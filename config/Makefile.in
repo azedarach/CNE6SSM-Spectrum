@@ -20,7 +20,7 @@ ENABLE_THREADS     := @ENABLE_THREADS@
 
 # Makefile modules
 MODELS             := @MODELS@
-MODULES            := config src fflite legacy slhaea doc
+MODULES            := config src fflite legacy slhaea doc test
 MODULES            += $(MODELS)
 
 # Variables for Mathematica meta code
