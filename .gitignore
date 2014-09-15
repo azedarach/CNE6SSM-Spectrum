@@ -36,3 +36,5 @@ doc/mainpage.dox
 doc/html
 
 test/*.log
+
+local_files/
