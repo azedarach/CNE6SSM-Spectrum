@@ -17,20 +17,21 @@ using namespace flexiblesusy;
 
 // Test that the default EWSB conditions give
 // expected values for a set of parameters
-BOOST_AUTO_TEST_CASE( test_default_ewsb )
+BOOST_AUTO_TEST_CASE( test_default_ewsb_tree_level )
 {
    CNE6SSM<Two_scale> model = CNE6SSM<Two_scale>();
 
-   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_1(), 0.0);
-   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_2(), 0.0);
-   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_3(), 0.0);
-   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_4(), 0.0);
-   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_5(), 0.0);
+   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_1(), 0.);
+   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_2(), 0.);
+   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_3(), 0.);
+   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_4(), 0.);
+   BOOST_CHECK_EQUAL(model.get_ewsb_eq_hh_5(), 0.);
+
 }
 
 // Test that the custom EWSB conditions give
 // expected values for a set of parameters
-BOOST_AUTO_TEST_CASE( test_custom_ewsb )
+BOOST_AUTO_TEST_CASE( test_custom_ewsb_tree_level )
 {
 
 }
