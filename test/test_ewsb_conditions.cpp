@@ -25,9 +25,9 @@ BOOST_AUTO_TEST_CASE( test_default_ewsb_tree_level )
    BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_4(), 0.);
    BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_5(), 0.);
 
-   CNE6SSM_input_parameters inputs;
-   inputs.QS = 5.;
-   default_model.set_input_parameters(inputs);
+   CNE6SSM_input_parameters default_inputs;
+   default_inputs.QS = 5.;
+   default_model.set_input_parameters(default_inputs);
 
    default_model.set_vd(24.4779);
    default_model.set_vu(244.779);
@@ -73,5 +73,44 @@ BOOST_AUTO_TEST_CASE( test_custom_ewsb_tree_level )
    BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_4(), 0.);
    BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_5(), 0.);
 
+   CNE6SSM_input_parameters custom_inputs;
+   custom_inputs.QS = 3.2;
+   custom_model.set_input_parameters(custom_inputs);
+
+   custom_model.set_vd(77.792);
+   custom_model.set_vu(233.376);
+   custom_model.set_vs(675.849);
+   custom_model.set_vsb(7434.343);
+   custom_model.set_vphi(5432.);
+   custom_model.set_g1(0.34);
+   custom_model.set_g1p(0.23);
+   custom_model.set_g2(0.7);
+   custom_model.set_Lambdax(0.15);
+   custom_model.set_Sigmax(0.54);
+   custom_model.set_TLambdax(2970.8);
+   custom_model.set_TSigmax(124.);
+   custom_model.set_MuPhi(-503.2);
+   custom_model.set_BMuPhi(21.3);
+   custom_model.set_KappaPr(0.9);
+   custom_model.set_TKappaPr(-100.);
+   custom_model.set_XiF(450.9);
+   custom_model.set_LXiF(-978.6);
+   custom_model.set_mHd2(-1.4e6);
+   custom_model.set_mHu2(2.5e6);
+   custom_model.set_ms2(1.5e6);
+   custom_model.set_msbar2(-2.1e6);
+   custom_model.set_mphi2(-1.6e4);
+
+   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_1(), -9.551900152e8, 1.0e-7);
+   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_2(), -3.774462196e8, 1.0e-7);
+   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_3(), -3.850971629e10, 1.0e-7);
+   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_4(), -8.248055767e9, 1.0e-7);
+   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_5(), 2.475560387e11, 1.0e-7);
+}
+
+// Test that the custom EWSB conditions correctly match 
+// their appropriate definitions
+BOOST_AUTO_TEST_CASE( test_custom_ewsb_tree_level_defns )
+{
 
 }
