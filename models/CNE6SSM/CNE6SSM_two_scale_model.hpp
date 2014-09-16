@@ -208,6 +208,14 @@ public:
    double get_ewsb_eq_hh_4() const;
    double get_ewsb_eq_hh_5() const;
 
+   /// DH:: Added alternate form of EWSB conditions for implementing
+   ///      Roman's algorithm.
+   double get_alternate_ewsb_eq_hh_1() const;
+   double get_alternate_ewsb_eq_hh_2() const;
+   double get_alternate_ewsb_eq_hh_3() const;
+   double get_alternate_ewsb_eq_hh_4() const;
+   double get_alternate_ewsb_eq_hh_5() const;
+
    std::complex<double> CpUSdconjUSdVZVZ(unsigned gO1, unsigned gO2) const;
    std::complex<double> CpUSdconjUSdVZpVZp(unsigned gO1, unsigned gO2) const;
    double CpUSdconjUSdconjVWmVWm(unsigned gO1, unsigned gO2) const;

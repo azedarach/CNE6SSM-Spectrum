@@ -67,11 +67,11 @@ BOOST_AUTO_TEST_CASE( test_custom_ewsb_tree_level )
 {
    CNE6SSM<Two_scale> custom_model = CNE6SSM<Two_scale>();
    
-   //BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_1(), 0.);
-   //BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_2(), 0.);
-   //BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_3(), 0.);
-   //BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_4(), 0.);
-   //BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_5(), 0.);
+   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_1(), 0.);
+   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_2(), 0.);
+   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_3(), 0.);
+   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_4(), 0.);
+   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_5(), 0.);
 
 
 }
