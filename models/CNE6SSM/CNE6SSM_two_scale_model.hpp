@@ -1303,6 +1303,9 @@ private:
    int solve_ewsb_tree_level_via_soft_higgs_masses();
    void ewsb_initial_guess(double[number_of_ewsb_equations]);
    static int tadpole_equations(const gsl_vector*, void*, gsl_vector*);
+   /// DH:: tadpole equations using the alternative EWSB conditions
+   ///      used in Roman's algorithm
+   static int alternate_tadpole_equations(const gsl_vector*, void*, gsl_vector*);
    void copy_DRbar_masses_to_pole_masses();
 
    // Passarino-Veltman loop functions

@@ -251,6 +251,63 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
 }
 
 /**
+ * Method which calculates the tadpoles at loop order specified in the
+ * pointer to the CLASSNAME::Ewsb_parameters struct, using the modified
+ * equations in Roman's algorithm.
+ *
+ * @param x GSL vector of EWSB output parameters
+ * @param params pointer to CLASSNAME::Ewsb_parameters struct
+ * @param f GSL vector with tadpoles
+ *
+ * @return GSL_EDOM if x contains Nans, GSL_SUCCESS otherwise.
+ */
+int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gsl_vector* f)
+{
+   if (contains_nan(x, number_of_ewsb_equations)) {
+      for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+      return GSL_EDOM;
+   }
+
+   const CLASSNAME::Ewsb_parameters* ewsb_parameters
+      = static_cast<CLASSNAME::Ewsb_parameters*>(params);
+   CNE6SSM* model = ewsb_parameters->model;
+   const unsigned ewsb_loop_order = ewsb_parameters->ewsb_loop_order;
+
+   double tadpole[number_of_ewsb_equations];
+
+   model->set_vs(gsl_vector_get(x, 0));
+   model->set_vsb(gsl_vector_get(x, 1));
+   model->set_vphi(gsl_vector_get(x, 2));
+   model->set_XiF(gsl_vector_get(x, 3));
+   model->set_LXiF(gsl_vector_get(x, 4));
+
+   tadpole[0] = model->get_alternate_ewsb_eq_hh_1();
+   tadpole[1] = model->get_alternate_ewsb_eq_hh_2();
+   tadpole[2] = model->get_alternate_ewsb_eq_hh_3();
+   tadpole[3] = model->get_alternate_ewsb_eq_hh_4();
+   tadpole[4] = model->get_alternate_ewsb_eq_hh_5();
+
+   if (ewsb_loop_order > 0) {
+      model->calculate_DRbar_parameters();
+      tadpole[0] -= Re(model->tadpole_hh(0));
+      tadpole[1] -= (Re(model->tadpole_hh(0)) - Re(model->tadpole_hh(1)));
+      tadpole[2] -= (Re(model->tadpole_hh(2) - Re(model->tadpole_hh(3)));
+      tadpole[3] -= Re(model->tadpole_hh(3));
+      tadpole[4] -= Re(model->tadpole_hh(4));
+
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+
+   for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+      gsl_vector_set(f, i, tadpole[i]);
+
+   return GSL_SUCCESS;
+}
+
+/**
  * method which solves the EWSB conditions iteratively, trying GSL
  * root finding methods
  *       gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids, gsl_multiroot_fsolver_broyden
