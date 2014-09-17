@@ -401,6 +401,29 @@ int CLASSNAME::solve_ewsb_tree_level_via_soft_higgs_masses()
    return error;
 }
 
+const Eigen::Array<double,5,1> CLASSNAME::get_ewsb_tree_level_soft_masses()
+{
+   const auto old_mHd2 = mHd2;
+   const auto old_mHu2 = mHu2;
+   const auto old_ms2 = ms2;
+   const auto old_msbar2 = msbar2;
+   const auto old_mphi2 = mphi2;
+
+   solve_ewsb_tree_level_via_soft_higgs_masses();
+
+   Eigen::Array<double,5,1> masses;
+
+   masses << mHd2, mHu2, ms2, msbar2, mphi2;
+
+   mHd2 = old_mHd2;
+   mHu2 = old_mHu2;
+   ms2 = old_ms2;
+   msbar2 = old_msbar2;
+   mphi2 = old_mphi2;
+
+   return masses;
+}
+
 int CLASSNAME::solve_ewsb_one_loop()
 {
    return solve_ewsb_iteratively(1);
@@ -2203,7 +2226,14 @@ double CLASSNAME::get_alternate_ewsb_eq_hh_1() const
 
 double CLASSNAME::get_alternate_ewsb_eq_hh_2() const
 {
-   double result = 0.;
+   const auto QS = LOCALINPUT(QS);
+
+   double result = mHd2*Sqr(vd) - mHu2*Sqr(vu) + 0.5*Sqr(vs)*AbsSqr(Lambdax)*
+      Sqr(vd) - 0.5*Sqr(vs)*AbsSqr(Lambdax)*Sqr(vu) + 0.125*Sqr(g2)*Power(vd,4)
+      + 0.075*Sqr(g1)*Power(vd,4) - 0.125*Sqr(g2)*Power(vu,4) - 0.075*Sqr(g1)*
+      Power(vu,4) + 0.1125*Sqr(g1p)*Power(vd,4) - 0.05*Sqr(g1p)*Power(vu,4)
+      - 0.0375*QS*Sqr(g1p)*Sqr(vd)*Sqr(vs) + 0.0375*QS*Sqr(g1p)*Sqr(vd)*Sqr(vsb)
+      + 0.025*QS*Sqr(g1p)*Sqr(vu)*Sqr(vs) - 0.025*QS*Sqr(g1p)*Sqr(vu)*Sqr(vsb);
 
    return result;
 }
@@ -2212,7 +2242,14 @@ double CLASSNAME::get_alternate_ewsb_eq_hh_3() const
 {
    const auto QS = LOCALINPUT(QS);
 
-   double result = 0.;
+   double result = ms2*Sqr(vs) - msbar2*Sqr(vsb) - 0.35355339059327373*vs*vd*vu*
+      TLambdax - 0.35355339059327373*vs*vd*vu*Conj(TLambdax) + 0.5*Sqr(vs)*
+      AbsSqr(Lambdax)*Sqr(vd) + 0.5*Sqr(vs)*AbsSqr(Lambdax)*Sqr(vu) + 0.5*Sqr(vphi)
+      *AbsSqr(Sigmax)*Sqr(vs) - 0.5*Sqr(vphi)*AbsSqr(Sigmax)*Sqr(vsb) - 0.25*vphi*
+      vsb*vd*vu*Conj(Sigmax)*Lambdax - 0.25*vphi*vsb*vd*vu*Sigmax*Conj(Lambdax) -
+      0.0375*QS*Sqr(g1p)*Sqr(vs)*Sqr(vd) - 0.025*QS*Sqr(g1p)*Sqr(vs)*Sqr(vu) + 
+      0.0125*Sqr(QS)*Sqr(g1p)*Power(vs,4) - 0.0375*QS*Sqr(g1p)*Sqr(vsb)*Sqr(vd) - 
+      0.025*QS*Sqr(g1p)*Sqr(vsb)*Sqr(vu) - 0.0125*Sqr(QS)*Sqr(g1p)*Power(vsb,4);
 
    return result;
 }

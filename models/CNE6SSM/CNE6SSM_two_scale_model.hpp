@@ -78,6 +78,10 @@ public:
    CNE6SSM_physical& get_physical();
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems();
+   /// DH:: A method to get access to the soft masses that solve
+   ///      the EWSB conditions at tree level, without actually
+   ///      modifying the model.
+   const Eigen::Array<double,5,1> get_ewsb_tree_level_soft_masses();
    int solve_ewsb_tree_level();
    int solve_ewsb_one_loop();
    int solve_ewsb();            ///< solve EWSB at ewsb_loop_order level
