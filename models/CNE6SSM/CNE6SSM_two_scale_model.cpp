@@ -2198,9 +2198,7 @@ double CLASSNAME::get_ewsb_eq_hh_5() const
 
 double CLASSNAME::get_alternate_ewsb_eq_hh_1() const
 {
-   double result = 0.;
-
-   return result;
+   return get_ewsb_eq_hh_1();
 }
 
 double CLASSNAME::get_alternate_ewsb_eq_hh_2() const
@@ -2212,6 +2210,8 @@ double CLASSNAME::get_alternate_ewsb_eq_hh_2() const
 
 double CLASSNAME::get_alternate_ewsb_eq_hh_3() const
 {
+   const auto QS = LOCALINPUT(QS);
+
    double result = 0.;
 
    return result;
@@ -2219,16 +2219,12 @@ double CLASSNAME::get_alternate_ewsb_eq_hh_3() const
 
 double CLASSNAME::get_alternate_ewsb_eq_hh_4() const
 {
-   double result = 0.;
-
-   return result;
+   return get_ewsb_eq_hh_4();
 }
 
 double CLASSNAME::get_alternate_ewsb_eq_hh_5() const
 {
-   double result = 0.;
-
-   return result;
+   return get_ewsb_eq_hh_5();
 }
 
 std::complex<double> CLASSNAME::CpUSdconjUSdVZVZ(unsigned gO1, unsigned gO2) const

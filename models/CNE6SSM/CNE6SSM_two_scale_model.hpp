@@ -210,11 +210,11 @@ public:
 
    /// DH:: Added alternate form of EWSB conditions for implementing
    ///      Roman's algorithm.
-   double get_alternate_ewsb_eq_hh_1() const;
-   double get_alternate_ewsb_eq_hh_2() const;
-   double get_alternate_ewsb_eq_hh_3() const;
-   double get_alternate_ewsb_eq_hh_4() const;
-   double get_alternate_ewsb_eq_hh_5() const;
+   double get_alternate_ewsb_eq_hh_1() const; //< == \frac{\partial V}{\partial v_1}
+   double get_alternate_ewsb_eq_hh_2() const; //< == v_1\frac{\partial V}{\partial v_1}-v_2\frac{\partial V}{\partial v_2}
+   double get_alternate_ewsb_eq_hh_3() const; //< == s_1\frac{\partial V}{\partial s_1}-s_2\frac{\partial V}{\partial s_2}
+   double get_alternate_ewsb_eq_hh_4() const; //< == \frac{\partial V}{\partial s_2}
+   double get_alternate_ewsb_eq_hh_5() const; //< == \frac{\partial V}{\partial \phi}
 
    std::complex<double> CpUSdconjUSdVZVZ(unsigned gO1, unsigned gO2) const;
    std::complex<double> CpUSdconjUSdVZpVZp(unsigned gO1, unsigned gO2) const;
