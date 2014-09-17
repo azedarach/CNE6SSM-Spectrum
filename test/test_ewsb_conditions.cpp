@@ -235,8 +235,6 @@ BOOST_AUTO_TEST_CASE( test_custom_zeroes_default )
    double KappaPr = custom_zero_model.get_KappaPr();
    double TKappaPr = custom_zero_model.get_TKappaPr();
 
-
-
    TLambdax = 
       0.5*(ms2*Sqr(vs) - msbar2*Sqr(vsb) + 0.5*Sqr(vs)*
            AbsSqr(Lambdax)*Sqr(vd) + 0.5*Sqr(vs)*AbsSqr(Lambdax)*Sqr(vu) + 0.5*Sqr(vphi)
