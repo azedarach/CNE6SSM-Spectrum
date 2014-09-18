@@ -64,6 +64,9 @@ public:
    void clear_DRbar_parameters();
    void do_calculate_sm_pole_masses(bool);
    bool do_calculate_sm_pole_masses() const;
+   /// DH:: method to set whether to use alternate EWSB conditions
+   void do_use_alternate_ewsb(bool);
+   bool do_use_alternate_ewsb() const;
    void reorder_DRbar_masses();
    void reorder_pole_masses();
    void set_ewsb_iteration_precision(double);
@@ -78,7 +81,7 @@ public:
    CNE6SSM_physical& get_physical();
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems();
-   /// DH:: A method to get access to the soft masses that solve
+   /// DH:: A convenience method to get access to the soft masses that solve
    ///      the EWSB conditions at tree level, without actually
    ///      modifying the model.
    const Eigen::Array<double,5,1> get_ewsb_tree_level_soft_masses();
@@ -1266,6 +1269,7 @@ private:
       unsigned ewsb_loop_order;
    };
 
+
    struct Thread {
       typedef void(CNE6SSM<Two_scale>::*Memfun_t)();
       CNE6SSM<Two_scale>* model;
@@ -1287,6 +1291,8 @@ private:
    unsigned ewsb_loop_order;
    unsigned pole_mass_loop_order;
    bool calculate_sm_pole_masses; ///< switch to calculate the pole masses of the Standard Model particles
+   /// DH:: flag to use alternate iteration (not very flexible, but will do for now)
+   bool use_alternate_ewsb;
    double precision;              ///< RG running precision
    double ewsb_iteration_precision;
    static const std::size_t number_of_ewsb_equations = 5;
@@ -1300,11 +1306,15 @@ private:
    int solve_ewsb_iteratively();
    int solve_ewsb_iteratively(unsigned);
    int solve_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
+   /// DH:: solves alternate EWSB conditions (TODO)
+   int solve_alternate_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
    int solve_ewsb_tree_level_via_soft_higgs_masses();
    void ewsb_initial_guess(double[number_of_ewsb_equations]);
+   /// DH:: initial guess for alternate EWSB conditions (TODO)
+   void alternate_ewsb_initial_guess(double[number_of_ewsb_equations]);
    static int tadpole_equations(const gsl_vector*, void*, gsl_vector*);
    /// DH:: tadpole equations using the alternative EWSB conditions
-   ///      used in Roman's algorithm
+   ///      used in Roman's algorithm (TODO)
    static int alternate_tadpole_equations(const gsl_vector*, void*, gsl_vector*);
    void copy_DRbar_masses_to_pole_masses();
 

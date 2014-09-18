@@ -137,6 +137,9 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
+
+   // DH:: if necessary this can be modified to have a better
+   //      initial guess for Roman's algorithm
    MODEL->set_XiF(0.1);
    MODEL->set_vs(0.7071067811865475*ssumInput);
    MODEL->set_vsb(0.7071067811865475*ssumInput);

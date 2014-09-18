@@ -76,6 +76,8 @@ int main(int argc, const char* argv[])
       spectrum_generator_settings.get(Spectrum_generator_settings::max_iterations));
    spectrum_generator.set_calculate_sm_masses(
       spectrum_generator_settings.get(Spectrum_generator_settings::calculate_sm_masses) >= 1.0);
+   // DH:: note fixed to true for testing
+   spectrum_generator.set_alternate_ewsb(true);
    spectrum_generator.set_input_scale(
       slha_io.get_input_scale());
    spectrum_generator.set_parameter_output_scale(

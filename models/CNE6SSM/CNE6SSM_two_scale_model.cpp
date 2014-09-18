@@ -128,6 +128,16 @@ bool CLASSNAME::do_calculate_sm_pole_masses() const
    return calculate_sm_pole_masses;
 }
 
+void CLASSNAME::do_use_alternate_ewsb(bool flag)
+{
+   use_alternate_ewsb = flag;
+}
+
+bool CLASSNAME::do_use_alternate_ewsb() const
+{
+   return use_alternate_ewsb;
+}
+
 void CLASSNAME::set_ewsb_loop_order(unsigned loop_order)
 {
    ewsb_loop_order = loop_order;
@@ -276,8 +286,12 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
 
    double tadpole[number_of_ewsb_equations];
 
-   model->set_vs(gsl_vector_get(x, 0));
-   model->set_vsb(gsl_vector_get(x, 1));
+   // DH:: note s is taken from input, which may be inconsistent with
+   //      scale choice (depending on how ssumInput is defined), may change
+   //      later
+   model->set_vs(model->get_input().ssumInput*Cos(ArcTan(gsl_vector_get(x, 0))));
+   model->set_vsb(model->get_input().ssumInput*Sin(ArcTan(gsl_vector_get(x, 0))));
+   model->set_Lambdax(gsl_vector_get(x,1));
    model->set_vphi(gsl_vector_get(x, 2));
    model->set_XiF(gsl_vector_get(x, 3));
    model->set_LXiF(gsl_vector_get(x, 4));
@@ -288,11 +302,12 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
    tadpole[3] = model->get_alternate_ewsb_eq_hh_4();
    tadpole[4] = model->get_alternate_ewsb_eq_hh_5();
 
+   // DH:: note sign difference relative to my notes - CHECK IT
    if (ewsb_loop_order > 0) {
       model->calculate_DRbar_parameters();
       tadpole[0] -= Re(model->tadpole_hh(0));
       tadpole[1] -= (Re(model->tadpole_hh(0)) - Re(model->tadpole_hh(1)));
-      tadpole[2] -= (Re(model->tadpole_hh(2) - Re(model->tadpole_hh(3)));
+      tadpole[2] -= (Re(model->tadpole_hh(2)) - Re(model->tadpole_hh(3)));
       tadpole[3] -= Re(model->tadpole_hh(3));
       tadpole[4] -= Re(model->tadpole_hh(4));
 
@@ -320,7 +335,12 @@ int CLASSNAME::solve_ewsb_iteratively()
    };
 
    double x_init[number_of_ewsb_equations];
-   ewsb_initial_guess(x_init);
+   // DH:: note alternative initial guess used here
+   if (use_alternate_ewsb) {
+      alternate_ewsb_initial_guess(x_init);
+   } else {
+      ewsb_initial_guess(x_init);
+   }
 
 #ifdef ENABLE_VERBOSE
    std::cout << "Solving EWSB equations ...\n"
@@ -333,7 +353,12 @@ int CLASSNAME::solve_ewsb_iteratively()
    int status;
    for (std::size_t i = 0; i < sizeof(solvers)/sizeof(*solvers); ++i) {
       VERBOSE_MSG("\tStarting EWSB iteration using solver " << i);
-      status = solve_ewsb_iteratively_with(solvers[i], x_init);
+      // DH:: switch to solve alternate EWSB. Note that the function
+      //      interface may have to change for the alternative routine.
+      //      Also, if change to fixed point iteration, move the branch outside
+      //      the for loop.
+      status = (use_alternate_ewsb ? solve_alternate_ewsb_iteratively_with(solvers[i], x_init) : 
+                solve_ewsb_iteratively_with(solvers[i], x_init));
       if (status == GSL_SUCCESS) {
          VERBOSE_MSG("\tSolver " << i << " finished successfully!");
          break;
@@ -358,6 +383,7 @@ int CLASSNAME::solve_ewsb_iteratively()
 
    return status;
 }
+
 
 int CLASSNAME::solve_ewsb_iteratively(unsigned loop_order)
 {
@@ -506,6 +532,16 @@ void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 
 }
 
+void CLASSNAME::alternate_ewsb_initial_guess(double x_init[number_of_ewsb_equations])
+{
+   x_init[0] = 1.1; //< TanTheta
+   x_init[1] = Lambdax;
+   x_init[2] = vphi;
+   x_init[3] = XiF;
+   x_init[4] = LXiF;
+
+}
+
 int CLASSNAME::solve_ewsb_iteratively_with(const gsl_multiroot_fsolver_type* solver,
                                            const double x_init[number_of_ewsb_equations])
 {
@@ -519,6 +555,21 @@ int CLASSNAME::solve_ewsb_iteratively_with(const gsl_multiroot_fsolver_type* sol
 
    return status;
 }
+
+int CLASSNAME::solve_alternate_ewsb_iteratively_with(const gsl_multiroot_fsolver_type* solver,
+                                                     const double x_init[number_of_ewsb_equations])
+{
+   Ewsb_parameters params = {this, ewsb_loop_order};
+   Root_finder<number_of_ewsb_equations> root_finder(CLASSNAME::alternate_tadpole_equations,
+                                                     &params,
+                                                     number_of_ewsb_iterations,
+                                                     ewsb_iteration_precision);
+   root_finder.set_solver_type(solver);
+   const int status = root_finder.find_root(x_init);
+
+   return status;
+}
+
 
 void CLASSNAME::print(std::ostream& ostr) const
 {
