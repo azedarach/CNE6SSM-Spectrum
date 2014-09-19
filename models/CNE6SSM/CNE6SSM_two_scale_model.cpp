@@ -534,7 +534,7 @@ void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 
 void CLASSNAME::alternate_ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 {
-   x_init[0] = 1.1; //< TanTheta
+   x_init[0] = 0.95; //< TanTheta
    x_init[1] = Lambdax;
    x_init[2] = vphi;
    x_init[3] = XiF;

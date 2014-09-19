@@ -40,10 +40,10 @@ Block EXTPAR
 Block HMIXIN
    31   5.000000000e+02      # mu_phi (pure singlet mass term)
    32   1.000000000e-01      # kappa prime (singlet cubic coupling)
-   33   1.000000000e-02      # sigma (singlet-S-Sbar coupling)
+   33   1.000000000e-01      # sigma (singlet-S-Sbar coupling)
 Block ESIXRUNIN
     0   0.000000000e+00      # mu prime
-    1   1.000000000e-02      # lambda (S-Higgs-Higgs interaction)
+    1   1.000000000e-01      # lambda (S-Higgs-Higgs interaction)
    30   0.000000000e+00      # Bmu_phi (soft breaking singlet mass term)
    42   0.000000000e+00      # sigma_L (singlet-L_4-L_4bar coupling) 
   101   0.000000000e+00      # B_mu prime
