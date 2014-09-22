@@ -67,6 +67,9 @@ public:
    /// DH:: method to set whether to use alternate EWSB conditions
    void do_use_alternate_ewsb(bool);
    bool do_use_alternate_ewsb() const;
+   /// DH:: temporary methods for getting and setting sign of Lambdax
+   void set_sign_Lambdax(int);
+   int get_sign_Lambdax();
    void reorder_DRbar_masses();
    void reorder_pole_masses();
    void set_ewsb_iteration_precision(double);
@@ -1269,7 +1272,6 @@ private:
       unsigned ewsb_loop_order;
    };
 
-
    struct Thread {
       typedef void(CNE6SSM<Two_scale>::*Memfun_t)();
       CNE6SSM<Two_scale>* model;
@@ -1293,6 +1295,8 @@ private:
    bool calculate_sm_pole_masses; ///< switch to calculate the pole masses of the Standard Model particles
    /// DH:: flag to use alternate iteration (not very flexible, but will do for now)
    bool use_alternate_ewsb;
+   /// DH:: N.B. temporary parameter: sign of Lambdax (avoids having to change EWSB interface)
+   int sgnLambdax;
    double precision;              ///< RG running precision
    double ewsb_iteration_precision;
    static const std::size_t number_of_ewsb_equations = 5;
@@ -1308,14 +1312,26 @@ private:
    int solve_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
    /// DH:: solves alternate EWSB conditions (TODO)
    int solve_alternate_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
+   int solve_alternate_ewsb_fpi(const double[number_of_ewsb_equations]);
    int solve_ewsb_tree_level_via_soft_higgs_masses();
    void ewsb_initial_guess(double[number_of_ewsb_equations]);
    /// DH:: initial guess for alternate EWSB conditions (TODO)
    void alternate_ewsb_initial_guess(double[number_of_ewsb_equations]);
+   /// DH:: initial guess for Roman's FPI method
+   void alternate_ewsb_fpi_initial_guess(double[number_of_ewsb_equations]);
    static int tadpole_equations(const gsl_vector*, void*, gsl_vector*);
    /// DH:: tadpole equations using the alternative EWSB conditions
    ///      used in Roman's algorithm (TODO)
    static int alternate_tadpole_equations(const gsl_vector*, void*, gsl_vector*);
+   /// DH:: carries out update step in Roman's algorithm
+   static int calculate_fpi_update_step(const gsl_vector*, void*, gsl_vector*);
+   /// DH:: helper functions used in Roman's FPI
+   double get_next_fpi_param_1() const;
+   double get_next_fpi_param_2() const;
+   double get_next_fpi_param_3() const;
+   double get_next_fpi_param_4() const;
+   double get_next_fpi_param_5() const;
+
    void copy_DRbar_masses_to_pole_masses();
 
    // Passarino-Veltman loop functions

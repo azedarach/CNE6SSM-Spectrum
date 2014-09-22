@@ -138,6 +138,16 @@ bool CLASSNAME::do_use_alternate_ewsb() const
    return use_alternate_ewsb;
 }
 
+void CLASSNAME::set_sign_Lambdax(int sgn_lam)
+{
+   sgnLambdax = Sign(sgn_lam);
+}
+
+int CLASSNAME::get_sign_Lambdax()
+{
+   return sgnLambdax;
+}
+
 void CLASSNAME::set_ewsb_loop_order(unsigned loop_order)
 {
    ewsb_loop_order = loop_order;
@@ -306,8 +316,8 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
    if (ewsb_loop_order > 0) {
       model->calculate_DRbar_parameters();
       tadpole[0] -= Re(model->tadpole_hh(0));
-      tadpole[1] -= (Re(model->tadpole_hh(0)) - Re(model->tadpole_hh(1)));
-      tadpole[2] -= (Re(model->tadpole_hh(2)) - Re(model->tadpole_hh(3)));
+      tadpole[1] -= (model->get_vd()*Re(model->tadpole_hh(0)) - model->get_vu()*Re(model->tadpole_hh(1)));
+      tadpole[2] -= (model->get_vs()*Re(model->tadpole_hh(2)) - model->get_vsb()*Re(model->tadpole_hh(3)));
       tadpole[3] -= Re(model->tadpole_hh(3));
       tadpole[4] -= Re(model->tadpole_hh(4));
 
@@ -318,6 +328,62 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
 
    for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
       gsl_vector_set(f, i, tadpole[i]);
+
+   return GSL_SUCCESS;
+}
+
+/**
+ * Method which the EWSB output parameters at the next step
+ * in Roman's FPI algorithm.
+ *
+ * @param x GSL vector of initial EWSB output parameters
+ * @param params pointer to CLASSNAME::Ewsb_parameters struct
+ * @param f GSL vector with updated EWSB output parameters
+ *
+ * @return GSL_EDOM if x contains Nans, GSL_SUCCESS otherwise.
+ */
+// DH:: probably better to not use gsl_vectors here. Use std::vector instead?
+int CLASSNAME::calculate_fpi_update_step(const gsl_vector* x, void* params, gsl_vector* f)
+{
+   if (contains_nan(x, number_of_ewsb_equations)) {
+      for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+      return GSL_EDOM;
+   }
+
+   const CLASSNAME::Ewsb_parameters* ewsb_parameters
+      = static_cast<CLASSNAME::Ewsb_parameters*>(params);
+   CNE6SSM* model = ewsb_parameters->model;
+   const unsigned ewsb_loop_order = ewsb_parameters->ewsb_loop_order;
+
+   const double s = model->get_input().ssumInput;
+
+   double ewsb_out_new[number_of_ewsb_equations];
+
+   // DH:: unpack parameters
+   double tth_old = gsl_vector_get(x,0);
+   double lam_old = gsl_vector_get(x,1);
+   double phi_old = gsl_vector_get(x,2);
+   double xif_old = gsl_vector_get(x,3);
+   double lxif_old = gsl_vector_get(x,4);
+
+   model->set_vs(s*Cos(ArcTan(tth_old)));
+   model->set_vsb(s*Sin(ArcTan(tth_old)));
+   model->set_Lambdax(lam_old);
+   model->set_vphi(phi_old);
+   model->set_XiF(xif_old);
+   model->set_LXiF(lxif_old);
+
+   if (ewsb_loop_order > 0) model->calculate_DRbar_parameters();
+
+   ewsb_out_new[0] = model->get_next_fpi_param_1();
+   ewsb_out_new[1] = model->get_next_fpi_param_2();
+   ewsb_out_new[2] = model->get_next_fpi_param_3();
+   ewsb_out_new[3] = model->get_next_fpi_param_4();
+   ewsb_out_new[4] = model->get_next_fpi_param_5();
+
+   for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+      gsl_vector_set(f, i, ewsb_out_new[i]);
 
    return GSL_SUCCESS;
 }
@@ -351,24 +417,24 @@ int CLASSNAME::solve_ewsb_iteratively()
 #endif
 
    int status;
-   for (std::size_t i = 0; i < sizeof(solvers)/sizeof(*solvers); ++i) {
-      VERBOSE_MSG("\tStarting EWSB iteration using solver " << i);
-      // DH:: switch to solve alternate EWSB. Note that the function
-      //      interface may have to change for the alternative routine.
-      //      Also, if change to fixed point iteration, move the branch outside
-      //      the for loop.
-      status = (use_alternate_ewsb ? solve_alternate_ewsb_iteratively_with(solvers[i], x_init) : 
-                solve_ewsb_iteratively_with(solvers[i], x_init));
-      if (status == GSL_SUCCESS) {
-         VERBOSE_MSG("\tSolver " << i << " finished successfully!");
-         break;
-      }
+   if (use_alternate_ewsb) {
+      status = solve_alternate_ewsb_fpi(x_init);
+   } else {
+      for (std::size_t i = 0; i < sizeof(solvers)/sizeof(*solvers); ++i) {
+         VERBOSE_MSG("\tStarting EWSB iteration using solver " << i);
+         // DH:: switch to solve alternate EWSB. 
+         status = solve_ewsb_iteratively_with(solvers[i], x_init);
+         if (status == GSL_SUCCESS) {
+            VERBOSE_MSG("\tSolver " << i << " finished successfully!");
+            break;
+         }
 #ifdef ENABLE_VERBOSE
-      else {
-         WARNING("\tSolver " << i << " could not find a solution!"
-                 " (requested precision: " << ewsb_iteration_precision << ")");
-      }
+         else {
+            WARNING("\tSolver " << i << " could not find a solution!"
+                    " (requested precision: " << ewsb_iteration_precision << ")");
+         }
 #endif
+      }
    }
 
    if (status != GSL_SUCCESS) {
@@ -542,6 +608,69 @@ void CLASSNAME::alternate_ewsb_initial_guess(double x_init[number_of_ewsb_equati
 
 }
 
+// DH:: consider refactoring this into multiple functions
+void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_equations])
+{
+   const auto QS = LOCALINPUT(QS);
+   const auto s = LOCALINPUT(ssumInput);
+
+   x_init[0] = AbsSqrt((ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)) 
+                       / (msbar2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)));
+
+   double cth = 1. / Sqrt(1. + Sqr(x_init[0]));
+   double sth = cth*x_init[0];
+   double cth2 = Sqr(cth);
+   double sth2 = Sqr(sth);
+   double c2th = cth2 - sth2;
+
+   x_init[1] = sgnLambdax*AbsSqrt(2.*(mHu2*Sqr(vu) - mHd2*Sqr(vd) + 0.125*Sqr(g2)*Power(vu,4)
+                                      + 0.075*Sqr(g1)*Power(vu,4) - 0.125*Sqr(g2)*Power(vd,4)
+                                      - 0.075*Sqr(g1)*Power(vd,4) + 0.0125*Sqr(g1p)*
+                                      (3.*Sqr(vd) - 2.*Sqr(vu))*
+                                      (-3.*Sqr(vd) - 2.*Sqr(vu) + QS*Sqr(s)*cth2
+                                       - QS*Sqr(s)*sth2)) / (Sqr(s)*cth2*(Sqr(vd) - Sqr(vu))));
+
+   double Alam = TLambdax / Lambdax;
+   double lam = x_init[1];
+
+   x_init[2] = (-4. / (s*sth*vu*lam*Conj(Sigmax) + s*sth*vu*Sigmax*Conj(lam)))*
+      (mHd2*vd - 0.35355339059327373*s*cth*vu*lam*Alam
+       - 0.35355339059327373*s*cth*vu*Conj(lam*Alam) + 0.5*AbsSqr(lam)*vd*
+       (Sqr(vu) + Sqr(s*cth)) + 0.125*Sqr(g2)*Power(vd,3) + 0.075*Sqr(g1)*Power(vd,3)
+       - 0.125*Sqr(g2)*vd*Sqr(vu) - 0.075*Sqr(g1)*vd*Sqr(vu) + 0.1125*Sqr(g1p)*
+       Power(vd,3) + 0.075*Sqr(g1p)*vd*Sqr(vu) - 0.0375*Sqr(g1p)*QS*vd*Sqr(s)*c2th);
+
+   double phi = x_init[2];
+
+   x_init[3] = ( 2. / (s*cth*Sigmax + s*cth*Conj(Sigmax)))*
+      (msbar2*s*sth - 0.35355339059327373*phi*s*cth*MuPhi*Conj(Sigmax)
+       - 0.35355339059327373*phi*s*cth*Sigmax*Conj(MuPhi) - 0.35355339059327373*phi*
+       s*cth*TSigmax - 0.35355339059327373*phi*s*cth*Conj(TSigmax) + 0.25*phi*vd*vu*
+       Lambdax*Conj(Sigmax) + 0.25*phi*vd*vu*Sigmax*Conj(Lambdax) 
+       + 0.5*AbsSqr(Sigmax)*s*sth*Sqr(phi) + 0.5*AbsSqr(Sigmax)*s*sth*Sqr(s*cth) - 0.25*s*cth
+       *Sqr(phi)*KappaPr*Conj(Sigmax) - 0.25*s*cth*Sqr(phi)*Sigmax*Conj(KappaPr)
+       + 0.0375*Sqr(g1p)*QS*s*sth*Sqr(vd) + 0.025*Sqr(g1p)*QS*s*sth*Sqr(vu) - 0.0125*
+       Sqr(g1p)*Sqr(QS)*s*sth*Sqr(s*cth) + 0.0125*Sqr(g1p)*Sqr(QS)*Power(s*sth,3));
+
+   double xi = x_init[3];
+
+   x_init[4] = -0.7071067811865475*
+      (mphi2*phi + phi*AbsSqr(MuPhi) + Power(phi,3)*AbsSqr(
+         KappaPr) + 0.5*phi*BMuPhi + 0.5*phi*Conj(BMuPhi) + 0.7071067811865475*
+       MuPhi*Conj(xi) - 0.35355339059327373*MuPhi*Sqr(s)*cth*sth*Conj(Sigmax) 
+       - 0.35355339059327373*Sqr(s)*cth*sth*Conj(TSigmax) +
+       phi*Conj(xi)*KappaPr - 0.5*phi*Sqr(s)*cth*sth*Conj(Sigmax)*KappaPr + 0.25*vd*s*sth*
+       vu*Conj(Sigmax)*lam + 0.7071067811865475*Conj(MuPhi)*xi + phi*Conj(
+          KappaPr)*xi - 0.35355339059327373*Sqr(s)*cth*sth*Conj(MuPhi)*Sigmax - 0.5*phi*Sqr(s)*
+       cth*sth*Conj(KappaPr)*Sigmax + 0.25*vd*s*sth*vu*Conj(lam)*Sigmax
+       + 1.0606601717798212*MuPhi*Conj(KappaPr)*Sqr(phi) +
+       0.35355339059327373*Conj(TKappaPr)*Sqr(phi) + 1.0606601717798212*Conj(
+          MuPhi)*KappaPr*Sqr(phi) + 0.5*phi*AbsSqr(Sigmax)*Sqr(s*cth) + 0.5*phi*AbsSqr
+       (Sigmax)*Sqr(s*sth) + 0.35355339059327373*Sqr(phi)*TKappaPr -
+       0.35355339059327373*Sqr(s)*cth*sth*TSigmax);
+
+}
+
 int CLASSNAME::solve_ewsb_iteratively_with(const gsl_multiroot_fsolver_type* solver,
                                            const double x_init[number_of_ewsb_equations])
 {
@@ -570,6 +699,33 @@ int CLASSNAME::solve_alternate_ewsb_iteratively_with(const gsl_multiroot_fsolver
    return status;
 }
 
+// DH:: possible optimisation later is to use tail call instead of loop
+int CLASSNAME::solve_alternate_ewsb_fpi(const double x_init[number_of_ewsb_equations])
+{
+   static std::size_t num_tries = 0;
+
+   if (num_tries - 1 > number_of_ewsb_iterations) {
+#ifdef ENABLE_VERBOSE
+      std::cout << "\tFPI status = max iterations reached\n";
+#endif
+      num_tries = 0;
+      return GSL_EMAXITER;
+   }
+
+   Ewsb_parameters params = {this, ewsb_loop_order};
+
+   double x_new[number_of_ewsb_equations];
+   int status;
+   std::size_t iter = 0
+   do {
+      iter++;
+      status calculate_fpi_update_step(x_init, &params, x_new);
+         
+         // Check convergence 
+     
+         } while (status == GSL_CONTINUE && iter < number_of_ewsb_iterations);
+ 
+}
 
 void CLASSNAME::print(std::ostream& ostr) const
 {
@@ -2370,6 +2526,154 @@ double CLASSNAME::get_alternate_ewsb_eq_hh_4() const
 double CLASSNAME::get_alternate_ewsb_eq_hh_5() const
 {
    return get_ewsb_eq_hh_5();
+}
+
+double CLASSNAME::get_next_fpi_param_1() const
+{
+   const auto QS = LOCALINPUT(QS);
+   const auto s = LOCALINPUT(ssumInput);
+
+   const double tth = vsb / vs;
+   const double cth = 1. / Sqrt(1. + Sqr(tth));
+   const double sth = cth * tth;
+   const double c2th = Sqr(cth) - Sqr(sth);
+
+   double delta = 0.5*AbsSqr(Lambdax)*Sqr(s)*Sqr(cth)*(Sqr(vd) + Sqr(vu))
+      + 0.5*AbsSqr(Sigmax)*Sqr(s)*Sqr(vphi)*c2th - 0.35355339059327373*vd*vu*
+      s*cth*TLambdax - 0.35355339059327373*vd*vu*s*cth*Conj(TLambdax) - 0.25*vphi*
+      s*vd*vu*sth*Lambdax*Conj(Sigmax) - 0.25*vphi*s*vd*vu*sth*Sigmax*Conj(Lambdax)
+      - 0.0375*QS*Sqr(g1p)*Sqr(s)*Sqr(vd) - 0.025*QS*Sqr(g1p)*Sqr(s)*Sqr(vu);
+
+   // DH:: depending on convergence properties, include
+   //      loop corrections within delta, or separate contribution?
+   //      Also double check signs for tadpole contributions. 
+   if (ewsb_loop_order > 0) {
+      // DH:: should have error checking here
+      delta -= (vs*Re(tadpole_hh(2)) - vsb*Re(tadpole_hh(3)));
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+
+   double result = (ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s) + delta/(Sqr(s)*Sqr(cth)))
+      / (msbar2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s));
+
+   return AbsSqrt(result);
+}
+
+double CLASSNAME::get_next_fpi_param_2() const
+{
+   const auto QS = LOCALINPUT(QS);
+   const auto s = LOCALINPUT(ssumInput);
+
+   const double tth = vsb/vs;
+   const double cth2 = 1./(1. + Sqr(tth));
+   const double sth2 = cth2*Sqr(tth);
+   const double c2th = cth2 - sth2;
+
+   double result = mHu2*Sqr(vu) - mHd2*Sqr(vd) + 0.125*Sqr(g2)*Power(vu,4) + 0.075*
+      Sqr(g1)*Power(vd,4) - 0.125*Sqr(g2)*Power(vd,4) - 0.075*Sqr(g1)*Power(vd,4)
+      - 0.1125*Sqr(g1p)*Power(vd,4) + 0.0375*QS*Sqr(g1p)*Sqr(vd)*Sqr(s)*c2th
+      + 0.05*Sqr(g1p)*Power(vu,4) - 0.025*QS*Sqr(g1p)*Sqr(vu)*Sqr(s)*c2th;
+
+   if (ewsb_loop_order > 0) {
+      // DH:: should have error checking here
+      result -= (vu*Re(tadpole_hh(1)) - vd*Re(tadpole_hh(0)));
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+
+   result *= (2. / Sqr(s)*cth2*(Sqr(vd) - Sqr(vu)));
+
+   // DH:: should also check that Lambdax^2 > 0 here
+
+   return sgnLambdax * AbsSqrt(result);
+}
+
+double CLASSNAME::get_next_fpi_param_3() const
+{
+   const auto QS = LOCALINPUT(QS);
+   const auto s = LOCALINPUT(ssumInput);
+
+   const double tth = vsb/vs;
+   const double c2th = (1. - Sqr(tth)) / (1. + Sqr(tth));
+
+   double result = mHd2*vd - 0.35355339059327373*vs*vu*TLambdax
+      - 0.35355339059327373*vs*vu*Conj(TLambdax) + 0.5*AbsSqr(Lambdax)*vd*
+      (Sqr(vu) + Sqr(vs)) + 0.125*Sqr(g2)*Power(vd,3) + 0.075*Sqr(g1)*Power(vd,3)
+      - 0.125*Sqr(g2)*vd*Sqr(vu) - 0.075*Sqr(g1)*vd*Sqr(vu) + 0.1125*Sqr(g1p)*
+      Power(vd,3) + 0.075*Sqr(g1p)*vd*Sqr(vu) - 0.0375*Sqr(g1p)*QS*vd*Sqr(s)*c2th;
+
+   if (ewsb_loop_order > 0) {
+      // DH:: should have error checking here
+      result -= Re(tadpole_hh(0));
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+
+   result *= (-4. / (vsb*vu*Lambdax*Conj(Sigmax) + vsb*vu*Sigmax*Conj(Lambdax)));
+
+   return result;
+}
+
+double CLASSNAME::get_next_fpi_param_4() const
+{
+   const auto QS = LOCALINPUT(QS);
+
+   double result = msbar2*vsb - 0.35355339059327373*vphi*vs*MuPhi*Conj(Sigmax)
+      - 0.35355339059327373*vphi*vs*Sigmax*Conj(MuPhi) - 0.35355339059327373*vphi*
+      vs*TSigmax - 0.35355339059327373*vphi*vs*Conj(TSigmax) + 0.25*vphi*vd*vu*
+      Lambdax*Conj(Sigmax) + 0.25*vphi*vd*vu*Sigmax*Conj(Lambdax) 
+      + 0.5*AbsSqr(Sigmax)*vsb*Sqr(vphi) + 0.5*AbsSqr(Sigmax)*vsb*Sqr(vs) - 0.25*vs
+      *Sqr(vphi)*KappaPr*Conj(Sigmax) - 0.25*vs*Sqr(vphi)*Sigmax*Conj(KappaPr)
+      + 0.0375*Sqr(g1p)*QS*vsb*Sqr(vd) + 0.025*Sqr(g1p)*QS*vsb*Sqr(vu) - 0.0125*
+      Sqr(g1p)*Sqr(QS)*vsb*Sqr(vs) + 0.0125*Sqr(g1p)*Sqr(QS)*Power(vsb,3);
+
+   if (ewsb_loop_order > 0) {
+      // DH:: should have error checking here
+      result -= Re(tadpole_hh(3));
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+
+   // DH:: assumes XiF is real 
+   result *= ( 2. / (vs*Sigmax + vs*Conj(Sigmax)));
+
+   return result;
+}
+
+double CLASSNAME::get_next_fpi_param_5() const
+{
+
+   double result = mphi2*vphi + vphi*AbsSqr(MuPhi) + Power(vphi,3)*AbsSqr(
+      KappaPr) + 0.5*vphi*BMuPhi + 0.5*vphi*Conj(BMuPhi) + 0.7071067811865475*
+      MuPhi*Conj(XiF) - 0.35355339059327373*MuPhi*vs*vsb*Conj(Sigmax) 
+      - 0.35355339059327373*vs*vsb*Conj(TSigmax) +
+      vphi*Conj(XiF)*KappaPr - 0.5*vphi*vs*vsb*Conj(Sigmax)*KappaPr + 0.25*vd*vsb*
+      vu*Conj(Sigmax)*Lambdax + 0.7071067811865475*Conj(MuPhi)*XiF + vphi*Conj(
+      KappaPr)*XiF - 0.35355339059327373*vs*vsb*Conj(MuPhi)*Sigmax - 0.5*vphi*vs*
+      vsb*Conj(KappaPr)*Sigmax + 0.25*vd*vsb*vu*Conj(Lambdax)*Sigmax
+      + 1.0606601717798212*MuPhi*Conj(KappaPr)*Sqr(vphi) +
+      0.35355339059327373*Conj(TKappaPr)*Sqr(vphi) + 1.0606601717798212*Conj(
+      MuPhi)*KappaPr*Sqr(vphi) + 0.5*vphi*AbsSqr(Sigmax)*Sqr(vs) + 0.5*vphi*AbsSqr
+      (Sigmax)*Sqr(vsb) + 0.35355339059327373*Sqr(vphi)*TKappaPr -
+      0.35355339059327373*vs*vsb*TSigmax;
+
+   if (ewsb_loop_order > 0) {
+      // DH:: should have error checking here
+      result -= Re(tadpole_hh(4));
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+ 
+   // DH:: assumes LXiF is real
+   result *= -0.7071067811865475;
+
+   return result;
 }
 
 std::complex<double> CLASSNAME::CpUSdconjUSdVZVZ(unsigned gO1, unsigned gO2) const
