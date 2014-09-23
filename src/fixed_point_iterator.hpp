@@ -135,6 +135,7 @@ int Fixed_point_iterator<dimension>::find_fixed_point(const std::vector<double> 
    gsl_set_error_handler_off();
 #endif
 
+   xn = start;
    fixed_point = start;
 
 #ifdef ENABLE_VERBOSE
@@ -246,11 +247,11 @@ int Fixed_point_iterator<dimension>::fixed_point_iterator_test_absolute() const
 template <std::size_t dimension>
 void Fixed_point_iterator<dimension>::print_state(std::size_t iteration) const
 {
-   std::cout << "\tIteration n = " << iteration << ": x(n) =";
+   std::cout << "\tIteration n = " << iteration << ": x_{n} =";
    for (std::size_t i = 0; i < dimension; ++i) {
       std::cout << " " << xn[i];
    }
-   std::cout << ", x(n+1) =";
+   std::cout << ", x_{n+1} =";
    for (std::size_t i = 0; i < dimension; ++i) {
       std::cout << " " << fixed_point[i];
    }
