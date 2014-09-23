@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <cassert>
-#include <vector>
 #include <gsl/gsl_errno.h>
 
 #include "wrappers.hpp"
@@ -26,33 +25,34 @@ namespace flexiblesusy {
  *
  * The user has to provide the function (of which a fixed point 
  * should be found) of the type Function_t. This function gets as
- * arguments a std::vector<double> of length 'dimension', a 
- * pointer to the parameters (of type void*) and a std::vector<double>
- * where the next point must be stored.
+ * arguments a GSL vector of length 'dimension', a pointer to the 
+ * parameters (of type void*) and a GSL vector where the next 
+ * point must be stored.
  *
  * Example:
  * @code
  * struct MyExample {
- *    static int func(const std::vector<double>& xold, void*, 
- *                    std::vector<double>& xnew)
+ *    static int func(const gsl_vector* xold, void*, 
+ *                    gsl_vector* xnew)
  *       {
  *         return GSL_SUCCESS;
  *       }
  * };
  * 
  * Fixed_point_iterator<2> fp_iter(MyExample::func, NULL, 100, 1.0e-5);
- * const std::vector<double> start = {a, b};
+ * const double start[2] = {a, b};
  * const int status = fp_iter.find_fixed_point(start);
  * @endcode
  */
 template <std::size_t dimension>
 class Fixed_point_iterator {
 public:
-   typedef int (*Function_t)(const std::vector<double> &, void*,
-                             std::vector<double>&);
+   typedef int (*Function_t)(const gsl_vector*, void*, gsl_vector*);
 
    Fixed_point_iterator();
    Fixed_point_iterator(Function_t, void*, std::size_t, double, bool);
+   Fixed_point_iterator(const Fixed_point_iterator&);
+   ~Fixed_point_iterator();
 
    double get_fixed_point(std::size_t) const;
    void set_function(Function_t f) { function = f; }
@@ -60,14 +60,14 @@ public:
    void set_precision(double p) { precision = p; }
    void set_max_iterations(std::size_t n) { max_iterations = n; }
    void set_test_absolute_errors(bool ae) { test_on_absolute = ae; } 
-   int find_fixed_point(const std::vector<double> &);
+   int find_fixed_point(const double[dimension]);
 
 private:
    std::size_t max_iterations;       ///< maximum number of iterations
    double precision;                 ///< precision goal
    bool test_on_absolute;            ///< use absolute convergence criterion
-   std::vector<double> xn;           ///< current iteration point
-   std::vector<double> fixed_point;  ///< vector of fixed point estimate
+   gsl_vector* xn;           ///< current iteration point
+   gsl_vector* fixed_point;  ///< vector of fixed point estimate
    void* parameters;                 ///< pointer to parameters
    Function_t function;              ///< function defining fixed point
 
@@ -85,11 +85,15 @@ Fixed_point_iterator<dimension>::Fixed_point_iterator()
    : max_iterations(100)
    , precision(1.0e-2)
    , test_on_absolute(false)
-   , xn(dimension)
-   , fixed_point(dimension)
    , parameters(NULL)
    , function(NULL)
-{}
+{
+   xn = gsl_vector_alloc(dimension);
+   fixed_point = gsl_vector_alloc(dimension);
+
+   if (!xn || !fixed_point)
+      throw OutOfMemoryError("GSL vector allocation failed in Fixed_point_iterator()");
+}
 
 /**
  * Constructor
@@ -108,11 +112,38 @@ Fixed_point_iterator<dimension>::Fixed_point_iterator(Function_t function_,
    : max_iterations(max_iterations_)
    , precision(precision_)
    , test_on_absolute(absolute_)
-   , xn(dimension)
-   , fixed_point(dimension)
    , parameters(parameters_)
    , function(function_)
-{}
+{
+   xn = gsl_vector_alloc(dimension);
+   fixed_point = gsl_vector_alloc(dimension);
+
+   if (!xn || !fixed_point)
+      throw OutOfMemoryError("GSL vector allocation failed in Fixed_point_iterator("
+                             "Function_t, void*, size_t, double, bool)");
+}
+
+template <std::size_t dimension>
+Fixed_point_iterator<dimension>::Fixed_point_iterator(const Fixed_point_iterator& other)
+   : max_iterations(other.max_iterations)
+   , precision(other.precision)
+   , test_on_absolute(other.test_on_absolute)
+   , parameters(other.parameters)
+   , function(other.function)
+{
+   xn = gsl_vector_alloc(dimension);
+   gsl_vector_memcpy(xn, other.xn);
+
+   fixed_point = gsl_vector_alloc(dimension);
+   gsl_vector_memcpy(fixed_point, other.fixed_point);
+}
+
+template <std::size_t dimension>
+Fixed_point_iterator<dimension>::~Fixed_point_iterator()
+{
+   gsl_vector_free(xn);
+   gsl_vector_free(fixed_point);
+}
 
 /**
  * Start the iteration
@@ -122,11 +153,10 @@ Fixed_point_iterator<dimension>::Fixed_point_iterator(Function_t function_,
  * @return GSL error code (GSL_SUCCESS if fixed point found)
  */
 template <std::size_t dimension>
-int Fixed_point_iterator<dimension>::find_fixed_point(const std::vector<double> & start)
+int Fixed_point_iterator<dimension>::find_fixed_point(const double start[dimension])
 {
    assert(function && "Fixed_point_iterator<dimension>::find_fixed_point: function pointer"
           " must not be zero!");
-   assert(start.size() == dimension && "Fixed_point_iterator<dimension>::find_fixed_point: start vector wrong size!");
 
    int status;
    std::size_t iter = 0;
@@ -135,8 +165,10 @@ int Fixed_point_iterator<dimension>::find_fixed_point(const std::vector<double> 
    gsl_set_error_handler_off();
 #endif
 
-   xn = start;
-   fixed_point = start;
+   for (std::size_t i = 0; i < dimension; ++i) {
+      gsl_vector_set(xn, i, start[i]);
+      gsl_vector_set(fixed_point, i, start[i]);
+   }
 
 #ifdef ENABLE_VERBOSE
    print_state(iter);
@@ -175,7 +207,8 @@ int Fixed_point_iterator<dimension>::find_fixed_point(const std::vector<double> 
 template <std::size_t dimension>
 int Fixed_point_iterator<dimension>::fixed_point_iterator_iterate()
 {
-   xn = fixed_point;
+   gsl_vector_memcpy(xn, fixed_point);
+
    int status = function(xn, parameters, fixed_point);
 
    if (status != GSL_SUCCESS) {
@@ -204,7 +237,8 @@ int Fixed_point_iterator<dimension>::fixed_point_iterator_test_relative() const
    }
 
    for (std::size_t i =0; i < dimension; ++i) {
-      rel_diff = MaxRelDiff(xn[i], fixed_point[i]);
+      rel_diff = MaxRelDiff(gsl_vector_get(xn, i), 
+                            gsl_vector_get(fixed_point, i));
 
       if (rel_diff > precision) {
          return GSL_CONTINUE;
@@ -231,7 +265,8 @@ int Fixed_point_iterator<dimension>::fixed_point_iterator_test_absolute() const
    }
 
    for (std::size_t i = 0; i < dimension; ++i) {
-      residual += Sqr(fixed_point[i] - xn[i]);
+      residual += Sqr(gsl_vector_get(fixed_point, i) - 
+                      gsl_vector_get(xn, i));
    }
 
    residual = Sqrt(residual);
@@ -249,11 +284,11 @@ void Fixed_point_iterator<dimension>::print_state(std::size_t iteration) const
 {
    std::cout << "\tIteration n = " << iteration << ": x_{n} =";
    for (std::size_t i = 0; i < dimension; ++i) {
-      std::cout << " " << xn[i];
+      std::cout << " " << gsl_vector_get(xn, i);
    }
    std::cout << ", x_{n+1} =";
    for (std::size_t i = 0; i < dimension; ++i) {
-      std::cout << " " << fixed_point[i];
+      std::cout << " " << gsl_vector_get(fixed_point, i);
    }
    std::cout << "\n";
 }
@@ -263,7 +298,7 @@ double Fixed_point_iterator<dimension>::get_fixed_point(std::size_t i) const
 {
    assert(i < dimension && "Fixed_point_iterator<>::get_fixed_point: index out"
           " of bounds");
-   return fixed_point[i];
+   return gsl_vector_get(fixed_point, i);
 }
 
 } // namespace flexiblesusy

@@ -31,21 +31,4 @@ bool contains_nan(const gsl_vector* x, std::size_t length)
    return false;
 }
 
-// DH:: overloaded version for std::vector
-bool contains_nan(const std::vector<double>& x, std::size_t length)
-{
-   // DH:: range checking as for gsl_vector_get; check that
-   //      this will work (and is portable)
-   if (length > x.size())
-   {
-      GSL_ERROR_VAL("index out of range", GSL_EINVAL, 0);
-   }
-
-   for (std::size_t i = 0; i < length; ++i)
-      if (std::isnan(x[i]))
-         return true;
-
-   return false;
-}
-
 }
