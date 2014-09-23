@@ -1,6 +1,7 @@
 // ====================================================================
 // Test suite for implementation of fixed point iteration class
 // ====================================================================
+#include <vector>
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE test_fixed_point_iterator
