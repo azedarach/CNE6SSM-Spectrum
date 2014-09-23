@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <gsl/gsl_sys.h>
 #include <gsl/gsl_errno.h>
 
 #include "wrappers.hpp"
@@ -213,6 +214,13 @@ int Fixed_point_iterator<dimension>::fixed_point_iterator_iterate()
 
    if (status != GSL_SUCCESS) {
       return GSL_EBADFUNC;
+   }
+
+   // For safety, include a check for nans or infs here (which
+   // should be sufficient for now)
+   for (std::size_t i = 0; i < dimension; ++i) {
+      if (!gsl_finite(gsl_vector_get(fixed_point, i)))
+         GSL_ERROR("update point is not finite", GSL_EBADFUNC);
    }
 
    return GSL_SUCCESS;
