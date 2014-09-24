@@ -226,6 +226,14 @@ public:
    double get_alternate_ewsb_eq_hh_4() const; //< == \frac{\partial V}{\partial s_2}
    double get_alternate_ewsb_eq_hh_5() const; //< == \frac{\partial V}{\partial \phi}
 
+   /// DH:: Rearranged forms of the alternate EWSB conditions
+   ///      for use in Roman's algorithm.
+   double get_next_fpi_param_1() const;
+   double get_next_fpi_param_2() const;
+   double get_next_fpi_param_3() const;
+   double get_next_fpi_param_4() const;
+   double get_next_fpi_param_5() const;
+
    std::complex<double> CpUSdconjUSdVZVZ(unsigned gO1, unsigned gO2) const;
    std::complex<double> CpUSdconjUSdVZpVZp(unsigned gO1, unsigned gO2) const;
    double CpUSdconjUSdconjVWmVWm(unsigned gO1, unsigned gO2) const;
@@ -1325,12 +1333,6 @@ private:
    static int alternate_tadpole_equations(const gsl_vector*, void*, gsl_vector*);
    /// DH:: carries out update step in Roman's algorithm
    static int calculate_fpi_update_step(const gsl_vector*, void*, gsl_vector*);
-   /// DH:: helper functions used in Roman's FPI
-   double get_next_fpi_param_1() const;
-   double get_next_fpi_param_2() const;
-   double get_next_fpi_param_3() const;
-   double get_next_fpi_param_4() const;
-   double get_next_fpi_param_5() const;
 
    void copy_DRbar_masses_to_pole_masses();
 

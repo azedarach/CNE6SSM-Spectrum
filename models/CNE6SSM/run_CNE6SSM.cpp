@@ -84,8 +84,8 @@ int main(int argc, const char* argv[])
       slha_io.get_parameter_output_scale());
    spectrum_generator.set_pole_mass_loop_order(
       spectrum_generator_settings.get(Spectrum_generator_settings::pole_mass_loop_order));
-   spectrum_generator.set_ewsb_loop_order(
-      spectrum_generator_settings.get(Spectrum_generator_settings::ewsb_loop_order));
+   spectrum_generator.set_ewsb_loop_order(1);
+   //spectrum_generator_settings.get(Spectrum_generator_settings::ewsb_loop_order));
    spectrum_generator.set_beta_loop_order(
       spectrum_generator_settings.get(Spectrum_generator_settings::beta_loop_order));
    spectrum_generator.set_threshold_corrections(

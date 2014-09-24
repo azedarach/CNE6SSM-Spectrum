@@ -141,7 +141,7 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_hE(hEInput);
    MODEL->set_Kappa(KappaInput);
    MODEL->set_Lambda12(Lambda12Input);
-   MODEL->set_Lambdax(LambdaxInput);
+   //MODEL->set_Lambdax(LambdaxInput);
    MODEL->set_fu(fuInput);
    MODEL->set_fd(fdInput);
    MODEL->set_TYe(Azero*Ye);

@@ -51,7 +51,7 @@ public:
    typedef int (*Function_t)(const gsl_vector*, void*, gsl_vector*);
 
    Fixed_point_iterator();
-   Fixed_point_iterator(Function_t, void*, std::size_t, double, bool);
+   Fixed_point_iterator(Function_t, void*, std::size_t, double, bool = false);
    Fixed_point_iterator(const Fixed_point_iterator&);
    ~Fixed_point_iterator();
 
