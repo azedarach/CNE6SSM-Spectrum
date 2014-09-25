@@ -399,11 +399,11 @@ int CLASSNAME::calculate_fpi_update_step(const gsl_vector* x, void* params, gsl_
    std::cout << "T4 = " << model->get_alternate_ewsb_eq_hh_4() << ", ";
    std::cout << "T5 = " << model->get_alternate_ewsb_eq_hh_5() << "\n";
 
-   std::cout << "T1d = " << model->get_ewsb_eq_hh_1() << ", ";
-   std::cout << "T2d = " << model->get_ewsb_eq_hh_2() << ", ";
-   std::cout << "T3d = " << model->get_ewsb_eq_hh_3() << ", ";
-   std::cout << "T4d = " << model->get_ewsb_eq_hh_4() << ", ";
-   std::cout << "T5d = " << model->get_ewsb_eq_hh_5() << "\n";
+   std::cout << "T1d = " << model->get_ewsb_eq_hh_1() - Re(model->tadpole_hh(0)) << ", ";
+   std::cout << "T2d = " << model->get_ewsb_eq_hh_2() - Re(model->tadpole_hh(1)) << ", ";
+   std::cout << "T3d = " << model->get_ewsb_eq_hh_3() - Re(model->tadpole_hh(2)) << ", ";
+   std::cout << "T4d = " << model->get_ewsb_eq_hh_4() - Re(model->tadpole_hh(3)) << ", ";
+   std::cout << "T5d = " << model->get_ewsb_eq_hh_5() - Re(model->tadpole_hh(4)) << "\n";
 
 
    for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
@@ -665,9 +665,6 @@ void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_eq
 
    x_init[0] = AbsSqrt((ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)) 
                        / (msbar2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)));
-   //double c2thi = (msbar2 - ms2) / (0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s));
-   // x_init[0] = AbsSqrt((1 - c2thi) / (1 + c2thi));
-
 
    double cth = 1. / Sqrt(1. + Sqr(x_init[0]));
    double sth = cth*x_init[0];
@@ -682,7 +679,6 @@ void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_eq
                                       (-3.0*Sqr(vd) - 2.0*Sqr(vu) + QS*Sqr(s)*cth2
                                        - QS*Sqr(s)*sth2)) / (Sqr(s)*cth2*(Sqr(vd) - Sqr(vu))));
    
-   //double Alam = TLambdax / Lambdax;
    double lam = x_init[1];
 
    x_init[2] = (-4. / (s*sth*vu*lam*Conj(Sigmax) + s*sth*vu*Sigmax*Conj(lam)))*
@@ -692,16 +688,6 @@ void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_eq
        - 0.125*Sqr(g2)*vd*Sqr(vu) - 0.075*Sqr(g1)*vd*Sqr(vu) + 0.1125*Sqr(g1p)*
        Power(vd,3) + 0.075*Sqr(g1p)*vd*Sqr(vu) - 0.0375*Sqr(g1p)*QS*vd*Sqr(s)*c2th);
 
-   std::cout << "vphi t1 = " << mHd2*vd << "\n";
-   std::cout << "vphi t2 = " << - 0.35355339059327373*s*cth*vu*TLambdax
-      - 0.35355339059327373*s*cth*vu*Conj(TLambdax) << "\n";
-   std::cout << "vphi t3 = " << 0.5*AbsSqr(lam)*vd*(Sqr(vu) + Sqr(s*cth)) << "\n";
-   std::cout << "vphi t4 = " << + 0.125*Sqr(g2)*Power(vd,3) + 0.075*Sqr(g1)*Power(vd,3)
-      - 0.125*Sqr(g2)*vd*Sqr(vu) - 0.075*Sqr(g1)*vd*Sqr(vu) << "\n";
-   std::cout << "vphi t5 = " << 0.1125*Sqr(g1p)*
-      Power(vd,3) + 0.075*Sqr(g1p)*vd*Sqr(vu) - 0.0375*Sqr(g1p)*QS*vd*Sqr(s)*c2th << "\n";
-   std::cout << "vphi coeff = " <<  (-4. / (s*sth*vu*lam*Conj(Sigmax) + s*sth*vu*Sigmax*Conj(lam))) << "\n";
-   
    double phi = x_init[2];
 
    x_init[3] = ( 2. / (s*cth*Sigmax + s*cth*Conj(Sigmax)))*
@@ -765,14 +751,68 @@ int CLASSNAME::solve_alternate_ewsb_fpi(const double x_init[number_of_ewsb_equat
 {
    Ewsb_parameters params = {this, ewsb_loop_order};
 
+   const int number_of_fpi_iterations = number_of_ewsb_iterations;
+   const double fpi_iteration_precision = ewsb_iteration_precision * 1.0e-03;
+
+   // DH:: currently using fractional accuracy for convergence, which
+   //      is more stringent and may not always be appropriate
+   const bool use_absolute_test = true;
+
    Fixed_point_iterator<number_of_ewsb_equations> fp_iter(CLASSNAME::calculate_fpi_update_step,
                                                           &params, 
-                                                          number_of_ewsb_iterations, 
-                                                          ewsb_iteration_precision);
+                                                          number_of_fpi_iterations, 
+                                                          fpi_iteration_precision,
+                                                          use_absolute_test);
 
-   const int status = fp_iter.find_fixed_point(x_init);
+   fp_iter.find_fixed_point(x_init);
 
-   return status;
+   // DH:: it is possible for the fixed point iteration to not have converged, 
+   //      but still have an acceptable solution for the EWSB outputs (or, 
+   //      conversely, for the iteration to converge but not have a solution). 
+   //      Check that the tadpole equations are zero to within tolerance, and if
+   //      they are return success.
+   const int real_status = check_fpi_ewsb_solution(ewsb_iteration_precision);
+
+   return real_status;
+}
+
+int CLASSNAME::check_fpi_ewsb_solution(double precision)
+{
+   double tadpole[number_of_ewsb_equations];
+
+   tadpole[0] = get_ewsb_eq_hh_1();
+   tadpole[1] = get_ewsb_eq_hh_2();
+   tadpole[2] = get_ewsb_eq_hh_3();
+   tadpole[3] = get_ewsb_eq_hh_4();
+   tadpole[4] = get_ewsb_eq_hh_5();
+
+   if (ewsb_loop_order > 0) {
+      // DH:: these should already have been calculated, and
+      //      could be removed for speed.
+      calculate_DRbar_parameters();
+
+      tadpole[0] -= Re(tadpole_hh(0));
+      tadpole[1] -= Re(tadpole_hh(1));
+      tadpole[2] -= Re(tadpole_hh(2));
+      tadpole[3] -= Re(tadpole_hh(3));
+      tadpole[4] -= Re(tadpole_hh(4));
+
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+   std::cout << "T1r = " << tadpole[0] << ", ";
+   std::cout << "T2r = " << tadpole[1] << ", ";
+   std::cout << "T3r = " << tadpole[2] << ", ";
+   std::cout << "T4r = " << tadpole[3] << ", ";
+   std::cout << "T5r = " << tadpole[4] << "\n";
+   double residual = Abs(tadpole[0]);
+
+   for (std::size_t i = 1; i < number_of_ewsb_equations; ++i) {
+      residual += Abs(tadpole[i]);
+   } 
+   std::cout << "residual = " << residual << "\n";
+   return (residual < precision ? GSL_SUCCESS : GSL_CONTINUE);
 }
 
 void CLASSNAME::print(std::ostream& ostr) const
@@ -1759,7 +1799,7 @@ void CLASSNAME::calculate_Mhh()
       problems.flag_tachyon(hh);
    else
       problems.unflag_tachyon(hh);
-
+   
    Mhh = AbsSqrt(Mhh);
 }
 

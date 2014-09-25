@@ -67,8 +67,8 @@ private:
    std::size_t max_iterations;       ///< maximum number of iterations
    double precision;                 ///< precision goal
    bool test_on_absolute;            ///< use absolute convergence criterion
-   gsl_vector* xn;           ///< current iteration point
-   gsl_vector* fixed_point;  ///< vector of fixed point estimate
+   gsl_vector* xn;                   ///< current iteration point
+   gsl_vector* fixed_point;          ///< vector of fixed point estimate
    void* parameters;                 ///< pointer to parameters
    Function_t function;              ///< function defining fixed point
 

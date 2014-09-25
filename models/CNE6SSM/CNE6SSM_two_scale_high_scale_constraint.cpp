@@ -178,7 +178,19 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_MassWB(m12);
    MODEL->set_MassG(m12);
    MODEL->set_MassBp(m12);
-
+   std::cout << "Q = " << model->get_scale() << ", ";
+   std::cout << "g1 = " << model->get_g1() << ", ";
+   std::cout << "g1p = " << model->get_g1p() << ", ";
+   std::cout << "g2 = " << model->get_g2() << ", ";
+   std::cout << "g3 = " << model->get_g3() << ", ";
+   std::cout << "yt = " << model->get_Yu(2,2) << ", ";
+   std::cout << "yb = " << model->get_Yd(2,2) << ", ";
+   std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
+   std::cout << "vd = " << model->get_vd() << ", ";
+   std::cout << "vu = " << model->get_vu() << ", ";
+   std::cout << "vs = " << model->get_vs() << ", ";
+   std::cout << "vsb = " << model->get_vsb() << ", ";
+   std::cout << "vphi = " << model->get_vphi() << "\n";
 }
 
 double CNE6SSM_high_scale_constraint<Two_scale>::get_scale() const

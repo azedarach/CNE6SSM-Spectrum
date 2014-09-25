@@ -1333,6 +1333,8 @@ private:
    static int alternate_tadpole_equations(const gsl_vector*, void*, gsl_vector*);
    /// DH:: carries out update step in Roman's algorithm
    static int calculate_fpi_update_step(const gsl_vector*, void*, gsl_vector*);
+   /// DH:: verifies that the EWSB conditions have been solved by the FPI
+   int check_fpi_ewsb_solution(double);
 
    void copy_DRbar_masses_to_pole_masses();
 
