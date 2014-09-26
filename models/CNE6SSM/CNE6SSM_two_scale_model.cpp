@@ -236,7 +236,9 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    const double vsb_old = s*Sqrt(1.0 - Sqr(vs_old) / Sqr(s)); 
 
    model->set_vs(gsl_vector_get(x, 0));
-// DH:: a test...
+   // DH:: this updates vsb to correspond to the current
+   // estimate for TanTheta, remove it to leave TanTheta
+   // free.
    model->set_vsb(vsb_old);
    model->set_Lambdax(gsl_vector_get(x, 1));
    model->set_vphi(gsl_vector_get(x, 2));
@@ -631,7 +633,6 @@ void CLASSNAME::alternate_ewsb_initial_guess(double x_init[number_of_ewsb_equati
 
 }
 
-// DH:: consider refactoring this into multiple functions
 void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_equations])
 {
 // DH:: note
