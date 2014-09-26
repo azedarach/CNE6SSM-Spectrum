@@ -20,7 +20,7 @@
  * @brief contains methods to solve EWSB and calculate pole masses and 
  *        mixings from DRbar parameters.
  */
-// File generated at Mon 15 Sep 2014 17:34:28
+// File generated at Fri 26 Sep 2014 11:58:49
 
 #include "CNE6SSM_two_scale_model.hpp"
 #include "wrappers.hpp"
@@ -64,8 +64,6 @@ std::mutex CLASSNAME::mtx_fortran;
 #define UNLOCK_MUTEX()
 #endif
 
-// DH:: note temporary default initialisation of sgn(lambda),
-//      should be read from SLHA file
 CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters& input_)
    : Two_scale_model()
    , CNE6SSM_soft_parameters(input_)
@@ -75,7 +73,6 @@ CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters& input_)
    , pole_mass_loop_order(2)
    , calculate_sm_pole_masses(false)
    , use_alternate_ewsb(false)
-   , sgnLambdax(1)
    , precision(1.0e-3)
    , ewsb_iteration_precision(1.0e-5)
    , physical()
@@ -141,16 +138,6 @@ void CLASSNAME::do_use_alternate_ewsb(bool flag)
 bool CLASSNAME::do_use_alternate_ewsb() const
 {
    return use_alternate_ewsb;
-}
-
-void CLASSNAME::set_sign_Lambdax(int sgn_lam)
-{
-   sgnLambdax = Sign(sgn_lam);
-}
-
-int CLASSNAME::get_sign_Lambdax()
-{
-   return sgnLambdax;
 }
 
 void CLASSNAME::set_ewsb_loop_order(unsigned loop_order)
@@ -245,7 +232,7 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    double tadpole[number_of_ewsb_equations];
 
    model->set_vs(gsl_vector_get(x, 0));
-   model->set_vsb(gsl_vector_get(x, 1));
+   model->set_Lambdax(gsl_vector_get(x, 1));
    model->set_vphi(gsl_vector_get(x, 2));
    model->set_XiF(gsl_vector_get(x, 3));
    model->set_LXiF(gsl_vector_get(x, 4));
@@ -301,9 +288,8 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
 
    double tadpole[number_of_ewsb_equations];
 
-   // DH:: note s is taken from input, which may be inconsistent with
-   //      scale choice (depending on how ssumInput is defined), may change
-   //      later
+   // DH:: note s is taken from input, so that the singlet VEVs
+   // are set at the SUSY scale 
    model->set_vs(model->get_input().ssumInput*Cos(ArcTan(gsl_vector_get(x, 0))));
    model->set_vsb(model->get_input().ssumInput*Sin(ArcTan(gsl_vector_get(x, 0))));
    model->set_Lambdax(gsl_vector_get(x,1));
@@ -317,7 +303,6 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
    tadpole[3] = model->get_alternate_ewsb_eq_hh_4();
    tadpole[4] = model->get_alternate_ewsb_eq_hh_5();
 
-   // DH:: note sign difference relative to my notes - CHECK IT
    if (ewsb_loop_order > 0) {
       model->calculate_DRbar_parameters();
       tadpole[0] -= Re(model->tadpole_hh(0));
@@ -338,7 +323,7 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
 }
 
 /**
- * Method which the EWSB output parameters at the next step
+ * Method which calculates the EWSB output parameters at the next step
  * in Roman's FPI algorithm.
  *
  * @param x GSL vector of initial EWSB output parameters
@@ -347,7 +332,6 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
  *
  * @return GSL_EDOM if x contains Nans, GSL_SUCCESS otherwise.
  */
-// DH:: probably better to not use gsl_vectors here. Use std::vector instead?
 int CLASSNAME::calculate_fpi_update_step(const gsl_vector* x, void* params, gsl_vector* f)
 {
    if (contains_nan(x, number_of_ewsb_equations)) {
@@ -425,7 +409,6 @@ int CLASSNAME::solve_ewsb_iteratively()
    };
 
    double x_init[number_of_ewsb_equations];
-   // DH:: note alternative initial guess used here
    if (use_alternate_ewsb) {
       alternate_ewsb_fpi_initial_guess(x_init);
    } else {
@@ -445,7 +428,7 @@ int CLASSNAME::solve_ewsb_iteratively()
       status = solve_alternate_ewsb_fpi(x_init);
       if (status == GSL_SUCCESS) {
          VERBOSE_MSG("\tFixed point iteration finished successfully!");
-      } 
+      }
 #ifdef ENABLE_VERBOSE
       else {
          WARNING("\tFixed point iteration could not find a solution!"
@@ -482,7 +465,6 @@ int CLASSNAME::solve_ewsb_iteratively()
    return status;
 }
 
-
 int CLASSNAME::solve_ewsb_iteratively(unsigned loop_order)
 {
    // temporarily set `ewsb_loop_order' to `loop_order' and do
@@ -491,14 +473,6 @@ int CLASSNAME::solve_ewsb_iteratively(unsigned loop_order)
    ewsb_loop_order = loop_order;
    const int status = solve_ewsb_iteratively();
    ewsb_loop_order = old_loop_order;
-// DH:: note
-   std::cout << "Q = " << get_scale() << ", ";
-   std::cout << "vs = " << vs << ", ";
-   std::cout << "vsb = " << vsb << ", ";
-   std::cout << "vphi = " << vphi << ", ";
-   std::cout << "Lambdax = " << Lambdax << ", ";
-   std::cout << "XiF = " << XiF << ", ";
-   std::cout << "LXiF = " << LXiF << "\n";
    return status;
 }
 
@@ -631,7 +605,7 @@ int CLASSNAME::solve_ewsb()
 void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 {
    x_init[0] = vs;
-   x_init[1] = vsb;
+   x_init[1] = Lambdax;
    x_init[2] = vphi;
    x_init[3] = XiF;
    x_init[4] = LXiF;
@@ -662,6 +636,7 @@ void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_eq
 
    const auto QS = LOCALINPUT(QS);
    const auto s = LOCALINPUT(ssumInput);
+   const auto signLambdax = LOCALINPUT(SignLambdax);
 
    x_init[0] = AbsSqrt((ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)) 
                        / (msbar2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)));
@@ -672,12 +647,12 @@ void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_eq
    double sth2 = Sqr(sth);
    double c2th = cth2 - sth2;
 
-   x_init[1] = sgnLambdax*AbsSqrt(2.0*(mHu2*Sqr(vu) - mHd2*Sqr(vd) + 0.125*Sqr(g2)*Power(vu,4)
-                                      + 0.075*Sqr(g1)*Power(vu,4) - 0.125*Sqr(g2)*Power(vd,4)
-                                      - 0.075*Sqr(g1)*Power(vd,4) + 0.0125*Sqr(g1p)*
-                                      (3.0*Sqr(vd) - 2.0*Sqr(vu))*
-                                      (-3.0*Sqr(vd) - 2.0*Sqr(vu) + QS*Sqr(s)*cth2
-                                       - QS*Sqr(s)*sth2)) / (Sqr(s)*cth2*(Sqr(vd) - Sqr(vu))));
+   x_init[1] = signLambdax*AbsSqrt(2.0*(mHu2*Sqr(vu) - mHd2*Sqr(vd) + 0.125*Sqr(g2)*Power(vu,4)
+                                        + 0.075*Sqr(g1)*Power(vu,4) - 0.125*Sqr(g2)*Power(vd,4)
+                                        - 0.075*Sqr(g1)*Power(vd,4) + 0.0125*Sqr(g1p)*
+                                        (3.0*Sqr(vd) - 2.0*Sqr(vu))*
+                                        (-3.0*Sqr(vd) - 2.0*Sqr(vu) + QS*Sqr(s)*cth2
+                                         - QS*Sqr(s)*sth2)) / (Sqr(s)*cth2*(Sqr(vd) - Sqr(vu))));
    
    double lam = x_init[1];
 
@@ -1799,7 +1774,7 @@ void CLASSNAME::calculate_Mhh()
       problems.flag_tachyon(hh);
    else
       problems.unflag_tachyon(hh);
-   
+
    Mhh = AbsSqrt(Mhh);
 }
 
@@ -2621,22 +2596,13 @@ double CLASSNAME::get_next_fpi_param_1() const
    const auto QS = LOCALINPUT(QS);
    const auto s = LOCALINPUT(ssumInput);
 
-   const double tth = vsb / vs;
-   const double cth = 1. / Sqrt(1. + Sqr(tth));
-   const double sth = cth * tth;
-   const double c2th = Sqr(cth) - Sqr(sth);
-
    double delta = 0.5*AbsSqr(Lambdax)*Sqr(vs)*(Sqr(vd) + Sqr(vu))
       + 0.5*AbsSqr(Sigmax)*Sqr(vs)*Sqr(vphi) - 0.5*AbsSqr(Sigmax)*Sqr(vsb)*Sqr(vphi)
       - 0.35355339059327373*vd*vu*vs*TLambdax - 0.35355339059327373*vd*vu*vs*Conj(TLambdax) 
       - 0.25*vphi*vsb*vd*vu*Lambdax*Conj(Sigmax) - 0.25*vphi*vsb*vd*vu*Sigmax*Conj(Lambdax)
       - 0.0375*QS*Sqr(g1p)*Sqr(s)*Sqr(vd) - 0.025*QS*Sqr(g1p)*Sqr(s)*Sqr(vu);
-   std::cout << "delta = " << delta << "\n";
-   std::cout << "delta / s^2 cth2 = " << delta/(Sqr(s)*Sqr(cth)) << "\n";
-   // DH:: depending on convergence properties, include
-   //      loop corrections within delta, or separate contribution?
-   //      Also double check signs for tadpole contributions. 
-   if (ewsb_loop_order > 0) {std::cout <<"Adding tadpoles\n";
+
+   if (ewsb_loop_order > 0) {
       // DH:: should have error checking here
       delta -= (vs*Re(tadpole_hh(2)) - vsb*Re(tadpole_hh(3)));
       if (ewsb_loop_order > 1) {
@@ -2644,11 +2610,7 @@ double CLASSNAME::get_next_fpi_param_1() const
       }
    }
 
-   // double result = (msbar2 - ms2 - delta / (s*s)) / (0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s));
-
-   // result = AbsSqrt((1-result)/(1+result));
-
-  double result = (ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s) + delta/(Sqr(s)*Sqr(cth)))
+  double result = (ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s) + delta/(Sqr(vs)))
        / (msbar2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s));
   
    return AbsSqrt(result);
@@ -2657,7 +2619,7 @@ double CLASSNAME::get_next_fpi_param_1() const
 double CLASSNAME::get_next_fpi_param_2() const
 {
    const auto QS = LOCALINPUT(QS);
-   const auto s = LOCALINPUT(ssumInput);
+   const auto signLambdax = LOCALINPUT(SignLambdax);
 
    double result = mHd2*Sqr(vd) - mHu2*Sqr(vu) + 0.125*Sqr(g2)*Power(vd,4)
       + 0.075*Sqr(g1)*Power(vd,4) - 0.125*Sqr(g2)*Power(vu,4) - 0.075*Sqr(g1)*
@@ -2677,13 +2639,12 @@ double CLASSNAME::get_next_fpi_param_2() const
 
    // DH:: should also check that Lambdax^2 > 0 here
 
-   return sgnLambdax * AbsSqrt(result);
+   return signLambdax * AbsSqrt(result);
 }
 
 double CLASSNAME::get_next_fpi_param_3() const
 {
    const auto QS = LOCALINPUT(QS);
-   const auto s = LOCALINPUT(ssumInput);
 
    double result = mHd2*vd - 0.35355339059327373*vs*vu*TLambdax
       - 0.35355339059327373*vs*vu*Conj(TLambdax) + 0.5*AbsSqr(Lambdax)*vd*

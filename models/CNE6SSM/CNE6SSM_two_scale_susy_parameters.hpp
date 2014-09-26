@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:22:16
+// File generated at Fri 26 Sep 2014 11:46:47
 
 #ifndef CNE6SSM_TWO_SCALE_susy_parameters_H
 #define CNE6SSM_TWO_SCALE_susy_parameters_H

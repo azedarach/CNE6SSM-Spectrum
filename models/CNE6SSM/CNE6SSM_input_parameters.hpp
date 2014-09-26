@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:29:07
+// File generated at Fri 26 Sep 2014 11:53:31
 
 #ifndef CNE6SSM_INPUT_PARAMETERS_H
 #define CNE6SSM_INPUT_PARAMETERS_H
@@ -30,6 +30,7 @@ struct CNE6SSM_input_parameters {
    double m0;
    double m12;
    double TanBeta;
+   int SignLambdax;
    double Azero;
    double ssumInput;
    double QS;
@@ -40,7 +41,6 @@ struct CNE6SSM_input_parameters {
    Eigen::Matrix<double,3,3> gDInput;
    Eigen::Matrix<double,3,3> KappaInput;
    Eigen::Matrix<double,2,2> Lambda12Input;
-   double LambdaxInput;
    Eigen::Matrix<double,3,2> fuInput;
    Eigen::Matrix<double,3,2> fdInput;
    double MuPrInput;
@@ -49,13 +49,13 @@ struct CNE6SSM_input_parameters {
    double BMuPhiInput;
 
    CNE6SSM_input_parameters()
-      : m0(0), m12(0), TanBeta(0), Azero(0), ssumInput(0), QS(0), hEInput(
-   Eigen::Matrix<double,3,2>::Zero()), SigmaLInput(0), KappaPrInput(0),
+      : m0(0), m12(0), TanBeta(0), SignLambdax(0), Azero(0), ssumInput(0), QS(0),
+   hEInput(Eigen::Matrix<double,3,2>::Zero()), SigmaLInput(0), KappaPrInput(0),
    SigmaxInput(0), gDInput(Eigen::Matrix<double,3,3>::Zero()), KappaInput(
    Eigen::Matrix<double,3,3>::Zero()), Lambda12Input(Eigen::Matrix<double,2,2>
-   ::Zero()), LambdaxInput(0), fuInput(Eigen::Matrix<double,3,2>::Zero()),
-   fdInput(Eigen::Matrix<double,3,2>::Zero()), MuPrInput(0), MuPhiInput(0),
-   BMuPrInput(0), BMuPhiInput(0)
+   ::Zero()), fuInput(Eigen::Matrix<double,3,2>::Zero()), fdInput(Eigen::Matrix
+   <double,3,2>::Zero()), MuPrInput(0), MuPhiInput(0), BMuPrInput(0),
+   BMuPhiInput(0)
 
    {}
 };

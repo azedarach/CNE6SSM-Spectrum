@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:22:26
+// File generated at Fri 26 Sep 2014 11:46:56
 
 #include "CNE6SSM_two_scale_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -45,7 +45,7 @@ double CNE6SSM_susy_parameters::calc_beta_vs_one_loop(const Susy_traces& susy_tr
       traceLambda12AdjLambda12*vs - 2*vs*AbsSqr(Lambdax) - vs*AbsSqr(Sigmax) +
       0.05*vs*Sqr(g1p)*Sqr(QS));
 
-   std::cout << "Q = " << get_scale() << ", 1-lp beta vs = " << beta_vs << "\n";
+
    return beta_vs;
 }
 
@@ -95,7 +95,7 @@ double CNE6SSM_susy_parameters::calc_beta_vs_two_loop(const Susy_traces& susy_tr
       Sqr(g1p)*Sqr(QS)) - 1600*Sqr(Conj(Lambdax))*Sqr(Lambdax) - 800*Sqr(Conj(
       Sigmax))*Sqr(Sigmax));
 
-   std::cout << "Q = " << get_scale() << ", 2-lp beta vs = " << beta_vs << "\n";
+
    return beta_vs;
 }
 

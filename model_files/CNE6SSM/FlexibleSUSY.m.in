@@ -1,11 +1,12 @@
 FSModelName = "@CLASSNAME@";
 FSEigenstates = SARAH`EWSB;
 
-(* cNE6SSM using default FS EWSB solver algorithm *)
+(* cNE6SSM using alternate FPI algorithm *)
 
 MINPAR = { {1, m0},
            {2, m12},
            {3, TanBeta},
+           {4, Sign[\[Lambda]]},
 	   {5, Azero}
 };
 
@@ -15,7 +16,9 @@ EXTPAR = { {65, ssumInput},
            {72, QS}
 };
 
-EWSBOutputParameters = {vs, vsb, vphi, \[Xi]F, L[\[Xi]F]};
+(* Note that this generates a warning of vsb not being fixed *)
+(* by any constraints, but should not be a problem.          *)
+EWSBOutputParameters = {vs, \[Lambda], vphi, \[Xi]F, L[\[Xi]F]};
 
 SUSYScale = Sqrt[M[Su[1]]*M[Su[6]]];
 
@@ -40,14 +43,12 @@ HighScaleInput = {
    {hE, LHInput[hE]},
    {\[Kappa], LHInput[\[Kappa]]},
    {\[Lambda]12, LHInput[\[Lambda]12]},
-   {\[Lambda], LHInput[\[Lambda]]},
    {fu, LHInput[fu]},
    {fd, LHInput[fd]},
    {T[Ye], Azero*Ye},
    {T[Yd], Azero*Yd},
    {T[Yu], Azero*Yu},
    {T[\[Kappa]Pr], Azero*\[Kappa]Pr},
-   (* 2 options: either sigma is determined by EWSB or is input *)
    {T[\[Sigma]], Azero*\[Sigma]},
    {T[hE], Azero*hE},
    {T[\[Sigma]L], Azero*\[Sigma]L},
@@ -99,7 +100,8 @@ InitialGuessAtLowScale = {
   {Yu, Automatic},
   {Yd, Automatic},
   {Ye, Automatic},
-  {\[Xi]F, 0.1},
+  {\[Xi]F, SM[MZ]^3},
+  {L[\[Xi]F], SM[MZ]^3},
   {vs, ssumInput / Sqrt[2]},
   {vsb, ssumInput / Sqrt[2]},
   {vphi, ssumInput}

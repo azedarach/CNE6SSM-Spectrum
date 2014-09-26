@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:22:19
+// File generated at Fri 26 Sep 2014 11:46:49
 
 #include "CNE6SSM_two_scale_susy_parameters.hpp"
 #include "wrappers.hpp"

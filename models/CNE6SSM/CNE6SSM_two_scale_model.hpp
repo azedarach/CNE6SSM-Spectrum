@@ -21,7 +21,7 @@
  *        value problem using the two_scale solver by solvingt EWSB 
  *        and determine the pole masses and mixings
  */
-// File generated at Mon 15 Sep 2014 17:34:28
+// File generated at Fri 26 Sep 2014 11:58:49
 
 #ifndef CNE6SSM_TWO_SCALE_H
 #define CNE6SSM_TWO_SCALE_H
@@ -64,12 +64,8 @@ public:
    void clear_DRbar_parameters();
    void do_calculate_sm_pole_masses(bool);
    bool do_calculate_sm_pole_masses() const;
-   /// DH:: method to set whether to use alternate EWSB conditions
    void do_use_alternate_ewsb(bool);
    bool do_use_alternate_ewsb() const;
-   /// DH:: temporary methods for getting and setting sign of Lambdax
-   void set_sign_Lambdax(int);
-   int get_sign_Lambdax();
    void reorder_DRbar_masses();
    void reorder_pole_masses();
    void set_ewsb_iteration_precision(double);
@@ -84,9 +80,6 @@ public:
    CNE6SSM_physical& get_physical();
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems();
-   /// DH:: A convenience method to get access to the soft masses that solve
-   ///      the EWSB conditions at tree level, without actually
-   ///      modifying the model.
    const Eigen::Array<double,5,1> get_ewsb_tree_level_soft_masses();
    int solve_ewsb_tree_level();
    int solve_ewsb_one_loop();
@@ -218,16 +211,12 @@ public:
    double get_ewsb_eq_hh_4() const;
    double get_ewsb_eq_hh_5() const;
 
-   /// DH:: Added alternate form of EWSB conditions for implementing
-   ///      Roman's algorithm.
-   double get_alternate_ewsb_eq_hh_1() const; //< == \frac{\partial V}{\partial v_1}
-   double get_alternate_ewsb_eq_hh_2() const; //< == v_1\frac{\partial V}{\partial v_1}-v_2\frac{\partial V}{\partial v_2}
-   double get_alternate_ewsb_eq_hh_3() const; //< == s_1\frac{\partial V}{\partial s_1}-s_2\frac{\partial V}{\partial s_2}
-   double get_alternate_ewsb_eq_hh_4() const; //< == \frac{\partial V}{\partial s_2}
-   double get_alternate_ewsb_eq_hh_5() const; //< == \frac{\partial V}{\partial \phi}
+   double get_alternate_ewsb_eq_hh_1() const;
+   double get_alternate_ewsb_eq_hh_2() const;
+   double get_alternate_ewsb_eq_hh_3() const;
+   double get_alternate_ewsb_eq_hh_4() const;
+   double get_alternate_ewsb_eq_hh_5() const;
 
-   /// DH:: Rearranged forms of the alternate EWSB conditions
-   ///      for use in Roman's algorithm.
    double get_next_fpi_param_1() const;
    double get_next_fpi_param_2() const;
    double get_next_fpi_param_3() const;
@@ -1301,10 +1290,7 @@ private:
    unsigned ewsb_loop_order;
    unsigned pole_mass_loop_order;
    bool calculate_sm_pole_masses; ///< switch to calculate the pole masses of the Standard Model particles
-   /// DH:: flag to use alternate iteration (not very flexible, but will do for now)
    bool use_alternate_ewsb;
-   /// DH:: N.B. temporary parameter: sign of Lambdax (avoids having to change EWSB interface)
-   int sgnLambdax;
    double precision;              ///< RG running precision
    double ewsb_iteration_precision;
    static const std::size_t number_of_ewsb_equations = 5;
@@ -1318,23 +1304,19 @@ private:
    int solve_ewsb_iteratively();
    int solve_ewsb_iteratively(unsigned);
    int solve_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
-   /// DH:: solves alternate EWSB conditions (TODO)
-   int solve_alternate_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
-   int solve_alternate_ewsb_fpi(const double[number_of_ewsb_equations]);
-   int solve_ewsb_tree_level_via_soft_higgs_masses();
    void ewsb_initial_guess(double[number_of_ewsb_equations]);
-   /// DH:: initial guess for alternate EWSB conditions (TODO)
-   void alternate_ewsb_initial_guess(double[number_of_ewsb_equations]);
-   /// DH:: initial guess for Roman's FPI method
-   void alternate_ewsb_fpi_initial_guess(double[number_of_ewsb_equations]);
    static int tadpole_equations(const gsl_vector*, void*, gsl_vector*);
-   /// DH:: tadpole equations using the alternative EWSB conditions
-   ///      used in Roman's algorithm (TODO)
+
+   int solve_alternate_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
+   void alternate_ewsb_initial_guess(double[number_of_ewsb_equations]);
    static int alternate_tadpole_equations(const gsl_vector*, void*, gsl_vector*);
-   /// DH:: carries out update step in Roman's algorithm
-   static int calculate_fpi_update_step(const gsl_vector*, void*, gsl_vector*);
-   /// DH:: verifies that the EWSB conditions have been solved by the FPI
+
+   int solve_alternate_ewsb_fpi(const double[number_of_ewsb_equations]);
    int check_fpi_ewsb_solution(double);
+   void alternate_ewsb_fpi_initial_guess(double[number_of_ewsb_equations]);
+   static int calculate_fpi_update_step(const gsl_vector*, void*, gsl_vector*);
+
+   int solve_ewsb_tree_level_via_soft_higgs_masses();
 
    void copy_DRbar_masses_to_pole_masses();
 

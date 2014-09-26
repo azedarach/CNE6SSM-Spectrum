@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:29:11
+// File generated at Fri 26 Sep 2014 11:53:35
 
 #include "CNE6SSM_two_scale_initial_guesser.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -95,7 +95,8 @@ void CNE6SSM_initial_guesser<Two_scale>::guess()
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
-   MODEL->set_XiF(0.1);
+   MODEL->set_XiF(Power(SM(MZ),3));
+   MODEL->set_LXiF(Power(SM(MZ),3));
    MODEL->set_vs(0.7071067811865475*ssumInput);
    MODEL->set_vsb(0.7071067811865475*ssumInput);
    MODEL->set_vphi(ssumInput);
@@ -137,10 +138,8 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
-
-   // DH:: if necessary this can be modified to have a better
-   //      initial guess for Roman's algorithm
-   MODEL->set_XiF(0.1);
+   MODEL->set_XiF(Power(SM(MZ),3));
+   MODEL->set_LXiF(Power(SM(MZ),3));
    MODEL->set_vs(0.7071067811865475*ssumInput);
    MODEL->set_vsb(0.7071067811865475*ssumInput);
    MODEL->set_vphi(ssumInput);

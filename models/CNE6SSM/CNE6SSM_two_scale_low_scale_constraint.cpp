@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:29:11
+// File generated at Fri 26 Sep 2014 11:53:35
 
 #include "CNE6SSM_two_scale_low_scale_constraint.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -78,6 +78,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
 {
    assert(model && "Error: CNE6SSM_low_scale_constraint:"
           " model pointer must not be zero");
+// DH:: note
    std::cout << "Q = " << model->get_scale() << ", ";
    std::cout << "g1 = " << model->get_g1() << ", ";
    std::cout << "g1p = " << model->get_g1p() << ", ";
@@ -111,6 +112,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    model->set_g1(new_g1);
    model->set_g2(new_g2);
    model->set_g3(new_g3);
+// DH:: note
    std::cout << "Q = " << model->get_scale() << ", ";
    std::cout << "g1 = " << model->get_g1() << ", ";
    std::cout << "g1p = " << model->get_g1p() << ", ";
@@ -120,7 +122,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    std::cout << "yb = " << model->get_Yd(2,2) << ", ";
    std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
    std::cout << "vd = " << model->get_vd() << ", ";
-   std::cout << "vu = " << model->get_vu() << ", ";
+   std::cout << "vu = " << model->get_vu() << "\n";
    std::cout << "vs = " << model->get_vs() << ", ";
    std::cout << "vsb = " << model->get_vsb() << ", ";
    std::cout << "vphi = " << model->get_vphi() << "\n";

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:29:09
+// File generated at Fri 26 Sep 2014 11:53:33
 
 #include "CNE6SSM_slha_io.hpp"
 #include "CNE6SSM_input_parameters.hpp"
@@ -73,6 +73,7 @@ void CNE6SSM_slha_io::set_minpar(const CNE6SSM_input_parameters& input)
    minpar << FORMAT_ELEMENT(1, input.m0, "m0");
    minpar << FORMAT_ELEMENT(2, input.m12, "m12");
    minpar << FORMAT_ELEMENT(3, input.TanBeta, "TanBeta");
+   minpar << FORMAT_ELEMENT(4, input.SignLambdax, "SignLambdax");
    minpar << FORMAT_ELEMENT(5, input.Azero, "Azero");
    slha_io.set_block(minpar);
 
@@ -143,7 +144,6 @@ void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters& input) const
    slha_io.read_block("ESIXFDYUKIN", input.fdInput);
    input.BMuPhiInput = slha_io.read_entry("ESIXRUNIN", 30);
    slha_io.read_block("ESIXKAPPAIN", input.KappaInput);
-   input.LambdaxInput = slha_io.read_entry("ESIXRUNIN", 1);
    slha_io.read_block("ESIXLAMBDAIN", input.Lambda12Input);
    input.MuPrInput = slha_io.read_entry("ESIXRUNIN", 0);
    input.BMuPrInput = slha_io.read_entry("ESIXRUNIN", 101);
@@ -165,6 +165,7 @@ void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters& input,
    case 1: input.m0 = value; break;
    case 2: input.m12 = value; break;
    case 3: input.TanBeta = value; break;
+   case 4: input.SignLambdax = value; break;
    case 5: input.Azero = value; break;
    default: WARNING("Unrecognized key: " << key); break;
    }

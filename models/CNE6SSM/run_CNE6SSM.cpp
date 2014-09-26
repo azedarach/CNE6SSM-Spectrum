@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:34:28
+// File generated at Fri 26 Sep 2014 11:58:49
 
 #include "CNE6SSM_input_parameters.hpp"
 #include "CNE6SSM_slha_io.hpp"
@@ -76,8 +76,8 @@ int main(int argc, const char* argv[])
       spectrum_generator_settings.get(Spectrum_generator_settings::max_iterations));
    spectrum_generator.set_calculate_sm_masses(
       spectrum_generator_settings.get(Spectrum_generator_settings::calculate_sm_masses) >= 1.0);
-   // DH:: note fixed to true for testing
-   spectrum_generator.set_alternate_ewsb(true);
+   spectrum_generator.set_alternate_ewsb(
+      spectrum_generator_settings.get(Spectrum_generator_settings::alternate_ewsb) >= 1.0);
    spectrum_generator.set_input_scale(
       slha_io.get_input_scale());
    spectrum_generator.set_parameter_output_scale(

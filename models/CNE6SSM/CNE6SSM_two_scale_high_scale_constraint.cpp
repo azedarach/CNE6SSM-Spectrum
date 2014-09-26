@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:29:10
+// File generated at Fri 26 Sep 2014 11:53:34
 
 #include "CNE6SSM_two_scale_high_scale_constraint.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -108,7 +108,6 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    const auto hEInput = INPUTPARAMETER(hEInput);
    const auto KappaInput = INPUTPARAMETER(KappaInput);
    const auto Lambda12Input = INPUTPARAMETER(Lambda12Input);
-   const auto LambdaxInput = INPUTPARAMETER(LambdaxInput);
    const auto fuInput = INPUTPARAMETER(fuInput);
    const auto fdInput = INPUTPARAMETER(fdInput);
    const auto Azero = INPUTPARAMETER(Azero);
@@ -141,7 +140,6 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_hE(hEInput);
    MODEL->set_Kappa(KappaInput);
    MODEL->set_Lambda12(Lambda12Input);
-   //MODEL->set_Lambdax(LambdaxInput);
    MODEL->set_fu(fuInput);
    MODEL->set_fd(fdInput);
    MODEL->set_TYe(Azero*Ye);
@@ -178,6 +176,7 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_MassWB(m12);
    MODEL->set_MassG(m12);
    MODEL->set_MassBp(m12);
+// DH:: note
    std::cout << "Q = " << model->get_scale() << ", ";
    std::cout << "g1 = " << model->get_g1() << ", ";
    std::cout << "g1p = " << model->get_g1p() << ", ";

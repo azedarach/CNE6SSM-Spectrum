@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:34:28
+// File generated at Fri 26 Sep 2014 11:58:49
 
 #ifndef CNE6SSM_SPECTRUM_GENERATOR_H
 #define CNE6SSM_SPECTRUM_GENERATOR_H
@@ -74,7 +74,6 @@ public:
    void set_beta_loop_order(unsigned l) { beta_loop_order = l; }
    void set_max_iterations(unsigned n) { max_iterations = n; }
    void set_calculate_sm_masses(bool flag) { calculate_sm_masses = flag; }
-   /// DH:: flag to use Roman's algorithm in EWSB solution instead
    void set_alternate_ewsb(bool flag) { alternate_ewsb = flag; }
    void set_threshold_corrections(unsigned t) { threshold_corrections = t; }
 
@@ -141,7 +140,6 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    model.clear();
    model.set_input_parameters(input);
    model.do_calculate_sm_pole_masses(calculate_sm_masses);
-   // DH:: note additional flag here
    model.do_use_alternate_ewsb(alternate_ewsb);
    model.set_loops(beta_loop_order);
    model.set_thresholds(threshold_corrections);

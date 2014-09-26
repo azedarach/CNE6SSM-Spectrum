@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Mon 15 Sep 2014 17:29:09
+// File generated at Fri 26 Sep 2014 11:53:33
 
 #ifndef CNE6SSM_SLHA_IO_H
 #define CNE6SSM_SLHA_IO_H
