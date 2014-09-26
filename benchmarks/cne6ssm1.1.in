@@ -34,7 +34,7 @@ Block MINPAR                 # Input parameters
     1   2.000000000e+03      # m0
     2   3.000000000e+03      # m12
     3   1.000000000e+01      # TanBeta
-    4   1.000000000e+01      # sign(Lambdax)
+    4   1.000000000e+00      # sign(Lambdax)
     5   1.000000000e+03      # Azero
 Block EXTPAR
     0   0                    # unification scale (0 = automatic)
@@ -46,7 +46,6 @@ Block HMIXIN
    33   1.000000000e-01      # sigma (singlet-S-Sbar coupling)
 Block ESIXRUNIN
     0   5.000000000e+02      # mu prime
-    1   1.000000000e-01      # lambda (S-Higgs-Higgs interaction)
    30   0.000000000e+00      # Bmu_phi (soft breaking singlet mass term)
    42   3.000000000e-01      # sigma_L (singlet-L_4-L_4bar coupling) 
   101   5.000000000e+02      # B_mu prime
@@ -56,15 +55,15 @@ Block ESIXLAMBDAIN
   2  1  0.000000000e+00      # Lambda12(2,1)			 
   2  2  5.000000000e-01      # Lambda12(2,2) 
 Block ESIXKAPPAIN
-  1  1  3.000000000e-01      # kappa(1,1)
+  1  1  5.000000000e-01      # kappa(1,1)
   1  2  0.000000000e+00      # kappa(1,2)
   1  3  0.000000000e+00      # kappa(1,3)
   2  1  0.000000000e+00      # kappa(2,1)
-  2  2  3.000000000e-01      # kappa(2,2)			
+  2  2  5.000000000e-01      # kappa(2,2)			
   2  3  0.000000000e+00      # kappa(2,3)
   3  1  0.000000000e+00      # kappa(3,1)
   3  2  0.000000000e+00      # kappa(3,2)
-  3  3  3.000000000e-01      # kappa(3,3)
+  3  3  5.000000000e-01      # kappa(3,3)
 Block ESIXHEYUKIN
   1  1  0.000000000e+00      # he(1,1) 
   1  2  0.000000000e+00      # he(1,2) 

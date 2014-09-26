@@ -231,7 +231,13 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
 
    double tadpole[number_of_ewsb_equations];
 
+   const double s = model->get_input().ssumInput;
+   const double vs_old = gsl_vector_get(x, 0);
+   const double vsb_old = s*Sqrt(1.0 - Sqr(vs_old) / Sqr(s)); 
+
    model->set_vs(gsl_vector_get(x, 0));
+// DH:: a test...
+   model->set_vsb(vsb_old);
    model->set_Lambdax(gsl_vector_get(x, 1));
    model->set_vphi(gsl_vector_get(x, 2));
    model->set_XiF(gsl_vector_get(x, 3));
@@ -604,8 +610,11 @@ int CLASSNAME::solve_ewsb()
 
 void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 {
-   x_init[0] = vs;
-   x_init[1] = Lambdax;
+   const double s = LOCALINPUT(ssumInput);
+   const double sgnLambdax = Sign(LOCALINPUT(SignLambdax));
+
+   x_init[0] = s / Sqrt(2.0);
+   x_init[1] = sgnLambdax * 0.1;
    x_init[2] = vphi;
    x_init[3] = XiF;
    x_init[4] = LXiF;
@@ -636,7 +645,7 @@ void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_eq
 
    const auto QS = LOCALINPUT(QS);
    const auto s = LOCALINPUT(ssumInput);
-   const auto signLambdax = LOCALINPUT(SignLambdax);
+   const auto sgnLambdax = Sign(LOCALINPUT(SignLambdax));
 
    x_init[0] = AbsSqrt((ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)) 
                        / (msbar2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)));
@@ -647,7 +656,7 @@ void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_eq
    double sth2 = Sqr(sth);
    double c2th = cth2 - sth2;
 
-   x_init[1] = signLambdax*AbsSqrt(2.0*(mHu2*Sqr(vu) - mHd2*Sqr(vd) + 0.125*Sqr(g2)*Power(vu,4)
+   x_init[1] = sgnLambdax*AbsSqrt(2.0*(mHu2*Sqr(vu) - mHd2*Sqr(vd) + 0.125*Sqr(g2)*Power(vu,4)
                                         + 0.075*Sqr(g1)*Power(vu,4) - 0.125*Sqr(g2)*Power(vd,4)
                                         - 0.075*Sqr(g1)*Power(vd,4) + 0.0125*Sqr(g1p)*
                                         (3.0*Sqr(vd) - 2.0*Sqr(vu))*
@@ -2619,7 +2628,7 @@ double CLASSNAME::get_next_fpi_param_1() const
 double CLASSNAME::get_next_fpi_param_2() const
 {
    const auto QS = LOCALINPUT(QS);
-   const auto signLambdax = LOCALINPUT(SignLambdax);
+   const auto sgnLambdax = Sign(LOCALINPUT(SignLambdax));
 
    double result = mHd2*Sqr(vd) - mHu2*Sqr(vu) + 0.125*Sqr(g2)*Power(vd,4)
       + 0.075*Sqr(g1)*Power(vd,4) - 0.125*Sqr(g2)*Power(vu,4) - 0.075*Sqr(g1)*
@@ -2639,7 +2648,7 @@ double CLASSNAME::get_next_fpi_param_2() const
 
    // DH:: should also check that Lambdax^2 > 0 here
 
-   return signLambdax * AbsSqrt(result);
+   return sgnLambdax * AbsSqrt(result);
 }
 
 double CLASSNAME::get_next_fpi_param_3() const
