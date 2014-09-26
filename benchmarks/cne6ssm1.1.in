@@ -34,6 +34,7 @@ Block MINPAR                 # Input parameters
     1   2.000000000e+03      # m0
     2   3.000000000e+03      # m12
     3   1.000000000e+01      # TanBeta
+    4   1.000000000e+01      # sign(Lambdax)
     5   1.000000000e+03      # Azero
 Block EXTPAR
     0   0                    # unification scale (0 = automatic)
