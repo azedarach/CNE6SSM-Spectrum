@@ -40,6 +40,7 @@ public:
       ewsb_loop_order,       ///< loop-order for solving the EWSB eqs.
       beta_loop_order,       ///< loop-order of beta-functions
       threshold_corrections, ///< disable/enable threshold corrections
+      alternate_ewsb,        ///< disable/enable alternate EWSB routines
       NUMBER_OF_OPTIONS      ///< number of possible options
    };
 
