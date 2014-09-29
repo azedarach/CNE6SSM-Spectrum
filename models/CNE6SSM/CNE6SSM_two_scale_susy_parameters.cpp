@@ -103,11 +103,12 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
    double beta_g2(calc_beta_g2_one_loop(TRACE_STRUCT));
    double beta_g3(calc_beta_g3_one_loop(TRACE_STRUCT));
    double beta_g1p(calc_beta_g1p_one_loop(TRACE_STRUCT));
-   double beta_vd(calc_beta_vd_one_loop(TRACE_STRUCT));
-   double beta_vu(calc_beta_vu_one_loop(TRACE_STRUCT));
-   double beta_vs(calc_beta_vs_one_loop(TRACE_STRUCT));
-   double beta_vsb(calc_beta_vsb_one_loop(TRACE_STRUCT));
-   double beta_vphi(calc_beta_vphi_one_loop(TRACE_STRUCT));
+   // DH:: temporary solution to prevent VEVs from running
+   double beta_vd((get_scale() < 10000. ? calc_beta_vd_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vu((get_scale() < 10000. ? calc_beta_vu_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vs((get_scale() < 10000. ? calc_beta_vs_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vsb((get_scale() < 10000. ? calc_beta_vsb_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vphi((get_scale() < 10000. ? calc_beta_vphi_one_loop(TRACE_STRUCT) : 0.));
 
    if (get_loops() > 1) {
       beta_Yd += calc_beta_Yd_two_loop(TRACE_STRUCT);
@@ -130,12 +131,14 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
       beta_g2 += calc_beta_g2_two_loop(TRACE_STRUCT);
       beta_g3 += calc_beta_g3_two_loop(TRACE_STRUCT);
       beta_g1p += calc_beta_g1p_two_loop(TRACE_STRUCT);
-      beta_vd += calc_beta_vd_two_loop(TRACE_STRUCT);
-      beta_vu += calc_beta_vu_two_loop(TRACE_STRUCT);
-      beta_vs += calc_beta_vs_two_loop(TRACE_STRUCT);
-      beta_vsb += calc_beta_vsb_two_loop(TRACE_STRUCT);
-      beta_vphi += calc_beta_vphi_two_loop(TRACE_STRUCT);
-
+      // DH:: temporary solution to prevent VEVs from running
+      if (get_scale() < 10000.) {
+         beta_vd += calc_beta_vd_two_loop(TRACE_STRUCT);
+         beta_vu += calc_beta_vu_two_loop(TRACE_STRUCT);
+         beta_vs += calc_beta_vs_two_loop(TRACE_STRUCT);
+         beta_vsb += calc_beta_vsb_two_loop(TRACE_STRUCT);
+         beta_vphi += calc_beta_vphi_two_loop(TRACE_STRUCT);
+      }
    }
 
 
