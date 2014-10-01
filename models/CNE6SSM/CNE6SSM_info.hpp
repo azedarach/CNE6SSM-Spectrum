@@ -57,10 +57,25 @@ namespace CNE6SSM_info {
       mDxbar221, mDxbar222, mHp2, mHpbar2, mphi2, MassB, MassWB, MassG, MassBp,
       NUMBER_OF_PARAMETERS};
 
+   // DH:: added enum for input parameters as well
+   enum Inputs : unsigned {m0, m12, TanBeta, SignLambdax, Azero, ssumInput, QS, 
+         hEInput00, hEInput01, hEInput10, hEInput11, hEInput20, hEInput21, 
+         SigmaLInput, KappaPrInput, SigmaxInput, gDInput00, gDInput01, 
+         gDInput02, gDInput10, gDInput11, gDInput12, gDInput20, gDInput21,
+         gDInput22, KappaInput00, KappaInput01, KappaInput02, KappaInput10,
+         KappaInput11, KappaInput12, KappaInput20, KappaInput21, KappaInput22,
+         Lambda12Input00, Lambda12Input01, Lambda12Input10, Lambda12Input11, 
+         fuInput00, fuInput01, fuInput10, fuInput11, fuInput20, fuInput21,
+         fdInput00, fdInput01, fdInput10, fdInput11, fdInput20, fdInput21,
+         MuPrInput, MuPhiInput, NUMBER_OF_INPUTS};
+
    extern const unsigned particle_multiplicities[NUMBER_OF_PARTICLES];
    extern const char* particle_names[NUMBER_OF_PARTICLES];
    extern const char* particle_latex_names[NUMBER_OF_PARTICLES];
    extern const char* parameter_names[NUMBER_OF_PARAMETERS];
+   extern const char* parameter_latex_names[NUMBER_OF_PARAMETERS];
+   extern const char* input_names[NUMBER_OF_INPUTS];
+   extern const char* input_latex_names[NUMBER_OF_INPUTS];
    extern const char* model_name;
    extern const bool is_low_energy_model;
 
