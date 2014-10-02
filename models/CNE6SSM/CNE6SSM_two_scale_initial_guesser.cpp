@@ -222,6 +222,11 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_soft_parameters()
    const double low_scale_guess = low_constraint.get_initial_scale_guess();
    const double high_scale_guess = high_constraint.get_initial_scale_guess();
 
+   // DH:: prevent VEVs from running above the initial estimate
+   // for the SUSY scale
+   const double susy_scale_guess = susy_constraint.get_initial_scale_guess();
+   model->set_vev_running_cutoff_scale(susy_scale_guess);
+
    model->run_to(high_scale_guess, running_precision);
 
    // apply high-scale constraint

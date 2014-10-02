@@ -36,9 +36,9 @@ CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(const CNE6SSM_input_parameters&
    gD(Eigen::Matrix<double,3,3>::Zero()), Kappa(Eigen::Matrix<double,3,3>
    ::Zero()), Lambda12(Eigen::Matrix<double,2,2>::Zero()), Lambdax(0), fu(
    Eigen::Matrix<double,3,2>::Zero()), fd(Eigen::Matrix<double,3,2>::Zero()),
-   Yu(Eigen::Matrix<double,3,3>::Zero()), MuPr(0), MuPhi(0), XiF(0), g1(0), g2(
-   0), g3(0), g1p(0), vd(0), vu(0), vs(0), vsb(0), vphi(0)
-
+   Yu(Eigen::Matrix<double,3,3>::Zero()), MuPr(0), MuPhi(0), XiF(0), g1(0), 
+   g2(0), g3(0), g1p(0), vd(0), vu(0), vs(0), vsb(0), vphi(0), 
+   disable_vev_running(false), vev_running_cutoff(0)
    , input(input_)
 {
    set_number_of_parameters(numberOfParameters);
@@ -55,13 +55,13 @@ CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(
    ,2>& fd_, const Eigen::Matrix<double,3,3>& Yu_, double MuPr_, double MuPhi_,
    double XiF_, double g1_, double g2_, double g3_, double g1p_, double vd_,
    double vu_, double vs_, double vsb_, double vphi_
-
 )
    : Beta_function()
    , Yd(Yd_), hE(hE_), Ye(Ye_), SigmaL(SigmaL_), KappaPr(KappaPr_), Sigmax(
    Sigmax_), gD(gD_), Kappa(Kappa_), Lambda12(Lambda12_), Lambdax(Lambdax_), fu
    (fu_), fd(fd_), Yu(Yu_), MuPr(MuPr_), MuPhi(MuPhi_), XiF(XiF_), g1(g1_), g2(
-   g2_), g3(g3_), g1p(g1p_), vd(vd_), vu(vu_), vs(vs_), vsb(vsb_), vphi(vphi_)
+   g2_), g3(g3_), g1p(g1p_), vd(vd_), vu(vu_), vs(vs_), vsb(vsb_), vphi(vphi_),
+   disable_vev_running(false), vev_running_cutoff(0)
 
    , input(input_)
 {
@@ -104,11 +104,11 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
    double beta_g3(calc_beta_g3_one_loop(TRACE_STRUCT));
    double beta_g1p(calc_beta_g1p_one_loop(TRACE_STRUCT));
    // DH:: temporary solution to prevent VEVs from running
-   double beta_vd((get_scale() < 10000. ? calc_beta_vd_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vu((get_scale() < 10000. ? calc_beta_vu_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vs((get_scale() < 10000. ? calc_beta_vs_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vsb((get_scale() < 10000. ? calc_beta_vsb_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vphi((get_scale() < 10000. ? calc_beta_vphi_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vd((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vd_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vu((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vu_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vs((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vs_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vsb((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vsb_one_loop(TRACE_STRUCT) : 0.));
+   double beta_vphi((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vphi_one_loop(TRACE_STRUCT) : 0.));
 
    if (get_loops() > 1) {
       beta_Yd += calc_beta_Yd_two_loop(TRACE_STRUCT);
@@ -131,8 +131,8 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
       beta_g2 += calc_beta_g2_two_loop(TRACE_STRUCT);
       beta_g3 += calc_beta_g3_two_loop(TRACE_STRUCT);
       beta_g1p += calc_beta_g1p_two_loop(TRACE_STRUCT);
-      // DH:: temporary solution to prevent VEVs from running
-      if (get_scale() < 10000.) {
+      // DH:: prevent VEVs from running if requested
+      if (!disable_vev_running || get_scale() < vev_running_cutoff) {
          beta_vd += calc_beta_vd_two_loop(TRACE_STRUCT);
          beta_vu += calc_beta_vu_two_loop(TRACE_STRUCT);
          beta_vs += calc_beta_vs_two_loop(TRACE_STRUCT);
@@ -640,7 +640,6 @@ double CLASSNAME::get_SphiRSphiR() const
 
    return anomDim;
 }
-
 
 const Eigen::ArrayXd CNE6SSM_susy_parameters::get() const
 {

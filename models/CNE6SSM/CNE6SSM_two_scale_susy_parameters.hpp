@@ -46,8 +46,8 @@ public:
    Lambdax_, const Eigen::Matrix<double,3,2>& fu_, const Eigen::Matrix<double,3
    ,2>& fd_, const Eigen::Matrix<double,3,3>& Yu_, double MuPr_, double MuPhi_,
    double XiF_, double g1_, double g2_, double g3_, double g1p_, double vd_,
-   double vu_, double vs_, double vsb_, double vphi_
-);
+   double vu_, double vs_, double vsb_, double vphi_);
+
    virtual ~CNE6SSM_susy_parameters() {}
    virtual Eigen::ArrayXd beta() const;
    virtual const Eigen::ArrayXd get() const;
@@ -93,6 +93,16 @@ public:
    void set_vs(double vs_) { vs = vs_; }
    void set_vsb(double vsb_) { vsb = vsb_; }
    void set_vphi(double vphi_) { vphi = vphi_; }
+   // DH:: methods to prevent VEVs from running above a 
+   // particular scale
+   void disable_vev_running_above_cutoff(bool choice) 
+      {
+         disable_vev_running = choice;
+      }
+   void set_vev_running_cutoff_scale(double q) //< VEVs don't run above this scale 
+      {
+         vev_running_cutoff = q;
+      }
 
    const Eigen::Matrix<double,3,3>& get_Yd() const { return Yd; }
    double get_Yd(int i, int k) const { return Yd(i,k); }
@@ -128,6 +138,11 @@ public:
    double get_vs() const { return vs; }
    double get_vsb() const { return vsb; }
    double get_vphi() const { return vphi; }
+   bool vev_running_disabled() const { return disable_vev_running; }
+   double get_vev_running_cutoff_scale() const
+      {
+         return vev_running_cutoff;
+      }
 
    Eigen::Matrix<double,3,3> get_SqSq() const;
    Eigen::Matrix<double,3,3> get_SlSl() const;
@@ -146,7 +161,6 @@ public:
    double get_SHpSHp() const;
    double get_SHpbarSHpbar() const;
    double get_SphiRSphiR() const;
-
 
 protected:
    Eigen::Matrix<double,3,3> Yd;
@@ -174,6 +188,10 @@ protected:
    double vs;
    double vsb;
    double vphi;
+
+   // DH:: scale above which VEVs do not run
+   bool disable_vev_running;
+   double vev_running_cutoff;
 
    CNE6SSM_input_parameters input;
 
