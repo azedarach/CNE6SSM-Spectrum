@@ -62,7 +62,7 @@ endif
 
 # the modules add their dependency files to this variable
 ALLDEP   :=
-# the modules add soucre files to be created to this variable
+# the modules add source files to be created to this variable
 ALLSRC   :=
 # the modules add their libraries to this variable
 ALLLIB   :=
