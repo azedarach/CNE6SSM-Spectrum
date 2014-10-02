@@ -1,0 +1,182 @@
+# Package information
+PKGNAME		:= @PKGNAME@
+ABSBASEDIR	:= @ABSBASEDIR@
+INSTALL_DIR	:= @INSTALL_DIR@
+
+# Switches
+ENABLE_COMPILE 	:= @ENABLE_COMPILE@
+ENABLE_RPATH	:= @ENABLE_RPATH@
+ENABLE_THREADS 	:= @ENABLE_THREADS@
+
+# Makefile modules
+MODULES		:= config
+MODULES 	+= @MODULES@
+
+# Variables for compilation
+CXX		:= @CXX@
+CPPFLAGS	:= @CPPFLAGS@ $(patsubst %,-I%,$(MODULES)) -I.
+CXXFLAGS	:= @CXXFLAGS@
+CXX_DEP_GEN	:= @CXX_DEP_GEN@
+FC		:= @FC@
+FFLAGS		:= @FFLAGS@
+FLIBS		:= @FLIBS@
+FOR_DEP_GEN	:= @FOR_DEP_GEN@
+RPATHFLAGS	:= @RPATHFLAGS@
+MAKELIB		:= @MAKELIB@
+LIBEXT		:= @LIBEXT@
+PYMODEXT	:= @PYMODEXT@
+BOOSTPYTHONLIBS := @BOOSTPYTHONLIBS@
+BOOSTTESTLIBS	:= @BOOSTTESTLIBS@
+BOOSTTHREADLIBS := @BOOSTTHREADLIBS@
+BOOSTFLAGS	:= @BOOSTFLAGS@
+EIGENFLAGS	:= @EIGENFLAGS@
+GSLLIBS		:= @GSLLIBS@
+GSLFLAGS	:= @GSLFLAGS@
+LAPACKLIBS	:= @LAPACKLIBS@
+PYTHON		:= @PYTHON@
+PYTHONLIBS	:= @PYTHONLIBS@
+PYTHONFLAGS	:= @PYTHONFLAGS@
+THREADLIBS	:= @THREADLIBS@
+
+ifeq ($(ENABLE_RPATH),yes)
+comma		:= ,
+endif
+
+# the modules add their dependency files to this variable
+ALLDEP 	:=
+# the modules add source files to be created to this variable
+ALLSRC	:=
+# the modules add their libraries to this variable
+ALLLIB	:=
+# the modules add executables to this variable
+ALLEXE	:=
+# the modules add test executables to this variable
+ALLTST	:=
+
+# package config script
+NE6SSMCONFIG := @NE6SSMCONFIG@
+
+# configure script
+CONFIGURE_SCRIPT := $(ABSBASEDIR)/configure
+
+# script which installs a file without export markers
+INSTALL_STRIPPED := \
+		$(ABSBASEDIR)/config/install_stripped.sh
+
+.PHONY: all allsrc allexec alllib alltest clean-executables \
+	clean clean-dep depend distclean showbuild
+
+all:
+ifeq ($(ENABLE_COMPILE),yes)
+all:	alllib allexec
+endif
+
+ifeq ($(INSTALL_DIR),)
+install-src::
+	$(error Installation directory is not set! To set it please run: ./configure --with-install-dir=/path/to/install/dir)
+else
+install-src::
+	install -d $(INSTALL_DIR)
+	$(INSTALL_STRIPPED) $(CONFIGURE_SCRIPT) $(INSTALL_DIR)/configure -m u=rw,g=r,o=r
+
+endif
+
+include config/abspathx.mk
+include $(patsubst %, %/module.mk, $(MODULES))
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),distclean)
+ifneq ($(MAKECMDGOALS),install-src)
+ifneq ($(MAKECMDGOALS),showbuild)
+ifneq ($(MAKECMDGOALS),tag)
+ifneq ($(MAKECMDGOALS),release)
+ifneq ($(MAKECMDGOALS),depend)
+ifneq ($(MAKECMDGOALS),doc)
+ifeq ($(ENABLE_COMPILE),yes)
+ifeq ($(findstring clean-,$(MAKECMDGOALS)),)
+ifeq ($(findstring distclean-,$(MAKECMDGOALS)),)
+ifeq ($(findstring doc-,$(MAKECMDGOALS)),)
+-include $(ALLDEP)
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+
+allsrc:   $(ALLSRC)
+allexec:  $(ALLEXE)
+alllib:   $(ALLLIB)
+alltest:  $(ALLTST)
+
+clean-dep:
+	-rm -f $(ALLDEP)
+
+depend:  clean-dep
+depend:  $(ALLDEP)
+
+%.d: %.cpp
+# -MT '$*.o' ensures that the target contains the full path
+	$(CXX_DEP_GEN) $(CPPFLAGS) $(CXXFLAGS_DEP_GEN) -MM -MP -MG -o $@ -MT '$*.o' $^
+
+%.d: %.f
+# the sed script ensures that the target contains the full path
+	$(FOR_DEP_GEN) $(CPPFLAGS) -cpp -MM -MP -MG $^ -MT '$*.o' | \
+	sed 's|.*\.o:|$*.o:|' > $@
+
+%.d: %.F
+# the sed script ensures that the target contains the full path
+	$(FC) $(CPPFLAGS) -cpp -MM -MP -MG $^ -MT '$*.o' | \
+	sed 's|.*\.o:|$*.o:|' > $@
+
+clean-executables:
+	-rm -f $(ALLEXE)
+
+distclean::
+	-rm -f Makefile
+	-rm -f $(FSCONFIG)
+	-rm -f config.boost config.log config.math config.sarah config.status
+
+showbuild:
+	@echo "PKGNAME            = $(PKGNAME)"
+	@echo "ABSBASEDIR         = $(ABSBASEDIR)"
+	@echo "INSTALL_DIR        = $(INSTALL_DIR)"
+	@echo ""
+	@echo "PYTHON             = $(PYTHON)"
+	@echo ""
+	@echo "CXX                = $(CXX)"
+	@echo "CPPFLAGS           = $(CPPFLAGS)"
+	@echo "CXXFLAGS           = $(CXXFLAGS)"
+	@echo "CXX_DEP_GEN        = $(CXX_DEP_GEN)"
+	@echo "CXXFLAGS_DEP_GEN   = $(CXXFLAGS_DEP_GEN)"
+	@echo "FC                 = $(FC)"
+	@echo "FFLAGS             = $(FFLAGS)"
+	@echo "FLIBS              = $(FLIBS)"
+	@echo "FOR_DEP_GEN        = $(FOR_DEP_GEN)"
+	@echo "MAKELIB            = $(MAKELIB)"
+	@echo "LIBEXT             = $(LIBEXT)"
+	@echo "PYMODEXT           = $(PYMODEXT)"
+	@echo "BOOSTPYTHONLIBS    = $(BOOSTPYTHONLIBS)"
+	@echo "BOOSTTESTLIBS      = $(BOOSTTESTLIBS)"
+	@echo "BOOSTTHREADLIBS    = $(BOOSTTHREADLIBS)"
+	@echo "BOOSTFLAGS         = $(BOOSTFLAGS)"
+	@echo "EIGENFLAGS         = $(EIGENFLAGS)"
+	@echo "GSLLIBS            = $(GSLLIBS)"
+	@echo "GSLFLAGS           = $(GSLFLAGS)"
+	@echo "LAPACKLIBS         = $(LAPACKLIBS)"
+	@echo "PYTHONFLAGS        = $(PYTHONFLAGS)"
+	@echo "PYTHONLIBS         = $(PYTHONLIBS)"
+	@echo "THREADLIBS         = $(THREADLIBS)"
+	@echo ""
+	@echo "ENABLE_COMPILE     = $(ENABLE_COMPILE)"
+	@echo "ENABLE_THREADS     = $(ENABLE_THREADS)"
+	@echo ""
+	@echo "The list of modules to be built:"
+	@echo "--------------------------------"
+	@echo "$(MODULES)"

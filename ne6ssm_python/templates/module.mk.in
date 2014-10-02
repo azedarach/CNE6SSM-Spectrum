@@ -1,0 +1,76 @@
+DIR       := @DIR@
+MODNAME   := @MODULENAME@
+FSMODEL   := @MODEL@
+
+@MODULENAME@_INSTALL_DIR := $(INSTALL_DIR)/$(DIR)
+
+@MODULENAME@_MK    := \
+		$(DIR)/module.mk
+
+MOD@MODULENAME@_SRC := \
+		$(DIR)/@MODULENAME@.cpp
+
+MOD@MODULENAME@_HDR := 
+
+MOD@MODULENAME@_OBJ := \
+		$(patsubst %.cpp, %.o, $(filter %.cpp, $(MOD@MODULENAME@_SRC)))
+
+MOD@MODULENAME@_DEP := \
+		$(MOD@MODULENAME@_OBJ:.o=.d)
+
+MOD@MODULENAME@     := $(DIR)/_$(MODNAME)$(PYMODEXT)
+
+LIBMODELPATH	:= -L@LIBMODELPATH@
+LIBFLEXIPATH	:= -L@LIBFLEXIPATH@
+LIBLEGACYPATH	:= -L@LIBLEGACYPATH@
+
+LIB@MODEL@	:= $(LIBMODELPATH) -l@MODEL@   \
+		   $(LIBFLEXIPATH) -lflexisusy \
+		   $(LIBLEGACYPATH) -llegacy
+
+MODELFLAGS	:= @MODELFLAGS@
+
+.PHONY:		all-$(MODNAME) clean-$(MODNAME) \
+		distclean-$(MODNAME)
+
+all-$(MODNAME): $(MOD@MODULENAME@)
+
+ifneq ($(INSTALL_DIR),)
+install-src::
+		install -d $(@MODULENAME@_INSTALL_DIR)
+		install -m u=rw,g=r,o=r $(MOD@MODULENAME@_SRC) $(@MODULENAME@_INSTALL_DIR)
+		install -m u=rw,g=r,o=r $(MOD@MODULENAME@_HDR) $(@MODULENAME@_INSTALL_DIR)
+		$(INSTALL_STRIPPED) $(@MODULENAME@_MK) $(@MODULENAME@_INSTALL_DIR) -m u=rw,g=r,o=r
+endif
+
+clean-$(MODNAME)-dep:
+		-rm -f $(MOD@MODULENAME@_DEP)
+
+clean-$(MODNAME)-obj:
+		-rm -f $(MOD@MODULENAME@_OBJ)
+
+clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
+		-rm -f $(MOD@MODULENAME@)
+
+distclean-$(MODNAME): clean-$(MODNAME)
+
+clean::		clean-$(MODNAME)
+
+distclean::	distclean-$(MODNAME)
+
+$(MOD@MODULENAME@_DEP) $(MOD@MODULENAME@_OBJ): CPPFLAGS += $(MODELFLAGS) $(GSLFLAGS) $(EIGENFLAGS) $(BOOSTFLAGS) $(PYTHONFLAGS)
+
+ifeq ($(ENABLE_RPATH),yes)
+@MODEL@RPATHFLAGS 	:= \
+		$(subst -L,-Wl$(comma)-rpath=,$(sort \
+			$(LIBMODELPATH) \
+			$(LIBFLEXIPATH) \
+			$(LIBLEGACYPATH)))
+endif
+
+$(MOD@MODULENAME@): $(MOD@MODULENAME@_OBJ)
+		$(MAKELIB) $@ $^ $(RPATHFLAGS) $(@MODEL@RPATHFLAGS) $(LIB@MODEL@) $(BOOSTPYTHONLIBS) $(PYTHONLIBS)
+
+ALLDEP += $(MOD@MODULENAME@_DEP)
+ALLSRC += $(MOD@MODULENAME@_SRC)
+ALLLIB += $(MOD@MODULENAME@)

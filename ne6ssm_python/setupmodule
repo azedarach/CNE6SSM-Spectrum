@@ -1,0 +1,174 @@
+#!/bin/sh
+
+# set-up script for Python modules
+
+# name of package
+PKGNAME="ne6ssm"
+
+# directory of this script
+BASEDIR=$(dirname $0)
+overwrite="no"
+name=""
+fs_model=""
+models_dir=$(cd $BASEDIR; cd ..; pwd)
+libmodel_path=""
+libflexi_path=""
+liblegacy_path=""
+lib_ext=".so"
+header_paths=""
+
+# exit codes
+exit_ok="0"
+exit_syntax_error="1"
+exit_module_dir_nonexistent="2"
+exit_model_lib_not_found="3"
+exit_missing_headers="4"
+
+#_____________________________________________________________________
+help() {
+cat <<EOF
+Usage: ./`basename $0` [options] --name=<module-name> --fs-model=<model-name>
+Options:
+  --name=            Name of the Python module.
+                     Example: --name=cne6ssm
+
+  --fs-model=        Name of the FlexibleSUSY model library that should
+                     be linked to.
+
+  --fs-dir=          Path to directory containing the FlexibleSUSY models.
+                     Looks for a directory named <model-name> in the 
+                     directory. If not given, the default search path is
+                     ../. Note that this directory should also 
+                     contain the model-independent directories config,
+                     fflite, legacy, slhaea and src.
+
+  --lib-ext=         Extension for shared libraries (such as ".so").
+
+  --help,-h          Print this help message.
+
+EOF
+}
+
+if test $# -lt 2 ; then
+    echo "Error: Too few arguments"
+    help
+    exit ${exit_syntax_error}
+fi
+
+if test $# -gt 0 ; then
+    while test ! "x$1" = "x" ; do
+	case "$1" in
+	    -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+	    *)    optarg= ;;
+	esac
+
+	case $1 in
+	    --help|-h)              help; exit ${exit_ok} ;;
+	    --name=*)               name="$optarg" ;;
+	    --fs-model=*)           fs_model="$optarg" ;;
+	    --fs-dir=*)             models_dir="$optarg" ;;
+	    --lib-ext=*)            lib_ext="$optarg" ;;
+	    *) echo "Invalid option '$1'. Try $0 --help" ; exit ${exit_syntax_error} ;;
+	esac
+	shift
+    done
+fi
+
+if [ -z "$name" ] ; then
+    echo "Error: no module specified!"
+    help
+    exit ${exit_syntax_error}
+fi
+
+# check if the module directory exists
+targetdir="$PKGNAME/${name}"
+
+if test ! -e "$targetdir" ; then
+    echo "Error: directory $targetdir does not exist!"
+    echo "Please choose another module name."
+    echo "See ./`basename $0` --help for more information."
+    exit ${exit_module_dir_nonexistent}
+fi
+
+library_name="lib${fs_model}${lib_ext}"
+# check if we can find the requested FlexibleSUSY model
+if [ -n "$fs_model" ]; then
+    printf "  searching for ${library_name} ..."
+    if test -d "$models_dir/models/$fs_model" ; then
+	# check that the library exists
+	if test -e "$models_dir/models/$fs_model/$library_name" ; then
+	    printf "found in ${models_dir}/models/${fs_model}\n"
+	    libmodel_path=$(cd ${models_dir}/models/${fs_model}; pwd)
+	else
+	    printf "not found in ${models_dir}/models/${fs_model}\n"
+	    echo "Error: ${library_name} not found!"
+	    exit ${exit_model_lib_not_found}
+	fi
+    else
+	printf "not found in ${models_dir}/models/${fs_model}\n"
+	echo "Error: No model library found for ${fs_model}!"
+	exit ${exit_model_lib_not_found}
+    fi
+
+    # get the necessary include paths
+    header_paths="${header_paths} -I${models_dir}/models/${fs_model}"
+
+    if test -d "$models_dir/src" ; then
+	header_paths="${header_paths} -I${models_dir}/src"
+	libflexi_path=$(cd ${models_dir}/src; pwd);
+    else
+	echo "Error: No src directory found in ${models_dir}!"
+	exit ${exit_missing_headers}
+    fi
+
+    if test -d "$models_dir/config" ; then
+	header_paths="${header_paths} -I${models_dir}/config"
+    else
+	echo "Error: No config directory found in ${models_dir}!"
+	exit ${exit_missing_headers}
+    fi
+
+    if test -d "$models_dir/fflite" ; then
+	header_paths="${header_paths} -I${models_dir}/fflite"
+    else
+	echo "Error: No fflite directory found in ${models_dir}!"
+	exit ${exit_missing_headers}
+    fi
+
+    if test -d "$models_dir/legacy" ; then
+	header_paths="${header_paths} -I${models_dir}/legacy"
+	liblegacy_path=$(cd ${models_dir}/legacy; pwd)
+    else
+	echo "Error: No legacy directory found in ${models_dir}!"
+	exit ${exit_missing_headers}
+    fi
+
+    if test -d "$models_dir/slhaea" ; then
+	header_paths="${header_paths} -I${models_dir}/slhaea"
+    else
+	echo "Error: No slhaea directory found in ${models_dir}!"
+	exit ${exit_missing_headers}
+    fi
+
+else
+    echo "Error: No model specified!"
+    echo "Please specify a model using --fs-model."
+    echo "See ./`basename $0` --help for more information."
+    exit ${exit_model_lib_not_found}  
+fi
+
+printf "  creating Makefile module %s/module.mk ..." "$targetdir"
+sed -e "s|@DIR@|$targetdir|g"                  \
+    -e "s|@MODEL@|$fs_model|g"                 \
+    -e "s|@MODULENAME@|$name|g"                \
+    -e "s|@LIBMODELPATH@|$libmodel_path|g"     \
+    -e "s|@LIBFLEXIPATH@|$libflexi_path|g"     \
+    -e "s|@LIBLEGACYPATH@|$liblegacy_path|g"   \
+    -e "s|@MODELFLAGS@|$header_paths|"         \
+    < templates/module.mk.in > $targetdir/module.mk
+echo "done"
+
+printf "  creating $s/__init__.py ..." "$targetdir"
+sed -e "s|@MODULENAME@|$name|g" \
+    < templates/__init__.py.in > $targetdir/__init__.py
+echo "done"
