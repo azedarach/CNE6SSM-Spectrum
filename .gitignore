@@ -17,6 +17,9 @@ config.math
 config.sarah
 flexiblesusy-config
 ne6ssm_python/ne6ssm-config
+ne6ssm_python/config/config.h
+ne6ssm_python/config.log
+ne6ssm_python/config.status
 Makefile
 
 doc/*.html
