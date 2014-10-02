@@ -16,6 +16,7 @@ config.boost
 config.math
 config.sarah
 flexiblesusy-config
+ne6ssm_python/ne6ssm-config
 Makefile
 
 doc/*.html

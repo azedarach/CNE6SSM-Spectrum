@@ -140,7 +140,7 @@ clean-executables:
 
 distclean::
 	-rm -f Makefile
-	-rm -f $(FSCONFIG)
+	-rm -f $(NE6SSMCONFIG)
 	-rm -f config.boost config.log config.math config.sarah config.status
 
 showbuild:
