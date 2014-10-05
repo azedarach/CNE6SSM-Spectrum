@@ -55,7 +55,8 @@ public:
       , beta_loop_order(2)
       , threshold_corrections(1)
       , calculate_sm_masses(false)
-      , alternate_ewsb(false) {}
+      , alternate_ewsb(false)
+      , cutoff_vev_running(false) {}
    ~CNE6SSM_spectrum_generator() {}
 
    double get_high_scale() const { return high_scale; }
@@ -75,6 +76,7 @@ public:
    void set_max_iterations(unsigned n) { max_iterations = n; }
    void set_calculate_sm_masses(bool flag) { calculate_sm_masses = flag; }
    void set_alternate_ewsb(bool flag) { alternate_ewsb = flag; }
+   void set_cutoff_vev_running(bool flag) { cutoff_vev_running = flag; }
    void set_threshold_corrections(unsigned t) { threshold_corrections = t; }
 
    void run(const QedQcd& oneset, const CNE6SSM_input_parameters& input);
@@ -96,6 +98,7 @@ private:
    unsigned threshold_corrections; ///< disable/enable threshold corrections
    bool calculate_sm_masses; ///< calculate SM pole masses
    bool alternate_ewsb; ///< DH:: use Roman's algorithm
+   bool cutoff_vev_running; ///< DH:: prevent VEVs from running above a certain scale
 };
 
 /**
@@ -141,6 +144,7 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    model.set_input_parameters(input);
    model.do_calculate_sm_pole_masses(calculate_sm_masses);
    model.do_use_alternate_ewsb(alternate_ewsb);
+   model.disable_vev_running_above_cutoff(cutoff_vev_running);
    model.set_loops(beta_loop_order);
    model.set_thresholds(threshold_corrections);
 

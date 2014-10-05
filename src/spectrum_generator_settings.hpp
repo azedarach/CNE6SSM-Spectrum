@@ -41,6 +41,7 @@ public:
       beta_loop_order,       ///< loop-order of beta-functions
       threshold_corrections, ///< disable/enable threshold corrections
       alternate_ewsb,        ///< disable/enable alternate EWSB routines
+      cutoff_vev_running,    ///< disable/enable cutting off VEV running
       NUMBER_OF_OPTIONS      ///< number of possible options
    };
 

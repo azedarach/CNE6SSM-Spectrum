@@ -84,6 +84,9 @@ void CNE6SSM_susy_scale_constraint<Two_scale>::apply()
    model->calculate_DRbar_parameters();
    update_scale();
 
+   // DH:: update scale above which VEVs are not run
+   model->set_vev_running_cutoff_scale(2.0 * scale);
+
    // apply user-defined susy scale constraints
 
 
