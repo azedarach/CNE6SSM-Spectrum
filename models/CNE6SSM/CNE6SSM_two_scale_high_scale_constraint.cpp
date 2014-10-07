@@ -72,7 +72,9 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
 {
    assert(model && "Error: CNE6SSM_high_scale_constraint:"
           " model pointer must not be zero");
-
+   std::cout << "####################################################\n";
+   std::cout << "\tapplying high scale constraint\n";
+   std::cout << "####################################################\n";
    if (std::fabs(model->get_g1()) > 3.0) {
 #ifdef ENABLE_VERBOSE
       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
@@ -177,19 +179,22 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_MassG(m12);
    MODEL->set_MassBp(m12);
 // DH:: note
-   std::cout << "Q = " << model->get_scale() << ", ";
-   std::cout << "g1 = " << model->get_g1() << ", ";
-   std::cout << "g1p = " << model->get_g1p() << ", ";
-   std::cout << "g2 = " << model->get_g2() << ", ";
-   std::cout << "g3 = " << model->get_g3() << ", ";
-   std::cout << "yt = " << model->get_Yu(2,2) << ", ";
-   std::cout << "yb = " << model->get_Yd(2,2) << ", ";
-   std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
-   std::cout << "vd = " << model->get_vd() << ", ";
-   std::cout << "vu = " << model->get_vu() << ", ";
-   std::cout << "vs = " << model->get_vs() << ", ";
-   std::cout << "vsb = " << model->get_vsb() << ", ";
-   std::cout << "vphi = " << model->get_vphi() << "\n";
+   // std::cout << "Q = " << model->get_scale() << ", ";
+   // std::cout << "g1 = " << model->get_g1() << ", ";
+   // std::cout << "g1p = " << model->get_g1p() << ", ";
+   // std::cout << "g2 = " << model->get_g2() << ", ";
+   // std::cout << "g3 = " << model->get_g3() << ", ";
+   // std::cout << "yt = " << model->get_Yu(2,2) << ", ";
+   // std::cout << "yb = " << model->get_Yd(2,2) << ", ";
+   // std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
+   // std::cout << "vd = " << model->get_vd() << ", ";
+   // std::cout << "vu = " << model->get_vu() << ", ";
+   // std::cout << "vs = " << model->get_vs() << ", ";
+   // std::cout << "vsb = " << model->get_vsb() << ", ";
+   // std::cout << "vphi = " << model->get_vphi() << "\n";
+   std::cout << "####################################################\n";
+   std::cout << "\tfinished applying high scale constraint\n";
+   std::cout << "####################################################\n";
 }
 
 double CNE6SSM_high_scale_constraint<Two_scale>::get_scale() const
@@ -246,6 +251,13 @@ void CNE6SSM_high_scale_constraint<Two_scale>::update_scale()
    const auto g2 = MODELPARAMETER(g2);
    const auto beta_g1 = BETAPARAMETER(g1);
    const auto beta_g2 = BETAPARAMETER(g2);
+
+   // DH:: do not try to update if beta functions are both zero.
+   // Might be better to check beta loop order instead?
+   if (is_zero(beta_g1) && is_zero(beta_g2)) {
+      scale = currentScale;
+      return;
+   }
 
    scale = currentScale*exp((-g1 + g2)/(BETA(g1) - BETA(g2)));
 

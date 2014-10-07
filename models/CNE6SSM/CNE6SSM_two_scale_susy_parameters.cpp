@@ -78,72 +78,131 @@ Eigen::ArrayXd CNE6SSM_susy_parameters::beta() const
 
 CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
 {
-   Susy_traces susy_traces;
-   calc_susy_traces(susy_traces);
-
-   Eigen::Matrix<double,3,3> beta_Yd(calc_beta_Yd_one_loop(TRACE_STRUCT));
-   Eigen::Matrix<double,3,2> beta_hE(calc_beta_hE_one_loop(TRACE_STRUCT));
-   Eigen::Matrix<double,3,3> beta_Ye(calc_beta_Ye_one_loop(TRACE_STRUCT));
-   double beta_SigmaL(calc_beta_SigmaL_one_loop(TRACE_STRUCT));
-   double beta_KappaPr(calc_beta_KappaPr_one_loop(TRACE_STRUCT));
-   double beta_Sigmax(calc_beta_Sigmax_one_loop(TRACE_STRUCT));
-   Eigen::Matrix<double,3,3> beta_gD(calc_beta_gD_one_loop(TRACE_STRUCT));
-   Eigen::Matrix<double,3,3> beta_Kappa(calc_beta_Kappa_one_loop(TRACE_STRUCT))
+   std::cout << "Q = " << get_scale() << ", vu = " << vu << ", vd = " << vd << ", vs = " << vs
+             << ", vsb = " << vsb << ", vphi = " << vphi << "\n";
+   Eigen::Matrix<double,3,3> beta_Yd(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<double,3,2> beta_hE(Eigen::Matrix<double,3,2>::Zero());
+   Eigen::Matrix<double,3,3> beta_Ye(Eigen::Matrix<double,3,3>::Zero());
+   double beta_SigmaL(0);
+   double beta_KappaPr(0);
+   double beta_Sigmax(0);
+   Eigen::Matrix<double,3,3> beta_gD(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<double,3,3> beta_Kappa(Eigen::Matrix<double,3,3>::Zero())
       ;
-   Eigen::Matrix<double,2,2> beta_Lambda12(calc_beta_Lambda12_one_loop(
-      TRACE_STRUCT));
-   double beta_Lambdax(calc_beta_Lambdax_one_loop(TRACE_STRUCT));
-   Eigen::Matrix<double,3,2> beta_fu(calc_beta_fu_one_loop(TRACE_STRUCT));
-   Eigen::Matrix<double,3,2> beta_fd(calc_beta_fd_one_loop(TRACE_STRUCT));
-   Eigen::Matrix<double,3,3> beta_Yu(calc_beta_Yu_one_loop(TRACE_STRUCT));
-   double beta_MuPr(calc_beta_MuPr_one_loop(TRACE_STRUCT));
-   double beta_MuPhi(calc_beta_MuPhi_one_loop(TRACE_STRUCT));
-   double beta_XiF(calc_beta_XiF_one_loop(TRACE_STRUCT));
-   double beta_g1(calc_beta_g1_one_loop(TRACE_STRUCT));
-   double beta_g2(calc_beta_g2_one_loop(TRACE_STRUCT));
-   double beta_g3(calc_beta_g3_one_loop(TRACE_STRUCT));
-   double beta_g1p(calc_beta_g1p_one_loop(TRACE_STRUCT));
-   // DH:: temporary solution to prevent VEVs from running
-   double beta_vd((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vd_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vu((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vu_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vs((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vs_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vsb((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vsb_one_loop(TRACE_STRUCT) : 0.));
-   double beta_vphi((!disable_vev_running || get_scale() < vev_running_cutoff ? calc_beta_vphi_one_loop(TRACE_STRUCT) : 0.));
+   Eigen::Matrix<double,2,2> beta_Lambda12(Eigen::Matrix<double,2,2>::Zero());
+   double beta_Lambdax(0);
+   Eigen::Matrix<double,3,2> beta_fu(Eigen::Matrix<double,3,2>::Zero());
+   Eigen::Matrix<double,3,2> beta_fd(Eigen::Matrix<double,3,2>::Zero());
+   Eigen::Matrix<double,3,3> beta_Yu(Eigen::Matrix<double,3,3>::Zero());
+   double beta_MuPr(0);
+   double beta_MuPhi(0);
+   double beta_XiF(0);
+   double beta_g1(0);
+   double beta_g2(0);
+   double beta_g3(0);
+   double beta_g1p(0);
+   double beta_vd(0);
+   double beta_vu(0);
+   double beta_vs(0);
+   double beta_vsb(0);
+   double beta_vphi(0);
+   if (get_loops() > 0) {
+      Susy_traces susy_traces;
+      calc_susy_traces(susy_traces);
+      // Eigen::Matrix<double,3,3> beta_Yd(calc_beta_Yd_one_loop(TRACE_STRUCT));
+      // Eigen::Matrix<double,3,2> beta_hE(calc_beta_hE_one_loop(TRACE_STRUCT));
+      // Eigen::Matrix<double,3,3> beta_Ye(calc_beta_Ye_one_loop(TRACE_STRUCT));
+      // double beta_SigmaL(calc_beta_SigmaL_one_loop(TRACE_STRUCT));
+      // double beta_KappaPr(calc_beta_KappaPr_one_loop(TRACE_STRUCT));
+      // double beta_Sigmax(calc_beta_Sigmax_one_loop(TRACE_STRUCT));
+      // Eigen::Matrix<double,3,3> beta_gD(calc_beta_gD_one_loop(TRACE_STRUCT));
+      // Eigen::Matrix<double,3,3> beta_Kappa(calc_beta_Kappa_one_loop(TRACE_STRUCT))
+      //    ;
+      // Eigen::Matrix<double,2,2> beta_Lambda12(calc_beta_Lambda12_one_loop(
+      //                                            TRACE_STRUCT));
+      // double beta_Lambdax(calc_beta_Lambdax_one_loop(TRACE_STRUCT));
+      // Eigen::Matrix<double,3,2> beta_fu(calc_beta_fu_one_loop(TRACE_STRUCT));
+      // Eigen::Matrix<double,3,2> beta_fd(calc_beta_fd_one_loop(TRACE_STRUCT));
+      // Eigen::Matrix<double,3,3> beta_Yu(calc_beta_Yu_one_loop(TRACE_STRUCT));
+      // double beta_MuPr(calc_beta_MuPr_one_loop(TRACE_STRUCT));
+      // double beta_MuPhi(calc_beta_MuPhi_one_loop(TRACE_STRUCT));
+      // double beta_XiF(calc_beta_XiF_one_loop(TRACE_STRUCT));
+      // double beta_g1(calc_beta_g1_one_loop(TRACE_STRUCT));
+      // double beta_g2(calc_beta_g2_one_loop(TRACE_STRUCT));
+      // double beta_g3(calc_beta_g3_one_loop(TRACE_STRUCT));
+      // double beta_g1p(calc_beta_g1p_one_loop(TRACE_STRUCT));
+      // // DH:: temporary solution to prevent VEVs from running
+      // double vev_temp_cutoff = 10000.0;
+      // double beta_vd((!disable_vev_running || get_scale() < vev_temp_cutoff ? calc_beta_vd_one_loop(TRACE_STRUCT) : 0.));
+      // double beta_vu((!disable_vev_running || get_scale() < vev_temp_cutoff ? calc_beta_vu_one_loop(TRACE_STRUCT) : 0.));
+      // double beta_vs((!disable_vev_running || get_scale() < vev_temp_cutoff ? calc_beta_vs_one_loop(TRACE_STRUCT) : 0.));
+      // double beta_vsb((!disable_vev_running || get_scale() < vev_temp_cutoff ? calc_beta_vsb_one_loop(TRACE_STRUCT) : 0.));
+      // double beta_vphi((!disable_vev_running || get_scale() < vev_temp_cutoff ? calc_beta_vphi_one_loop(TRACE_STRUCT) : 0.));
 
-   if (get_loops() > 1) {
-      beta_Yd += calc_beta_Yd_two_loop(TRACE_STRUCT);
-      beta_hE += calc_beta_hE_two_loop(TRACE_STRUCT);
-      beta_Ye += calc_beta_Ye_two_loop(TRACE_STRUCT);
-      beta_SigmaL += calc_beta_SigmaL_two_loop(TRACE_STRUCT);
-      beta_KappaPr += calc_beta_KappaPr_two_loop(TRACE_STRUCT);
-      beta_Sigmax += calc_beta_Sigmax_two_loop(TRACE_STRUCT);
-      beta_gD += calc_beta_gD_two_loop(TRACE_STRUCT);
-      beta_Kappa += calc_beta_Kappa_two_loop(TRACE_STRUCT);
-      beta_Lambda12 += calc_beta_Lambda12_two_loop(TRACE_STRUCT);
-      beta_Lambdax += calc_beta_Lambdax_two_loop(TRACE_STRUCT);
-      beta_fu += calc_beta_fu_two_loop(TRACE_STRUCT);
-      beta_fd += calc_beta_fd_two_loop(TRACE_STRUCT);
-      beta_Yu += calc_beta_Yu_two_loop(TRACE_STRUCT);
-      beta_MuPr += calc_beta_MuPr_two_loop(TRACE_STRUCT);
-      beta_MuPhi += calc_beta_MuPhi_two_loop(TRACE_STRUCT);
-      beta_XiF += calc_beta_XiF_two_loop(TRACE_STRUCT);
-      beta_g1 += calc_beta_g1_two_loop(TRACE_STRUCT);
-      beta_g2 += calc_beta_g2_two_loop(TRACE_STRUCT);
-      beta_g3 += calc_beta_g3_two_loop(TRACE_STRUCT);
-      beta_g1p += calc_beta_g1p_two_loop(TRACE_STRUCT);
-      // DH:: prevent VEVs from running if requested
-      if (!disable_vev_running || get_scale() < vev_running_cutoff) {
-         beta_vd += calc_beta_vd_two_loop(TRACE_STRUCT);
-         beta_vu += calc_beta_vu_two_loop(TRACE_STRUCT);
-         beta_vs += calc_beta_vs_two_loop(TRACE_STRUCT);
-         beta_vsb += calc_beta_vsb_two_loop(TRACE_STRUCT);
-         beta_vphi += calc_beta_vphi_two_loop(TRACE_STRUCT);
+      beta_Yd += calc_beta_Yd_one_loop(TRACE_STRUCT);
+      beta_hE += calc_beta_hE_one_loop(TRACE_STRUCT);
+      beta_Ye += calc_beta_Ye_one_loop(TRACE_STRUCT);
+      beta_SigmaL += calc_beta_SigmaL_one_loop(TRACE_STRUCT);
+      beta_KappaPr += calc_beta_KappaPr_one_loop(TRACE_STRUCT);
+      beta_Sigmax += calc_beta_Sigmax_one_loop(TRACE_STRUCT);
+      beta_gD += calc_beta_gD_one_loop(TRACE_STRUCT);
+      beta_Kappa += calc_beta_Kappa_one_loop(TRACE_STRUCT);
+      beta_Lambda12 += calc_beta_Lambda12_one_loop(TRACE_STRUCT);
+      beta_Lambdax += calc_beta_Lambdax_one_loop(TRACE_STRUCT);
+      beta_fu += calc_beta_fu_one_loop(TRACE_STRUCT);
+      beta_fd += calc_beta_fd_one_loop(TRACE_STRUCT);
+      beta_Yu += calc_beta_Yu_one_loop(TRACE_STRUCT);
+      beta_MuPr += calc_beta_MuPr_one_loop(TRACE_STRUCT);
+      beta_MuPhi += calc_beta_MuPhi_one_loop(TRACE_STRUCT);
+      beta_XiF += calc_beta_XiF_one_loop(TRACE_STRUCT);
+      beta_g1 += calc_beta_g1_one_loop(TRACE_STRUCT);
+      beta_g2 += calc_beta_g2_one_loop(TRACE_STRUCT);
+      beta_g3 += calc_beta_g3_one_loop(TRACE_STRUCT);
+      beta_g1p += calc_beta_g1p_one_loop(TRACE_STRUCT);
+      // DH:: temporary solution to prevent VEVs from running
+      double vev_temp_cutoff = 10000.0;
+      if (!disable_vev_running || get_scale() < vev_temp_cutoff) {
+         beta_vd += calc_beta_vd_one_loop(TRACE_STRUCT);
+         beta_vu += calc_beta_vu_one_loop(TRACE_STRUCT);
+         beta_vs += calc_beta_vs_one_loop(TRACE_STRUCT);
+         beta_vsb += calc_beta_vsb_one_loop(TRACE_STRUCT);
+         beta_vphi += calc_beta_vphi_one_loop(TRACE_STRUCT);
+      }
+      std::cout << "cutoff = " << vev_temp_cutoff << ", beta_vu = " << beta_vu << ", beta_vd = " << beta_vd << ", beta_vs = " << beta_vs
+                << ", beta_vsb = " << beta_vsb << ", beta_vphi = " << beta_vphi << "\n";
+      if (get_loops() > 1) {
+         beta_Yd += calc_beta_Yd_two_loop(TRACE_STRUCT);
+         beta_hE += calc_beta_hE_two_loop(TRACE_STRUCT);
+         beta_Ye += calc_beta_Ye_two_loop(TRACE_STRUCT);
+         beta_SigmaL += calc_beta_SigmaL_two_loop(TRACE_STRUCT);
+         beta_KappaPr += calc_beta_KappaPr_two_loop(TRACE_STRUCT);
+         beta_Sigmax += calc_beta_Sigmax_two_loop(TRACE_STRUCT);
+         beta_gD += calc_beta_gD_two_loop(TRACE_STRUCT);
+         beta_Kappa += calc_beta_Kappa_two_loop(TRACE_STRUCT);
+         beta_Lambda12 += calc_beta_Lambda12_two_loop(TRACE_STRUCT);
+         beta_Lambdax += calc_beta_Lambdax_two_loop(TRACE_STRUCT);
+         beta_fu += calc_beta_fu_two_loop(TRACE_STRUCT);
+         beta_fd += calc_beta_fd_two_loop(TRACE_STRUCT);
+         beta_Yu += calc_beta_Yu_two_loop(TRACE_STRUCT);
+         beta_MuPr += calc_beta_MuPr_two_loop(TRACE_STRUCT);
+         beta_MuPhi += calc_beta_MuPhi_two_loop(TRACE_STRUCT);
+         beta_XiF += calc_beta_XiF_two_loop(TRACE_STRUCT);
+         beta_g1 += calc_beta_g1_two_loop(TRACE_STRUCT);
+         beta_g2 += calc_beta_g2_two_loop(TRACE_STRUCT);
+         beta_g3 += calc_beta_g3_two_loop(TRACE_STRUCT);
+         beta_g1p += calc_beta_g1p_two_loop(TRACE_STRUCT);
+         // DH:: prevent VEVs from running if requested
+         if (!disable_vev_running || get_scale() < vev_temp_cutoff) {
+            beta_vd += calc_beta_vd_two_loop(TRACE_STRUCT);
+            beta_vu += calc_beta_vu_two_loop(TRACE_STRUCT);
+            beta_vs += calc_beta_vs_two_loop(TRACE_STRUCT);
+            beta_vsb += calc_beta_vsb_two_loop(TRACE_STRUCT);
+            beta_vphi += calc_beta_vphi_two_loop(TRACE_STRUCT);
+         }
       }
    }
-
-
    return CNE6SSM_susy_parameters(get_scale(), get_loops(), get_thresholds(), input,
-                    beta_Yd, beta_hE, beta_Ye, beta_SigmaL, beta_KappaPr, beta_Sigmax, beta_gD, beta_Kappa, beta_Lambda12, beta_Lambdax, beta_fu, beta_fd, beta_Yu, beta_MuPr, beta_MuPhi, beta_XiF, beta_g1, beta_g2, beta_g3, beta_g1p, beta_vd, beta_vu, beta_vs, beta_vsb, beta_vphi);
+                                  beta_Yd, beta_hE, beta_Ye, beta_SigmaL, beta_KappaPr, beta_Sigmax, beta_gD, beta_Kappa, beta_Lambda12, beta_Lambdax, beta_fu, beta_fd, beta_Yu, beta_MuPr, beta_MuPhi, beta_XiF, beta_g1, beta_g2, beta_g3, beta_g1p, beta_vd, beta_vu, beta_vs, beta_vsb, beta_vphi);
 }
 
 void CNE6SSM_susy_parameters::clear()

@@ -385,18 +385,6 @@ int CLASSNAME::calculate_fpi_update_step(const gsl_vector* x, void* params, gsl_
    ewsb_out_new[4] = model->get_next_fpi_param_5();
    model->set_LXiF(ewsb_out_new[4]);
 
-   std::cout << "T1 = " << model->get_alternate_ewsb_eq_hh_1() << ", ";
-   std::cout << "T2 = " << model->get_alternate_ewsb_eq_hh_2() << ", ";
-   std::cout << "T3 = " << model->get_alternate_ewsb_eq_hh_3() << ", ";
-   std::cout << "T4 = " << model->get_alternate_ewsb_eq_hh_4() << ", ";
-   std::cout << "T5 = " << model->get_alternate_ewsb_eq_hh_5() << "\n";
-
-   std::cout << "T1d = " << model->get_ewsb_eq_hh_1() - Re(model->tadpole_hh(0)) << ", ";
-   std::cout << "T2d = " << model->get_ewsb_eq_hh_2() - Re(model->tadpole_hh(1)) << ", ";
-   std::cout << "T3d = " << model->get_ewsb_eq_hh_3() - Re(model->tadpole_hh(2)) << ", ";
-   std::cout << "T4d = " << model->get_ewsb_eq_hh_4() - Re(model->tadpole_hh(3)) << ", ";
-   std::cout << "T5d = " << model->get_ewsb_eq_hh_5() - Re(model->tadpole_hh(4)) << "\n";
-
 
    for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
       gsl_vector_set(f, i, ewsb_out_new[i]);
@@ -599,9 +587,10 @@ int CLASSNAME::solve_ewsb_one_loop()
 {
    return solve_ewsb_iteratively(1);
 }
-
+//DH::note
 int CLASSNAME::solve_ewsb()
-{
+{std::cout << "Q = " << get_scale() << ", vu = " << vu << ", vd = " << vd
+           << ", vs = " << vs << ", vsb = " << vsb << ", vphi = " << vphi << "\n";
    VERBOSE_MSG("\tSolving EWSB at " << ewsb_loop_order << "-loop order");
 
    if (ewsb_loop_order == 0)
@@ -636,13 +625,13 @@ void CLASSNAME::alternate_ewsb_initial_guess(double x_init[number_of_ewsb_equati
 void CLASSNAME::alternate_ewsb_fpi_initial_guess(double x_init[number_of_ewsb_equations])
 {
 // DH:: note
-   std::cout << "Q = " << get_scale() << ", ";
-   std::cout << "vs = " << vs << ", ";
-   std::cout << "vsb = " << vsb << ", ";
-   std::cout << "vphi = " << vphi << ", ";
-   std::cout << "Lambdax = " << Lambdax << ", ";
-   std::cout << "XiF = " << XiF << ", ";
-   std::cout << "LXiF = " << LXiF << "\n";
+   // std::cout << "Q = " << get_scale() << ", ";
+   // std::cout << "vs = " << vs << ", ";
+   // std::cout << "vsb = " << vsb << ", ";
+   // std::cout << "vphi = " << vphi << ", ";
+   // std::cout << "Lambdax = " << Lambdax << ", ";
+   // std::cout << "XiF = " << XiF << ", ";
+   // std::cout << "LXiF = " << LXiF << "\n";
 
    const auto QS = LOCALINPUT(QS);
    const auto s = LOCALINPUT(ssumInput);
@@ -786,16 +775,13 @@ int CLASSNAME::check_fpi_ewsb_solution(double precision)
 
       }
    }
-   std::cout << "T1r = " << tadpole[0] << ", ";
-   std::cout << "T2r = " << tadpole[1] << ", ";
-   std::cout << "T3r = " << tadpole[2] << ", ";
-   std::cout << "T4r = " << tadpole[3] << ", ";
-   std::cout << "T5r = " << tadpole[4] << "\n";
+
    double residual = Abs(tadpole[0]);
 
    for (std::size_t i = 1; i < number_of_ewsb_equations; ++i) {
       residual += Abs(tadpole[i]);
    } 
+//DH::note
    std::cout << "residual = " << residual << "\n";
    return (residual < precision ? GSL_SUCCESS : GSL_CONTINUE);
 }

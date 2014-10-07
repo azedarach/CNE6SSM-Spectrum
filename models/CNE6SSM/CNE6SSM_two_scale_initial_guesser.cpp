@@ -141,8 +141,9 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    MODEL->set_XiF(Power(SM(MZ),3));
    MODEL->set_LXiF(Power(SM(MZ),3));
    MODEL->set_vs(0.7071067811865475*ssumInput);
-   MODEL->set_vsb(0.7071067811865475*ssumInput);
-   MODEL->set_vphi(ssumInput);
+   MODEL->set_vsb(0.7071067811865475*0.95*ssumInput);
+   //DH::note change
+   MODEL->set_vphi(0.5*ssumInput);
 
 }
 

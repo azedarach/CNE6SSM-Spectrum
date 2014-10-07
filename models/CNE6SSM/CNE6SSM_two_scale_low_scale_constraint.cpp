@@ -79,19 +79,10 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    assert(model && "Error: CNE6SSM_low_scale_constraint:"
           " model pointer must not be zero");
 // DH:: note
-   std::cout << "Q = " << model->get_scale() << ", ";
-   std::cout << "g1 = " << model->get_g1() << ", ";
-   std::cout << "g1p = " << model->get_g1p() << ", ";
-   std::cout << "g2 = " << model->get_g2() << ", ";
-   std::cout << "g3 = " << model->get_g3() << ", ";
-   std::cout << "yt = " << model->get_Yu(2,2) << ", ";
-   std::cout << "yb = " << model->get_Yd(2,2) << ", ";
-   std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
-   std::cout << "vd = " << model->get_vd() << ", ";
-   std::cout << "vu = " << model->get_vu() << "\n";
-   std::cout << "vs = " << model->get_vs() << ", ";
-   std::cout << "vsb = " << model->get_vsb() << ", ";
-   std::cout << "vphi = " << model->get_vphi() << "\n";
+   std::cout << "####################################################\n";
+   std::cout << "\tapplying low scale constraint\n";
+   std::cout << "####################################################\n";
+   std::cout << "Old MZDRbar = " << MZDRbar << "\n";
    model->calculate_DRbar_parameters();
    update_scale();
    calculate_DRbar_gauge_couplings();
@@ -99,7 +90,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    const auto TanBeta = INPUTPARAMETER(TanBeta);
    const auto g1 = MODELPARAMETER(g1);
    const auto g2 = MODELPARAMETER(g2);
-
+   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << "\n";
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
@@ -107,25 +98,32 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
       )));
    MODEL->set_vu((2*MZDRbar*TanBeta)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(
       TanBeta))));
-
-
+   std::cout << "New MZDRbar = " << MZDRbar << "\n";
+   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << "\n";
+   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
+             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
    model->set_g1(new_g1);
    model->set_g2(new_g2);
    model->set_g3(new_g3);
+   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
+             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
 // DH:: note
-   std::cout << "Q = " << model->get_scale() << ", ";
-   std::cout << "g1 = " << model->get_g1() << ", ";
-   std::cout << "g1p = " << model->get_g1p() << ", ";
-   std::cout << "g2 = " << model->get_g2() << ", ";
-   std::cout << "g3 = " << model->get_g3() << ", ";
-   std::cout << "yt = " << model->get_Yu(2,2) << ", ";
-   std::cout << "yb = " << model->get_Yd(2,2) << ", ";
-   std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
-   std::cout << "vd = " << model->get_vd() << ", ";
-   std::cout << "vu = " << model->get_vu() << "\n";
-   std::cout << "vs = " << model->get_vs() << ", ";
-   std::cout << "vsb = " << model->get_vsb() << ", ";
-   std::cout << "vphi = " << model->get_vphi() << "\n";
+   // std::cout << "Q = " << model->get_scale() << ", ";
+   // std::cout << "g1 = " << model->get_g1() << ", ";
+   // std::cout << "g1p = " << model->get_g1p() << ", ";
+   // std::cout << "g2 = " << model->get_g2() << ", ";
+   // std::cout << "g3 = " << model->get_g3() << ", ";
+   // std::cout << "yt = " << model->get_Yu(2,2) << ", ";
+   // std::cout << "yb = " << model->get_Yd(2,2) << ", ";
+   // std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
+   // std::cout << "vd = " << model->get_vd() << ", ";
+   // std::cout << "vu = " << model->get_vu() << "\n";
+   // std::cout << "vs = " << model->get_vs() << ", ";
+   // std::cout << "vsb = " << model->get_vsb() << ", ";
+   // std::cout << "vphi = " << model->get_vphi() << "\n";
+   std::cout << "####################################################\n";
+   std::cout << "\tfinished applying low scale constraint\n";
+   std::cout << "####################################################\n";
 }
 
 double CNE6SSM_low_scale_constraint<Two_scale>::get_scale() const
