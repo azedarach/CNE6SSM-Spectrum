@@ -34,11 +34,12 @@ int main()
    spectrum_generator.set_alternate_ewsb(0); // 1 == yes
    spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
 
-   std::size_t m0_npts = 5;
-   std::size_t m12_npts = 2;
+   std::size_t m0_npts = 30;
+   std::size_t m12_npts = 30;
+   std::size_t TanBeta_npts = 1;
    std::size_t A0_npts = 1;
 
-   std::vector<std::size_t> scan_dimensions = {m0_npts, m12_npts, A0_npts};
+   std::vector<std::size_t> scan_dimensions = {m0_npts, m12_npts, TanBeta_npts, A0_npts};
 
    Grid_scanner scan(scan_dimensions);
 
@@ -89,23 +90,26 @@ void get_current_inputs(const std::vector<std::size_t>& posn, const std::vector<
    const double TanBeta_lower = 10.;
    const double TanBeta_upper = 10.;
    const double Azero_lower = 1000.; // GeV
-   const double Azero_upper = 1000.; // GeV
+   const double Azero_upper = 3000.; // GeV
 
    double m0_incr = 0.0;
    double m12_incr = 0.0;
+   double TanBeta_incr = 0.0;
    double Azero_incr = 0.0;
 
    if (dims.at(0) > 1) 
       m0_incr = (m0_upper - m0_lower) / (dims.at(0) - 1.0);
    if (dims.at(1) > 1) 
       m12_incr = (m12_upper - m12_lower) / (dims.at(1) - 1.0);
-   if (dims.at(2) > 1) 
-      Azero_incr = (Azero_upper - Azero_lower) / (dims.at(2) - 1.0);
+   if (dims.at(2) > 1)
+      TanBeta_incr = (TanBeta_upper - TanBeta_lower) / (dims.at(2) - 1.0);
+   if (dims.at(3) > 1) 
+      Azero_incr = (Azero_upper - Azero_lower) / (dims.at(3) - 1.0);
 
    input.m0 = m0_lower + m0_incr * posn.at(0);
    input.m12 = m12_lower + m12_incr * posn.at(1);
-   input.TanBeta = TanBeta_lower;
-   input.Azero = Azero_lower + Azero_incr * posn.at(2);
+   input.TanBeta = TanBeta_lower + TanBeta_incr * posn.at(2);
+   input.Azero = Azero_lower + Azero_incr * posn.at(3);
 
    input.SignLambdax = 1;
    input.ssumInput = 40000.0; // GeV
