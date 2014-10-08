@@ -59,7 +59,6 @@ void Spectrum_generator_settings::set(Settings o, double value)
  * | beta_loop_order       | 0, 1, 2                      | 2 (= 2-loop)    |
  * | threshold_corrections | 0 (disabled), 1 (enabled)    | 1 (= enabled)   |
  * | alternate_ewsb        | 0 (disabled), 1 (enabled)    | 0 (= disabled)  |
- * | cutoff_vev_running    | 0 (disabled), 1 (enabled)    | 0 (= disabled)  |
  */
 void Spectrum_generator_settings::reset()
 {
@@ -72,7 +71,6 @@ void Spectrum_generator_settings::reset()
    values[beta_loop_order]       = 2.;
    values[threshold_corrections] = 1.;
    values[alternate_ewsb]        = 0.;
-   values[cutoff_vev_running]    = 0.;
 }
 
 } // namespace flexiblesusy
