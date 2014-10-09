@@ -401,8 +401,8 @@ int CLASSNAME::calculate_fpi_update_step(const gsl_vector* x, void* params, gsl_
 int CLASSNAME::solve_ewsb_iteratively()
 {
    const gsl_multiroot_fsolver_type* solvers[] = {
-      gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids, gsl_multiroot_fsolver_broyden
-   };
+      gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids, gsl_multiroot_fsolver_broyden,
+   gsl_multiroot_fsolver_dnewton};
 
    double x_init[number_of_ewsb_equations];
    if (use_alternate_ewsb) {
@@ -457,7 +457,11 @@ int CLASSNAME::solve_ewsb_iteratively()
    } else {
       problems.unflag_no_ewsb();
    }
-
+//DH::note
+   std::cout << "EWSB solution:\n";
+   std::cout << "Q = " << get_scale() << ", vu = " << vu << ", vd = " << vd
+             << ", vs = " << vs << ", vsb = " << vsb << ", vphi = " << vphi <<"\n";
+   std::cout << "Lambdax = " << Lambdax << ", XiF = " << XiF << ", LXiF = " << LXiF << "\n";
    return status;
 }
 
@@ -592,10 +596,10 @@ int CLASSNAME::solve_ewsb()
 {std::cout << "Q = " << get_scale() << ", vu = " << vu << ", vd = " << vd
            << ", vs = " << vs << ", vsb = " << vsb << ", vphi = " << vphi << "\n";
    VERBOSE_MSG("\tSolving EWSB at " << ewsb_loop_order << "-loop order");
-
+   std::cout << "ewsb_loop_order = " << ewsb_loop_order << "\n";
    if (ewsb_loop_order == 0)
       return solve_ewsb_tree_level();
-
+   std::cout << "you shouldn't be here\n";
    return solve_ewsb_iteratively(ewsb_loop_order);
 }
 
@@ -1158,17 +1162,22 @@ void CLASSNAME::reorder_pole_masses()
  */
 void CLASSNAME::calculate_spectrum()
 {
+   std::cout << "get_Mhh() = "  << get_Mhh()  << std::endl;
    calculate_DRbar_parameters();
+   std::cout << "after DRbar calc get_Mhh() = "  << get_Mhh()  << std::endl;
+   std::cout << "at scale = "  << get_scale() << std::endl;
    if (pole_mass_loop_order > 0)
       calculate_pole_masses();
-
+   std::cout << "after pole calc get_Mhh() = "  << get_Mhh()  << std::endl;
+   std::cout << "after pole calc PHYSICAL(Mhh) = "  << PHYSICAL(Mhh)  << std::endl;
    // move goldstone bosons to the front
    reorder_DRbar_masses();
    if (pole_mass_loop_order == 0)
       copy_DRbar_masses_to_pole_masses();
    else
       reorder_pole_masses();
-
+   std::cout << "after reorder get_Mhh() = "  << get_Mhh()  << std::endl;
+   std::cout << "after pole calc PHYSICAL(Mhh) = "  << PHYSICAL(Mhh)  << std::endl;
    if (problems.have_serious_problem()) {
       clear_DRbar_parameters();
       physical.clear();

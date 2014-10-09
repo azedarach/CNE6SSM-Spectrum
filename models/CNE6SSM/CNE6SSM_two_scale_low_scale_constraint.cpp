@@ -82,6 +82,23 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    std::cout << "####################################################\n";
    std::cout << "\tapplying low scale constraint\n";
    std::cout << "####################################################\n";
+   std::cout << "****************************************************\n";
+   std::cout << "\tapplying low scale constraint\n";
+   std::cout << "****************************************************\n";
+   std::cout << "Model parameters set at scale = " << model->get_scale() << ":\n";
+   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
+             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
+   std::cout << "Yu(0,0) = " << model->get_Yu(0,0) << ", Yu(1,1) = " << model->get_Yu(1,1)
+             << ", Yu(2,2) = " << model->get_Yu(2,2) << "\n";
+   std::cout << "Yd(0,0) = " << model->get_Yd(0,0) << ", Yd(1,1) = " << model->get_Yd(1,1)
+             << ", Yd(2,2) = " << model->get_Yd(2,2) << "\n";
+   std::cout << "Ye(0,0) = " << model->get_Ye(0,0) << ", Yu(1,1) = " << model->get_Ye(1,1)
+             << ", Ye(2,2) = " << model->get_Ye(2,2) << "\n";
+   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << ", vs = "
+             << model->get_vs() << ", vsb = " << model->get_vsb() << ", vphi = " << model->get_vphi()
+             << "\n";
+   std::cout << "XiF = " << model->get_XiF() << ", LXiF = " << model->get_LXiF() << "\n";
+   std::cout << "****************************************************\n";
    std::cout << "Old MZDRbar = " << MZDRbar << "\n";
    model->calculate_DRbar_parameters();
    update_scale();
@@ -108,19 +125,23 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
              << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
 // DH:: note
-   // std::cout << "Q = " << model->get_scale() << ", ";
-   // std::cout << "g1 = " << model->get_g1() << ", ";
-   // std::cout << "g1p = " << model->get_g1p() << ", ";
-   // std::cout << "g2 = " << model->get_g2() << ", ";
-   // std::cout << "g3 = " << model->get_g3() << ", ";
-   // std::cout << "yt = " << model->get_Yu(2,2) << ", ";
-   // std::cout << "yb = " << model->get_Yd(2,2) << ", ";
-   // std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
-   // std::cout << "vd = " << model->get_vd() << ", ";
-   // std::cout << "vu = " << model->get_vu() << "\n";
-   // std::cout << "vs = " << model->get_vs() << ", ";
-   // std::cout << "vsb = " << model->get_vsb() << ", ";
-   // std::cout << "vphi = " << model->get_vphi() << "\n";
+   std::cout << "****************************************************\n";
+   std::cout << "\tapplied low scale constraint\n";
+   std::cout << "****************************************************\n";
+   std::cout << "Model parameters set at scale = " << model->get_scale() << ":\n";
+   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
+             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
+   std::cout << "Yu(0,0) = " << model->get_Yu(0,0) << ", Yu(1,1) = " << model->get_Yu(1,1)
+             << ", Yu(2,2) = " << model->get_Yu(2,2) << "\n";
+   std::cout << "Yd(0,0) = " << model->get_Yd(0,0) << ", Yd(1,1) = " << model->get_Yd(1,1)
+             << ", Yd(2,2) = " << model->get_Yd(2,2) << "\n";
+   std::cout << "Ye(0,0) = " << model->get_Ye(0,0) << ", Yu(1,1) = " << model->get_Ye(1,1)
+             << ", Ye(2,2) = " << model->get_Ye(2,2) << "\n";
+   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << ", vs = "
+             << model->get_vs() << ", vsb = " << model->get_vsb() << ", vphi = " << model->get_vphi()
+             << "\n";
+   std::cout << "XiF = " << model->get_XiF() << ", LXiF = " << model->get_LXiF() << "\n";
+   std::cout << "****************************************************\n";
    std::cout << "####################################################\n";
    std::cout << "\tfinished applying low scale constraint\n";
    std::cout << "####################################################\n";
@@ -205,10 +226,14 @@ void CNE6SSM_low_scale_constraint<Two_scale>::calculate_DRbar_gauge_couplings()
    const double e_drbar        = Sqrt(4.0 * Pi * alpha_em_drbar);
 
    // interface variables
-   MZDRbar
-      = model->calculate_MVZ_DRbar(Electroweak_constants::MZ);
-   const double MWDRbar
-      = model->calculate_MVWm_DRbar(Electroweak_constants::MW);
+   MZDRbar = Electroweak_constants::MZ;
+   double MWDRbar = Electroweak_constants::MW;
+
+   if (model->get_thresholds()) {
+      MZDRbar = model->calculate_MVZ_DRbar(Electroweak_constants::MZ);
+      MWDRbar = model->calculate_MVWm_DRbar(Electroweak_constants::MW);
+   }
+
    const double AlphaS = alpha_s_drbar;
    const double EDRbar = e_drbar;
 

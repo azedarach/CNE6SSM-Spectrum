@@ -160,7 +160,7 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
       beta_g3 += calc_beta_g3_one_loop(TRACE_STRUCT);
       beta_g1p += calc_beta_g1p_one_loop(TRACE_STRUCT);
       // DH:: temporary solution to prevent VEVs from running
-      double vev_temp_cutoff = 10000.0;
+      double vev_temp_cutoff = 10000.0;//vev_running_cutoff;
       if (!disable_vev_running || get_scale() < vev_temp_cutoff) {
          beta_vd += calc_beta_vd_one_loop(TRACE_STRUCT);
          beta_vu += calc_beta_vu_one_loop(TRACE_STRUCT);
@@ -201,6 +201,13 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
          }
       }
    }
+   std::cerr << get_scale() << " " << vu << " " << vd << " " << vs << " " << vsb << " "
+             << vphi << " " << Yu(2,2) << " " << Yd(2,2) << " " << Ye(2,2) << " " << g1 << " " 
+             << g2 << " " << g3 << " " << g1p << " " << Kappa(0,0) << " " << Kappa(1,1) 
+             << " " << Kappa(2,2) << " " << fu(0,0) << " " << fu(1,1) << " " << fu(2,0) << " "
+             << fd(0,0) << " " << fd(1,1) << " " << fd(2,1) << " " << MuPr << " " << MuPhi << " "
+             << XiF << " " << Lambdax << " " << SigmaL << " " << Sigmax << " " << beta_vu << " " << beta_vd << " " << beta_vs << " " << beta_vsb
+             << " " << beta_vphi << "\n";
    return CNE6SSM_susy_parameters(get_scale(), get_loops(), get_thresholds(), input,
                                   beta_Yd, beta_hE, beta_Ye, beta_SigmaL, beta_KappaPr, beta_Sigmax, beta_gD, beta_Kappa, beta_Lambda12, beta_Lambdax, beta_fu, beta_fd, beta_Yu, beta_MuPr, beta_MuPhi, beta_XiF, beta_g1, beta_g2, beta_g3, beta_g1p, beta_vd, beta_vu, beta_vs, beta_vsb, beta_vphi);
 }

@@ -76,19 +76,21 @@ void RGFlow<Two_scale>::solve()
    unsigned int max_iterations = get_max_iterations();
    if (models.empty() || max_iterations == 0)
       return;
-
+   std::cerr << "# Initial guess\n";
    initial_guess();
 
    iteration = 0;
    bool accuracy_reached = false;
    while (iteration < max_iterations && !accuracy_reached) {
+//DH::note
+      std::cerr << "# Iteration = " << iteration << "\n";
       update_running_precision();
       run_up();
       run_down();
       accuracy_reached = accuracy_goal_reached();
       ++iteration;
    }
-
+   std::cerr << "# Finish up\n";
    apply_lowest_constraint();
 
    if (!accuracy_reached)

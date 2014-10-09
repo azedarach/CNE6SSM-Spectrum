@@ -75,8 +75,14 @@ CNE6SSM_initial_guesser<Two_scale>::~CNE6SSM_initial_guesser()
  */
 void CNE6SSM_initial_guesser<Two_scale>::guess()
 {
+   std::cout << "####################################################\n";
+   std::cout << "\tstarting initial guess\n";
+   std::cout << "####################################################\n";
    guess_susy_parameters();
    guess_soft_parameters();
+   std::cout << "####################################################\n";
+   std::cout << "\tfinished initial guess\n";
+   std::cout << "####################################################\n";
 }
 
 /**
@@ -105,6 +111,9 @@ void CNE6SSM_initial_guesser<Two_scale>::guess()
  */
 void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
 {
+   std::cout << "****************************************************\n";
+   std::cout << "\tguessing susy parameters\n";
+   std::cout << "****************************************************\n";
    QedQcd leAtMt(oneset);
    const double MZ = Electroweak_constants::MZ;
    const double MW = Electroweak_constants::MW;
@@ -144,7 +153,23 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    MODEL->set_vsb(0.7071067811865475*0.95*ssumInput);
    //DH::note change
    MODEL->set_vphi(0.5*ssumInput);
-
+   std::cout << "****************************************************\n";
+   std::cout << "Model parameters set at scale = " << model->get_scale() << ":\n";
+   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
+             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
+   std::cout << "Yu(0,0) = " << model->get_Yu(0,0) << ", Yu(1,1) = " << model->get_Yu(1,1)
+             << ", Yu(2,2) = " << model->get_Yu(2,2) << "\n";
+   std::cout << "Yd(0,0) = " << model->get_Yd(0,0) << ", Yd(1,1) = " << model->get_Yd(1,1)
+             << ", Yd(2,2) = " << model->get_Yd(2,2) << "\n";
+   std::cout << "Ye(0,0) = " << model->get_Ye(0,0) << ", Yu(1,1) = " << model->get_Ye(1,1)
+             << ", Ye(2,2) = " << model->get_Ye(2,2) << "\n";
+   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << ", vs = "
+             << model->get_vs() << ", vsb = " << model->get_vsb() << ", vphi = " << model->get_vphi()
+             << "\n";
+   std::cout << "XiF = " << model->get_XiF() << ", LXiF = " << model->get_LXiF() << "\n";
+   std::cout << "****************************************************\n";
+   std::cout << "\tfinished guessing susy parameters\n";
+   std::cout << "****************************************************\n";
 }
 
 void CNE6SSM_initial_guesser<Two_scale>::calculate_DRbar_yukawa_couplings()
@@ -220,6 +245,9 @@ void CNE6SSM_initial_guesser<Two_scale>::calculate_Ye_DRbar()
  */
 void CNE6SSM_initial_guesser<Two_scale>::guess_soft_parameters()
 {
+   std::cout << "****************************************************\n";
+   std::cout << "\tguessing soft parameters\n";
+   std::cout << "****************************************************\n";
    const double low_scale_guess = low_constraint.get_initial_scale_guess();
    const double high_scale_guess = high_constraint.get_initial_scale_guess();
 
@@ -244,6 +272,23 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_soft_parameters()
 
    // calculate tree-level spectrum
    model->calculate_DRbar_parameters();
+   std::cout << "****************************************************\n";
+   std::cout << "Model parameters set at scale = " << model->get_scale() << ":\n";
+   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
+             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
+   std::cout << "Yu(0,0) = " << model->get_Yu(0,0) << ", Yu(1,1) = " << model->get_Yu(1,1)
+             << ", Yu(2,2) = " << model->get_Yu(2,2) << "\n";
+   std::cout << "Yd(0,0) = " << model->get_Yd(0,0) << ", Yd(1,1) = " << model->get_Yd(1,1)
+             << ", Yd(2,2) = " << model->get_Yd(2,2) << "\n";
+   std::cout << "Ye(0,0) = " << model->get_Ye(0,0) << ", Yu(1,1) = " << model->get_Ye(1,1)
+             << ", Ye(2,2) = " << model->get_Ye(2,2) << "\n";
+   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << ", vs = "
+             << model->get_vs() << ", vsb = " << model->get_vsb() << ", vphi = " << model->get_vphi()
+             << "\n";
+   std::cout << "XiF = " << model->get_XiF() << ", LXiF = " << model->get_LXiF() << "\n";
+   std::cout << "****************************************************\n";
+   std::cout << "\tfinished guessing soft parameters\n";
+   std::cout << "****************************************************\n";
 }
 
 } // namespace flexiblesusy

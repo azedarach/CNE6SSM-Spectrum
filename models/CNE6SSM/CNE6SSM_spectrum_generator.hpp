@@ -172,7 +172,10 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
       high_scale = high_scale_constraint.get_scale();
       susy_scale = susy_scale_constraint.get_scale();
       low_scale  = low_scale_constraint.get_scale();
-
+//DH::note
+      //   model.run_to(high_scale);
+//      high_scale_constraint.apply();
+//DH::normal from here
       model.run_to(susy_scale);
       model.solve_ewsb();
       model.calculate_spectrum();
