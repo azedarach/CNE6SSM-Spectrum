@@ -72,26 +72,7 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
 {
    assert(model && "Error: CNE6SSM_high_scale_constraint:"
           " model pointer must not be zero");
-   std::cout << "####################################################\n";
-   std::cout << "\tapplying high scale constraint\n";
-   std::cout << "####################################################\n";
-   std::cout << "****************************************************\n";
-   std::cout << "\tapplying high scale constraint\n";
-   std::cout << "****************************************************\n";
-   std::cout << "Model parameters set at scale = " << model->get_scale() << ":\n";
-   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
-             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
-   std::cout << "Yu(0,0) = " << model->get_Yu(0,0) << ", Yu(1,1) = " << model->get_Yu(1,1)
-             << ", Yu(2,2) = " << model->get_Yu(2,2) << "\n";
-   std::cout << "Yd(0,0) = " << model->get_Yd(0,0) << ", Yd(1,1) = " << model->get_Yd(1,1)
-             << ", Yd(2,2) = " << model->get_Yd(2,2) << "\n";
-   std::cout << "Ye(0,0) = " << model->get_Ye(0,0) << ", Yu(1,1) = " << model->get_Ye(1,1)
-             << ", Ye(2,2) = " << model->get_Ye(2,2) << "\n";
-   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << ", vs = "
-             << model->get_vs() << ", vsb = " << model->get_vsb() << ", vphi = " << model->get_vphi()
-             << "\n";
-   std::cout << "XiF = " << model->get_XiF() << ", LXiF = " << model->get_LXiF() << "\n";
-   std::cout << "****************************************************\n";
+
    if (std::fabs(model->get_g1()) > 3.0) {
 #ifdef ENABLE_VERBOSE
       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
@@ -164,15 +145,15 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_TYe(Azero*Ye);
    MODEL->set_TYd(Azero*Yd);
    MODEL->set_TYu(Azero*Yu);
-   MODEL->set_TKappaPr(Azero*KappaPr);
-   MODEL->set_TSigmax(Azero*Sigmax);
-   MODEL->set_ThE(Azero*hE);
-   MODEL->set_TSigmaL(Azero*SigmaL);
-   MODEL->set_TgD(Azero*gD);
-   MODEL->set_Tfu(Azero*fu);
-   MODEL->set_Tfd(Azero*fd);
-   MODEL->set_TKappa(Azero*Kappa);
-   MODEL->set_TLambda12(Azero*Lambda12);
+   MODEL->set_TKappaPr(Azero*KappaPrInput);
+   MODEL->set_TSigmax(Azero*SigmaxInput);
+   MODEL->set_ThE(Azero*hEInput);
+   MODEL->set_TSigmaL(Azero*SigmaLInput);
+   MODEL->set_TgD(Azero*gDInput);
+   MODEL->set_Tfu(Azero*fuInput);
+   MODEL->set_Tfd(Azero*fdInput);
+   MODEL->set_TKappa(Azero*KappaInput);
+   MODEL->set_TLambda12(Azero*Lambda12Input);
    MODEL->set_TLambdax(Azero*Lambdax);
    MODEL->set_mHd2(Sqr(m0));
    MODEL->set_mHu2(Sqr(m0));
@@ -195,40 +176,7 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_MassWB(m12);
    MODEL->set_MassG(m12);
    MODEL->set_MassBp(m12);
-// DH:: note
-   // std::cout << "Q = " << model->get_scale() << ", ";
-   // std::cout << "g1 = " << model->get_g1() << ", ";
-   // std::cout << "g1p = " << model->get_g1p() << ", ";
-   // std::cout << "g2 = " << model->get_g2() << ", ";
-   // std::cout << "g3 = " << model->get_g3() << ", ";
-   // std::cout << "yt = " << model->get_Yu(2,2) << ", ";
-   // std::cout << "yb = " << model->get_Yd(2,2) << ", ";
-   // std::cout << "ytau = " << model->get_Ye(2,2) << ", ";
-   // std::cout << "vd = " << model->get_vd() << ", ";
-   // std::cout << "vu = " << model->get_vu() << ", ";
-   // std::cout << "vs = " << model->get_vs() << ", ";
-   // std::cout << "vsb = " << model->get_vsb() << ", ";
-   // std::cout << "vphi = " << model->get_vphi() << "\n";
-   std::cout << "****************************************************\n";
-   std::cout << "\tapplied high scale constraint\n";
-   std::cout << "****************************************************\n";
-   std::cout << "Model parameters set at scale = " << model->get_scale() << ":\n";
-   std::cout << "g1 = " << model->get_g1() << ", g2 = " << model->get_g2() 
-             << ", g3 = " << model->get_g3() << ", g1p = " << model->get_g1p() << "\n";
-   std::cout << "Yu(0,0) = " << model->get_Yu(0,0) << ", Yu(1,1) = " << model->get_Yu(1,1)
-             << ", Yu(2,2) = " << model->get_Yu(2,2) << "\n";
-   std::cout << "Yd(0,0) = " << model->get_Yd(0,0) << ", Yd(1,1) = " << model->get_Yd(1,1)
-             << ", Yd(2,2) = " << model->get_Yd(2,2) << "\n";
-   std::cout << "Ye(0,0) = " << model->get_Ye(0,0) << ", Yu(1,1) = " << model->get_Ye(1,1)
-             << ", Ye(2,2) = " << model->get_Ye(2,2) << "\n";
-   std::cout << "vu = " << model->get_vu() << ", vd = " << model->get_vd() << ", vs = "
-             << model->get_vs() << ", vsb = " << model->get_vsb() << ", vphi = " << model->get_vphi()
-             << "\n";
-   std::cout << "XiF = " << model->get_XiF() << ", LXiF = " << model->get_LXiF() << "\n";
-   std::cout << "****************************************************\n";
-   std::cout << "####################################################\n";
-   std::cout << "\tfinished applying high scale constraint\n";
-   std::cout << "####################################################\n";
+
 }
 
 double CNE6SSM_high_scale_constraint<Two_scale>::get_scale() const

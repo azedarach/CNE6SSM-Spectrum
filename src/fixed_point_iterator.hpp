@@ -1,6 +1,6 @@
 // ====================================================================
-// Class to do fixed point iteration. Uses std::vector instead of
-// gsl_vector at the moment, as the syntax is slightly nicer.
+// Class to do fixed point iteration. Basically just the same as
+// Root_finder, but does fixed point iteration instead.
 //
 // TODO:
 //   - implement check for no progress towards solution

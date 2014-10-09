@@ -14,6 +14,7 @@
 #include "lowe.h"
 
 #include <iostream>
+#include <chrono>
 
 void get_current_inputs(const std::vector<std::size_t>&, const std::vector<std::size_t>&, flexiblesusy::CNE6SSM_input_parameters&);
 
@@ -22,7 +23,8 @@ int main()
    using namespace flexiblesusy;
    using namespace softsusy;
    typedef Two_scale algorithm_type;
-
+   typedef std::chrono::duration<int,std::micro> microseconds_t;
+   std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
    CNE6SSM_input_parameters input;
    QedQcd oneset;
    oneset.toMz();
@@ -32,7 +34,7 @@ int main()
    spectrum_generator.set_max_iterations(0);   // 0 == automatic
    spectrum_generator.set_calculate_sm_masses(0); // 0 == no
    spectrum_generator.set_alternate_ewsb(0); // 1 == yes
-   spectrum_generator.set_cutoff_vev_running(1); // 1 == yes
+   spectrum_generator.set_cutoff_vev_running(0); // 1 == yes
    spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
 
    std::size_t m0_npts = 30;
@@ -50,6 +52,7 @@ int main()
         << std::setw(12) << std::left << "TanBeta" << ' '
         << std::setw(12) << std::left << "Azero" << ' '
         << std::setw(12) << std::left << "Mhh(1)/GeV" << ' '
+        << std::setw(12) << std::left << "MSHp0(1)/GeV" << ' '
         << std::setw(12) << std::left << "error"
         << '\n';
 
@@ -63,6 +66,7 @@ int main()
       const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& problems
          = spectrum_generator.get_problems();
       const double higgs = pole_masses.Mhh(0);
+      const double survival_higgs = pole_masses.MSHp0(0);
       const bool error = problems.have_serious_problem();
 
       cout << " "
@@ -71,6 +75,7 @@ int main()
            << std::setw(12) << std::left << input.TanBeta << ' '
            << std::setw(12) << std::left << input.Azero << ' '
            << std::setw(12) << std::left << higgs << ' '
+           << std::setw(12) << std::left << survival_higgs << ' '
            << std::setw(12) << std::left << error;
       if (error) {
          cout << "\t# " << problems;
@@ -78,6 +83,10 @@ int main()
       cout << '\n';
       scan.step_forward();
    }
+   std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+   microseconds_t duration(std::chrono::duration_cast<microseconds_t>(end-start));
+   double time_in_seconds = duration.count() * 0.000001;
+   cout << "# Scan completed in " << time_in_seconds << " seconds\n";
 
    return 0;
 }

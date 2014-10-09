@@ -40,7 +40,7 @@ double CNE6SSM_susy_parameters::calc_beta_vu_one_loop(const Susy_traces& susy_tr
    double beta_vu;
 
    beta_vu = 0.1*oneOver16PiSqr*vu*(-10*tracefuAdjfu - 30*traceYuAdjYu -
-      10*AbsSqr(Lambdax) + 3*Sqr(g1) + 2*Sqr(g1p) + 15*Sqr(g2));
+                                    10*AbsSqr(Lambdax) + 3*Sqr(g1) + 2*Sqr(g1p) + 15*Sqr(g2));
 
 
    return beta_vu;
