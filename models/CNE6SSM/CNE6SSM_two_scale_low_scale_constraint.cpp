@@ -180,10 +180,14 @@ void CNE6SSM_low_scale_constraint<Two_scale>::calculate_DRbar_gauge_couplings()
    const double e_drbar        = Sqrt(4.0 * Pi * alpha_em_drbar);
 
    // interface variables
-   MZDRbar
-      = model->calculate_MVZ_DRbar(Electroweak_constants::MZ);
-   const double MWDRbar
-      = model->calculate_MVWm_DRbar(Electroweak_constants::MW);
+   MZDRbar = Electroweak_constants::MZ;
+   double MWDRbar = Electroweak_constants::MW;
+
+   if (model->get_thresholds()) {
+      MZDRbar = model->calculate_MVZ_DRbar(Electroweak_constants::MZ);
+      MWDRbar = model->calculate_MVWm_DRbar(Electroweak_constants::MW);
+   }
+
    const double AlphaS = alpha_s_drbar;
    const double EDRbar = e_drbar;
 
