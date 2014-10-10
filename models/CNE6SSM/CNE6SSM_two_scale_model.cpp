@@ -68,7 +68,7 @@ std::mutex CLASSNAME::mtx_fortran;
 CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters& input_)
    : Two_scale_model()
    , CNE6SSM_soft_parameters(input_)
-   , number_of_ewsb_iterations(100)
+   , number_of_ewsb_iterations(200)
    , number_of_mass_iterations(20)
    , ewsb_loop_order(2)
    , pole_mass_loop_order(2)
