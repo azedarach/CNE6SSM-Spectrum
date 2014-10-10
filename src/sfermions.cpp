@@ -44,6 +44,14 @@ const double Hypercharge_right[NUMBER_OF_MSSM_SPARTICLES] = {
    -4./3., 2./3., 0., 2.
 };
 
+const double Ncharge_left[NUMBER_OF_MSSM_SPARTICLES] = {
+   1., 1., 2., 2.
+};
+
+const double Ncharge_right[NUMBER_OF_MSSM_SPARTICLES] = {
+   1., 2., 0., 1.
+};
+
 /**
  * Obtains 2 x 2 mass matrix using input parameters in first argument 
  * and diagonalises it.  Fills the second argument with the eigenvalues
@@ -57,30 +65,41 @@ double diagonalize_sfermions_2x2(const Mass_data& pars,
    const double yf     = pars.yf;
    const double vd     = pars.vd;
    const double vu     = pars.vu;
+   const double vs     = pars.vs;
+   const double vsb    = pars.vsb;
+   const double QS     = pars.QS;
    const double gY     = pars.gY;
    const double g2     = pars.g2;
+   const double gN     = pars.gN;
    const double Tyf    = pars.Tyf;
    const double mu     = pars.mu;
    const double T3     = pars.T3;
    const double Yl     = pars.Yl;
    const double Yr     = pars.Yr;
+   const double Ql     = pars.Ql;
+   const double Qr     = pars.Qr;
    const double vev2   = 0.25 * (Sqr(vd) - Sqr(vu));
+   const double svev2  = Sqr(vs) - Sqr(vsb);
    Eigen::Matrix<double,2,2> mass_matrix;
    /// fill sfermion phi in mass matix in basis (phi_L phi_R)
    if (Sign(T3) > 0) {
       mass_matrix(0,0) = ml2 + 0.5 * AbsSqr(yf) * Sqr(vu)
-         + (T3 * Sqr(g2) - 0.5 * Yl * Sqr(gY)) * vev2;
+         + (T3 * Sqr(g2) - 0.5 * Yl * Sqr(gY)) * vev2
+         + 0.5 * Sqr(gN) * Ql * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu) + QS * svev2);
       mass_matrix(0,1) = oneOverRoot2 * (vu*Conj(Tyf) - vd*Conj(yf)*mu);
       mass_matrix(1,0) = Conj(mass_matrix(0,1));
       mass_matrix(1,1) = mr2 + 0.5 * AbsSqr(yf) * Sqr(vu)
-         - 0.5 * Yr * Sqr(gY) * vev2;
+         - 0.5 * Yr * Sqr(gY) * vev2 
+         + 0.5 * Sqr(gN) * Qr * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu) + QS * svev2);
    } else {
       mass_matrix(0,0) = ml2 + 0.5 * AbsSqr(yf) * Sqr(vd)
-         + (T3 * Sqr(g2) - 0.5 * Yl * Sqr(gY)) * vev2;
+         + (T3 * Sqr(g2) - 0.5 * Yl * Sqr(gY)) * vev2
+         + 0.5 * Sqr(gN) * Ql * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu) + QS * svev2);
       mass_matrix(0,1) = oneOverRoot2 * (vd*Conj(Tyf) - vu*Conj(yf)*mu);
       mass_matrix(1,0) = Conj(mass_matrix(0,1));
       mass_matrix(1,1) = mr2 + 0.5 * AbsSqr(yf) * Sqr(vd)
-         - 0.5 * Yr * Sqr(gY) * vev2;
+         - 0.5 * Yr * Sqr(gY) * vev2
+         + 0.5 * Sqr(gN) * Qr * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu) + QS * svev2);
    }
 
    Eigen::Matrix<double, 2, 2> Zf;

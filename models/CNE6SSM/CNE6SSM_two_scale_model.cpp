@@ -33,7 +33,7 @@
 #include "config.h"
 #include "pv.hpp"
 
-
+#include "sfermions.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -54028,12 +54028,129 @@ std::complex<double> CLASSNAME::tadpole_hh(unsigned gO1) const
 
 }
 
+void CLASSNAME::calculate_MSu_3rd_generation(double& msf1, double& msf2, double& theta) const
+{
+   const auto QS = LOCALINPUT(QS);
 
+   sfermions::Mass_data sf_data;
+   sf_data.ml2 = mq2(2,2);
+   sf_data.mr2 = mu2(2,2);
+   sf_data.yf  = Yu(2,2);
+   sf_data.vd  = vd;
+   sf_data.vu  = vu;
+   sf_data.vs  = vs;
+   sf_data.vsb = vsb;
+   sf_data.QS  = QS;
+   sf_data.gY  = 0.7745966692414834*g1;
+   sf_data.g2  = g2;
+   sf_data.gN  = 0.158113883008419*g1p;
+   sf_data.Tyf = TYu(2,2);
+   sf_data.mu  = 0.7071067811865475*vs*Lambdax;
+   sf_data.T3  = sfermions::Isospin[sfermions::up];
+   sf_data.Yl  = sfermions::Hypercharge_left[sfermions::up];
+   sf_data.Yr  = sfermions::Hypercharge_right[sfermions::up];
+   sf_data.Ql  = sfermions::Ncharge_left[sfermions::up];
+   sf_data.Qr  = sfermions::Ncharge_right[sfermions::up];
 
+   Eigen::Array<double,2,1> msf;
 
+   theta = sfermions::diagonalize_sfermions_2x2(sf_data, msf);
+   msf1  = msf(0);
+   msf2  = msf(1);
+}
 
+void CLASSNAME::calculate_MSd_3rd_generation(double& msf1, double& msf2, double& theta) const
+{
+   const auto QS = LOCALINPUT(QS);
 
+   sfermions::Mass_data sf_data;
+   sf_data.ml2 = mq2(2,2);
+   sf_data.mr2 = md2(2,2);
+   sf_data.yf  = Yd(2,2);
+   sf_data.vd  = vd;
+   sf_data.vu  = vu;
+   sf_data.vs  = vs;
+   sf_data.vsb = vsb;
+   sf_data.QS  = QS;
+   sf_data.gY  = 0.7745966692414834*g1;
+   sf_data.g2  = g2;
+   sf_data.gN  = 0.158113883008419*g1p;
+   sf_data.Tyf = TYd(2,2);
+   sf_data.mu  = 0.7071067811865475*vs*Lambdax;
+   sf_data.T3  = sfermions::Isospin[sfermions::down];
+   sf_data.Yl  = sfermions::Hypercharge_left[sfermions::down];
+   sf_data.Yr  = sfermions::Hypercharge_right[sfermions::down];
+   sf_data.Ql = sfermions::Ncharge_left[sfermions::down];
+   sf_data.Qr = sfermions::Ncharge_right[sfermions::down];
 
+   Eigen::Array<double,2,1> msf;
+
+   theta = sfermions::diagonalize_sfermions_2x2(sf_data, msf);
+   msf1  = msf(0);
+   msf2  = msf(1);
+}
+
+void CLASSNAME::calculate_MSv_3rd_generation(double& msf1, double& msf2, double& theta) const
+{
+   const auto QS = LOCALINPUT(QS);
+
+   sfermions::Mass_data sf_data;
+   sf_data.ml2 = ml2(2,2);
+   sf_data.mr2 = 0.;
+   sf_data.yf  = 0.;
+   sf_data.vd  = vd;
+   sf_data.vu  = vu;
+   sf_data.vs  = vs;
+   sf_data.vsb = vsb;
+   sf_data.QS  = QS;
+   sf_data.gY  = 0.7745966692414834*g1;
+   sf_data.g2  = g2;
+   sf_data.gN  = 0.158113883008419*g1p;
+   sf_data.Tyf = 0.;
+   sf_data.mu  = 0.7071067811865475*vs*Lambdax;
+   sf_data.T3  = sfermions::Isospin[sfermions::neutrino];
+   sf_data.Yl  = sfermions::Hypercharge_left[sfermions::neutrino];
+   sf_data.Yr  = sfermions::Hypercharge_right[sfermions::neutrino];
+   sf_data.Ql  = sfermions::Ncharge_left[sfermions::neutrino];
+   sf_data.Qr  = sfermions::Ncharge_right[sfermions::neutrino];
+
+   Eigen::Array<double,2,1> msf;
+
+   theta = sfermions::diagonalize_sfermions_2x2(sf_data, msf);
+   msf1  = msf(0);
+   msf2  = msf(1);
+}
+
+void CLASSNAME::calculate_MSe_3rd_generation(double& msf1, double& msf2, double& theta) const
+{
+   const auto QS = LOCALINPUT(QS);
+
+   sfermions::Mass_data sf_data;
+   sf_data.ml2 = ml2(2,2);
+   sf_data.mr2 = me2(2,2);
+   sf_data.yf  = Ye(2,2);
+   sf_data.vd  = vd;
+   sf_data.vu  = vu;
+   sf_data.vs  = vs;
+   sf_data.vsb = vsb;
+   sf_data.QS  = QS;
+   sf_data.gY  = 0.7745966692414834*g1;
+   sf_data.g2  = g2;
+   sf_data.gN  = 0.158113883008419*g1p;
+   sf_data.Tyf = TYe(2,2);
+   sf_data.mu  = 0.7071067811865475*vs*Lambdax;
+   sf_data.T3  = sfermions::Isospin[sfermions::electron];
+   sf_data.Yl  = sfermions::Hypercharge_left[sfermions::electron];
+   sf_data.Yr  = sfermions::Hypercharge_right[sfermions::electron];
+   sf_data.Ql  = sfermions::Ncharge_left[sfermions::electron];
+   sf_data.Qr  = sfermions::Ncharge_right[sfermions::electron];
+
+   Eigen::Array<double,2,1> msf;
+
+   theta = sfermions::diagonalize_sfermions_2x2(sf_data, msf);
+   msf1  = msf(0);
+   msf2  = msf(1);
+}
 
 void CLASSNAME::calculate_MVG_pole()
 {

@@ -35,22 +35,29 @@ enum Sparticles {
 extern const double Isospin[NUMBER_OF_MSSM_SPARTICLES];
 extern const double Hypercharge_left[NUMBER_OF_MSSM_SPARTICLES];
 extern const double Hypercharge_right[NUMBER_OF_MSSM_SPARTICLES];
-
+// DH:: added for NE6SSM (but note this is no good if the charges
+// are left as inputs as in a generic E6 model).
+extern const double Ncharge_left[NUMBER_OF_MSSM_SPARTICLES];
+extern const double Ncharge_right[NUMBER_OF_MSSM_SPARTICLES];
 
 /**
  * data needed to fill 2 x 2 sfermion mass matrix 
  */ 
 struct Mass_data {
-   double ml2;    ///< soft mass of left-handed sfermion
-   double mr2;    ///< soft mass of right-handed sfermion
-   double yf;     ///< Yukawa coupling
-   double vd, vu; ///< Higgs VEVs
-   double gY, g2; ///< gauge couplings (not GUT normalized)
-   double Tyf;    ///< trilinear coupling
-   double mu;     ///< Superpotential parameter
-   double T3;     ///< weak isospin
-   double Yl;     ///< Hypercharge of left-handed sfermion
-   double Yr;     ///< Hypercharge of right-handed sfermion
+   double ml2;         ///< soft mass of left-handed sfermion
+   double mr2;         ///< soft mass of right-handed sfermion
+   double yf;          ///< Yukawa coupling
+   double vd, vu;      ///< Higgs VEVs
+   double vs, vsb;     ///< singlet VEVs
+   double QS;          ///< N-charge of singlet
+   double gY, g2, gN;  ///< gauge couplings (not GUT normalized)
+   double Tyf;         ///< trilinear coupling
+   double mu;          ///< Effective superpotential parameter
+   double T3;          ///< weak isospin
+   double Yl;          ///< Hypercharge of left-handed sfermion
+   double Yr;          ///< Hypercharge of right-handed sfermion
+   double Ql;          ///< N-charge of left-handed sfermion
+   double Qr;          ///< N-charge of right-handed sfermion
 };
 
 double diagonalize_sfermions_2x2(const Mass_data&,

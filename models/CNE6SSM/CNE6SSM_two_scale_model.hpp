@@ -1217,7 +1217,10 @@ public:
    std::complex<double> self_energy_Fu_PL_heavy_rotated(double p , unsigned gO1, unsigned gO2) const;
    std::complex<double> tadpole_hh(unsigned gO1) const;
 
-
+   void calculate_MSu_3rd_generation(double&, double&, double&) const;
+   void calculate_MSd_3rd_generation(double&, double&, double&) const;
+   void calculate_MSv_3rd_generation(double&, double&, double&) const;
+   void calculate_MSe_3rd_generation(double&, double&, double&) const;
 
 
    void calculate_MVG_pole();
