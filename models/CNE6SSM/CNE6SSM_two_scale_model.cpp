@@ -774,7 +774,7 @@ int CLASSNAME::check_fpi_ewsb_solution(double precision)
 
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
-         model->tadpole_hh_2loop(two_loop_tadpole);
+         tadpole_hh_2loop(two_loop_tadpole);
          tadpole[0] -= two_loop_tadpole[0];
          tadpole[1] -= two_loop_tadpole[1];
          tadpole[2] -= two_loop_tadpole[2];
@@ -2607,7 +2607,7 @@ double CLASSNAME::get_next_fpi_param_1() const
       delta -= (vs*Re(tadpole_hh(2)) - vsb*Re(tadpole_hh(3)));
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
-         model->tadpole_hh_2loop(two_loop_tadpole);
+         tadpole_hh_2loop(two_loop_tadpole);
          delta -= vs*two_loop_tadpole[2];
       }
    }
@@ -2634,8 +2634,8 @@ double CLASSNAME::get_next_fpi_param_2() const
       result -= (vd*Re(tadpole_hh(0)) - vu*Re(tadpole_hh(1)));
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
-         model->tadpole_hh_2loop(two_loop_tadpole);
-         result -= (vd*two_loop_tadpole[0] - vu*two_loop_tadpole[1])
+         tadpole_hh_2loop(two_loop_tadpole);
+         result -= (vd*two_loop_tadpole[0] - vu*two_loop_tadpole[1]);
       }
    }
 
@@ -2662,7 +2662,7 @@ double CLASSNAME::get_next_fpi_param_3() const
       result -= Re(tadpole_hh(0));
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
-         model->tadpole_hh_2loop(two_loop_tadpole);
+         tadpole_hh_2loop(two_loop_tadpole);
          result -= two_loop_tadpole[0];
       }
    }
