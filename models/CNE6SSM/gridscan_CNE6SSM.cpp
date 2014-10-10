@@ -15,8 +15,12 @@
 
 #include <iostream>
 #include <chrono>
+#include <sys/time.h>
 
 void get_current_inputs(const std::vector<std::size_t>&, const std::vector<std::size_t>&, flexiblesusy::CNE6SSM_input_parameters&);
+
+double get_wall_time();
+double get_cpu_time();
 
 int main()
 {
@@ -24,7 +28,10 @@ int main()
    using namespace softsusy;
    typedef Two_scale algorithm_type;
    typedef std::chrono::duration<int,std::micro> microseconds_t;
-   std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+   std::chrono::high_resolution_clock::time_point start_point = std::chrono::high_resolution_clock::now();
+   double wall_start = get_wall_time();
+   double cpu_start = get_cpu_time();
+
    CNE6SSM_input_parameters input;
    QedQcd oneset;
    oneset.toMz();
@@ -33,13 +40,13 @@ int main()
    spectrum_generator.set_precision_goal(5.0e-3);
    spectrum_generator.set_max_iterations(0);   // 0 == automatic
    spectrum_generator.set_calculate_sm_masses(0); // 0 == no
-   spectrum_generator.set_alternate_ewsb(0); // 1 == yes
+   spectrum_generator.set_alternate_ewsb(1); // 1 == yes
    spectrum_generator.set_cutoff_vev_running(0); // 1 == yes
    spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
 
    std::size_t m0_npts = 30;
    std::size_t m12_npts = 30;
-   std::size_t A0_npts = 1;
+   std::size_t A0_npts = 10;
    std::size_t TanBeta_npts = 1;
 
    std::vector<std::size_t> scan_dimensions = {m0_npts, m12_npts, TanBeta_npts, A0_npts};
@@ -83,10 +90,15 @@ int main()
       cout << '\n';
       scan.step_forward();
    }
-   std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-   microseconds_t duration(std::chrono::duration_cast<microseconds_t>(end-start));
+   std::chrono::high_resolution_clock::time_point end_point = std::chrono::high_resolution_clock::now();
+   microseconds_t duration(std::chrono::duration_cast<microseconds_t>(end_point - start_point));
    double time_in_seconds = duration.count() * 0.000001;
+   double wall_end = get_wall_time();
+   double cpu_end = get_cpu_time();
+
    cout << "# Scan completed in " << time_in_seconds << " seconds\n";
+   cout << "# Wall time = " << wall_end - wall_start << " seconds\n";
+   cout << "# CPU time  = " << cpu_end - cpu_start << " seconds\n";
 
    return 0;
 }
@@ -99,8 +111,8 @@ void get_current_inputs(const std::vector<std::size_t>& posn, const std::vector<
    const double m12_upper = 3000.; // GeV
    const double TanBeta_lower = 10.;
    const double TanBeta_upper = 10.;
-   const double Azero_lower = 1000.; // GeV
-   const double Azero_upper = 1000.; // GeV
+   const double Azero_lower = 0.; // GeV
+   const double Azero_upper = 3000.; // GeV
 
    double m0_incr = 0.0;
    double m12_incr = 0.0;
@@ -180,4 +192,17 @@ void get_current_inputs(const std::vector<std::size_t>& posn, const std::vector<
    input.BMuPrInput = 5.0e2;
    input.BMuPhiInput = 0.;
 
+}
+
+double get_wall_time()
+{
+   struct timeval time;
+   if (gettimeofday(&time,NULL)) {
+      return 0;
+   }
+   return (double)time.tv_sec + (double)time.tv_usec*0.000001;
+}
+
+double get_cpu_time() {
+   return (double)clock() / CLOCKS_PER_SEC;
 }

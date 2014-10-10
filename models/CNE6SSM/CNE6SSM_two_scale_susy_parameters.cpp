@@ -197,13 +197,13 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
          }
       }
    }
-   std::cerr << get_scale() << " " << vu << " " << vd << " " << vs << " " << vsb << " "
-             << vphi << " " << Yu(2,2) << " " << Yd(2,2) << " " << Ye(2,2) << " " << g1 << " " 
-             << g2 << " " << g3 << " " << g1p << " " << Kappa(0,0) << " " << Kappa(1,1) 
-             << " " << Kappa(2,2) << " " << fu(0,0) << " " << fu(1,1) << " " << fu(2,0) << " "
-             << fd(0,0) << " " << fd(1,1) << " " << fd(2,1) << " " << MuPr << " " << MuPhi << " "
-             << XiF << " " << Lambdax << " " << SigmaL << " " << Sigmax << " " << vev_running_cutoff << " " << beta_vu << " " << beta_vd << " " << beta_vs << " " << beta_vsb
-             << " " << beta_vphi << "\n";
+   // std::cerr << get_scale() << " " << vu << " " << vd << " " << vs << " " << vsb << " "
+   //           << vphi << " " << Yu(2,2) << " " << Yd(2,2) << " " << Ye(2,2) << " " << g1 << " " 
+   //           << g2 << " " << g3 << " " << g1p << " " << Kappa(0,0) << " " << Kappa(1,1) 
+   //           << " " << Kappa(2,2) << " " << fu(0,0) << " " << fu(1,1) << " " << fu(2,0) << " "
+   //           << fd(0,0) << " " << fd(1,1) << " " << fd(2,1) << " " << MuPr << " " << MuPhi << " "
+   //           << XiF << " " << Lambdax << " " << SigmaL << " " << Sigmax << " " << vev_running_cutoff << " " << beta_vu << " " << beta_vd << " " << beta_vs << " " << beta_vsb
+   //           << " " << beta_vphi << "\n";
    return CNE6SSM_susy_parameters(get_scale(), get_loops(), get_thresholds(), input,
                                   beta_Yd, beta_hE, beta_Ye, beta_SigmaL, beta_KappaPr, beta_Sigmax, beta_gD, beta_Kappa, beta_Lambda12, beta_Lambdax, beta_fu, beta_fd, beta_Yu, beta_MuPr, beta_MuPhi, beta_XiF, beta_g1, beta_g2, beta_g3, beta_g1p, beta_vd, beta_vu, beta_vs, beta_vsb, beta_vphi);
 }
