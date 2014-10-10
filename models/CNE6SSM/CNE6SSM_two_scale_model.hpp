@@ -1222,6 +1222,10 @@ public:
    void calculate_MSv_3rd_generation(double&, double&, double&) const;
    void calculate_MSe_3rd_generation(double&, double&, double&) const;
 
+   void self_energy_hh_2loop(double result[6]) const;
+   void self_energy_Ah_2loop(double result[6]) const;
+
+   void tadpole_hh_2loop(double result[3]) const;
 
    void calculate_MVG_pole();
    void calculate_MGlu_pole();

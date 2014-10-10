@@ -34,6 +34,7 @@
 #include "pv.hpp"
 
 #include "sfermions.hpp"
+#include "nmssm_twoloophiggs.h"
 
 #include <cmath>
 #include <iostream>
@@ -260,7 +261,11 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
       tadpole[4] -= Re(model->tadpole_hh(4));
 
       if (ewsb_loop_order > 1) {
-
+         double two_loop_tadpole[3];
+         model->tadpole_hh_2loop(two_loop_tadpole);
+         tadpole[0] -= two_loop_tadpole[0];
+         tadpole[1] -= two_loop_tadpole[1];
+         tadpole[2] -= two_loop_tadpole[2];
       }
    }
 
@@ -320,7 +325,11 @@ int CLASSNAME::alternate_tadpole_equations(const gsl_vector* x, void* params, gs
       tadpole[4] -= Re(model->tadpole_hh(4));
 
       if (ewsb_loop_order > 1) {
-
+         double two_loop_tadpole[3];
+         model->tadpole_hh_2loop(two_loop_tadpole);
+         tadpole[0] -= two_loop_tadpole[0];
+         tadpole[1] -= (model->get_vd()*two_loop_tadpole[0] - model->get_vu()*two_loop_tadpole[1]);
+         tadpole[2] -= model->get_vs()*two_loop_tadpole[2];
       }
    }
 
@@ -763,7 +772,11 @@ int CLASSNAME::check_fpi_ewsb_solution(double precision)
       tadpole[4] -= Re(tadpole_hh(4));
 
       if (ewsb_loop_order > 1) {
-
+         double two_loop_tadpole[3];
+         model->tadpole_hh_2loop(two_loop_tadpole);
+         tadpole[0] -= two_loop_tadpole[0];
+         tadpole[1] -= two_loop_tadpole[1];
+         tadpole[2] -= two_loop_tadpole[2];
       }
    }
 
@@ -2592,7 +2605,9 @@ double CLASSNAME::get_next_fpi_param_1() const
       // DH:: should have error checking here
       delta -= (vs*Re(tadpole_hh(2)) - vsb*Re(tadpole_hh(3)));
       if (ewsb_loop_order > 1) {
-
+         double two_loop_tadpole[3];
+         model->tadpole_hh_2loop(two_loop_tadpole);
+         delta -= vs*two_loop_tadpole[2];
       }
    }
 
@@ -2617,7 +2632,9 @@ double CLASSNAME::get_next_fpi_param_2() const
       // DH:: should have error checking here
       result -= (vd*Re(tadpole_hh(0)) - vu*Re(tadpole_hh(1)));
       if (ewsb_loop_order > 1) {
-
+         double two_loop_tadpole[3];
+         model->tadpole_hh_2loop(two_loop_tadpole);
+         result -= (vd*two_loop_tadpole[0] - vu*two_loop_tadpole[1])
       }
    }
 
@@ -2643,7 +2660,9 @@ double CLASSNAME::get_next_fpi_param_3() const
       // DH:: should have error checking here
       result -= Re(tadpole_hh(0));
       if (ewsb_loop_order > 1) {
-
+         double two_loop_tadpole[3];
+         model->tadpole_hh_2loop(two_loop_tadpole);
+         result -= two_loop_tadpole[0];
       }
    }
 
@@ -54152,6 +54171,294 @@ void CLASSNAME::calculate_MSe_3rd_generation(double& msf1, double& msf2, double&
    msf2  = msf(1);
 }
 
+void CLASSNAME::self_energy_hh_2loop(double result[6]) const
+{
+   // calculate 3rd generation sfermion masses and mixing angles
+   double mst_1, mst_2, theta_t;
+   double msb_1, msb_2, theta_b;
+   double mstau_1, mstau_2, theta_tau;
+   double msnu_1, msnu_2, theta_nu;
+
+   calculate_MSu_3rd_generation(mst_1, mst_2, theta_t);
+   calculate_MSd_3rd_generation(msb_1, msb_2, theta_b);
+   calculate_MSe_3rd_generation(mstau_1, mstau_2, theta_tau);
+   calculate_MSv_3rd_generation(msnu_1, msnu_2, theta_nu);
+
+   double mst1sq = Sqr(mst_1), mst2sq = Sqr(mst_2);
+   double msb1sq = Sqr(msb_1), msb2sq = Sqr(msb_2);
+   double mstau1sq = Sqr(mstau_1), mstau2sq = Sqr(mstau_2);
+   double msnusq = Sqr(msnu_2);
+   double sxt = Sin(theta_t), cxt = Cos(theta_t);
+   double sxb = Sin(theta_b), cxb = Cos(theta_b);
+   double sintau = Sin(theta_tau), costau = Cos(theta_tau);
+
+   double gs = g3;
+   double as = Sqr(gs) / (4.0 * Pi);
+   double rmt = MFu(2);
+   double rmtsq = Sqr(rmt);
+   double scalesq = Sqr(get_scale());
+   double vev2 = Sqr(vd) + Sqr(vu);
+   double vev = Sqrt(Sqr(vd) + Sqr(vu));
+   double tanb = vu/vd;
+   const double tanb2 = Sqr(tanb);
+   const double sinb = tanb / Sqrt(1. + tanb2);
+   const double cosb = 1. / Sqrt(1. + tanb2);
+   double amu = -0.7071067811865475*vs*Lambdax;
+   double mg = MGlu;
+   double mAsq = Sqr(MAh(1));
+   double cotb = 1.0 / tanb;
+   double rmb = MFd(2);
+   double rmbsq = Sqr(rmb);
+   double rmtausq = Sqr(MFe(2));
+   double fmasq = Abs(mAsq);
+   double lamS = Lambdax;
+   static const double root2 = Sqrt(2.0);
+   double vevs =  vev / root2;
+   double svevs = vs / root2;
+   int loop = 2;
+   int scheme = 0; // selects DR-bar scheme
+
+   double s11w = 0., s12w = 0., s22w = 0.;
+   double s11tau = 0., s12tau = 0., s22tau = 0.;
+   double p2w = 0., p2tau = 0.;
+
+   double DMS[3][3] = {{ 0. }}, DMP[3][3] = {{ 0. }};
+   double DMSB[3][3] = {{ 0. }}, DMPB[3][3] = {{ 0. }};
+
+   LOCK_MUTEX();
+
+   // get alpha_s alpha_t pieces
+   effpot_(&loop, &rmt, &mg, &mst1sq, &mst2sq, &sxt, &cxt,
+           &scalesq, &tanb, &vevs, &lamS, &svevs, &as, &DMS, &DMP);
+
+   // get alpha_s alpha_b pieces
+   effpot_(&loop, &rmb, &mg, &msb1sq, &msb2sq, &sxb, &cxb,
+           &scalesq, &cotb, &vevs, &lamS, &svevs, &as, &DMSB, &DMPB);
+
+   // Corrections as in MSSM, not corrected for NMSSM,
+   // should be OK for MSSM states when S state is close to decoupled
+   ddshiggs_(&rmtsq, &rmbsq, &fmasq, &mst1sq, &mst2sq, &msb1sq,
+             &msb2sq, &sxt, &cxt, &sxb, &cxb, &scalesq, &amu, &tanb,
+             &vev2, &s11w, &s12w, &s22w);
+   ddsodd_(&rmtsq, &rmbsq, &fmasq, &mst1sq, &mst2sq, &msb1sq, &msb2sq,
+           &sxt, &cxt, &sxb, &cxb, &scalesq, &amu, &tanb, &vev2, &p2w);
+   tausqhiggs_(&rmtausq, &fmasq, &msnusq, &mstau1sq, &mstau2sq, &sintau,
+               &costau, &scalesq, &amu, &tanb, &vev2, &scheme, &s11tau,
+               &s22tau, &s12tau);
+   tausqodd_(&rmtausq, &fmasq, &msnusq, &mstau1sq, &mstau2sq, &sintau,
+             &costau, &scalesq, &amu, &tanb, &vev2, &p2tau);
+
+   UNLOCK_MUTEX();
+
+   // Make appropriate substitutions for elements following 0907.4682
+   // bottom of page 9
+   std::swap(DMSB[0][0], DMSB[1][1]);
+   std::swap(DMSB[0][2], DMSB[1][2]);
+
+   for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+         DMS[i][j] += DMSB[i][j];
+      }
+   }
+
+   const double dMA = p2w + p2tau;
+
+   // subtract two-loop tadpoles
+   double tadpole[3];
+   tadpole_hh_2loop(tadpole);
+
+   DMS[0][0] += s11w + s11tau + dMA * Sqr(sinb) - tadpole[0] / vd;
+   DMS[0][1] += s12w + s12tau - dMA * sinb * cosb;
+   DMS[1][1] += s22w + s22tau + dMA * Sqr(cosb) - tadpole[1] / vu;
+   DMS[2][2] += - tadpole[2] / vs;
+
+   result[0] = - DMS[0][0]; // 1,1 element
+   result[1] = - DMS[0][1]; // 1,2 element
+   result[2] = - DMS[0][2]; // 1,3 element
+   result[3] = - DMS[1][1]; // 2,2 element
+   result[4] = - DMS[1][2]; // 2,3 element
+   result[5] = - DMS[2][2]; // 3,3 element
+
+}
+
+void CLASSNAME::self_energy_Ah_2loop(double result[6]) const
+{
+   // calculate 3rd generation sfermion masses and mixing angles
+   double mst_1, mst_2, theta_t;
+   double msb_1, msb_2, theta_b;
+   double mstau_1, mstau_2, theta_tau;
+   double msnu_1, msnu_2, theta_nu;
+
+   calculate_MSu_3rd_generation(mst_1, mst_2, theta_t);
+   calculate_MSd_3rd_generation(msb_1, msb_2, theta_b);
+   calculate_MSe_3rd_generation(mstau_1, mstau_2, theta_tau);
+   calculate_MSv_3rd_generation(msnu_1, msnu_2, theta_nu);
+
+   double mst1sq = Sqr(mst_1), mst2sq = Sqr(mst_2);
+   double msb1sq = Sqr(msb_1), msb2sq = Sqr(msb_2);
+   double mstau1sq = Sqr(mstau_1), mstau2sq = Sqr(mstau_2);
+   double msnusq = Sqr(msnu_2);
+   double sxt = Sin(theta_t), cxt = Cos(theta_t);
+   double sxb = Sin(theta_b), cxb = Cos(theta_b);
+   double sintau = Sin(theta_tau), costau = Cos(theta_tau);
+
+   double gs = g3;
+   double as = Sqr(gs) / (4.0 * Pi);
+   double rmt = MFu(2);
+   double rmtsq = Sqr(rmt);
+   double scalesq = Sqr(get_scale());
+   double vev2 = Sqr(vd) + Sqr(vu);
+   double vev = Sqrt(Sqr(vd) + Sqr(vu));
+   double tanb = vu/vd;
+   const double tanb2 = Sqr(tanb);
+   const double sinb = tanb / Sqrt(1. + tanb2);
+   const double cosb = 1. / Sqrt(1. + tanb2);
+   const double sinb2 = Sqr(sinb);
+   const double cosb2 = Sqr(cosb);
+   double amu = -0.7071067811865475*vs*Lambdax;
+   double mg = MGlu;
+   double mAsq = Sqr(MAh(1));
+   double cotb = 1.0 / tanb;
+   double rmb = MFd(2);
+   double rmbsq = Sqr(rmb);
+   double rmtausq = Sqr(MFe(2));
+   double fmasq = Abs(mAsq);
+   double lamS = Lambdax;
+   static const double root2 = Sqrt(2.0);
+   double vevs =  vev / root2;
+   double svevs = vs / root2;
+   int loop = 2;
+
+   double p2w = 0., p2tau = 0.;
+
+   double DMS[3][3] = {{ 0. }}, DMP[3][3] = {{ 0. }};
+   double DMSB[3][3] = {{ 0. }}, DMPB[3][3] = {{ 0. }};
+
+   LOCK_MUTEX();
+
+   // get alpha_s alpha_t pieces
+   effpot_(&loop, &rmt, &mg, &mst1sq, &mst2sq, &sxt, &cxt,
+           &scalesq, &tanb, &vevs, &lamS, &svevs, &as, &DMS, &DMP);
+
+   // get alpha_s alpha_b pieces
+   effpot_(&loop, &rmb, &mg, &msb1sq, &msb2sq, &sxb, &cxb,
+           &scalesq, &cotb, &vevs, &lamS, &svevs, &as, &DMSB, &DMPB);
+
+   // Corrections as in MSSM, not corrected for NMSSM,
+   // should be OK for MSSM states when S state is close to decoupled
+   ddsodd_(&rmtsq, &rmbsq, &fmasq, &mst1sq, &mst2sq, &msb1sq, &msb2sq,
+           &sxt, &cxt, &sxb, &cxb, &scalesq, &amu, &tanb, &vev2, &p2w);
+   tausqodd_(&rmtausq, &fmasq, &msnusq, &mstau1sq, &mstau2sq, &sintau,
+             &costau, &scalesq, &amu, &tanb, &vev2, &p2tau);
+
+   UNLOCK_MUTEX();
+
+   // Make appropriate substitutions for elements following 0907.4682
+   // bottom of page 9
+   std::swap(DMPB[0][0], DMPB[1][1]);
+   std::swap(DMPB[0][2], DMPB[1][2]);
+
+   for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+         DMP[i][j] += DMPB[i][j];
+      }
+   }
+
+   const double dMA = p2w + p2tau;
+
+   DMP[0][0] += dMA * sinb2;
+   DMP[0][1] += dMA * sinb * cosb;
+   DMP[1][1] += dMA * cosb2;
+
+   // subtract two-loop tadpoles
+   double tadpole[3];
+   tadpole_hh_2loop(tadpole);
+
+   DMP[0][0] += - tadpole[0] / vd;
+   DMP[1][1] += - tadpole[1] / vu;
+   DMP[2][2] += - tadpole[2] / vs;
+
+   result[0] = - DMP[0][0]; // 1,1 element
+   result[1] = - DMP[0][1]; // 1,2 element
+   result[2] = - DMP[0][2]; // 1,3 element
+   result[3] = - DMP[1][1]; // 2,2 element
+   result[4] = - DMP[1][2]; // 2,3 element
+   result[5] = - DMP[2][2]; // 3,3 element
+
+}
+
+void CLASSNAME::tadpole_hh_2loop(double result[3]) const
+{
+   // calculate 3rd generation sfermion masses and mixing angles
+   double mst_1, mst_2, theta_t;
+   double msb_1, msb_2, theta_b;
+   double mstau_1, mstau_2, theta_tau;
+   double msnu_1, msnu_2, theta_nu;
+
+   calculate_MSu_3rd_generation(mst_1, mst_2, theta_t);
+   calculate_MSd_3rd_generation(msb_1, msb_2, theta_b);
+   calculate_MSe_3rd_generation(mstau_1, mstau_2, theta_tau);
+   calculate_MSv_3rd_generation(msnu_1, msnu_2, theta_nu);
+
+   double mst1sq = Sqr(mst_1), mst2sq = Sqr(mst_2);
+   double msb1sq = Sqr(msb_1), msb2sq = Sqr(msb_2);
+   double mstau1sq = Sqr(mstau_1), mstau2sq = Sqr(mstau_2);
+   double msnusq = Sqr(msnu_2);
+   double sxt = Sin(theta_t), cxt = Cos(theta_t);
+   double sxb = Sin(theta_b), cxb = Cos(theta_b);
+   double sintau = Sin(theta_tau), costau = Cos(theta_tau);
+
+   double gs = g3;
+   double rmtsq = Sqr(MFu(2));
+   double scalesq = Sqr(get_scale());
+   double vev2 = Sqr(vd) + Sqr(vu);
+   const double vev = Sqrt(vev2);
+   double tanb = vu/vd;
+   const double tanb2 = Sqr(tanb);
+   const double sinb = tanb / Sqrt(1. + tanb2);
+   const double cosb = 1. / Sqrt(1. + tanb2);
+   double amu = -0.7071067811865475*vs*Lambdax;
+   double mg = MGlu;
+   double mAsq = Sqr(MAh(1));
+   double cotbeta = 1.0 / tanb;
+   double rmbsq = Sqr(MFd(2));
+   double rmtausq = Sqr(MFe(2));
+
+   double s1s = 0., s2s = 0., s1t = 0., s2t = 0.;
+   double s1b = 0., s2b = 0., s1tau = 0., s2tau = 0.;
+
+   LOCK_MUTEX();
+
+   ewsb2loop_(&rmtsq, &mg, &mst1sq, &mst2sq, &sxt, &cxt, &scalesq,
+              &amu, &tanb, &vev2, &gs, &s1s, &s2s);
+   ddstad_(&rmtsq, &rmbsq, &mAsq, &mst1sq, &mst2sq, &msb1sq, &msb2sq,
+           &sxt, &cxt, &sxb, &cxb, &scalesq, &amu, &tanb, &vev2, &s1t,
+           &s2t);
+   ewsb2loop_(&rmbsq, &mg, &msb1sq, &msb2sq, &sxb, &cxb, &scalesq,
+              &amu, &cotbeta, &vev2, &gs, &s2b, &s1b);
+   tausqtad_(&rmtausq, &mAsq, &msnusq, &mstau1sq, &mstau2sq, &sintau,
+             &costau, &scalesq, &amu, &tanb, &vev2, &s1tau, &s2tau);
+
+   UNLOCK_MUTEX();
+
+   // rescale T1 to get TS
+   const double sss = s1s * vev * cosb / vs;
+   const double ssb = s1b * vev * sinb / vs;
+
+   if (!std::isnan(s1s * s1t * s1b * s1tau * s2s * s2t * s2b * s2tau
+                   * sss * ssb)) {
+      result[0] = (- s1s - s1t - s1b - s1tau) * vd;
+      result[1] = (- s2s - s2t - s2b - s2tau) * vu;
+      result[2] = (- sss - ssb) * vs;
+      
+   } else {
+      result[0] = 0.;
+      result[1] = 0.;
+      result[2] = 0.;
+   }
+
+}
+
 void CLASSNAME::calculate_MVG_pole()
 {
    // diagonalization with medium precision
@@ -54386,6 +54693,11 @@ void CLASSNAME::calculate_Mhh_pole()
    double diff = 0.0;
    decltype(Mhh) old_Mhh(Mhh), new_Mhh(Mhh);
 
+   // two-loop Higgs self-energy contributions
+   double two_loop[6] = { 0. };
+   if (pole_mass_loop_order > 1)
+      self_energy_hh_2loop(two_loop);
+
    do {
       Eigen::Matrix<double,5,5> self_energy;
       const Eigen::Matrix<double,5,5> M_tree(get_mass_matrix_hh());
@@ -54397,6 +54709,15 @@ void CLASSNAME::calculate_Mhh_pole()
                self_energy(i1,i2) = Re(self_energy_hh(p,i1,i2
                   ));
             }
+         }
+
+         if (pole_mass_loop_order > 1) {
+            self_energy(0, 0) += two_loop[0];
+            self_energy(0, 1) += two_loop[1];
+            self_energy(0, 2) += two_loop[2];
+            self_energy(1, 1) += two_loop[3];
+            self_energy(1, 2) += two_loop[4];
+            self_energy(2, 2) += two_loop[5];
          }
 
          Symmetrize(self_energy);
@@ -54431,6 +54752,11 @@ void CLASSNAME::calculate_MAh_pole()
    double diff = 0.0;
    decltype(MAh) old_MAh(MAh), new_MAh(MAh);
 
+   // two-loop Higgs self-energy contributions
+   double two_loop[6] = { 0. };
+   if (pole_mass_loop_order > 1)
+      self_energy_Ah_2loop(two_loop);
+
    do {
       Eigen::Matrix<double,5,5> self_energy;
       const Eigen::Matrix<double,5,5> M_tree(get_mass_matrix_Ah());
@@ -54442,6 +54768,15 @@ void CLASSNAME::calculate_MAh_pole()
                self_energy(i1,i2) = Re(self_energy_Ah(p,i1,i2
                   ));
             }
+         }
+
+         if (pole_mass_loop_order > 1) {
+            self_energy(0, 0) += two_loop[0];
+            self_energy(0, 1) += two_loop[1];
+            self_energy(0, 2) += two_loop[2];
+            self_energy(1, 1) += two_loop[3];
+            self_energy(1, 2) += two_loop[4];
+            self_energy(2, 2) += two_loop[5];
          }
 
          Symmetrize(self_energy);
