@@ -410,7 +410,8 @@ int CLASSNAME::calculate_fpi_update_step(const gsl_vector* x, void* params, gsl_
 int CLASSNAME::solve_ewsb_iteratively()
 {
    const gsl_multiroot_fsolver_type* solvers[] = {
-      gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids, gsl_multiroot_fsolver_broyden
+      gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids, gsl_multiroot_fsolver_broyden, 
+      gsl_multiroot_fsolver_dnewton
    };
 
    double x_init[number_of_ewsb_equations];
