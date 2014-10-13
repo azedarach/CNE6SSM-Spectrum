@@ -52,13 +52,18 @@ Command_line_options::~Command_line_options()
 {
 }
 
+/**
+ * Parse string of program options and store the given option values
+ * in the member variables of this class.
+ *
+ * @param argc number of program arguments
+ * @param argv program arguments
+ */
 void Command_line_options::parse(int argc, const char* argv[])
 {
    assert(argc > 0);
+   reset();
    program = argv[0];
-   do_exit = false;
-   do_print_model_info = false;
-   exit_status = EXIT_SUCCESS;
 
    for (int i = 1; i < argc; ++i) {
       const std::string option(argv[i]);
@@ -125,10 +130,75 @@ void Command_line_options::print_usage(std::ostream& ostr) const
         << std::endl;
 }
 
+/**
+ * Resets all command line options to their initial values.
+ */
+void Command_line_options::reset()
+{
+   do_exit = false;
+   do_print_model_info = false;
+   exit_status = EXIT_SUCCESS;
+   program.clear();
+   rgflow_file.clear();
+   slha_input_file.clear();
+   slha_output_file.clear();
+   spectrum_file.clear();
+}
+
+/**
+ * Returns true if the string str starts with prefix, false otherwise.
+ *
+ * @param str string to search in
+ * @param prefix string to search for
+ *
+ * @return true if the string str starts with prefix, false otherwise
+ */
 bool Command_line_options::starts_with(const std::string& str,
                                        const std::string& prefix)
 {
    return !str.compare(0, prefix.size(), prefix);
+}
+
+/**
+ * Extracts the parameter value from a command line option string of
+ * the form --m0=125 .
+ *
+ * @param str full option string, including the parameter value (--m0=125)
+ * @param prefix option string, without the parameter value (--m0=)
+ * @param[out] parameter output parameter value (of type double)
+ *
+ * @return true, if str starts with prefix, false otherwise
+ */
+bool Command_line_options::get_parameter_value(const std::string& str,
+                                               const std::string& prefix,
+                                               double& parameter)
+{
+   if (starts_with(str, prefix)) {
+      parameter = atof(str.substr(prefix.length()).c_str());
+      return true;
+   }
+   return false;
+}
+
+/**
+ * Extracts the parameter value from a command line option string of
+ * the form --m0=125 .
+ *
+ * @param str full option string, including the parameter value (--m0=125)
+ * @param prefix option string, without the parameter value (--m0=)
+ * @param[out] parameter output parameter value (of type int)
+ *
+ * @return true, if str starts with prefix, false otherwise
+ */
+bool Command_line_options::get_parameter_value(const std::string& str,
+                                               const std::string& prefix,
+                                               int& parameter)
+{
+   if (starts_with(str, prefix)) {
+      parameter = atoi(str.substr(prefix.length()).c_str());
+      return true;
+   }
+   return false;
 }
 
 } // namespace flexiblesusy

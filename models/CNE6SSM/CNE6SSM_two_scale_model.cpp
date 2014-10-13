@@ -413,14 +413,12 @@ int CLASSNAME::solve_ewsb_iteratively()
       gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids, gsl_multiroot_fsolver_broyden, 
       gsl_multiroot_fsolver_dnewton
    };
-
+   
+   // First try to solve using FPI
    double x_init[number_of_ewsb_equations];
-   if (use_alternate_ewsb) {
-      alternate_ewsb_fpi_initial_guess(x_init);
-   } else {
-      ewsb_initial_guess(x_init);
-   }
-
+   
+   alternate_ewsb_fpi_initial_guess(x_init);
+   
 #ifdef ENABLE_VERBOSE
    std::cout << "Solving EWSB equations ...\n"
       "\tInitial guess: x_init =";
@@ -428,20 +426,18 @@ int CLASSNAME::solve_ewsb_iteratively()
       std::cout << " " << x_init[i];
    std::cout << '\n';
 #endif
-
-   int status;
-   if (use_alternate_ewsb) {
-      status = solve_alternate_ewsb_fpi(x_init);
-      if (status == GSL_SUCCESS) {
-         VERBOSE_MSG("\tFixed point iteration finished successfully!");
-      }
-#ifdef ENABLE_VERBOSE
-      else {
-         WARNING("\tFixed point iteration could not find a solution!"
-                 " (requested precision: " << ewsb_iteration_precision << ")");
-      }
-#endif
+   
+   int status = solve_alternate_ewsb_fpi(x_init);
+   
+   if (status == GSL_SUCCESS) {
+      VERBOSE_MSG("\tFixed point iteration finished successfully!");
    } else {
+#ifdef ENABLE_VERBOSE
+      WARNING("\tFixed point iteration could not find a solution!"
+              " (requested precision: " << ewsb_iteration_precision << ")");
+#endif
+      ewsb_initial_guess(x_init);
+      
       for (std::size_t i = 0; i < sizeof(solvers)/sizeof(*solvers); ++i) {
          VERBOSE_MSG("\tStarting EWSB iteration using solver " << i);
          status = solve_ewsb_iteratively_with(solvers[i], x_init);
@@ -457,7 +453,7 @@ int CLASSNAME::solve_ewsb_iteratively()
 #endif
       }
    }
-
+   
    if (status != GSL_SUCCESS) {
       problems.flag_no_ewsb();
 #ifdef ENABLE_VERBOSE
@@ -467,7 +463,7 @@ int CLASSNAME::solve_ewsb_iteratively()
    } else {
       problems.unflag_no_ewsb();
    }
-
+   
    return status;
 }
 
@@ -786,7 +782,7 @@ int CLASSNAME::check_fpi_ewsb_solution(double precision)
    for (std::size_t i = 1; i < number_of_ewsb_equations; ++i) {
       residual += Abs(tadpole[i]);
    } 
-
+   
    return (residual < precision ? GSL_SUCCESS : GSL_CONTINUE);
 }
 
