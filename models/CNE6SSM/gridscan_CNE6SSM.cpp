@@ -15,6 +15,8 @@
 #include "lowe.h"
 
 #include <iostream>
+#include <chrono>
+#include <sys/time.h>
 
 namespace flexiblesusy {
 
@@ -158,11 +160,29 @@ namespace flexiblesusy {
 
 } // namespace flexiblesusy
 
+double get_wall_time()
+{
+   struct timeval time;
+   if (gettimeofday(&time,NULL)) {
+      return 0;
+   }
+   return (double)time.tv_sec + (double)time.tv_usec*0.000001;
+}
+
+double get_cpu_time()
+{
+   return (double)clock() / CLOCKS_PER_SEC;
+}
+
 int main(int argc, char* argv[])
 {
    using namespace flexiblesusy;
    using namespace softsusy;
    typedef Two_scale algorithm_type;
+   typedef std::chrono::duration<int,std::micro> microseconds_t;
+   std::chrono::high_resolution_clock::time_point start_point = std::chrono::high_resolution_clock::now();
+   double wall_start = get_wall_time();
+   double cpu_start = get_cpu_time();
 
    CNE6SSM_input_parameters input;
    set_command_line_parameters(argc, argv, input);
@@ -380,6 +400,16 @@ int main(int argc, char* argv[])
       cout << '\n';
       scan.step_forward();
    }
+
+   std::chrono::high_resolution_clock::time_point end_point = std::chrono::high_resolution_clock::now();
+   microseconds_t duration(std::chrono::duration_cast<microseconds_t>(end_point - start_point));
+   double time_in_seconds = duration.count() * 0.000001;
+   double wall_end = get_wall_time();
+   double cpu_end = get_cpu_time();
+
+   cout << "# Scan completed in " << time_in_seconds << " seconds\n";
+   cout << "# Wall time = " << wall_end - wall_start << " seconds\n";
+   cout << "# CPU time  = " << cpu_end - cpu_start << " seconds\n";
 
    return 0;
 }
