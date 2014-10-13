@@ -206,10 +206,10 @@ int main(int argc, char* argv[])
    Grid_scanner scan(scan_dimensions);
 
    cout << "# "
-        << std::setw(12) << std::left << "m0" << ' '
-        << std::setw(12) << std::left << "m12" << ' '
+        << std::setw(12) << std::left << "m0/GeV" << ' '
+        << std::setw(12) << std::left << "m12/GeV" << ' '
         << std::setw(12) << std::left << "TanBeta" << ' '
-        << std::setw(12) << std::left << "Azero" << ' '
+        << std::setw(12) << std::left << "Azero/GeV" << ' '
         << std::setw(12) << std::left << "SignLambdax" << ' '
         << std::setw(12) << std::left << "MGlu/GeV" << ' '
         << std::setw(12) << std::left << "MChaP/GeV" << ' '
