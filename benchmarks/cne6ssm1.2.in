@@ -7,7 +7,7 @@ Block FlexibleSUSY
     2   0                    # algorithm (0 = two_scale, 1 = lattice)
     3   0                    # calculate SM pole masses
     4   2                    # pole mass loop order
-    5   1                    # EWSB loop order
+    5   2                    # EWSB loop order
     6   2                    # beta-functions loop order
     7   1                    # threshold corrections (0 = disabled, 1 = enabled)
     8   0                    # use alternate EWSB (0 = disabled, 1 = enabled)
