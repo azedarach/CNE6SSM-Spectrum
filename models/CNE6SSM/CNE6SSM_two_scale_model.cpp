@@ -1257,6 +1257,1025 @@ void CLASSNAME::run_to(double scale, double eps)
       eps = precision;
    CNE6SSM_soft_parameters::run_to(scale, eps);
 }
+
+double CLASSNAME::get_parameter(unsigned parameter) const
+{
+   if (parameter >= CNE6SSM_info::NUMBER_OF_PARAMETERS)
+      throw UnknownModelParameterError(parameter);
+
+   switch (parameter) {
+
+   case CNE6SSM_info::Yd00:
+      return Yd(0,0);
+   case CNE6SSM_info::Yd01:
+      return Yd(0,1);
+   case CNE6SSM_info::Yd02:
+      return Yd(0,2);
+   case CNE6SSM_info::Yd10:
+      return Yd(1,0); 
+   case CNE6SSM_info::Yd11:
+      return Yd(1,1); 
+   case CNE6SSM_info::Yd12:
+      return Yd(1,2);
+   case CNE6SSM_info::Yd20:
+      return Yd(2,0);
+   case CNE6SSM_info::Yd21:
+      return Yd(2,1);
+   case CNE6SSM_info::Yd22:
+      return Yd(2,2);
+   case CNE6SSM_info::hE00:
+      return hE(0,0);
+   case CNE6SSM_info::hE01:
+      return hE(0,1);
+   case CNE6SSM_info::hE10:
+      return hE(1,0); 
+   case CNE6SSM_info::hE11:
+      return hE(1,1); 
+   case CNE6SSM_info::hE20:
+      return hE(2,0); 
+   case CNE6SSM_info::hE21:
+      return hE(2,1);
+   case CNE6SSM_info::Ye00:
+      return Ye(0,0); 
+   case CNE6SSM_info::Ye01:
+      return Ye(0,1);
+   case CNE6SSM_info::Ye02:
+      return Ye(0,2); 
+   case CNE6SSM_info::Ye10:
+      return Ye(1,0); 
+   case CNE6SSM_info::Ye11:
+      return Ye(1,1); 
+   case CNE6SSM_info::Ye12:
+      return Ye(1,2);
+   case CNE6SSM_info::Ye20:
+      return Ye(2,0); 
+   case CNE6SSM_info::Ye21:
+      return Ye(2,1); 
+   case CNE6SSM_info::Ye22:
+      return Ye(2,2); 
+   case CNE6SSM_info::SigmaL:
+      return SigmaL; 
+   case CNE6SSM_info::KappaPr:
+      return KappaPr; 
+   case CNE6SSM_info::Sigmax:
+      return Sigmax; 
+   case CNE6SSM_info::gD00:
+      return gD(0,0); 
+   case CNE6SSM_info::gD01:
+      return gD(0,1); 
+   case CNE6SSM_info::gD02:
+      return gD(0,2); 
+   case CNE6SSM_info::gD10:
+      return gD(1,0); 
+   case CNE6SSM_info::gD11:
+      return gD(1,1);
+   case CNE6SSM_info::gD12:
+      return gD(1,2); 
+   case CNE6SSM_info::gD20:
+      return gD(2,0); 
+   case CNE6SSM_info::gD21:
+      return gD(2,1); 
+   case CNE6SSM_info::gD22:
+      return gD(2,2); 
+   case CNE6SSM_info::Kappa00:
+      return Kappa(0,0); 
+   case CNE6SSM_info::Kappa01:
+      return Kappa(0,1); 
+   case CNE6SSM_info::Kappa02:
+      return Kappa(0,2); 
+   case CNE6SSM_info::Kappa10:
+      return Kappa(1,0); 
+   case CNE6SSM_info::Kappa11:
+      return Kappa(1,1); 
+   case CNE6SSM_info::Kappa12:
+      return Kappa(1,2);
+   case CNE6SSM_info::Kappa20:
+      return Kappa(2,0); 
+   case CNE6SSM_info::Kappa21:
+      return Kappa(2,1); 
+   case CNE6SSM_info::Kappa22:
+      return Kappa(2,2); 
+   case CNE6SSM_info::Lambda1200:
+      return Lambda12(0,0); 
+   case CNE6SSM_info::Lambda1201:
+      return Lambda12(0,1); 
+   case CNE6SSM_info::Lambda1210:
+      return Lambda12(1,0); 
+   case CNE6SSM_info::Lambda1211:
+      return Lambda12(1,1);
+   case CNE6SSM_info::Lambdax:
+      return Lambdax;
+   case CNE6SSM_info::fu00:
+      return fu(0,0);
+   case CNE6SSM_info::fu01:
+      return fu(0,1); 
+   case CNE6SSM_info::fu10:
+      return fu(1,0);
+   case CNE6SSM_info::fu11:
+      return fu(1,1); 
+   case CNE6SSM_info::fu20:
+      return fu(2,0); 
+   case CNE6SSM_info::fu21:
+      return fu(2,1); 
+   case CNE6SSM_info::fd00:
+      return fd(0,0); 
+   case CNE6SSM_info::fd01:
+      return fd(0,1);
+   case CNE6SSM_info::fd10:
+      return fd(1,0); 
+   case CNE6SSM_info::fd11:
+      return fd(1,1); 
+   case CNE6SSM_info::fd20:
+      return fd(2,0);
+   case CNE6SSM_info::fd21:
+      return fd(2,1); 
+   case CNE6SSM_info::Yu00:
+      return Yu(0,0); 
+   case CNE6SSM_info::Yu01:
+      return Yu(0,1); 
+   case CNE6SSM_info::Yu02:
+      return Yu(0,2); 
+   case CNE6SSM_info::Yu10:
+      return Yu(1,0); 
+   case CNE6SSM_info::Yu11:
+      return Yu(1,1); 
+   case CNE6SSM_info::Yu12:
+      return Yu(1,2); 
+   case CNE6SSM_info::Yu20:
+      return Yu(2,0); 
+   case CNE6SSM_info::Yu21:
+      return Yu(2,1); 
+   case CNE6SSM_info::Yu22:
+      return Yu(2,2); 
+   case CNE6SSM_info::MuPr:
+      return MuPr; 
+   case CNE6SSM_info::MuPhi:
+      return MuPhi; 
+   case CNE6SSM_info::XiF:
+      return XiF;
+   case CNE6SSM_info::g1:
+      return g1; 
+   case CNE6SSM_info::g2:
+      return g2;
+   case CNE6SSM_info::g3:
+      return g3; 
+   case CNE6SSM_info::g1p:
+      return g1p; 
+   case CNE6SSM_info::vd:
+      return vd; 
+   case CNE6SSM_info::vu:
+      return vu; 
+   case CNE6SSM_info::vs:
+      return vs; 
+   case CNE6SSM_info::vsb:
+      return vsb; 
+   case CNE6SSM_info::vphi:
+      return vphi; 
+   case CNE6SSM_info::TYd00:
+      return TYd(0,0); 
+   case CNE6SSM_info::TYd01:
+      return TYd(0,1); 
+   case CNE6SSM_info::TYd02:
+      return TYd(0,2); 
+   case CNE6SSM_info::TYd10:
+      return TYd(1,0); 
+   case CNE6SSM_info::TYd11:
+      return TYd(1,1);
+   case CNE6SSM_info::TYd12:
+      return TYd(1,2); 
+   case CNE6SSM_info::TYd20:
+      return TYd(2,0); 
+   case CNE6SSM_info::TYd21:
+      return TYd(2,1); 
+   case CNE6SSM_info::TYd22:
+      return TYd(2,2); 
+   case CNE6SSM_info::ThE00:
+      return ThE(0,0); 
+   case CNE6SSM_info::ThE01:
+      return ThE(0,1); 
+   case CNE6SSM_info::ThE10:
+      return ThE(1,0); 
+   case CNE6SSM_info::ThE11:
+      return ThE(1,1); 
+   case CNE6SSM_info::ThE20:
+      return ThE(2,0); 
+   case CNE6SSM_info::ThE21:
+      return ThE(2,1); 
+   case CNE6SSM_info::TYe00:
+      return TYe(0,0);
+   case CNE6SSM_info::TYe01:
+      return TYe(0,1); 
+   case CNE6SSM_info::TYe02:
+      return TYe(0,2); 
+   case CNE6SSM_info::TYe10:
+      return TYe(1,0); 
+   case CNE6SSM_info::TYe11:
+      return TYe(1,1); 
+   case CNE6SSM_info::TYe12:
+      return TYe(1,2); 
+   case CNE6SSM_info::TYe20:
+      return TYe(2,0); 
+   case CNE6SSM_info::TYe21:
+      return TYe(2,1); 
+   case CNE6SSM_info::TYe22:
+      return TYe(2,2); 
+   case CNE6SSM_info::TSigmaL:
+      return TSigmaL; 
+   case CNE6SSM_info::TKappaPr:
+      return TKappaPr;
+   case CNE6SSM_info::TSigmax:
+      return TSigmax; 
+   case CNE6SSM_info::TgD00:
+      return TgD(0,0); 
+   case CNE6SSM_info::TgD01:
+      return TgD(0,1); 
+   case CNE6SSM_info::TgD02:
+      return TgD(0,2); 
+   case CNE6SSM_info::TgD10:
+      return TgD(1,0); 
+   case CNE6SSM_info::TgD11:
+      return TgD(1,1); 
+   case CNE6SSM_info::TgD12:
+      return TgD(1,2); 
+   case CNE6SSM_info::TgD20:
+      return TgD(2,0); 
+   case CNE6SSM_info::TgD21:
+      return TgD(2,1); 
+   case CNE6SSM_info::TgD22:
+      return TgD(2,2);
+   case CNE6SSM_info::TKappa00:
+      return TKappa(0,0); 
+   case CNE6SSM_info::TKappa01:
+      return TKappa(0,1); 
+   case CNE6SSM_info::TKappa02:
+      return TKappa(0,2); 
+   case CNE6SSM_info::TKappa10:
+      return TKappa(1,0); 
+   case CNE6SSM_info::TKappa11:
+      return TKappa(1,1); 
+   case CNE6SSM_info::TKappa12:
+      return TKappa(1,2); 
+   case CNE6SSM_info::TKappa20:
+      return TKappa(2,0);
+   case CNE6SSM_info::TKappa21:
+      return TKappa(2,1); 
+   case CNE6SSM_info::TKappa22:
+      return TKappa(2,2); 
+   case CNE6SSM_info::TLambda1200:
+      return TLambda12(0,0); 
+   case CNE6SSM_info::TLambda1201:
+      return TLambda12(0,1); 
+   case CNE6SSM_info::TLambda1210:
+      return TLambda12(1,0); 
+   case CNE6SSM_info::TLambda1211:
+      return TLambda12(1,1);
+   case CNE6SSM_info::TLambdax:
+      return TLambdax;
+   case CNE6SSM_info::Tfu00:
+      return Tfu(0,0); 
+   case CNE6SSM_info::Tfu01:
+      return Tfu(0,1); 
+   case CNE6SSM_info::Tfu10:
+      return Tfu(1,0);
+   case CNE6SSM_info::Tfu11:
+      return Tfu(1,1); 
+   case CNE6SSM_info::Tfu20:
+      return Tfu(2,0); 
+   case CNE6SSM_info::Tfu21:
+      return Tfu(2,1); 
+   case CNE6SSM_info::Tfd00:
+      return Tfd(0,0); 
+   case CNE6SSM_info::Tfd01:
+      return Tfd(0,1); 
+   case CNE6SSM_info::Tfd10:
+      return Tfd(1,0);
+   case CNE6SSM_info::Tfd11:
+      return Tfd(1,1); 
+   case CNE6SSM_info::Tfd20:
+      return Tfd(2,0); 
+   case CNE6SSM_info::Tfd21:
+      return Tfd(2,1); 
+   case CNE6SSM_info::TYu00:
+      return TYu(0,0); 
+   case CNE6SSM_info::TYu01:
+      return TYu(0,1); 
+   case CNE6SSM_info::TYu02:
+      return TYu(0,2); 
+   case CNE6SSM_info::TYu10:
+      return TYu(1,0); 
+   case CNE6SSM_info::TYu11:
+      return TYu(1,1); 
+   case CNE6SSM_info::TYu12:
+      return TYu(1,2); 
+   case CNE6SSM_info::TYu20:
+      return TYu(2,0); 
+   case CNE6SSM_info::TYu21:
+      return TYu(2,1);
+   case CNE6SSM_info::TYu22:
+      return TYu(2,2); 
+   case CNE6SSM_info::BMuPr:
+      return BMuPr;
+   case CNE6SSM_info::BMuPhi:
+      return BMuPhi; 
+   case CNE6SSM_info::LXiF:
+      return LXiF; 
+   case CNE6SSM_info::mq200:
+      return mq2(0,0); 
+   case CNE6SSM_info::mq201:
+      return mq2(0,1); 
+   case CNE6SSM_info::mq202:
+      return mq2(0,2); 
+   case CNE6SSM_info::mq210:
+      return mq2(1,0); 
+   case CNE6SSM_info::mq211:
+      return mq2(1,1); 
+   case CNE6SSM_info::mq212:
+      return mq2(1,2); 
+   case CNE6SSM_info::mq220:
+      return mq2(2,0);
+   case CNE6SSM_info::mq221:
+      return mq2(2,1); 
+   case CNE6SSM_info::mq222:
+      return mq2(2,2); 
+   case CNE6SSM_info::ml200:
+      return ml2(0,0);
+   case CNE6SSM_info::ml201:
+      return ml2(0,1); 
+   case CNE6SSM_info::ml202:
+      return ml2(0,2); 
+   case CNE6SSM_info::ml210:
+      return ml2(1,0); 
+   case CNE6SSM_info::ml211:
+      return ml2(1,1); 
+   case CNE6SSM_info::ml212:
+      return ml2(1,2); 
+   case CNE6SSM_info::ml220:
+      return ml2(2,0); 
+   case CNE6SSM_info::ml221:
+      return ml2(2,1);
+   case CNE6SSM_info::ml222:
+      return ml2(2,2);
+   case CNE6SSM_info::mHd2:
+      return mHd2; 
+   case CNE6SSM_info::mHu2:
+      return mHu2; 
+   case CNE6SSM_info::md200:
+      return md2(0,0); 
+   case CNE6SSM_info::md201:
+      return md2(0,1); 
+   case CNE6SSM_info::md202:
+      return md2(0,2); 
+   case CNE6SSM_info::md210:
+      return md2(1,0); 
+   case CNE6SSM_info::md211:
+      return md2(1,1); 
+   case CNE6SSM_info::md212:
+      return md2(1,2); 
+   case CNE6SSM_info::md220:
+      return md2(2,0); 
+   case CNE6SSM_info::md221:
+      return md2(2,1);
+   case CNE6SSM_info::md222:
+      return md2(2,2); 
+   case CNE6SSM_info::mu200:
+      return mu2(0,0); 
+   case CNE6SSM_info::mu201:
+      return mu2(0,1); 
+   case CNE6SSM_info::mu202:
+      return mu2(0,2); 
+   case CNE6SSM_info::mu210:
+      return mu2(1,0); 
+   case CNE6SSM_info::mu211:
+      return mu2(1,1); 
+   case CNE6SSM_info::mu212:
+      return mu2(1,2); 
+   case CNE6SSM_info::mu220:
+      return mu2(2,0); 
+   case CNE6SSM_info::mu221:
+      return mu2(2,1); 
+   case CNE6SSM_info::mu222:
+      return mu2(2,2); 
+   case CNE6SSM_info::me200:
+      return me2(0,0);
+   case CNE6SSM_info::me201:
+      return me2(0,1); 
+   case CNE6SSM_info::me202:
+      return me2(0,2); 
+   case CNE6SSM_info::me210:
+      return me2(1,0); 
+   case CNE6SSM_info::me211:
+      return me2(1,1); 
+   case CNE6SSM_info::me212:
+      return me2(1,2); 
+   case CNE6SSM_info::me220:
+      return me2(2,0); 
+   case CNE6SSM_info::me221:
+      return me2(2,1); 
+   case CNE6SSM_info::me222:
+      return me2(2,2); 
+   case CNE6SSM_info::ms2:
+      return ms2; 
+   case CNE6SSM_info::msbar2:
+      return msbar2;
+   case CNE6SSM_info::mH1I200:
+      return mH1I2(0,0); 
+   case CNE6SSM_info::mH1I201:
+      return mH1I2(0,1); 
+   case CNE6SSM_info::mH1I210:
+      return mH1I2(1,0); 
+   case CNE6SSM_info::mH1I211:
+      return mH1I2(1,1); 
+   case CNE6SSM_info::mH2I200:
+      return mH2I2(0,0); 
+   case CNE6SSM_info::mH2I201:
+      return mH2I2(0,1); 
+   case CNE6SSM_info::mH2I210:
+      return mH2I2(1,0); 
+   case CNE6SSM_info::mH2I211:
+      return mH2I2(1,1);
+   case CNE6SSM_info::mSI200:
+      return mSI2(0,0); 
+   case CNE6SSM_info::mSI201:
+      return mSI2(0,1); 
+   case CNE6SSM_info::mSI202:
+      return mSI2(0,2); 
+   case CNE6SSM_info::mSI210:
+      return mSI2(1,0); 
+   case CNE6SSM_info::mSI211:
+      return mSI2(1,1); 
+   case CNE6SSM_info::mSI212:
+      return mSI2(1,2); 
+   case CNE6SSM_info::mSI220:
+      return mSI2(2,0); 
+   case CNE6SSM_info::mSI221:
+      return mSI2(2,1); 
+   case CNE6SSM_info::mSI222:
+      return mSI2(2,2);
+   case CNE6SSM_info::mDx200:
+      return mDx2(0,0); 
+   case CNE6SSM_info::mDx201:
+      return mDx2(0,1); 
+   case CNE6SSM_info::mDx202:
+      return mDx2(0,2); 
+   case CNE6SSM_info::mDx210:
+      return mDx2(1,0); 
+   case CNE6SSM_info::mDx211:
+      return mDx2(1,1); 
+   case CNE6SSM_info::mDx212:
+      return mDx2(1,2); 
+   case CNE6SSM_info::mDx220:
+      return mDx2(2,0); 
+   case CNE6SSM_info::mDx221:
+      return mDx2(2,1); 
+   case CNE6SSM_info::mDx222:
+      return mDx2(2,2);
+   case CNE6SSM_info::mDxbar200:
+      return mDxbar2(0,0); 
+   case CNE6SSM_info::mDxbar201:
+      return mDxbar2(0,1); 
+   case CNE6SSM_info::mDxbar202:
+      return mDxbar2(0,2); 
+   case CNE6SSM_info::mDxbar210:
+      return mDxbar2(1,0); 
+   case CNE6SSM_info::mDxbar211:
+      return mDxbar2(1,1); 
+   case CNE6SSM_info::mDxbar212:
+      return mDxbar2(1,2); 
+   case CNE6SSM_info::mDxbar220:
+      return mDxbar2(2,0);
+   case CNE6SSM_info::mDxbar221:
+      return mDxbar2(2,1); 
+   case CNE6SSM_info::mDxbar222:
+      return mDxbar2(2,2); 
+   case CNE6SSM_info::mHp2:
+      return mHp2; 
+   case CNE6SSM_info::mHpbar2:
+      return mHpbar2; 
+   case CNE6SSM_info::mphi2:
+      return mphi2; 
+   case CNE6SSM_info::MassB:
+      return MassB; 
+   case CNE6SSM_info::MassWB:
+      return MassWB; 
+   case CNE6SSM_info::MassG:
+      return MassG; 
+   case CNE6SSM_info::MassBp:
+      return MassBp;
+
+   default:
+      throw UnknownModelParameterError(parameter);
+   }
+}
+
+void CLASSNAME::set_parameter(unsigned parameter, double x)
+{
+   if (parameter >= CNE6SSM_info::NUMBER_OF_PARAMETERS)
+      throw UnknownModelParameterError(parameter);
+
+   switch (parameter) {
+
+   case CNE6SSM_info::Yd00:
+      Yd(0,0) = x;
+   case CNE6SSM_info::Yd01:
+      Yd(0,1) = x;
+   case CNE6SSM_info::Yd02:
+      Yd(0,2) = x;
+   case CNE6SSM_info::Yd10:
+      Yd(1,0) = x; 
+   case CNE6SSM_info::Yd11:
+      Yd(1,1) = x; 
+   case CNE6SSM_info::Yd12:
+      Yd(1,2) = x;
+   case CNE6SSM_info::Yd20:
+      Yd(2,0) = x;
+   case CNE6SSM_info::Yd21:
+      Yd(2,1) = x;
+   case CNE6SSM_info::Yd22:
+      Yd(2,2) = x;
+   case CNE6SSM_info::hE00:
+      hE(0,0) = x;
+   case CNE6SSM_info::hE01:
+      hE(0,1) = x;
+   case CNE6SSM_info::hE10:
+      hE(1,0) = x; 
+   case CNE6SSM_info::hE11:
+      hE(1,1) = x; 
+   case CNE6SSM_info::hE20:
+      hE(2,0) = x; 
+   case CNE6SSM_info::hE21:
+      hE(2,1) = x;
+   case CNE6SSM_info::Ye00:
+      Ye(0,0) = x; 
+   case CNE6SSM_info::Ye01:
+      Ye(0,1) = x;
+   case CNE6SSM_info::Ye02:
+      Ye(0,2) = x; 
+   case CNE6SSM_info::Ye10:
+      Ye(1,0) = x; 
+   case CNE6SSM_info::Ye11:
+      Ye(1,1) = x; 
+   case CNE6SSM_info::Ye12:
+      Ye(1,2) = x;
+   case CNE6SSM_info::Ye20:
+      Ye(2,0) = x; 
+   case CNE6SSM_info::Ye21:
+      Ye(2,1) = x; 
+   case CNE6SSM_info::Ye22:
+      Ye(2,2) = x; 
+   case CNE6SSM_info::SigmaL:
+      SigmaL = x; 
+   case CNE6SSM_info::KappaPr:
+      KappaPr = x; 
+   case CNE6SSM_info::Sigmax:
+      Sigmax = x; 
+   case CNE6SSM_info::gD00:
+      gD(0,0) = x; 
+   case CNE6SSM_info::gD01:
+      gD(0,1) = x; 
+   case CNE6SSM_info::gD02:
+      gD(0,2) = x; 
+   case CNE6SSM_info::gD10:
+      gD(1,0) = x; 
+   case CNE6SSM_info::gD11:
+      gD(1,1) = x;
+   case CNE6SSM_info::gD12:
+      gD(1,2) = x; 
+   case CNE6SSM_info::gD20:
+      gD(2,0) = x; 
+   case CNE6SSM_info::gD21:
+      gD(2,1) = x; 
+   case CNE6SSM_info::gD22:
+      gD(2,2) = x; 
+   case CNE6SSM_info::Kappa00:
+      Kappa(0,0) = x; 
+   case CNE6SSM_info::Kappa01:
+      Kappa(0,1) = x; 
+   case CNE6SSM_info::Kappa02:
+      Kappa(0,2) = x; 
+   case CNE6SSM_info::Kappa10:
+      Kappa(1,0) = x; 
+   case CNE6SSM_info::Kappa11:
+      Kappa(1,1) = x; 
+   case CNE6SSM_info::Kappa12:
+      Kappa(1,2) = x;
+   case CNE6SSM_info::Kappa20:
+      Kappa(2,0) = x; 
+   case CNE6SSM_info::Kappa21:
+      Kappa(2,1) = x; 
+   case CNE6SSM_info::Kappa22:
+      Kappa(2,2) = x; 
+   case CNE6SSM_info::Lambda1200:
+      Lambda12(0,0) = x; 
+   case CNE6SSM_info::Lambda1201:
+      Lambda12(0,1) = x; 
+   case CNE6SSM_info::Lambda1210:
+      Lambda12(1,0) = x; 
+   case CNE6SSM_info::Lambda1211:
+      Lambda12(1,1) = x;
+   case CNE6SSM_info::Lambdax:
+      Lambdax = x;
+   case CNE6SSM_info::fu00:
+      fu(0,0) = x;
+   case CNE6SSM_info::fu01:
+      fu(0,1) = x; 
+   case CNE6SSM_info::fu10:
+      fu(1,0) = x;
+   case CNE6SSM_info::fu11:
+      fu(1,1) = x; 
+   case CNE6SSM_info::fu20:
+      fu(2,0) = x; 
+   case CNE6SSM_info::fu21:
+      fu(2,1) = x; 
+   case CNE6SSM_info::fd00:
+      fd(0,0) = x; 
+   case CNE6SSM_info::fd01:
+      fd(0,1) = x;
+   case CNE6SSM_info::fd10:
+      fd(1,0) = x; 
+   case CNE6SSM_info::fd11:
+      fd(1,1) = x; 
+   case CNE6SSM_info::fd20:
+      fd(2,0) = x;
+   case CNE6SSM_info::fd21:
+      fd(2,1) = x; 
+   case CNE6SSM_info::Yu00:
+      Yu(0,0) = x; 
+   case CNE6SSM_info::Yu01:
+      Yu(0,1) = x; 
+   case CNE6SSM_info::Yu02:
+      Yu(0,2) = x; 
+   case CNE6SSM_info::Yu10:
+      Yu(1,0) = x; 
+   case CNE6SSM_info::Yu11:
+      Yu(1,1) = x; 
+   case CNE6SSM_info::Yu12:
+      Yu(1,2) = x; 
+   case CNE6SSM_info::Yu20:
+      Yu(2,0) = x; 
+   case CNE6SSM_info::Yu21:
+      Yu(2,1) = x; 
+   case CNE6SSM_info::Yu22:
+      Yu(2,2) = x; 
+   case CNE6SSM_info::MuPr:
+      MuPr = x; 
+   case CNE6SSM_info::MuPhi:
+      MuPhi = x; 
+   case CNE6SSM_info::XiF:
+      XiF = x;
+   case CNE6SSM_info::g1:
+      g1 = x; 
+   case CNE6SSM_info::g2:
+      g2 = x;
+   case CNE6SSM_info::g3:
+      g3 = x; 
+   case CNE6SSM_info::g1p:
+      g1p = x; 
+   case CNE6SSM_info::vd:
+      vd = x; 
+   case CNE6SSM_info::vu:
+      vu = x; 
+   case CNE6SSM_info::vs:
+      vs = x; 
+   case CNE6SSM_info::vsb:
+      vsb = x; 
+   case CNE6SSM_info::vphi:
+      vphi = x; 
+   case CNE6SSM_info::TYd00:
+      TYd(0,0) = x; 
+   case CNE6SSM_info::TYd01:
+      TYd(0,1) = x; 
+   case CNE6SSM_info::TYd02:
+      TYd(0,2) = x; 
+   case CNE6SSM_info::TYd10:
+      TYd(1,0) = x; 
+   case CNE6SSM_info::TYd11:
+      TYd(1,1) = x;
+   case CNE6SSM_info::TYd12:
+      TYd(1,2) = x; 
+   case CNE6SSM_info::TYd20:
+      TYd(2,0) = x; 
+   case CNE6SSM_info::TYd21:
+      TYd(2,1) = x; 
+   case CNE6SSM_info::TYd22:
+      TYd(2,2) = x; 
+   case CNE6SSM_info::ThE00:
+      ThE(0,0) = x; 
+   case CNE6SSM_info::ThE01:
+      ThE(0,1) = x; 
+   case CNE6SSM_info::ThE10:
+      ThE(1,0) = x; 
+   case CNE6SSM_info::ThE11:
+      ThE(1,1) = x; 
+   case CNE6SSM_info::ThE20:
+      ThE(2,0) = x; 
+   case CNE6SSM_info::ThE21:
+      ThE(2,1) = x; 
+   case CNE6SSM_info::TYe00:
+      TYe(0,0) = x;
+   case CNE6SSM_info::TYe01:
+      TYe(0,1) = x; 
+   case CNE6SSM_info::TYe02:
+      TYe(0,2) = x; 
+   case CNE6SSM_info::TYe10:
+      TYe(1,0) = x; 
+   case CNE6SSM_info::TYe11:
+      TYe(1,1) = x; 
+   case CNE6SSM_info::TYe12:
+      TYe(1,2) = x; 
+   case CNE6SSM_info::TYe20:
+      TYe(2,0) = x; 
+   case CNE6SSM_info::TYe21:
+      TYe(2,1) = x; 
+   case CNE6SSM_info::TYe22:
+      TYe(2,2) = x; 
+   case CNE6SSM_info::TSigmaL:
+      TSigmaL = x; 
+   case CNE6SSM_info::TKappaPr:
+      TKappaPr = x;
+   case CNE6SSM_info::TSigmax:
+      TSigmax = x; 
+   case CNE6SSM_info::TgD00:
+      TgD(0,0) = x; 
+   case CNE6SSM_info::TgD01:
+      TgD(0,1) = x; 
+   case CNE6SSM_info::TgD02:
+      TgD(0,2) = x; 
+   case CNE6SSM_info::TgD10:
+      TgD(1,0) = x; 
+   case CNE6SSM_info::TgD11:
+      TgD(1,1) = x; 
+   case CNE6SSM_info::TgD12:
+      TgD(1,2) = x; 
+   case CNE6SSM_info::TgD20:
+      TgD(2,0) = x; 
+   case CNE6SSM_info::TgD21:
+      TgD(2,1) = x; 
+   case CNE6SSM_info::TgD22:
+      TgD(2,2) = x;
+   case CNE6SSM_info::TKappa00:
+      TKappa(0,0) = x; 
+   case CNE6SSM_info::TKappa01:
+      TKappa(0,1) = x; 
+   case CNE6SSM_info::TKappa02:
+      TKappa(0,2) = x; 
+   case CNE6SSM_info::TKappa10:
+      TKappa(1,0) = x; 
+   case CNE6SSM_info::TKappa11:
+      TKappa(1,1) = x; 
+   case CNE6SSM_info::TKappa12:
+      TKappa(1,2) = x; 
+   case CNE6SSM_info::TKappa20:
+      TKappa(2,0) = x;
+   case CNE6SSM_info::TKappa21:
+      TKappa(2,1) = x; 
+   case CNE6SSM_info::TKappa22:
+      TKappa(2,2) = x; 
+   case CNE6SSM_info::TLambda1200:
+      TLambda12(0,0) = x; 
+   case CNE6SSM_info::TLambda1201:
+      TLambda12(0,1) = x; 
+   case CNE6SSM_info::TLambda1210:
+      TLambda12(1,0) = x; 
+   case CNE6SSM_info::TLambda1211:
+      TLambda12(1,1) = x;
+   case CNE6SSM_info::TLambdax:
+      TLambdax = x;
+   case CNE6SSM_info::Tfu00:
+      Tfu(0,0) = x; 
+   case CNE6SSM_info::Tfu01:
+      Tfu(0,1) = x; 
+   case CNE6SSM_info::Tfu10:
+      Tfu(1,0) = x;
+   case CNE6SSM_info::Tfu11:
+      Tfu(1,1) = x; 
+   case CNE6SSM_info::Tfu20:
+      Tfu(2,0) = x; 
+   case CNE6SSM_info::Tfu21:
+      Tfu(2,1) = x; 
+   case CNE6SSM_info::Tfd00:
+      Tfd(0,0) = x; 
+   case CNE6SSM_info::Tfd01:
+      Tfd(0,1) = x; 
+   case CNE6SSM_info::Tfd10:
+      Tfd(1,0) = x;
+   case CNE6SSM_info::Tfd11:
+      Tfd(1,1) = x; 
+   case CNE6SSM_info::Tfd20:
+      Tfd(2,0) = x; 
+   case CNE6SSM_info::Tfd21:
+      Tfd(2,1) = x; 
+   case CNE6SSM_info::TYu00:
+      TYu(0,0) = x; 
+   case CNE6SSM_info::TYu01:
+      TYu(0,1) = x; 
+   case CNE6SSM_info::TYu02:
+      TYu(0,2) = x; 
+   case CNE6SSM_info::TYu10:
+      TYu(1,0) = x; 
+   case CNE6SSM_info::TYu11:
+      TYu(1,1) = x; 
+   case CNE6SSM_info::TYu12:
+      TYu(1,2) = x; 
+   case CNE6SSM_info::TYu20:
+      TYu(2,0) = x; 
+   case CNE6SSM_info::TYu21:
+      TYu(2,1) = x;
+   case CNE6SSM_info::TYu22:
+      TYu(2,2) = x; 
+   case CNE6SSM_info::BMuPr:
+      BMuPr = x;
+   case CNE6SSM_info::BMuPhi:
+      BMuPhi = x; 
+   case CNE6SSM_info::LXiF:
+      LXiF = x; 
+   case CNE6SSM_info::mq200:
+      mq2(0,0) = x; 
+   case CNE6SSM_info::mq201:
+      mq2(0,1) = x; 
+   case CNE6SSM_info::mq202:
+      mq2(0,2) = x; 
+   case CNE6SSM_info::mq210:
+      mq2(1,0) = x; 
+   case CNE6SSM_info::mq211:
+      mq2(1,1) = x; 
+   case CNE6SSM_info::mq212:
+      mq2(1,2) = x; 
+   case CNE6SSM_info::mq220:
+      mq2(2,0) = x;
+   case CNE6SSM_info::mq221:
+      mq2(2,1) = x; 
+   case CNE6SSM_info::mq222:
+      mq2(2,2) = x; 
+   case CNE6SSM_info::ml200:
+      ml2(0,0) = x;
+   case CNE6SSM_info::ml201:
+      ml2(0,1) = x; 
+   case CNE6SSM_info::ml202:
+      ml2(0,2) = x; 
+   case CNE6SSM_info::ml210:
+      ml2(1,0) = x; 
+   case CNE6SSM_info::ml211:
+      ml2(1,1) = x; 
+   case CNE6SSM_info::ml212:
+      ml2(1,2) = x; 
+   case CNE6SSM_info::ml220:
+      ml2(2,0) = x; 
+   case CNE6SSM_info::ml221:
+      ml2(2,1) = x;
+   case CNE6SSM_info::ml222:
+      ml2(2,2) = x;
+   case CNE6SSM_info::mHd2:
+      mHd2 = x; 
+   case CNE6SSM_info::mHu2:
+      mHu2 = x; 
+   case CNE6SSM_info::md200:
+      md2(0,0) = x; 
+   case CNE6SSM_info::md201:
+      md2(0,1) = x; 
+   case CNE6SSM_info::md202:
+      md2(0,2) = x; 
+   case CNE6SSM_info::md210:
+      md2(1,0) = x; 
+   case CNE6SSM_info::md211:
+      md2(1,1) = x; 
+   case CNE6SSM_info::md212:
+      md2(1,2) = x; 
+   case CNE6SSM_info::md220:
+      md2(2,0) = x; 
+   case CNE6SSM_info::md221:
+      md2(2,1) = x;
+   case CNE6SSM_info::md222:
+      md2(2,2) = x; 
+   case CNE6SSM_info::mu200:
+      mu2(0,0) = x; 
+   case CNE6SSM_info::mu201:
+      mu2(0,1) = x; 
+   case CNE6SSM_info::mu202:
+      mu2(0,2) = x; 
+   case CNE6SSM_info::mu210:
+      mu2(1,0) = x; 
+   case CNE6SSM_info::mu211:
+      mu2(1,1) = x; 
+   case CNE6SSM_info::mu212:
+      mu2(1,2) = x; 
+   case CNE6SSM_info::mu220:
+      mu2(2,0) = x; 
+   case CNE6SSM_info::mu221:
+      mu2(2,1) = x; 
+   case CNE6SSM_info::mu222:
+      mu2(2,2) = x; 
+   case CNE6SSM_info::me200:
+      me2(0,0) = x;
+   case CNE6SSM_info::me201:
+      me2(0,1) = x; 
+   case CNE6SSM_info::me202:
+      me2(0,2) = x; 
+   case CNE6SSM_info::me210:
+      me2(1,0) = x; 
+   case CNE6SSM_info::me211:
+      me2(1,1) = x; 
+   case CNE6SSM_info::me212:
+      me2(1,2) = x; 
+   case CNE6SSM_info::me220:
+      me2(2,0) = x; 
+   case CNE6SSM_info::me221:
+      me2(2,1) = x; 
+   case CNE6SSM_info::me222:
+      me2(2,2) = x; 
+   case CNE6SSM_info::ms2:
+      ms2 = x; 
+   case CNE6SSM_info::msbar2:
+      msbar2 = x;
+   case CNE6SSM_info::mH1I200:
+      mH1I2(0,0) = x; 
+   case CNE6SSM_info::mH1I201:
+      mH1I2(0,1) = x; 
+   case CNE6SSM_info::mH1I210:
+      mH1I2(1,0) = x; 
+   case CNE6SSM_info::mH1I211:
+      mH1I2(1,1) = x; 
+   case CNE6SSM_info::mH2I200:
+      mH2I2(0,0) = x; 
+   case CNE6SSM_info::mH2I201:
+      mH2I2(0,1) = x; 
+   case CNE6SSM_info::mH2I210:
+      mH2I2(1,0) = x; 
+   case CNE6SSM_info::mH2I211:
+      mH2I2(1,1) = x;
+   case CNE6SSM_info::mSI200:
+      mSI2(0,0) = x; 
+   case CNE6SSM_info::mSI201:
+      mSI2(0,1) = x; 
+   case CNE6SSM_info::mSI202:
+      mSI2(0,2) = x; 
+   case CNE6SSM_info::mSI210:
+      mSI2(1,0) = x; 
+   case CNE6SSM_info::mSI211:
+      mSI2(1,1) = x; 
+   case CNE6SSM_info::mSI212:
+      mSI2(1,2) = x; 
+   case CNE6SSM_info::mSI220:
+      mSI2(2,0) = x; 
+   case CNE6SSM_info::mSI221:
+      mSI2(2,1) = x; 
+   case CNE6SSM_info::mSI222:
+      mSI2(2,2) = x;
+   case CNE6SSM_info::mDx200:
+      mDx2(0,0) = x; 
+   case CNE6SSM_info::mDx201:
+      mDx2(0,1) = x; 
+   case CNE6SSM_info::mDx202:
+      mDx2(0,2) = x; 
+   case CNE6SSM_info::mDx210:
+      mDx2(1,0) = x; 
+   case CNE6SSM_info::mDx211:
+      mDx2(1,1) = x; 
+   case CNE6SSM_info::mDx212:
+      mDx2(1,2) = x; 
+   case CNE6SSM_info::mDx220:
+      mDx2(2,0) = x; 
+   case CNE6SSM_info::mDx221:
+      mDx2(2,1) = x; 
+   case CNE6SSM_info::mDx222:
+      mDx2(2,2) = x;
+   case CNE6SSM_info::mDxbar200:
+      mDxbar2(0,0) = x; 
+   case CNE6SSM_info::mDxbar201:
+      mDxbar2(0,1) = x; 
+   case CNE6SSM_info::mDxbar202:
+      mDxbar2(0,2) = x; 
+   case CNE6SSM_info::mDxbar210:
+      mDxbar2(1,0) = x; 
+   case CNE6SSM_info::mDxbar211:
+      mDxbar2(1,1) = x; 
+   case CNE6SSM_info::mDxbar212:
+      mDxbar2(1,2) = x; 
+   case CNE6SSM_info::mDxbar220:
+      mDxbar2(2,0) = x;
+   case CNE6SSM_info::mDxbar221:
+      mDxbar2(2,1) = x; 
+   case CNE6SSM_info::mDxbar222:
+      mDxbar2(2,2) = x; 
+   case CNE6SSM_info::mHp2:
+      mHp2 = x; 
+   case CNE6SSM_info::mHpbar2:
+      mHpbar2 = x; 
+   case CNE6SSM_info::mphi2:
+      mphi2 = x; 
+   case CNE6SSM_info::MassB:
+      MassB = x; 
+   case CNE6SSM_info::MassWB:
+      MassWB = x; 
+   case CNE6SSM_info::MassG:
+      MassG = x; 
+   case CNE6SSM_info::MassBp:
+      MassBp = x;
+
+   default:
+      throw UnknownModelParameterError(parameter);
+   }
+}
+
 /**
  * finds the lsp and returns it's mass
  */

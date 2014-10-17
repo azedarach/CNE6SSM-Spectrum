@@ -102,6 +102,26 @@ private:
    std::string msg;
 };
 
+/**
+ * @class UnknownModelParameterError
+ * @brief Unknown model parameter
+ */
+class UnknownModelParameterError : public Error {
+public:
+   explicit UnknownModelParameterError(unsigned parameter_)
+      : parameter(parameter_)
+      {}
+   virtual ~UnknownModelParameterError() {}
+   virtual std::string what() const {
+      std::stringstream message;
+      message << "UnknownModelParameterError: unknown model parameter "
+              << parameter;
+      return message.str();
+   }
+private:
+   double parameter;
+};
+
 }
 
 #endif

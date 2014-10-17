@@ -30,6 +30,7 @@
 #include "CNE6SSM_two_scale_soft_parameters.hpp"
 #include "CNE6SSM_physical.hpp"
 #include "CNE6SSM_info.hpp"
+#include "model.hpp"
 #include "two_scale_model.hpp"
 #include "problems.hpp"
 #include "config.h"
@@ -53,7 +54,10 @@ class Two_scale;
  * @brief model class with routines for determing masses and mixinga and EWSB
  */
 template<>
-class CNE6SSM<Two_scale> : public Two_scale_model, public CNE6SSM_soft_parameters {
+class CNE6SSM<Two_scale> 
+   : public Model 
+   , public Two_scale_model
+   , public CNE6SSM_soft_parameters {
 public:
    explicit CNE6SSM(const CNE6SSM_input_parameters& input_ = CNE6SSM_input_parameters());
    virtual ~CNE6SSM();
@@ -92,6 +96,9 @@ public:
    virtual void print(std::ostream&) const;
    virtual void set_precision(double);
 
+   // Model interface
+   double get_parameter(unsigned) const;
+   void set_parameter(unsigned, double);
 
    double get_MVG() const { return MVG; }
    double get_MGlu() const { return MGlu; }

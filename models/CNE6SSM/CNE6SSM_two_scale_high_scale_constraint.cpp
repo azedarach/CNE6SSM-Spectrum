@@ -117,15 +117,6 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    const auto Ye = MODELPARAMETER(Ye);
    const auto Yd = MODELPARAMETER(Yd);
    const auto Yu = MODELPARAMETER(Yu);
-   const auto KappaPr = MODELPARAMETER(KappaPr);
-   const auto Sigmax = MODELPARAMETER(Sigmax);
-   const auto hE = MODELPARAMETER(hE);
-   const auto SigmaL = MODELPARAMETER(SigmaL);
-   const auto gD = MODELPARAMETER(gD);
-   const auto fu = MODELPARAMETER(fu);
-   const auto fd = MODELPARAMETER(fd);
-   const auto Kappa = MODELPARAMETER(Kappa);
-   const auto Lambda12 = MODELPARAMETER(Lambda12);
    const auto Lambdax = MODELPARAMETER(Lambdax);
 
    MODEL->set_g1p(g1);
