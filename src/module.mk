@@ -20,6 +20,7 @@ LIBFLEXI_SRC := \
 		$(DIR)/model.cpp \
 		$(DIR)/nmssm2loop.f \
 		$(DIR)/numerics.cpp \
+		$(DIR)/scan_command_line_options.cpp \
 		$(DIR)/spectrum_generator_settings.cpp \
 		$(DIR)/pv.cpp \
 		$(DIR)/rge.cpp \
@@ -69,6 +70,7 @@ LIBFLEXI_HDR := \
 		$(DIR)/rk.hpp \
 		$(DIR)/root_finder.hpp \
 		$(DIR)/scan.hpp \
+		$(DIR)/scan_command_line_options.hpp \
 		$(DIR)/sfermions.hpp \
 		$(DIR)/slha_io.hpp \
 		$(DIR)/spectrum_generator_settings.hpp \
