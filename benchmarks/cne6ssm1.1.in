@@ -31,11 +31,16 @@ Block SMINPUTS               # Standard Model inputs
    23   1.040000000e-01      # ms(2 GeV)
    24   1.270000000e+00      # mc(2 GeV)
 Block MINPAR                 # Input parameters
-    1   2.000000000e+03      # m0
-    2   3.000000000e+03      # m12
-    3   1.000000000e+01      # TanBeta
-    4   1.000000000e+00      # sign(Lambdax)
-    5   1.000000000e+03      # Azero
+#    1   2.000000000e+03      # m0
+#    2   3.000000000e+03      # m12
+#    3   1.000000000e+01      # TanBeta
+#    4   1.000000000e+00      # sign(Lambdax)
+#    5   1.000000000e+03      # Azero
+    1   0.0000000000
+    2   151.515
+    3   10.0
+    4   1.0
+    5   -1315.79
 Block EXTPAR
     0   0                    # unification scale (0 = automatic)
    65   4.000000000e+04      # s = sqrt{s_1^2 + s_2^2}
@@ -45,10 +50,10 @@ Block HMIXIN
    32   2.000000000e-02      # kappa prime (singlet cubic coupling)
    33   1.000000000e-01      # sigma (singlet-S-Sbar coupling)
 Block ESIXRUNIN
-    0   5.000000000e+02      # mu prime
+    0   1.000000000e+04      # mu prime
    30   0.000000000e+00      # Bmu_phi (soft breaking singlet mass term)
    42   3.000000000e-01      # sigma_L (singlet-L_4-L_4bar coupling) 
-  101   5.000000000e+02      # B_mu prime
+  101   1.000000000e+04      # B_mu prime
 Block ESIXLAMBDAIN
   1  1  5.000000000e-01      # Lambda12(1,1) 
   1  2  0.000000000e+00      # Lambda12(1,2) 

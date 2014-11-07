@@ -28,6 +28,7 @@ LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_info.cpp \
 		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_physical.cpp \
+		$(DIR)/CNE6SSM_scan_parameters.cpp \
 		$(DIR)/CNE6SSM_scan_utilities.cpp \
 		$(DIR)/CNE6SSM_utilities.cpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.cpp \
@@ -51,6 +52,7 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_low_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_model.hpp \
 		$(DIR)/CNE6SSM_physical.hpp \
+		$(DIR)/CNE6SSM_scan_parameters.hpp \
 		$(DIR)/CNE6SSM_scan_utilities.hpp \
 		$(DIR)/CNE6SSM_slha_io.hpp \
 		$(DIR)/CNE6SSM_spectrum_generator.hpp \

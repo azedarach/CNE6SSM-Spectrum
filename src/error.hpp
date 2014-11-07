@@ -95,7 +95,7 @@ public:
    virtual ~OutOfMemoryError() {}
    virtual std::string what() const {
       std::stringstream message;
-      message << "OutOfMemoryError: Not enought memory: " << msg;
+      message << "OutOfMemoryError: Not enough memory: " << msg;
       return message.str();
    }
 private:
@@ -120,6 +120,26 @@ public:
    }
 private:
    double parameter;
+};
+
+/**
+ * @class ReadError
+ * @brief Error reading file
+ */
+class ReadError : public Error {
+public:
+   explicit ReadError(const std::string& msg_)
+      : msg(msg_)
+      {}
+   virtual ~ReadError() {}
+   virtual std::string what() const
+      {
+         std::stringstream message;
+         message << "ReadError: Error reading file: "<< msg;
+         return message.str();
+      }
+private:
+   std::string msg;
 };
 
 }

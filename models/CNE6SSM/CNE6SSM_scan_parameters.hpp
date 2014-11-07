@@ -1,0 +1,94 @@
+// ====================================================================
+// Helper class containing details of scans
+// ====================================================================
+
+#ifndef CNE6SSM_SCAN_PARAMETERS_H
+#define CNE6SSM_SCAN_PARAMETERS_H
+
+#include "CNE6SSM_input_parameters.hpp"
+
+#include "scan.hpp"
+
+#include <chrono>
+
+namespace flexiblesusy {
+
+class CNE6SSM_scan_parameters {
+public:
+   CNE6SSM_scan_parameters();
+
+   CNE6SSM_scan_parameters(double m0_lower_, double m0_upper_, std::size_t m0_npts_,
+                           double m12_lower_, double m12_upper_, std::size_t m12_npts_,
+                           double TanBeta_lower_, double TanBeta_upper_, std::size_t TanBeta_npts_,
+                           double SignLambdax_lower_, double SignLambdax_upper_, std::size_t SignLambdax_npts_,
+                           double Azero_lower_, double Azero_upper_, std::size_t Azero_npts_);
+
+   CNE6SSM_scan_parameters(double m0_lower_, double m0_upper_,
+                           double m12_lower_, double m12_upper_,
+                           double TanBeta_lower_, double TanBeta_upper_, 
+                           double SignLambdax_lower_, double SignLambdax_upper_,
+                           double Azero_lower_, double Azero_upper_, std::size_t total_npts_);
+
+   ~CNE6SSM_scan_parameters() {}
+
+   double get_m0_lower() const { return m0_lower; }
+   double get_m0_upper() const { return m0_upper; }
+   std::size_t get_m0_npts() const { return m0_npts; }
+   double get_m0_incr() const { return m0_incr; }
+   double get_m12_lower() const { return m12_lower; }
+   double get_m12_upper() const { return m12_upper; }
+   std::size_t get_m12_npts() const { return m12_npts; }
+   double get_m12_incr() const { return m12_incr; }
+   double get_TanBeta_lower() const { return TanBeta_lower; }
+   double get_TanBeta_upper() const { return TanBeta_upper; }
+   std::size_t get_TanBeta_npts() const { return TanBeta_npts; }
+   double get_TanBeta_incr() const { return TanBeta_incr; }
+   int get_SignLambdax_lower() const { return SignLambdax_lower; }
+   int get_SignLambdax_upper() const { return SignLambdax_upper; }
+   std::size_t get_SignLambdax_npts() const { return SignLambdax_npts; }
+   int get_SignLambdax_incr() const { return SignLambdax_incr; }
+   double get_Azero_lower() const { return Azero_lower; }
+   double get_Azero_upper() const { return Azero_upper; }
+   std::size_t get_Azero_npts() const { return Azero_npts; }
+   double get_Azero_incr() const { return Azero_incr; }
+   double get_total_npts() const { return total_npts; }
+   bool get_is_grid_scan() const { return is_grid_scan; }
+
+   double get_random_m0();
+   double get_random_m12();
+   double get_random_TanBeta();
+   double get_random_SignLambdax();
+   double get_random_Azero();
+
+private:
+   double m0_lower;
+   double m0_upper;
+   std::size_t m0_npts;
+   double m0_incr;
+   double m12_lower;
+   double m12_upper;
+   std::size_t m12_npts;
+   double m12_incr;
+   double TanBeta_lower;
+   double TanBeta_upper;
+   std::size_t TanBeta_npts;
+   double TanBeta_incr;
+   int SignLambdax_lower;
+   int SignLambdax_upper;
+   std::size_t SignLambdax_npts;
+   int SignLambdax_incr;
+   double Azero_lower;
+   double Azero_upper;
+   std::size_t Azero_npts;
+   double Azero_incr;
+   std::size_t total_npts;
+   bool is_grid_scan;
+
+   std::minstd_rand generator;
+   std::uniform_real_distribution<double> distribution;
+
+};
+
+} // namespace flexiblesusy
+
+#endif

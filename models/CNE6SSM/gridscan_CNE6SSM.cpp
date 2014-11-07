@@ -6,66 +6,24 @@
 // ====================================================================
 
 #include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_scan_parameters.hpp"
+#include "CNE6SSM_scan_utilities.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
 
-#include "command_line_options.hpp"
+#include "scan_command_line_options.hpp"
 #include "error.hpp"
 #include "grid_scanner.hpp"
-#include "scan.hpp"
 #include "lowe.h"
 
 #include <iostream>
+#include <fstream>
 #include <chrono>
 #include <sys/time.h>
 
-namespace flexiblesusy {
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
-   void print_usage()
-   {
-      std::cout <<
-         "Usage: gridscan_CNE6SSM.x [options]\n"
-         "Options:\n"
-         "  --m0=<value>\n"
-         "  --m12=<value>\n"
-         "  --TanBeta=<value>\n"
-         "  --SignLambdax=<value>\n"
-         "  --Azero=<value>\n"
-         
-         "  --help,-h                         print this help message"
-                << std::endl;
-   }
-   
-   void set_command_line_parameters(int argc, char* argv[],
-                                    CNE6SSM_input_parameters& input)
-   {
-      for (int i = 1; i < argc; ++i) {
-         const std::string option(argv[i]);
-         
-         if (Command_line_options::get_parameter_value(option, "--m0=", input.m0))
-            continue;
-         
-         if(Command_line_options::get_parameter_value(option, "--m12=", input.m12))
-            continue;
-         
-         if(Command_line_options::get_parameter_value(option, "--TanBeta=", input.TanBeta))
-            continue;
-         
-         if(Command_line_options::get_parameter_value(option, "--SignLambdax=", input.SignLambdax))
-            continue;
-         
-         if(Command_line_options::get_parameter_value(option, "--Azero=", input.Azero))
-            continue;
-         
-         
-         if (option == "--help" || option == "-h") {
-            print_usage();
-            exit(EXIT_SUCCESS);
-         }
-         
-         ERROR("Unrecognized command line option: " << option);
-         exit(EXIT_FAILURE);
-      }
-   }
+namespace flexiblesusy {
    
    void set_default_parameter_values(CNE6SSM_input_parameters& input)
    {
@@ -74,9 +32,6 @@ namespace flexiblesusy {
 
       if (is_zero(input.SignLambdax))
          input.SignLambdax = 1;
-
-      if (is_zero(input.Azero))
-         input.Azero = 1000.;
 
       input.ssumInput = 40000.0; // GeV
       input.QS = 5.;
@@ -138,24 +93,275 @@ namespace flexiblesusy {
       
    }
 
-   void set_soft_mass_values(const std::vector<std::size_t>& posn, const std::vector<std::size_t>& dims, CNE6SSM_input_parameters& input)
+   void set_minpar_values(CNE6SSM_scan_parameters params, const std::vector<std::size_t>& posn, CNE6SSM_input_parameters& input)
    {
-      const double m0_lower = 0.; // GeV
-      const double m0_upper = 3000.; // GeV
-      const double m12_lower = 0.; // GeV
-      const double m12_upper = 3000.; // GeV
+      if (params.get_is_grid_scan()) {
+
+         input.m0 = params.get_m0_lower() + params.get_m0_incr() * posn.at(0);
+         input.m12 = params.get_m12_lower() + params.get_m12_incr() * posn.at(1);
+         input.TanBeta = params.get_TanBeta_lower() + params.get_TanBeta_incr() * posn.at(2);
+         input.SignLambdax = params.get_SignLambdax_lower() + params.get_SignLambdax_incr() * posn.at(3);
+         input.Azero = params.get_Azero_lower() + params.get_Azero_incr() * posn.at(4);
+
+      } else {
+         input.m0 = params.get_random_m0();
+         input.m12 = params.get_random_m12();
+         input.TanBeta = params.get_random_TanBeta();
+         input.SignLambdax = params.get_random_SignLambdax();
+         input.Azero = params.get_random_Azero();
+      }
+   }
+
+   inline void trim(std::string& str)
+   {
+      std::size_t startpos = str.find_first_not_of(" \t\n\v\f\r");
+      if (startpos != std::string::npos) str.erase(0, startpos);
+      std::size_t endpos = str.find_last_not_of(" \t\n\v\f\r");
+      if (endpos != std::string::npos) str.erase(endpos+1);
+   }
+
+   CNE6SSM_scan_parameters parse_scan_inputs_file(const std::string& scan_input_file)
+   {
+      std::ifstream ifs(scan_input_file, std::ifstream::in);
+      if (ifs.fail()) {
+         throw ReadError("unable to open file " + scan_input_file);
+      }
       
-      double m0_incr = 0.0;
-      double m12_incr = 0.0;
-      
-      if (dims.at(0) > 1) 
-         m0_incr = (m0_upper - m0_lower) / (dims.at(0) - 1.0);
-      if (dims.at(1) > 1) 
-         m12_incr = (m12_upper - m12_lower) / (dims.at(1) - 1.0);
-      
-      input.m0 = m0_lower + m0_incr * posn.at(0);
-      input.m12 = m12_lower + m12_incr * posn.at(1);
-      
+      double m0_lower = 0.;
+      double m0_upper = 0.;
+      int m0_npts = 1;
+      double m12_lower = 0.;
+      double m12_upper = 0.;
+      int m12_npts = 1;
+      double TanBeta_lower = 1.;
+      double TanBeta_upper = 1.;
+      int TanBeta_npts = 1;
+      int SignLambdax_lower = 1;
+      int SignLambdax_upper = 1;
+      int SignLambdax_npts = 1;
+      double Azero_lower = 0.;
+      double Azero_upper = 0.;
+      int Azero_npts = 1;
+      int total_npts = 1;
+      bool is_grid_scan = true;
+
+      // read from file
+      // # starts a (single line) comment
+      // \n, ;, and , are delimiters
+      std::string line;
+      while (std::getline(ifs, line)) {
+         if (line.find("#") != std::string::npos) {
+            line = line.substr(0, line.find("#"));
+         }
+         if (line.empty())
+            continue;
+
+         // break up into individual fields
+         std::vector<std::string> fields;
+         boost::split(fields, line, boost::is_any_of(",;"));
+
+         for (std::size_t i = 0; i < fields.size(); ++i) {
+            // remove whitespace
+            trim(fields[i]);
+
+            // get field name and value
+            if (!fields[i].empty()) {
+               std::vector<std::string> field;
+               boost::split(field, fields[i], boost::is_any_of("="));
+               if (field.size() < 2) {
+                  WARNING("Ignoring invalid input '" + fields[i] + "'");
+               } else {
+                  trim(field[0]);
+                  trim(field[1]);
+
+                  // compare against valid inputs
+                  if (field[0] == "is_grid_scan") {
+                     boost::to_lower(field[1]);
+                     if (field[1] == "false" || field[1] == "f") {
+                        is_grid_scan = false;
+                     } else if (field[1] == "true" || field[1] == "t") {
+                        is_grid_scan = true;
+                     } else {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                     }
+                  } else if (field[0] == "m0_lower") {
+                     try {
+                        m0_lower = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        m0_lower = 0.;
+                     }
+                  } else if (field[0] == "m0_upper") {
+                     try {
+                        m0_upper = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        m0_upper = 0.;
+                     }
+                  } else if (field[0] == "m0_npts") {
+                     try {
+                        m0_npts = boost::lexical_cast<int>(field[1]);
+                        if (!is_grid_scan) {
+                           WARNING("Random scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (m0_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           m0_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        m0_npts = 1;
+                     }
+                  } else if (field[0] == "m12_lower") {
+                     try {
+                        m12_lower = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        m12_lower = 0.;
+                     }
+                  } else if (field[0] == "m12_upper") {
+                     try {
+                        m12_upper = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        m12_upper = 0.;
+                     }
+                  } else if (field[0] == "m12_npts") {
+                     try {
+                        m12_npts = boost::lexical_cast<int>(field[1]);
+                        if (!is_grid_scan) {
+                           WARNING("Random scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (m12_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           m12_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        m12_npts = 1;
+                     }
+                  } else if (field[0] == "TanBeta_lower") {
+                     try {
+                        TanBeta_lower = boost::lexical_cast<double>(field[1]);
+                        if (TanBeta_lower < 1. || TanBeta_lower > 1000.) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           TanBeta_lower = 1.;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        TanBeta_lower = 1.;
+                     }
+                  } else if (field[0] == "TanBeta_upper") {
+                     try {
+                        TanBeta_upper = boost::lexical_cast<double>(field[1]);
+                        if (TanBeta_upper < 1. || TanBeta_upper > 1000.) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           TanBeta_upper = 1.;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        TanBeta_upper = 1.;
+                     }
+                  } else if (field[0] == "TanBeta_npts") {
+                     try {
+                        TanBeta_npts = boost::lexical_cast<int>(field[1]);
+                        if (!is_grid_scan) {
+                           WARNING("Random scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (TanBeta_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           TanBeta_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        TanBeta_npts = 1;
+                     }
+                  } else if (field[0] == "SignLambdax_lower") {
+                     try {
+                        SignLambdax_lower = Sign(boost::lexical_cast<double>(field[1]));
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        SignLambdax_lower = -1;
+                     }
+                  } else if (field[0] == "SignLambdax_upper") {
+                     try {
+                        SignLambdax_upper = Sign(boost::lexical_cast<double>(field[1]));
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        SignLambdax_upper = 1;
+                     }
+                  } else if (field[0] == "SignLambdax_npts") {
+                     try {
+                        SignLambdax_npts = boost::lexical_cast<int>(field[1]);
+                        if (!is_grid_scan) {
+                           WARNING("Random scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (SignLambdax_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           SignLambdax_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        SignLambdax_npts = 1;
+                     }
+                  } else if (field[0] == "Azero_lower") {
+                     try {
+                        Azero_lower = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Azero_lower = 0.;
+                     }
+                  } else if (field[0] == "Azero_upper") {
+                     try {
+                        Azero_upper = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Azero_upper = 0.;
+                     }
+                  } else if (field[0] == "Azero_npts") {
+                     try {
+                        Azero_npts = boost::lexical_cast<int>(field[1]);
+                        if (!is_grid_scan) {
+                           WARNING("Random scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (Azero_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           Azero_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Azero_npts = 1;
+                     }
+                  } else if (field[0] == "total_npts") {
+                     try {
+                        total_npts = boost::lexical_cast<int>(field[1]);
+                        if (is_grid_scan) {
+                           WARNING("Grid scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (total_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           total_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        total_npts = 1;
+                     }
+                  } else {
+                     WARNING("Ignoring invalid input '" + fields[i] + "'");
+                  }
+               } //< if (field.size() < 2)
+            } //< if (!fields[i].empty())
+         } //< for(std::size_t i = 0; i < fields.size(); ++i)
+      } //< while(std::getline(ifs, line))
+
+      // initialise scan parameters
+      if (is_grid_scan) {
+         return CNE6SSM_scan_parameters(m0_lower, m0_upper, m0_npts,
+                                        m12_lower, m12_upper, m12_npts,
+                                        TanBeta_lower, TanBeta_upper, TanBeta_npts,
+                                        SignLambdax_lower, SignLambdax_upper, SignLambdax_npts,
+                                        Azero_lower, Azero_upper, Azero_npts);
+      } else {
+         return CNE6SSM_scan_parameters(m0_lower, m0_upper,
+                                        m12_lower, m12_upper,
+                                        TanBeta_lower, TanBeta_upper, 
+                                        SignLambdax_lower, SignLambdax_upper,
+                                        Azero_lower, Azero_upper, total_npts);
+      }
    }
 
 } // namespace flexiblesusy
@@ -174,19 +380,88 @@ double get_cpu_time()
    return (double)clock() / CLOCKS_PER_SEC;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
    using namespace flexiblesusy;
    using namespace softsusy;
    typedef Two_scale algorithm_type;
    typedef std::chrono::duration<int,std::micro> microseconds_t;
+
    std::chrono::high_resolution_clock::time_point start_point = std::chrono::high_resolution_clock::now();
    double wall_start = get_wall_time();
    double cpu_start = get_cpu_time();
 
+   std::size_t seed = start_point.time_since_epoch().count();
+
+   std::minstd_rand generator(seed);
+   std::uniform_real_distribution<double> distribution(0., 1.);
+
+   Scan_command_line_options options(argc, argv);
+   if (options.must_print_model_info())
+      CNE6SSM_info::print(std::cout);
+   if (options.must_exit())
+      return options.status();
+
+   const std::string scan_input_file(options.get_scan_input_file());
+   const std::string pole_mass_output_file(options.get_pole_mass_output_file());
+   const std::string drbar_mass_output_file(options.get_drbar_mass_output_file());
+   const std::string drbar_susy_pars_output_file(options.get_drbar_susy_pars_output_file());
+   const std::string drbar_soft_pars_output_file(options.get_drbar_soft_pars_output_file());
+   const std::string drbar_mixings_output_file(options.get_drbar_mixings_output_file());
+
+   CNE6SSM_scan_parameters parameters;
+
+   if (scan_input_file.empty()) {
+      WARNING("No scan input file given!\n"
+              "   Default scan parameters will be used.\n"
+              "   You can provide them via the option --scan-input-file=");
+   } else {
+      try {
+         parameters = parse_scan_inputs_file(scan_input_file);
+      } catch (const ReadError& error) {
+         ERROR(error.what());
+         return EXIT_FAILURE;
+      }
+   }
+
+   // output streams
+   std::ofstream pole_mass_out_stream;
+   if (!pole_mass_output_file.empty()) {
+      pole_mass_out_stream.open(pole_mass_output_file, std::ofstream::out);
+   }
+
+   std::ostream & pole_mass_out = pole_mass_output_file.empty() ? std::cout : pole_mass_out_stream;
+
+   bool must_write_drbar_masses = false;
+   bool must_write_drbar_susy_pars = false;
+   bool must_write_drbar_soft_pars = false;
+   bool must_write_drbar_mixings = false;
+
+   std::ofstream drbar_mass_out_stream;
+   std::ofstream drbar_susy_pars_out_stream;
+   std::ofstream drbar_soft_pars_out_stream;
+   std::ofstream drbar_mixings_out_stream;
+   if (!drbar_mass_output_file.empty()) {
+      must_write_drbar_masses = true;
+      drbar_mass_out_stream.open(drbar_mass_output_file, std::ofstream::out);
+   }
+   if (!drbar_susy_pars_output_file.empty()) {
+      must_write_drbar_susy_pars = true;
+      drbar_susy_pars_out_stream.open(drbar_susy_pars_output_file, std::ofstream::out);
+   }
+   if (!drbar_soft_pars_output_file.empty()) {
+      must_write_drbar_soft_pars = true;
+      drbar_soft_pars_out_stream.open(drbar_soft_pars_output_file, std::ofstream::out);
+   }
+   if (!drbar_mixings_output_file.empty()) {
+      must_write_drbar_mixings = true;
+      drbar_mixings_out_stream.open(drbar_mixings_output_file, std::ofstream::out);
+   }
+
    CNE6SSM_input_parameters input;
-   set_command_line_parameters(argc, argv, input);
    set_default_parameter_values(input);
+
+   // attempt to read scan input file
 
    QedQcd oneset;
    oneset.toMz();
@@ -195,211 +470,81 @@ int main(int argc, char* argv[])
    spectrum_generator.set_precision_goal(1.0e-3);
    spectrum_generator.set_max_iterations(0);   // 0 == automatic
    spectrum_generator.set_calculate_sm_masses(0); // 0 == no
+   // note: alternate ewsb flag is currently unused
    spectrum_generator.set_alternate_ewsb(1); // 1 == yes
-   spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
-   
-   std::size_t m0_npts = 45;
-   std::size_t m12_npts = 45;
+   spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale 
 
-   std::vector<std::size_t> scan_dimensions = {m0_npts, m12_npts};
+   std::vector<std::size_t> scan_dimensions = {parameters.get_m0_npts(), parameters.get_m12_npts(), 
+                                               parameters.get_TanBeta_npts(), 
+                                               parameters.get_SignLambdax_npts(), 
+                                               parameters.get_Azero_npts()};
 
    Grid_scanner scan(scan_dimensions);
 
-   cout << "# "
-        << std::setw(12) << std::left << "m0/GeV" << ' '
-        << std::setw(12) << std::left << "m12/GeV" << ' '
-        << std::setw(12) << std::left << "TanBeta" << ' '
-        << std::setw(12) << std::left << "Azero/GeV" << ' '
-        << std::setw(12) << std::left << "SignLambdax" << ' '
-        << std::setw(12) << std::left << "MGlu/GeV" << ' '
-        << std::setw(12) << std::left << "MChaP/GeV" << ' '
-        << std::setw(12) << std::left << "MVZp/GeV" << ' '
-        << std::setw(12) << std::left << "MSd(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSd(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSd(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSd(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MSd(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MSd(6)/GeV" << ' '
-        << std::setw(12) << std::left << "MSv(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSv(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSv(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSu(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSu(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSu(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSu(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MSu(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MSu(6)/GeV" << ' '
-        << std::setw(12) << std::left << "MSe(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSe(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSe(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSe(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MSe(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MSe(6)/GeV" << ' '
-        << std::setw(12) << std::left << "MSDX(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSDX(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSDX(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSDX(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MSDX(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MSDX(6)/GeV" << ' '
-        << std::setw(12) << std::left << "Mhh(1)/GeV" << ' '
-        << std::setw(12) << std::left << "Mhh(2)/GeV" << ' '
-        << std::setw(12) << std::left << "Mhh(3)/GeV" << ' '
-        << std::setw(12) << std::left << "Mhh(4)/GeV" << ' '
-        << std::setw(12) << std::left << "Mhh(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MAh(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MAh(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MAh(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MAh(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MAh(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MHpm(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MHpm(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(6)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(7)/GeV" << ' '
-        << std::setw(12) << std::left << "MChi(8)/GeV" << ' '
-        << std::setw(12) << std::left << "MCha(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MCha(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MFDX(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MFDX(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MFDX(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHI0(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHI0(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHI0(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHI0(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHI0(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHI0(6)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHI0(7)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHIPM(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHIPM(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHIPM(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHIPM(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MChaI(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MChaI(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiI(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiI(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiI(3)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiI(4)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiI(5)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiI(6)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiI(7)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHp0(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHp0(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHpp(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MSHpp(2)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiP(1)/GeV" << ' '
-        << std::setw(12) << std::left << "MChiP(2)/GeV" << ' '
-        << std::setw(12) << std::left << "error"
-        << '\n';
-
+   CNE6SSM_pole_mass_writer pole_mass_writer;
+   CNE6SSM_drbar_values_writer drbar_values_writer;
+   bool must_write_comment_line = true;
    while (!scan.has_finished()) {
-      set_soft_mass_values(scan.get_position(), scan.get_dimensions(), input);
+      set_minpar_values(parameters, scan.get_position(), input);
 
       spectrum_generator.run(oneset, input);
 
       const CNE6SSM<algorithm_type>& model = spectrum_generator.get_model();
-      const CNE6SSM_physical& pole_masses = model.get_physical();
-      const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& problems
-         = spectrum_generator.get_problems();
-      const bool error = problems.have_serious_problem();
 
-      cout << " "
-           << std::setw(12) << std::left << input.m0 << ' '
-           << std::setw(12) << std::left << input.m12 << ' '
-           << std::setw(12) << std::left << input.TanBeta << ' '
-           << std::setw(12) << std::left << input.Azero << ' '
-           << std::setw(12) << std::left << input.SignLambdax << ' '
-           << std::setw(12) << std::left << pole_masses.MGlu << ' '
-           << std::setw(12) << std::left << pole_masses.MChaP << ' '
-           << std::setw(12) << std::left << pole_masses.MVZp << ' '
-           << std::setw(12) << std::left << pole_masses.MSd(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSd(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSd(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSd(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MSd(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MSd(5) << ' '
-           << std::setw(12) << std::left << pole_masses.MSv(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSv(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSv(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSu(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSu(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSu(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSu(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MSu(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MSu(5) << ' '
-           << std::setw(12) << std::left << pole_masses.MSe(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSe(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSe(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSe(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MSe(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MSe(5) << ' '
-           << std::setw(12) << std::left << pole_masses.MSDX(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSDX(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSDX(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSDX(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MSDX(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MSDX(5) << ' '
-           << std::setw(12) << std::left << pole_masses.Mhh(0) << ' '
-           << std::setw(12) << std::left << pole_masses.Mhh(1) << ' '
-           << std::setw(12) << std::left << pole_masses.Mhh(2) << ' '
-           << std::setw(12) << std::left << pole_masses.Mhh(3) << ' '
-           << std::setw(12) << std::left << pole_masses.Mhh(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MAh(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MAh(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MAh(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MAh(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MAh(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MHpm(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MHpm(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(5) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(6) << ' '
-           << std::setw(12) << std::left << pole_masses.MChi(7) << ' '
-           << std::setw(12) << std::left << pole_masses.MCha(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MCha(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MFDX(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MFDX(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MFDX(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHI0(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHI0(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHI0(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHI0(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHI0(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHI0(5) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHI0(6) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHIPM(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHIPM(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHIPM(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHIPM(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MChaI(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MChaI(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiI(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiI(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiI(2) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiI(3) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiI(4) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiI(5) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiI(6) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHp0(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHp0(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHpp(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MSHpp(1) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiP(0) << ' '
-           << std::setw(12) << std::left << pole_masses.MChiP(1) << ' '
-           << std::setw(12) << std::left << error;
-      if (error) {
-         cout << "\t# " << problems;
+      pole_mass_writer.extract_pole_masses(model);
+
+      if (must_write_drbar_masses)
+         drbar_values_writer.extract_drbar_masses(model);
+      if (must_write_drbar_susy_pars)
+         drbar_values_writer.extract_drbar_susy_pars(model);
+      if (must_write_drbar_soft_pars)
+         drbar_values_writer.extract_drbar_soft_pars(model);
+      if (must_write_drbar_mixings)
+         drbar_values_writer.extract_drbar_mixings(model);
+
+      if (must_write_comment_line) {
+         pole_mass_writer.write_pole_masses_comment_line(pole_mass_out);
+
+         if (must_write_drbar_masses)
+            drbar_values_writer.write_drbar_masses_comment_line(drbar_mass_out_stream);
+         if (must_write_drbar_susy_pars)
+            drbar_values_writer.write_drbar_susy_pars_comment_line(drbar_susy_pars_out_stream);
+         if (must_write_drbar_soft_pars)
+            drbar_values_writer.write_drbar_soft_pars_comment_line(drbar_soft_pars_out_stream);
+         if (must_write_drbar_mixings)
+            drbar_values_writer.write_drbar_mixings_comment_line(drbar_mixings_out_stream);
+
+         must_write_comment_line = false;
       }
-      cout << '\n';
+      pole_mass_writer.write_pole_masses_line(pole_mass_out);
+
+      if (must_write_drbar_masses)
+         drbar_values_writer.write_drbar_masses_line(drbar_mass_out_stream);
+      if (must_write_drbar_susy_pars)
+         drbar_values_writer.write_drbar_susy_pars_line(drbar_susy_pars_out_stream);
+      if (must_write_drbar_soft_pars)
+         drbar_values_writer.write_drbar_soft_pars_line(drbar_soft_pars_out_stream);
+      if (must_write_drbar_mixings)
+         drbar_values_writer.write_drbar_mixings_line(drbar_mixings_out_stream);
+
       scan.step_forward();
    }
+
+   if (pole_mass_out_stream.is_open())
+      pole_mass_out_stream.close();
+
+   if (drbar_mass_out_stream.is_open())
+      drbar_mass_out_stream.close();
+
+   if (drbar_susy_pars_out_stream.is_open())
+      drbar_susy_pars_out_stream.close();
+
+   if (drbar_soft_pars_out_stream.is_open())
+      drbar_soft_pars_out_stream.close();
+
+   if (drbar_mixings_out_stream.is_open())
+      drbar_mixings_out_stream.close();
+
 
    std::chrono::high_resolution_clock::time_point end_point = std::chrono::high_resolution_clock::now();
    microseconds_t duration(std::chrono::duration_cast<microseconds_t>(end_point - start_point));
