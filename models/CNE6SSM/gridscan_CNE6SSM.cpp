@@ -23,6 +23,10 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
+std::size_t seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+
+static std::minstd_rand generator(seed);
+
 namespace flexiblesusy {
    
    void set_default_parameter_values(CNE6SSM_input_parameters& input)
@@ -104,11 +108,11 @@ namespace flexiblesusy {
          input.Azero = params.get_Azero_lower() + params.get_Azero_incr() * posn.at(4);
 
       } else {
-         input.m0 = params.get_random_m0();
-         input.m12 = params.get_random_m12();
-         input.TanBeta = params.get_random_TanBeta();
-         input.SignLambdax = params.get_random_SignLambdax();
-         input.Azero = params.get_random_Azero();
+         input.m0 = params.get_random_m0(generator);
+         input.m12 = params.get_random_m12(generator);
+         input.TanBeta = params.get_random_TanBeta(generator);
+         input.SignLambdax = params.get_random_SignLambdax(generator);
+         input.Azero = params.get_random_Azero(generator);
       }
    }
 
@@ -391,9 +395,9 @@ int main(int argc, const char* argv[])
    double wall_start = get_wall_time();
    double cpu_start = get_cpu_time();
 
-   std::size_t seed = start_point.time_since_epoch().count();
+//   std::size_t seed = start_point.time_since_epoch().count();
 
-   std::minstd_rand generator(seed);
+//   static std::minstd_rand generator(seed);
    std::uniform_real_distribution<double> distribution(0., 1.);
 
    Scan_command_line_options options(argc, argv);

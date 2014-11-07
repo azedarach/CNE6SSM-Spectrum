@@ -19,9 +19,6 @@ namespace flexiblesusy {
 
       total_npts = m0_npts * m12_npts * TanBeta_npts * SignLambdax_npts * Azero_npts;
 
-      std::size_t seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-
-      generator = std::minstd_rand(seed);
       distribution = std::uniform_real_distribution<double>(0.,1.);
    }
 
@@ -53,9 +50,6 @@ namespace flexiblesusy {
       
       total_npts = m0_npts * m12_npts * TanBeta_npts * SignLambdax_npts * Azero_npts;
 
-      std::size_t seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-
-      generator = std::minstd_rand(seed);
       distribution = std::uniform_real_distribution<double>(0.,1.);
    }
    
@@ -83,33 +77,30 @@ namespace flexiblesusy {
       SignLambdax_npts = 1;
       Azero_npts = total_npts;
 
-      std::size_t seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-
-      generator = std::minstd_rand(seed);
       distribution = std::uniform_real_distribution<double>(0.,1.);
    }
    
-   double CNE6SSM_scan_parameters::get_random_m0()
+   double CNE6SSM_scan_parameters::get_random_m0(std::minstd_rand & generator)
    {
       return m0_lower + (m0_upper - m0_lower) * distribution(generator);
    }
 
-   double CNE6SSM_scan_parameters::get_random_m12()
+   double CNE6SSM_scan_parameters::get_random_m12(std::minstd_rand & generator)
    {
       return m12_lower + (m12_upper - m12_lower) * distribution(generator);
    }
 
-   double CNE6SSM_scan_parameters::get_random_TanBeta()
+   double CNE6SSM_scan_parameters::get_random_TanBeta(std::minstd_rand & generator)
    {
       return TanBeta_lower + (TanBeta_upper - TanBeta_lower) * distribution(generator);
    }
 
-   double CNE6SSM_scan_parameters::get_random_SignLambdax()
+   double CNE6SSM_scan_parameters::get_random_SignLambdax(std::minstd_rand & generator)
    {
       return Sign(SignLambdax_lower + (SignLambdax_upper - SignLambdax_lower) * distribution(generator));
    }
 
-   double CNE6SSM_scan_parameters::get_random_Azero()
+   double CNE6SSM_scan_parameters::get_random_Azero(std::minstd_rand & generator)
    {
       return Azero_lower + (Azero_upper - Azero_lower) * distribution(generator);
    }

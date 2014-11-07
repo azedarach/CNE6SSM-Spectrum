@@ -54,11 +54,11 @@ public:
    double get_total_npts() const { return total_npts; }
    bool get_is_grid_scan() const { return is_grid_scan; }
 
-   double get_random_m0();
-   double get_random_m12();
-   double get_random_TanBeta();
-   double get_random_SignLambdax();
-   double get_random_Azero();
+   double get_random_m0(std::minstd_rand &);
+   double get_random_m12(std::minstd_rand &);
+   double get_random_TanBeta(std::minstd_rand &);
+   double get_random_SignLambdax(std::minstd_rand &);
+   double get_random_Azero(std::minstd_rand &);
 
 private:
    double m0_lower;
@@ -84,7 +84,6 @@ private:
    std::size_t total_npts;
    bool is_grid_scan;
 
-   std::minstd_rand generator;
    std::uniform_real_distribution<double> distribution;
 
 };
