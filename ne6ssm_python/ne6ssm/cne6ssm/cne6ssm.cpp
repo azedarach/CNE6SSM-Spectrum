@@ -1,10 +1,11 @@
 #include "CNE6SSM_info.hpp"
+#include <cstring>
 
 #include <boost/python.hpp>
 
 using namespace boost::python;
 
-static list get_parameter_names()
+static list get_all_parameter_names()
 {
    list t;
    for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARAMETERS;
@@ -14,7 +15,7 @@ static list get_parameter_names()
    return t;
 }
 
-static list get_parameter_latex_names()
+static list get_all_parameter_latex_names()
 {
    list t;
    for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARAMETERS;
@@ -24,7 +25,7 @@ static list get_parameter_latex_names()
    return t;
 }
 
-static list get_particle_names()
+static list get_all_particle_names()
 {
    list t;
    for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARTICLES; ++i) {
@@ -33,7 +34,7 @@ static list get_particle_names()
    return t;
 }
 
-static list get_particle_latex_names()
+static list get_all_particle_latex_names()
 {
    list t;
    for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARTICLES; ++i) {
@@ -42,7 +43,7 @@ static list get_particle_latex_names()
    return t;
 }
 
-static list get_particle_multiplicities()
+static list get_all_particle_multiplicities()
 {
    list t;
    for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARTICLES; ++i) {
@@ -51,7 +52,7 @@ static list get_particle_multiplicities()
    return t;
 }
 
-static list get_input_names()
+static list get_all_input_names()
 {
    list t;
    for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS; ++i) {
@@ -60,7 +61,7 @@ static list get_input_names()
    return t;
 }
 
-static list get_input_latex_names()
+static list get_all_input_latex_names()
 {
    list t;
    for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS; ++i) {
@@ -69,20 +70,34 @@ static list get_input_latex_names()
    return t;
 }
 
+const char* convert_to_input_latex_name(const char* name)
+{
+   std::size_t index = 0;
+   while (index < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::input_names[index])) {
+         return flexiblesusy::CNE6SSM_info::input_latex_names[index];
+      }
+      ++index;
+   }
+   return "";
+}
+
 BOOST_PYTHON_MODULE(_cne6ssm)
 {
-   def("get_parameter_names",
-       get_parameter_names);
-   def("get_parameter_latex_names",
-       get_parameter_latex_names);
-   def("get_particle_names",
-       get_particle_names);
-   def("get_particle_latex_names",
-       get_particle_latex_names);
-   def("get_particle_multiplicities",
-       get_particle_multiplicities);
-   def("get_input_names",
-       get_input_names);
-   def("get_input_latex_names",
-       get_input_latex_names);
+   def("get_all_parameter_names",
+       get_all_parameter_names);
+   def("get_all_parameter_latex_names",
+       get_all_parameter_latex_names);
+   def("get_all_particle_names",
+       get_all_particle_names);
+   def("get_all_particle_latex_names",
+       get_all_particle_latex_names);
+   def("get_all_particle_multiplicities",
+       get_all_particle_multiplicities);
+   def("get_all_input_names",
+       get_all_input_names);
+   def("get_all_input_latex_names",
+       get_all_input_latex_names);
+   def("convert_to_input_latex_name",
+       convert_to_input_latex_name);
 }
