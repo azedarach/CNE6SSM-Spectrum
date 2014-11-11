@@ -140,7 +140,7 @@ namespace CNE6SSM_info {
       "Lambda12Input(0,0)", "Lambda12Input(0,1)", "Lambda12Input(1,0)", "Lambda12Input(1,1)",
       "fuInput(0,0)", "fuInput(0,1)", "fuInput(1,0)", "fuInput(1,1)", "fuInput(2,0)",
       "fuInput(2,1)", "fdInput(0,0)", "fdInput(0,1)", "fdInput(1,0)", "fdInput(1,1)",
-      "fdInput(2,0)", "fdInput(2,1)", "MuPrInput", "MuPhiInput"};
+      "fdInput(2,0)", "fdInput(2,1)", "MuPrInput", "MuPhiInput", "BMuPrInput", "BMuPhiInput"};
 
    const char* input_latex_names[NUMBER_OF_INPUTS] = {"m_0", "m_{1/2}", "\\tan\\beta", 
       "\\textrm{sgn}(\\lambda)", "A_0", "s", "\\tilde{Q}_S", "h_{11}^E", "h_{12}^E",
@@ -151,7 +151,7 @@ namespace CNE6SSM_info {
       "\\kappa_{33}", "\\lambda_{11}", "\\lambda_{12}", "\\lambda_{21}", "\\lambda_{22}",
       "\\tilde{f}_{11}", "\\tilde{f}_{12}", "\\tilde{f}_{21}", "\\tilde{f}_{22}", 
       "\\tilde{f}_{31}", "\\tilde{f}_{32}", "f_{11}", "f_{12}", "f_{21}", "f_{22}", 
-      "f_{31}", "f_{32}", "\\mu_L", "\\mu"};
+      "f_{31}", "f_{32}", "\\mu_L", "\\mu", "B_{\\mu_L}", "B_\\mu"};
 
    const char* model_name = "CNE6SSM";
    const bool is_low_energy_model = false;

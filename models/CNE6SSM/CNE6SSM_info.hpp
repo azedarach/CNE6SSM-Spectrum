@@ -67,7 +67,7 @@ namespace CNE6SSM_info {
          Lambda12Input00, Lambda12Input01, Lambda12Input10, Lambda12Input11, 
          fuInput00, fuInput01, fuInput10, fuInput11, fuInput20, fuInput21,
          fdInput00, fdInput01, fdInput10, fdInput11, fdInput20, fdInput21,
-         MuPrInput, MuPhiInput, NUMBER_OF_INPUTS};
+         MuPrInput, MuPhiInput, BMuPrInput, BMuPhiInput, NUMBER_OF_INPUTS};
 
    extern const unsigned particle_multiplicities[NUMBER_OF_PARTICLES];
    extern const char* particle_names[NUMBER_OF_PARTICLES];
