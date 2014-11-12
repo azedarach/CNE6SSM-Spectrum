@@ -34,11 +34,11 @@ namespace CNE6SSM_info {
       "SHpp", "ChiP", "VWm"};
 
    const char* particle_latex_names[NUMBER_OF_PARTICLES] = {   "g",
-      "\\tilde{g}", "\\nu", "\\tilde{\\chi}^{'-}", "\\gamma", "Z", "{Z'}",
-      "\\tilde{d}", "\\tilde{\\nu}", "\\tilde{u}", "\\tilde{e}", "\\tilde{x}", "h"
-      , "A^0", "H^-", "\\tilde{\\chi}^0", "\\tilde{\\chi}^-", "e", "d", "u", "x",
-      "h^{0,Inert}", "h^{-,Inert}", "\\tilde{\\chi}^{-,Inert}",
-      "\\tilde{\\chi}^{0,Inert}", "H^{'0}", "H^{'-}", "\\tilde{\\chi}^{'0}", "W^-"
+      "\\tilde{g}", "\\nu", "\\tilde{\\chi'}^{-}", "\\gamma", "Z", "{Z\\ {}^\\prime}",
+      "\\tilde{d}", "\\tilde{\\nu}", "\\tilde{u}", "\\tilde{e}", "\\tilde{D}", "h"
+      , "A^0", "H^{\\pm}", "\\tilde{\\chi}^0", "\\tilde{\\chi}^-", "e", "d", "u", "D",
+      "h_I^{0}", "h_I^{-}", "\\tilde{\\chi}_I^{-}",
+      "\\tilde{\\chi}_I^{0}", "L_4^{0}", "L_4^{-}", "\\tilde{\\chi'}^{0}", "W^-"
       };
 
    const char* parameter_names[NUMBER_OF_PARAMETERS] = {"Yd(0,0)", "Yd(0,1)",
