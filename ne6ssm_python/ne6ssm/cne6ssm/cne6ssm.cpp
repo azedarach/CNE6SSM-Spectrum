@@ -7,6 +7,26 @@
 
 using namespace boost::python;
 
+static list get_all_mixing_names()
+{
+   list t;
+   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_MIXINGS;
+        ++i) {
+      t.append(flexiblesusy::CNE6SSM_info::mixing_names[i]);
+   }
+   return t;
+}
+
+static list get_all_mixing_latex_names()
+{
+   list t;
+   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_MIXINGS;
+        ++i) {
+      t.append(flexiblesusy::CNE6SSM_info::mixing_latex_names[i]);
+   }
+   return t;
+}
+
 static list get_all_parameter_names()
 {
    list t;
@@ -203,6 +223,132 @@ const char* convert_to_input_latex_name(const char* name)
    return "";
 }
 
+bool is_mixing_name(const char* name)
+{
+   std::string input_name(name); //< much more convenient
+   std::string mixing_name;
+
+   // see if leading Re or Im is present
+   bool is_real_part = false;
+   bool is_imag_part = false;
+   if (input_name.substr(0, 2) == "Re") {
+      is_real_part = true;
+   } else if (input_name.substr(0, 2) == "Im") {
+      is_imag_part = true;
+   }
+
+   // extract name without Re or Im
+   if (is_real_part || is_imag_part) {
+      std::size_t lead_bracket_posn = input_name.find_first_of('(');
+      if (lead_bracket_posn == std::string::npos) {
+         return "";
+      }
+      input_name = input_name.substr(lead_bracket_posn + 1);
+      std::size_t last_bracket_posn = input_name.find_last_of(')');
+      if (last_bracket_posn == std::string::npos) {
+         return "";
+      }
+      input_name = input_name.substr(0, last_bracket_posn);
+   }
+
+   // see if index is attached
+   std::size_t open_bracket_posn = input_name.find_first_of('(');
+   if (open_bracket_posn != std::string::npos) {
+      mixing_name = input_name.substr(0, open_bracket_posn); 
+   } else {
+      mixing_name = input_name;
+   }
+
+   std::size_t loc = 0;
+   while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_MIXINGS) {
+      if (!strcmp(mixing_name.c_str(), flexiblesusy::CNE6SSM_info::mixing_names[loc]))
+         return true;
+      ++loc;
+   }
+
+   return false;
+}
+
+const char * convert_to_mixing_latex_name(const char* name)
+{
+   std::string input_name(name); //< much more convenient
+   std::string mixing_name;
+
+   // see if leading Re or Im is present
+   bool is_real_part = false;
+   bool is_imag_part = false;
+   if (input_name.substr(0, 2) == "Re") {
+      is_real_part = true;
+   } else if (input_name.substr(0, 2) == "Im") {
+      is_imag_part = true;
+   }
+   
+   // extract name without Re or Im
+   if (is_real_part || is_imag_part) {
+      std::size_t lead_bracket_posn = input_name.find_first_of('(');
+      if (lead_bracket_posn == std::string::npos) {
+         return "";
+      }
+      input_name = input_name.substr(lead_bracket_posn + 1);
+      std::size_t last_bracket_posn = input_name.find_last_of(')');
+      if (last_bracket_posn == std::string::npos) {
+         return "";
+      }
+      input_name = input_name.substr(0, last_bracket_posn);
+   }
+   
+   // see if index is attached
+   std::size_t open_bracket_posn = input_name.find_first_of('(');
+   if (open_bracket_posn != std::string::npos) {
+      mixing_name = input_name.substr(0, open_bracket_posn); 
+   } else {
+      mixing_name = input_name;
+   }
+
+   std::size_t loc = 0;
+   while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_MIXINGS) {
+      if (!strcmp(mixing_name.c_str(), flexiblesusy::CNE6SSM_info::mixing_names[loc]))
+         break;
+      ++loc;
+   }
+
+   if (loc == flexiblesusy::CNE6SSM_info::NUMBER_OF_MIXINGS)
+      return "";
+
+   std::string latex_name(flexiblesusy::CNE6SSM_info::mixing_latex_names[loc]);
+
+   // if index is provided, locate closing bracket
+   // and check that index is valid
+   if (open_bracket_posn != std::string::npos) {
+      std::size_t close_bracket_posn = input_name.find_first_of(')', open_bracket_posn);
+      if (close_bracket_posn == std::string::npos) {
+         return "";
+      }
+      std::size_t comma_posn = input_name.find_first_of(',');
+      if (comma_posn == std::string::npos) {
+         return "";
+      }
+      std::string row = input_name.substr(open_bracket_posn + 1, comma_posn - open_bracket_posn - 1);
+      std::size_t row_num = atoi(row.c_str());
+      std::string col = input_name.substr(comma_posn + 1, close_bracket_posn - comma_posn - 1);
+      std::size_t col_num = atoi(col.c_str());
+      if (row_num <= 0 || row_num > flexiblesusy::CNE6SSM_info::mixing_dimensions[loc]
+          || col_num <= 0 || col_num > flexiblesusy::CNE6SSM_info::mixing_dimensions[loc]) {
+         return "";
+      } else {
+         latex_name = "(" + latex_name + ")_{" + row + "," + col + "}";
+      }
+   }
+
+   if (is_real_part) {
+      latex_name = "\\mathrm{Re}(" + latex_name + ")";
+   } else if (is_imag_part) {
+      latex_name = "\\mathrm{Im}(" + latex_name + ")";
+   }
+
+   return latex_name.c_str();
+}
+
 const char* convert_to_latex_name(const char* name)
 {
    if (is_particle_name(name)) {
@@ -211,6 +357,8 @@ const char* convert_to_latex_name(const char* name)
       return convert_to_parameter_latex_name(name);
    } else if (is_input_name(name)) {
       return convert_to_input_latex_name(name);
+   } else if (is_mixing_name(name)) {
+      return convert_to_mixing_latex_name(name);
    }
 
    return "";
@@ -218,6 +366,10 @@ const char* convert_to_latex_name(const char* name)
 
 BOOST_PYTHON_MODULE(_cne6ssm)
 {
+   def("get_all_mixing_names",
+       get_all_mixing_names);
+   def("get_all_mixing_latex_names",
+       get_all_mixing_latex_names);
    def("get_all_parameter_names",
        get_all_parameter_names);
    def("get_all_parameter_latex_names",
@@ -236,6 +388,8 @@ BOOST_PYTHON_MODULE(_cne6ssm)
        get_all_input_latex_names);
    def("convert_to_input_latex_name",
        convert_to_input_latex_name);
+   def("convert_to_mixing_latex_name",
+       convert_to_mixing_latex_name);
    def("convert_to_latex_name",
        convert_to_latex_name);
 }
