@@ -336,7 +336,7 @@ const char * convert_to_mixing_latex_name(const char* name)
           || col_num <= 0 || col_num > flexiblesusy::CNE6SSM_info::mixing_dimensions[loc]) {
          return "";
       } else {
-         latex_name = "(" + latex_name + ")_{" + row + "," + col + "}";
+         latex_name = "(" + latex_name + ")_{" + row + col + "}";
       }
    }
 
