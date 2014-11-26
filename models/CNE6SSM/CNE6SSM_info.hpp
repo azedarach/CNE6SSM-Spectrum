@@ -69,6 +69,11 @@ namespace CNE6SSM_info {
          fdInput00, fdInput01, fdInput10, fdInput11, fdInput20, fdInput21,
          MuPrInput, MuPhiInput, BMuPrInput, BMuPhiInput, NUMBER_OF_INPUTS};
 
+   // DH:: and enum for mixings
+   enum Mixings : unsigned {ZD, ZV, ZU, ZE, ZDX, ZH, ZA, ZP, ZN, UM, UP, ZEL,
+         ZER, ZDL, ZDR, ZUL, ZUR, ZDXL, ZDXR, UHI0, UHIPM, ZMI, ZPI, ZNI, 
+         UHp0, UHpp, ZNp, NUMBER_OF_MIXINGS};
+
    extern const unsigned particle_multiplicities[NUMBER_OF_PARTICLES];
    extern const char* particle_names[NUMBER_OF_PARTICLES];
    extern const char* particle_latex_names[NUMBER_OF_PARTICLES];
@@ -76,6 +81,11 @@ namespace CNE6SSM_info {
    extern const char* parameter_latex_names[NUMBER_OF_PARAMETERS];
    extern const char* input_names[NUMBER_OF_INPUTS];
    extern const char* input_latex_names[NUMBER_OF_INPUTS];
+
+   extern const unsigned mixing_dimensions[NUMBER_OF_MIXINGS];
+   extern const char* mixing_names[NUMBER_OF_MIXINGS];
+   extern const char* mixing_latex_names[NUMBER_OF_MIXINGS];
+
    extern const char* model_name;
    extern const bool is_low_energy_model;
 

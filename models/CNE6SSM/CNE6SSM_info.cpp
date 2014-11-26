@@ -153,6 +153,21 @@ namespace CNE6SSM_info {
       "\\tilde{f}_{31}", "\\tilde{f}_{32}", "f_{11}", "f_{12}", "f_{21}", "f_{22}", 
       "f_{31}", "f_{32}", "\\mu_L", "\\mu", "B_{\\mu_L}", "B_\\mu"};
 
+   const unsigned mixing_dimensions[NUMBER_OF_MIXINGS] = {6, 3, 6, 6
+      , 6, 5, 5, 2, 8, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 7, 4, 
+      2, 2, 7, 2, 2, 2};
+
+   const char* mixing_names[NUMBER_OF_MIXINGS] = {"ZD", "ZV", "ZU" 
+      , "ZE", "ZDX", "ZH", "ZA", "ZP", "ZN", "UM", "UP", "ZEL"
+      , "ZER", "ZDL", "ZDR", "ZUL", "ZUR", "ZDXL", "ZDXR", "UHI0"
+      , "UHIPM", "ZMI", "ZPI", "ZNI", "UHp0", "UHpp", "ZNp"};
+
+   const char* mixing_latex_names[NUMBER_OF_MIXINGS] = {"Z_d", "Z_{\\nu}", "Z_u"
+      , "Z_e", "Z_D", "U_h", "U_A", "U_{H^\\pm}", "N", "U", "V"
+      , "U_{e_L}", "U_{e_R}", "U_{d_L}", "U_{d_R}", "U_{u_L}"
+      , "U_{u_R}", "U_{D_L}", "U_{D_R}", "U_{h_I}", "U_{H^\\pm_I}"
+      , "U_I", "V_I", "N_I", "U_{L_4^0}", "U_{L_4^\\pm}", "N_{L_4}"};
+
    const char* model_name = "CNE6SSM";
    const bool is_low_energy_model = false;
 

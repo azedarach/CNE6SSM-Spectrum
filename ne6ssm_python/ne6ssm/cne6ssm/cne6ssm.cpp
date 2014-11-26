@@ -54,6 +54,34 @@ static list get_all_particle_multiplicities()
    return t;
 }
 
+bool is_particle_name(const char* name)
+{
+   std::string input_name(name); //< much more convenient
+   std::string particle_name;
+   // see if index is attached
+   std::size_t open_bracket_posn = input_name.find_first_of('(');
+   if (open_bracket_posn != std::string::npos) {
+      particle_name = input_name.substr(0, open_bracket_posn); 
+   } else {
+      particle_name = input_name;
+   }
+
+   // remove leading 'M', if present
+   std::size_t mass_prefix_posn = particle_name.find_first_of('M');
+   if (mass_prefix_posn != std::string::npos) {
+      particle_name = particle_name.substr(1);
+   }
+
+   std::size_t loc = 0;
+   while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARTICLES) {
+      if (!strcmp(particle_name.c_str(), flexiblesusy::CNE6SSM_info::particle_names[loc]))
+         return true;
+      ++loc;
+   }
+
+   return false;
+}
+
 const char * convert_to_particle_latex_name(const char* name)
 {
    std::string input_name(name); //< much more convenient
@@ -64,6 +92,14 @@ const char * convert_to_particle_latex_name(const char* name)
       particle_name = input_name.substr(0, open_bracket_posn); 
    } else {
       particle_name = input_name;
+   }
+
+   // remove leading 'M', if present
+   bool is_mass = false;
+   std::size_t mass_prefix_posn = particle_name.find_first_of('M');
+   if (mass_prefix_posn != std::string::npos) {
+      particle_name = particle_name.substr(1);
+      is_mass = true;
    }
 
    std::size_t loc = 0;
@@ -94,7 +130,35 @@ const char * convert_to_particle_latex_name(const char* name)
       }
    }
 
+   if (is_mass) {
+      latex_name = "m_{" + latex_name + "}";
+   }
+
    return latex_name.c_str();
+}
+
+bool is_parameter_name(const char* name)
+{
+   std::size_t loc = 0;
+   while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARAMETERS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::parameter_names[loc]))
+         return true;
+      ++loc;
+   }
+
+   return false;
+}
+
+const char* convert_to_parameter_latex_name(const char* name)
+{
+   std::size_t index = 0;
+   while (index < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARAMETERS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::parameter_names[index])) {
+         return flexiblesusy::CNE6SSM_info::parameter_latex_names[index];
+      }
+      ++index;
+   }
+   return "";
 }
 
 static list get_all_input_names()
@@ -115,6 +179,18 @@ static list get_all_input_latex_names()
    return t;
 }
 
+bool is_input_name(const char* name)
+{
+   std::size_t loc = 0;
+   while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::input_names[loc]))
+         return true;
+      ++loc;
+   }
+
+   return false;
+}
+
 const char* convert_to_input_latex_name(const char* name)
 {
    std::size_t index = 0;
@@ -124,6 +200,19 @@ const char* convert_to_input_latex_name(const char* name)
       }
       ++index;
    }
+   return "";
+}
+
+const char* convert_to_latex_name(const char* name)
+{
+   if (is_particle_name(name)) {
+      return convert_to_particle_latex_name(name);
+   } else if (is_parameter_name(name)) {
+      return convert_to_parameter_latex_name(name);
+   } else if (is_input_name(name)) {
+      return convert_to_input_latex_name(name);
+   }
+
    return "";
 }
 
@@ -147,4 +236,6 @@ BOOST_PYTHON_MODULE(_cne6ssm)
        get_all_input_latex_names);
    def("convert_to_input_latex_name",
        convert_to_input_latex_name);
+   def("convert_to_latex_name",
+       convert_to_latex_name);
 }
