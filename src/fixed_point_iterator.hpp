@@ -29,21 +29,6 @@ namespace flexiblesusy {
  * arguments a GSL vector of length 'dimension', a pointer to the 
  * parameters (of type void*) and a GSL vector where the next 
  * point must be stored.
- *
- * Example:
- * @code
- * struct MyExample {
- *    static int func(const gsl_vector* xold, void*, 
- *                    gsl_vector* xnew)
- *       {
- *         return GSL_SUCCESS;
- *       }
- * };
- * 
- * Fixed_point_iterator<2> fp_iter(MyExample::func, NULL, 100, 1.0e-5);
- * const double start[2] = {a, b};
- * const int status = fp_iter.find_fixed_point(start);
- * @endcode
  */
 template <std::size_t dimension>
 class Fixed_point_iterator {
