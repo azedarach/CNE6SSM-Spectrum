@@ -213,6 +213,7 @@ int main(int argc, const char * argv[])
       Eigen::Matrix<double, num_terms, num_terms> input_values;
       Eigen::VectorXd mHu2_values(num_terms);
       Eigen::VectorXd mHd2_values(num_terms);
+      Eigen::VectorXd ms2_values(num_terms);
 
       double m0_centre = model.get_input().m0;
       double m12_centre = model.get_input().m12;
@@ -239,11 +240,13 @@ int main(int argc, const char * argv[])
          // get the soft mass values
          mHu2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mHu2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
          mHd2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mHd2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
+         ms2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::ms2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
       }
 
       // solve for the coefficients in the expansion of mHd2 and mHu2
       Eigen::VectorXd mHd2_coeffs = input_values.fullPivHouseholderQr().solve(mHd2_values);
       Eigen::VectorXd mHu2_coeffs = input_values.fullPivHouseholderQr().solve(mHu2_values);
+      Eigen::VectorXd ms2_coeffs = input_values.fullPivHouseholderQr().solve(ms2_values);
 
       std::cout << "Estimate for coefficients:\n";
       std::cout << "aHd(" << susy_scale << " GeV) = " << mHd2_coeffs(0) << "\n";
@@ -252,8 +255,12 @@ int main(int argc, const char * argv[])
       std::cout << "bHu(" << susy_scale << " GeV) = " << mHu2_coeffs(1) << "\n";
       std::cout << "cHd(" << susy_scale << " GeV) = " << mHd2_coeffs(2) << "\n";
       std::cout << "cHu(" << susy_scale << " GeV) = " << mHu2_coeffs(2) << "\n";
-      std::cout << "cHd(" << susy_scale << " GeV) = " << mHd2_coeffs(3) << "\n";
-      std::cout << "cHu(" << susy_scale << " GeV) = " << mHu2_coeffs(3) << "\n";
+      std::cout << "dHd(" << susy_scale << " GeV) = " << mHd2_coeffs(3) << "\n";
+      std::cout << "dHu(" << susy_scale << " GeV) = " << mHu2_coeffs(3) << "\n";
+      std::cout << "aS1(" << susy_scale << " GeV) = " << ms2_coeffs(0) << "\n";
+      std::cout << "bS1(" << susy_scale << " GeV) = " << ms2_coeffs(1) << "\n";
+      std::cout << "cS1(" << susy_scale << " GeV) = " << ms2_coeffs(2) << "\n";
+      std::cout << "dS1(" << susy_scale << " GeV) = " << ms2_coeffs(3) << "\n";
       std::cout << "aLambdax(" << susy_scale << " GeV) = " 
                 << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(0), mHu2_coeffs(0)) << "\n";
       std::cout << "bLambdax(" << susy_scale << " GeV) = " 

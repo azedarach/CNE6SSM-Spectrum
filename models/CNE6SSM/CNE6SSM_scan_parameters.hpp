@@ -29,6 +29,20 @@ public:
                            double SignLambdax_lower_, double SignLambdax_upper_,
                            double Azero_lower_, double Azero_upper_, std::size_t total_npts_);
 
+   CNE6SSM_scan_parameters(double m0_lower_, double m0_upper_, std::size_t m0_npts_,
+                           double m12_lower_, double m12_upper_, std::size_t m12_npts_,
+                           double TanBeta_lower_, double TanBeta_upper_, std::size_t TanBeta_npts_,
+                           double SignLambdax_lower_, double SignLambdax_upper_, std::size_t SignLambdax_npts_,
+                           double Azero_lower_, double Azero_upper_, std::size_t Azero_npts_,
+                           double output_scale_);
+
+   CNE6SSM_scan_parameters(double m0_lower_, double m0_upper_,
+                           double m12_lower_, double m12_upper_,
+                           double TanBeta_lower_, double TanBeta_upper_, 
+                           double SignLambdax_lower_, double SignLambdax_upper_,
+                           double Azero_lower_, double Azero_upper_, std::size_t total_npts_,
+                           double output_scale_);
+
    ~CNE6SSM_scan_parameters() {}
 
    double get_m0_lower() const { return m0_lower; }
@@ -53,6 +67,7 @@ public:
    double get_Azero_incr() const { return Azero_incr; }
    double get_total_npts() const { return total_npts; }
    bool get_is_grid_scan() const { return is_grid_scan; }
+   double get_output_scale() const { return output_scale; }
 
    double get_random_m0(std::minstd_rand &);
    double get_random_m12(std::minstd_rand &);
@@ -83,6 +98,7 @@ private:
    double Azero_incr;
    std::size_t total_npts;
    bool is_grid_scan;
+   double output_scale;
 
    std::uniform_real_distribution<double> distribution;
 
