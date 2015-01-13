@@ -771,6 +771,17 @@ int main(int argc, const char* argv[])
       double m12_centre = model.get_input().m12;
       double Azero_centre = model.get_input().Azero;
 
+      double m0_width = 0.1;
+      double m12_width = 0.1;
+      double Azero_width = 0.1;
+
+      if (Abs(m0_centre) >= 1.)
+         m0_width = 0.1 * m0_centre;
+      if (Abs(m12_centre) >= 1.)
+         m12_width = 0.1 * m12_centre;
+      if (Abs(Azero_centre) >= 1.)
+         Azero_width = 0.1 * Azero_centre;
+
       double tree_level_Lambdax = 0.;
 
       if (!error) {
@@ -788,9 +799,9 @@ int main(int argc, const char* argv[])
          Eigen::VectorXd msbar2_values(num_terms);
          Eigen::VectorXd mphi2_values(num_terms);
 
-         std::normal_distribution<double> m0_distribution(m0_centre, 0.1 * m0_centre);
-         std::normal_distribution<double> m12_distribution(m12_centre, 0.1 * m12_centre);
-         std::normal_distribution<double> Azero_distribution(Azero_centre, 0.1 * Azero_centre);
+         std::normal_distribution<double> m0_distribution(m0_centre, m0_width);
+         std::normal_distribution<double> m12_distribution(m12_centre, m12_width);
+         std::normal_distribution<double> Azero_distribution(Azero_centre, Azero_width);
 
          for (std::size_t i = 0; i < num_terms; ++i) {
             double m0_tmp = m0_distribution(generator);
