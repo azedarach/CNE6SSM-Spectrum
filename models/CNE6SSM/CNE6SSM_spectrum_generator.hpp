@@ -172,7 +172,17 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
       model.run_to(susy_scale);
       model.solve_ewsb();
       model.calculate_spectrum();
-
+      double mst1 = 0.;
+      double mst2 = 0.;
+      double tht = 0.;
+      model.calculate_MSu_3rd_generation(mst1, mst2, tht);
+      // std::cout << "Stop 1 = " << mst1 << "\n";
+      // std::cout << "Stop 2 = " << mst2 << "\n";
+      // std::cout << "Eq 1 = " << model.get_ewsb_eq_hh_1() << "\n";
+      // std::cout << "Eq 2 = " << model.get_ewsb_eq_hh_2() << "\n";
+      // std::cout << "Eq 3 = " << model.get_ewsb_eq_hh_3() << "\n";
+      // std::cout << "Eq 4 = " << model.get_ewsb_eq_hh_4() << "\n";
+      // std::cout << "Eq 5 = " << model.get_ewsb_eq_hh_5() << "\n";
       // run to output scale (if scale > 0)
       if (!is_zero(parameter_output_scale)) {
          model.run_to(parameter_output_scale);

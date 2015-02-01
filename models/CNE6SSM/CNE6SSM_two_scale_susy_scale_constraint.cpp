@@ -120,10 +120,17 @@ void CNE6SSM_susy_scale_constraint<Two_scale>::initialize()
 
 void CNE6SSM_susy_scale_constraint<Two_scale>::update_scale()
 {
+   //const auto MSu = MODELPARAMETER(MSu);
+
+   //scale = Sqrt(MSu(0)*MSu(5));
+   const auto ZU = MODELPARAMETER(ZU);
    const auto MSu = MODELPARAMETER(MSu);
 
-   scale = Sqrt(MSu(0)*MSu(5));
-
+   scale = Sqrt(Power(MSu(0),Sqr(Abs(ZU(0,2))) + Sqr(Abs(ZU(0,5))))*Power(MSu(1
+      ),Sqr(Abs(ZU(1,2))) + Sqr(Abs(ZU(1,5))))*Power(MSu(2),Sqr(Abs(ZU(2,2))) +
+      Sqr(Abs(ZU(2,5))))*Power(MSu(3),Sqr(Abs(ZU(3,2))) + Sqr(Abs(ZU(3,5))))*Power
+      (MSu(4),Sqr(Abs(ZU(4,2))) + Sqr(Abs(ZU(4,5))))*Power(MSu(5),Sqr(Abs(ZU(5,2))
+      ) + Sqr(Abs(ZU(5,5)))));
 
 }
 

@@ -248,18 +248,44 @@ int main(int argc, const char * argv[])
       Eigen::VectorXd mHu2_coeffs = input_values.fullPivHouseholderQr().solve(mHu2_values);
       Eigen::VectorXd ms2_coeffs = input_values.fullPivHouseholderQr().solve(ms2_values);
 
-      std::cout << "Estimate for coefficients:\n";
+      // get relative errors in estimate
+      double mHd2_estimate = mHd2_coeffs(0) * Sqr(input.m0) + mHd2_coeffs(1) * Sqr(input.m12) + mHd2_coeffs(2) * input.m12 * input.Azero + mHd2_coeffs(3) * Sqr(input.Azero);
+      double mHu2_estimate = mHu2_coeffs(0) * Sqr(input.m0) + mHu2_coeffs(1) * Sqr(input.m12) + mHu2_coeffs(2) * input.m12 * input.Azero + mHu2_coeffs(3) * Sqr(input.Azero);
+      double ms2_estimate = ms2_coeffs(0) * Sqr(input.m0) + ms2_coeffs(1) * Sqr(input.m12) + ms2_coeffs(2) * input.m12 * input.Azero + ms2_coeffs(3) * Sqr(input.Azero);
+
+      double percent_error_mHd2 = 100.0 * Abs((model.get_mHd2() - mHd2_estimate) / (0.5 * (model.get_mHd2() + mHd2_estimate)));
+      double percent_error_mHu2 = 100.0 * Abs((model.get_mHu2() - mHu2_estimate) / (0.5 * (model.get_mHu2() + mHu2_estimate)));
+      double percent_error_ms2 = 100.0 * Abs((model.get_ms2() - ms2_estimate) / (0.5 * (model.get_ms2() + ms2_estimate)));
+
+      std::cout << "Results:\n";
+      std::cout << "m0 = " << input.m0 << "\n";
+      std::cout << "m12 = " << input.m12 << "\n";
+      std::cout << "TanBeta = " << input.TanBeta << "\n";
+      std::cout << "SignLambdax = " << input.SignLambdax << "\n";
+      std::cout << "Azero = " << input.Azero << "\n";
+      std::cout << "g1 = " << model.get_g1() << "\n";
+      std::cout << "g2 = " << model.get_g2() << "\n";
+      std::cout << "g1p = " << model.get_g1p() << "\n";
+      std::cout << "vd = " << model.get_vd() << "\n";
+      std::cout << "vu = " << model.get_vu() << "\n";
+      std::cout << "vs = " << model.get_vs() << "\n";
+      std::cout << "vsb = " << model.get_vsb() << "\n";
+      std::cout << "QS = " << model.get_input().QS << "\n";
+      std::cout << "mHd2 = " << model.get_mHd2() << "\n";
+      std::cout << "mHu2 = " << model.get_mHu2() << "\n";
+      std::cout << "ms2 = " << model.get_ms2() << "\n";
+      std::cout << "Lambdax = " << model.get_Lambdax() << "\n";
       std::cout << "aHd(" << susy_scale << " GeV) = " << mHd2_coeffs(0) << "\n";
       std::cout << "aHu(" << susy_scale << " GeV) = " << mHu2_coeffs(0) << "\n";
+      std::cout << "aS1(" << susy_scale << " GeV) = " << ms2_coeffs(0) << "\n";
       std::cout << "bHd(" << susy_scale << " GeV) = " << mHd2_coeffs(1) << "\n";
       std::cout << "bHu(" << susy_scale << " GeV) = " << mHu2_coeffs(1) << "\n";
+      std::cout << "bS1(" << susy_scale << " GeV) = " << ms2_coeffs(1) << "\n";
       std::cout << "cHd(" << susy_scale << " GeV) = " << mHd2_coeffs(2) << "\n";
       std::cout << "cHu(" << susy_scale << " GeV) = " << mHu2_coeffs(2) << "\n";
+      std::cout << "cS1(" << susy_scale << " GeV) = " << ms2_coeffs(2) << "\n";
       std::cout << "dHd(" << susy_scale << " GeV) = " << mHd2_coeffs(3) << "\n";
       std::cout << "dHu(" << susy_scale << " GeV) = " << mHu2_coeffs(3) << "\n";
-      std::cout << "aS1(" << susy_scale << " GeV) = " << ms2_coeffs(0) << "\n";
-      std::cout << "bS1(" << susy_scale << " GeV) = " << ms2_coeffs(1) << "\n";
-      std::cout << "cS1(" << susy_scale << " GeV) = " << ms2_coeffs(2) << "\n";
       std::cout << "dS1(" << susy_scale << " GeV) = " << ms2_coeffs(3) << "\n";
       std::cout << "aLambdax(" << susy_scale << " GeV) = " 
                 << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(0), mHu2_coeffs(0)) << "\n";
@@ -270,7 +296,9 @@ int main(int argc, const char * argv[])
       std::cout << "dLambdax(" << susy_scale << " GeV) = " 
                 << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(3), mHu2_coeffs(3)) << "\n";
       std::cout << "lLambdax(" << susy_scale << " GeV) = " << get_tree_level_Lambdax_constant_term(model) << "\n";
-
+      std::cout << "Percent error mHd2 = " << percent_error_mHd2 << "\n";
+      std::cout << "Percent error mHu2 = " << percent_error_mHu2 << "\n";
+      std::cout << "Percent error ms2 = " << percent_error_ms2 << "\n";
    }
 
    return exit_code;

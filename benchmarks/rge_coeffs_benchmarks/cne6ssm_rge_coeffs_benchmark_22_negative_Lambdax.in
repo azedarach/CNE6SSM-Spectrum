@@ -1,0 +1,93 @@
+Block FlexibleSUSY
+    0   1.000000000e-03      # precision goal
+    1   0                    # max. iterations (0 = automatic)
+    2   0                    # algorithm (0 = two_scale, 1 = lattice)
+    3   0                    # calculate SM pole masses
+    4   2                    # pole mass loop order
+    5   2                    # EWSB loop order
+    6   2                    # beta-functions loop order
+    7   1                    # threshold corrections (0 = disabled, 1 = enabled)
+Block MODSEL                 # Select model
+#   12    1000                # DRbar parameter output scale (GeV)
+Block SMINPUTS               # Standard Model inputs
+    1   1.279340000e+02      # alpha^(-1) SM MSbar(MZ)
+    2   1.166370000e-05      # G_Fermi
+    3   1.176000000e-01      # alpha_s(MZ) SM MSbar
+    4   9.118760000e+01      # MZ(pole)
+    5   4.200000000e+00      # mb(mb) SM MSbar
+    6   1.733000000e+02      # mtop(pole)
+    7   1.777000000e+00      # mtau(pole)
+    8   0.000000000e+00      # mnu3(pole)
+   11   5.109989020e-04      # melectron(pole)
+   12   0.000000000e+00      # mnu1(pole)
+   13   1.056583570e-01      # mmuon(pole)
+   14   0.000000000e+00      # mnu2(pole)
+   21   4.750000000e-03      # md(2 GeV)
+   22   2.400000000e-03      # mu(2 GeV)
+   23   1.040000000e-01      # ms(2 GeV)
+   24   1.270000000e+00      # mc(2 GeV)
+Block MINPAR                 # Input parameters
+    1   4.265290000e+03      # m0
+    2   1.725920000e+02      # m12
+    3   1.000000000e+01      # TanBeta
+    4  -1.000000000e+00      # sign(Lambdax)
+    5   4.997110000e+03      # Azero
+Block EXTPAR
+    0   0.000000000e+00      # unification scale (0 = automatic)
+   65   4.000000000e+04      # s = sqrt{s_1^2 + s_2^2}
+   72   5.000000000e+00      # QS
+Block HMIXIN
+   31   0.000000000e+00      # mu_phi (pure singlet mass term)
+   32   2.000000000e-02      # kappa prime (singlet cubic coupling)
+   33   1.000000000e-01      # sigma (singlet-S-Sbar coupling)
+Block ESIXRUNIN
+    0   1.000000000e+04      # mu prime
+   30   0.000000000e+00      # Bmu_phi (soft breaking singlet mass term)
+   42   3.000000000e-01      # sigma_L (singlet-L_4-L_4bar coupling)
+  101   1.000000000e+04      # B_mu prime
+Block ESIXLAMBDAIN
+  1  1  5.000000000e-01      # Lambda12(1,1)
+  1  2  0.000000000e+00      # Lambda12(1,2)
+  2  1  0.000000000e+00      # Lambda12(2,1)
+  2  2  5.000000000e-01      # Lambda12(2,2)
+Block ESIXKAPPAIN
+  1  1  2.000000000e-01      # Kappa(1,1)
+  1  2  0.000000000e+00      # Kappa(1,2)
+  1  3  0.000000000e+00      # Kappa(1,3)
+  2  1  0.000000000e+00      # Kappa(2,1)
+  2  2  2.000000000e-01      # Kappa(2,2)
+  2  3  0.000000000e+00      # Kappa(2,3)
+  3  1  0.000000000e+00      # Kappa(3,1)
+  3  2  0.000000000e+00      # Kappa(3,2)
+  3  3  2.000000000e-01      # Kappa(3,3)
+Block ESIXHEYUKIN
+  1  1  0.000000000e+00      # hE(1,1)
+  1  2  0.000000000e+00      # hE(1,2)
+  2  1  0.000000000e+00      # hE(2,1)
+  2  2  0.000000000e+00      # hE(2,2)
+  3  1  0.000000000e+00      # hE(3,1)
+  3  2  0.000000000e+00      # hE(3,2)
+Block ESIXGDYUKIN
+  1  1  0.000000000e+00      # gD(1,1)
+  1  2  0.000000000e+00      # gD(1,2)
+  1  3  0.000000000e+00      # gD(1,3)
+  2  1  0.000000000e+00      # gD(2,1)
+  2  2  0.000000000e+00      # gD(2,2)
+  2  3  0.000000000e+00      # gD(2,3)
+  3  1  0.000000000e+00      # gD(3,1)
+  3  2  0.000000000e+00      # gD(3,2)
+  3  3  0.000000000e+00      # gD(3,3)
+Block ESIXFUYUKIN
+  1  1  1.000000000e-07      # fu(1,1)
+  1  2  0.000000000e+00      # fu(1,2)
+  2  1  0.000000000e+00      # fu(2,1)
+  2  2  1.000000000e-07      # fu(2,2)
+  3  1  1.000000000e-07      # fu(3,1)
+  3  2  0.000000000e+00      # fu(3,2)
+Block ESIXFDYUKIN
+  1  1  1.000000000e-07      # fd(1,1)
+  1  2  0.000000000e+00      # fd(1,2)
+  2  1  0.000000000e+00      # fd(2,1)
+  2  2  1.000000000e-07      # fd(2,2)
+  3  1  0.000000000e+00      # fd(3,1)
+  3  2  1.000000000e-07      # fd(3,2)
