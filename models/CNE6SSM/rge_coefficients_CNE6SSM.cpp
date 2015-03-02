@@ -214,6 +214,17 @@ int main(int argc, const char * argv[])
       Eigen::VectorXd mHu2_values(num_terms);
       Eigen::VectorXd mHd2_values(num_terms);
       Eigen::VectorXd ms2_values(num_terms);
+      Eigen::VectorXd mq200_values(num_terms);
+      Eigen::VectorXd mu200_values(num_terms);
+
+      // additional coefficients to compute
+      const std::size_t num_terms_gaugino = 2;
+      Eigen::Matrix<double, num_terms_gaugino, num_terms_gaugino> gaugino_input_values;
+      Eigen::VectorXd MassG_values(num_terms_gaugino);
+      Eigen::VectorXd TYu11_values(num_terms_gaugino);
+      Eigen::VectorXd Yu11_values(num_terms_gaugino);
+      Eigen::VectorXd TYu22_values(num_terms_gaugino);
+      Eigen::VectorXd Yu22_values(num_terms_gaugino);
 
       double m0_centre = model.get_input().m0;
       double m12_centre = model.get_input().m12;
@@ -241,21 +252,52 @@ int main(int argc, const char * argv[])
          mHu2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mHu2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
          mHd2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mHd2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
          ms2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::ms2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
+         mq200_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mq200, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
+         mu200_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mu200, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
+      }
+
+      for (std::size_t i = 0; i < num_terms_gaugino; ++i) {
+         // generate random values from a Gaussian centred
+         // on the initial values
+         double m0_tmp = m0_distribution(generator);
+         double m12_tmp = m12_distribution(generator);
+         double Azero_tmp = Azero_distribution(generator);
+         
+         gaugino_input_values(i, 0) = Azero_tmp;
+         gaugino_input_values(i, 1) = m12_tmp;
+
+         MassG_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::MassG, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
       }
 
       // solve for the coefficients in the expansion of mHd2 and mHu2
       Eigen::VectorXd mHd2_coeffs = input_values.fullPivHouseholderQr().solve(mHd2_values);
       Eigen::VectorXd mHu2_coeffs = input_values.fullPivHouseholderQr().solve(mHu2_values);
       Eigen::VectorXd ms2_coeffs = input_values.fullPivHouseholderQr().solve(ms2_values);
+      Eigen::VectorXd mq200_coeffs = input_values.fullPivHouseholderQr().solve(mq200_values);
+      Eigen::VectorXd mu200_coeffs = input_values.fullPivHouseholderQr().solve(mu200_values);
+
+      Eigen::VectorXd MassG_coeffs = gaugino_input_values.fullPivHouseholderQr().solve(MassG_values);
 
       // get relative errors in estimate
       double mHd2_estimate = mHd2_coeffs(0) * Sqr(input.m0) + mHd2_coeffs(1) * Sqr(input.m12) + mHd2_coeffs(2) * input.m12 * input.Azero + mHd2_coeffs(3) * Sqr(input.Azero);
       double mHu2_estimate = mHu2_coeffs(0) * Sqr(input.m0) + mHu2_coeffs(1) * Sqr(input.m12) + mHu2_coeffs(2) * input.m12 * input.Azero + mHu2_coeffs(3) * Sqr(input.Azero);
       double ms2_estimate = ms2_coeffs(0) * Sqr(input.m0) + ms2_coeffs(1) * Sqr(input.m12) + ms2_coeffs(2) * input.m12 * input.Azero + ms2_coeffs(3) * Sqr(input.Azero);
 
+      double mq200_estimate = mq200_coeffs(0) * Sqr(input.m0) + mq200_coeffs(1) * Sqr(input.m12) + mq200_coeffs(2) * input.m12 * input.Azero + mq200_coeffs(3) * Sqr(input.Azero);
+      double mu200_estimate = mu200_coeffs(0) * Sqr(input.m0) + mu200_coeffs(1) * Sqr(input.m12) + mu200_coeffs(2) * input.m12 * input.Azero + mu200_coeffs(3) * Sqr(input.Azero);
+
+
       double percent_error_mHd2 = 100.0 * Abs((model.get_mHd2() - mHd2_estimate) / (0.5 * (model.get_mHd2() + mHd2_estimate)));
       double percent_error_mHu2 = 100.0 * Abs((model.get_mHu2() - mHu2_estimate) / (0.5 * (model.get_mHu2() + mHu2_estimate)));
       double percent_error_ms2 = 100.0 * Abs((model.get_ms2() - ms2_estimate) / (0.5 * (model.get_ms2() + ms2_estimate)));
+
+
+      double percent_error_mq200 = 100.0 * Abs((model.get_mq2(0,0) - mq200_estimate) / (0.5 * (model.get_mq2(0,0) + mq200_estimate)));
+      double percent_error_mu200 = 100.0 * Abs((model.get_mu2(0,0) - mu200_estimate) / (0.5 * (model.get_mu2(0,0) + mu200_estimate)));
+
+      double MassG_estimate = MassG_coeffs(0) * input.Azero + MassG_coeffs(1) * input.m12;
+
+      double percent_error_MassG = 100.0 * Abs((model.get_MassG() - MassG_estimate) / (0.5 * (model.get_MassG() + MassG_estimate)));
 
       std::cout << "Results:\n";
       std::cout << "m0 = " << input.m0 << "\n";
@@ -274,6 +316,9 @@ int main(int argc, const char * argv[])
       std::cout << "mHd2 = " << model.get_mHd2() << "\n";
       std::cout << "mHu2 = " << model.get_mHu2() << "\n";
       std::cout << "ms2 = " << model.get_ms2() << "\n";
+      std::cout << "mq200 = " << model.get_mq2(0,0) << "\n";
+      std::cout << "mu200 = " << model.get_mu2(0,0) << "\n";
+      std::cout << "MassG = " << model.get_MassG() << "\n";
       std::cout << "Lambdax = " << model.get_Lambdax() << "\n";
       std::cout << "aHd(" << susy_scale << " GeV) = " << mHd2_coeffs(0) << "\n";
       std::cout << "aHu(" << susy_scale << " GeV) = " << mHu2_coeffs(0) << "\n";
@@ -287,6 +332,14 @@ int main(int argc, const char * argv[])
       std::cout << "dHd(" << susy_scale << " GeV) = " << mHd2_coeffs(3) << "\n";
       std::cout << "dHu(" << susy_scale << " GeV) = " << mHu2_coeffs(3) << "\n";
       std::cout << "dS1(" << susy_scale << " GeV) = " << ms2_coeffs(3) << "\n";
+      std::cout << "aq200(" << susy_scale << " GeV) = " << mq200_coeffs(0) << "\n";
+      std::cout << "bq200(" << susy_scale << " GeV) = " << mq200_coeffs(1) << "\n";
+      std::cout << "cq200(" << susy_scale << " GeV) = " << mq200_coeffs(2) << "\n";
+      std::cout << "dq200(" << susy_scale << " GeV) = " << mq200_coeffs(3) << "\n";
+      std::cout << "au200(" << susy_scale << " GeV) = " << mu200_coeffs(0) << "\n";
+      std::cout << "bu200(" << susy_scale << " GeV) = " << mu200_coeffs(1) << "\n";
+      std::cout << "cu200(" << susy_scale << " GeV) = " << mu200_coeffs(2) << "\n";
+      std::cout << "du200(" << susy_scale << " GeV) = " << mu200_coeffs(3) << "\n";
       std::cout << "aLambdax(" << susy_scale << " GeV) = " 
                 << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(0), mHu2_coeffs(0)) << "\n";
       std::cout << "bLambdax(" << susy_scale << " GeV) = " 
@@ -296,9 +349,14 @@ int main(int argc, const char * argv[])
       std::cout << "dLambdax(" << susy_scale << " GeV) = " 
                 << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(3), mHu2_coeffs(3)) << "\n";
       std::cout << "lLambdax(" << susy_scale << " GeV) = " << get_tree_level_Lambdax_constant_term(model) << "\n";
+      std::cout << "pM3(" << susy_scale << " GeV) = " << MassG_coeffs(0) << "\n";
+      std::cout << "qM3(" << susy_scale << " GeV) = " << MassG_coeffs(1) << "\n";
       std::cout << "Percent error mHd2 = " << percent_error_mHd2 << "\n";
       std::cout << "Percent error mHu2 = " << percent_error_mHu2 << "\n";
       std::cout << "Percent error ms2 = " << percent_error_ms2 << "\n";
+      std::cout << "Percent error mq200 = " << percent_error_mq200 << "\n";
+      std::cout << "Percent error mu200 = " << percent_error_mu200 << "\n";
+      std::cout << "Percent error MassG = " << percent_error_MassG << "\n";
    }
 
    return exit_code;
