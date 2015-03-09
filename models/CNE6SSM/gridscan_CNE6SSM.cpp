@@ -106,13 +106,24 @@ namespace flexiblesusy {
          input.TanBeta = params.get_TanBeta_lower() + params.get_TanBeta_incr() * posn.at(2);
          input.SignLambdax = params.get_SignLambdax_lower() + params.get_SignLambdax_incr() * posn.at(3);
          input.Azero = params.get_Azero_lower() + params.get_Azero_incr() * posn.at(4);
-
+         input.KappaInput(0,0) = params.get_Kappa_lower() + params.get_Kappa_incr() * posn.at(5);
+         input.KappaInput(1,1) = params.get_Kappa_lower() + params.get_Kappa_incr() * posn.at(5);
+         input.KappaInput(2,2) = params.get_Kappa_lower() + params.get_Kappa_incr() * posn.at(5);
+         input.Lambda12Input(0,0) = params.get_Lambda12_lower() + params.get_Lambda12_incr() * posn.at(6);
+         input.Lambda12Input(1,1) = params.get_Lambda12_lower() + params.get_Lambda12_incr() * posn.at(6);
       } else {
          input.m0 = params.get_random_m0(generator);
          input.m12 = params.get_random_m12(generator);
          input.TanBeta = params.get_random_TanBeta(generator);
          input.SignLambdax = params.get_random_SignLambdax(generator);
          input.Azero = params.get_random_Azero(generator);
+         const double random_Kappa = params.get_random_Kappa(generator);
+         input.KappaInput(0,0) = random_Kappa;
+         input.KappaInput(1,1) = random_Kappa;
+         input.KappaInput(2,2) = random_Kappa;
+         const double random_Lambda12 = params.get_random_Lambda12(generator);
+         input.Lambda12Input(0,0) = random_Lambda12;
+         input.Lambda12Input(1,1) = random_Lambda12;
       }
    }
 
@@ -146,6 +157,17 @@ namespace flexiblesusy {
       double Azero_lower = 0.;
       double Azero_upper = 0.;
       int Azero_npts = 1;
+
+      // extension to allow scanning over universal kappa
+      // and lambda couplings (not very neat, but works for now)
+      double Kappa_lower = 0.2;
+      double Kappa_upper = 0.2;
+      int Kappa_npts = 1;
+
+      double Lambda12_lower = 0.5;
+      double Lambda12_upper = 0.5;
+      int Lambda12_npts = 1;
+
       int total_npts = 1;
       bool is_grid_scan = true;
 
@@ -331,6 +353,60 @@ namespace flexiblesusy {
                         WARNING("Ignoring invalid input '" + fields[i] + "'");
                         Azero_npts = 1;
                      }
+                  } else if (field[0] == "Kappa_lower") {
+                     try {
+                        Kappa_lower = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Kappa_lower = 0.2;
+                     }
+                  } else if (field[0] == "Kappa_upper") {
+                     try {
+                        Kappa_upper = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Kappa_upper = 0.2;
+                     }
+                  } else if (field[0] == "Kappa_npts") {
+                     try {
+                        Kappa_npts = boost::lexical_cast<int>(field[1]);
+                        if (!is_grid_scan) {
+                           WARNING("Random scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (Kappa_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           Kappa_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Kappa_npts = 1;
+                     }
+                  } else if (field[0] == "Lambda12_lower") {
+                     try {
+                        Lambda12_lower = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Lambda12_lower = 0.5;
+                     }
+                  } else if (field[0] == "Lambda12_upper") {
+                     try {
+                        Lambda12_upper = boost::lexical_cast<double>(field[1]);
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Lambda12_upper = 0.5;
+                     }
+                  } else if (field[0] == "Lambda12_npts") {
+                     try {
+                        Lambda12_npts = boost::lexical_cast<int>(field[1]);
+                        if (!is_grid_scan) {
+                           WARNING("Random scan requested, input '" + fields[i] + "' will be ignored");
+                        } else if (Lambda12_npts <= 0) {
+                           WARNING("Ignoring invalid input '" + fields[i] + "'");
+                           Lambda12_npts = 1;
+                        }
+                     } catch (const boost::bad_lexical_cast& error) {
+                        WARNING("Ignoring invalid input '" + fields[i] + "'");
+                        Lambda12_npts = 1;
+                     }
                   } else if (field[0] == "total_npts") {
                      try {
                         total_npts = boost::lexical_cast<int>(field[1]);
@@ -358,13 +434,16 @@ namespace flexiblesusy {
                                         m12_lower, m12_upper, m12_npts,
                                         TanBeta_lower, TanBeta_upper, TanBeta_npts,
                                         SignLambdax_lower, SignLambdax_upper, SignLambdax_npts,
-                                        Azero_lower, Azero_upper, Azero_npts);
+                                        Azero_lower, Azero_upper, Azero_npts, Kappa_lower,
+                                        Kappa_upper, Kappa_npts, Lambda12_lower, Lambda12_upper,
+                                        Lambda12_npts);
       } else {
          return CNE6SSM_scan_parameters(m0_lower, m0_upper,
                                         m12_lower, m12_upper,
                                         TanBeta_lower, TanBeta_upper, 
                                         SignLambdax_lower, SignLambdax_upper,
-                                        Azero_lower, Azero_upper, total_npts);
+                                        Azero_lower, Azero_upper, Kappa_lower, 
+                                        Kappa_upper, Lambda12_lower, Lambda12_upper, total_npts);
       }
    }
 
@@ -481,7 +560,9 @@ int main(int argc, const char* argv[])
    std::vector<std::size_t> scan_dimensions = {parameters.get_m0_npts(), parameters.get_m12_npts(), 
                                                parameters.get_TanBeta_npts(), 
                                                parameters.get_SignLambdax_npts(), 
-                                               parameters.get_Azero_npts()};
+                                               parameters.get_Azero_npts(),
+                                               parameters.get_Kappa_npts(),
+                                               parameters.get_Lambda12_npts()};
 
    Grid_scanner scan(scan_dimensions);
 

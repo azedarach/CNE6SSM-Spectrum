@@ -21,26 +21,34 @@ public:
                            double m12_lower_, double m12_upper_, std::size_t m12_npts_,
                            double TanBeta_lower_, double TanBeta_upper_, std::size_t TanBeta_npts_,
                            double SignLambdax_lower_, double SignLambdax_upper_, std::size_t SignLambdax_npts_,
-                           double Azero_lower_, double Azero_upper_, std::size_t Azero_npts_);
+                           double Azero_lower_, double Azero_upper_, std::size_t Azero_npts_,
+                           double Kappa_lower_, double Kappa_upper_, std::size_t Kappa_npts_,
+                           double Lambda12_lower_, double Lambda12_upper_, std::size_t Lambda12_npts_);
 
    CNE6SSM_scan_parameters(double m0_lower_, double m0_upper_,
                            double m12_lower_, double m12_upper_,
                            double TanBeta_lower_, double TanBeta_upper_, 
                            double SignLambdax_lower_, double SignLambdax_upper_,
-                           double Azero_lower_, double Azero_upper_, std::size_t total_npts_);
+                           double Azero_lower_, double Azero_upper_, 
+                           double Kappa_lower_, double Kappa_upper_,
+                           double Lambda12_lower_, double Lambda12_upper_, std::size_t total_npts_);
 
    CNE6SSM_scan_parameters(double m0_lower_, double m0_upper_, std::size_t m0_npts_,
                            double m12_lower_, double m12_upper_, std::size_t m12_npts_,
                            double TanBeta_lower_, double TanBeta_upper_, std::size_t TanBeta_npts_,
                            double SignLambdax_lower_, double SignLambdax_upper_, std::size_t SignLambdax_npts_,
                            double Azero_lower_, double Azero_upper_, std::size_t Azero_npts_,
+                           double Kappa_lower_, double Kappa_upper_, std::size_t Kappa_npts_,
+                           double Lambda12_lower_, double Lambda12_upper_, std::size_t Lambda12_npts_,
                            double output_scale_);
 
    CNE6SSM_scan_parameters(double m0_lower_, double m0_upper_,
                            double m12_lower_, double m12_upper_,
                            double TanBeta_lower_, double TanBeta_upper_, 
                            double SignLambdax_lower_, double SignLambdax_upper_,
-                           double Azero_lower_, double Azero_upper_, std::size_t total_npts_,
+                           double Azero_lower_, double Azero_upper_, 
+                           double Kappa_lower_, double Kappa_upper_, 
+                           double Lambda12_lower_, double Lambda12_upper_, std::size_t total_npts_,
                            double output_scale_);
 
    ~CNE6SSM_scan_parameters() {}
@@ -65,6 +73,14 @@ public:
    double get_Azero_upper() const { return Azero_upper; }
    std::size_t get_Azero_npts() const { return Azero_npts; }
    double get_Azero_incr() const { return Azero_incr; }
+   double get_Kappa_lower() const { return Kappa_lower; }
+   double get_Kappa_upper() const { return Kappa_upper; }
+   std::size_t get_Kappa_npts() const { return Kappa_npts; }
+   double get_Kappa_incr() const { return Kappa_incr; }
+   double get_Lambda12_lower() const { return Lambda12_lower; }
+   double get_Lambda12_upper() const { return Lambda12_upper; }
+   std::size_t get_Lambda12_npts() const { return Lambda12_npts; }
+   double get_Lambda12_incr() const { return Lambda12_incr; }
    double get_total_npts() const { return total_npts; }
    bool get_is_grid_scan() const { return is_grid_scan; }
    double get_output_scale() const { return output_scale; }
@@ -74,6 +90,8 @@ public:
    double get_random_TanBeta(std::minstd_rand &);
    double get_random_SignLambdax(std::minstd_rand &);
    double get_random_Azero(std::minstd_rand &);
+   double get_random_Kappa(std::minstd_rand &);
+   double get_random_Lambda12(std::minstd_rand &);
 
 private:
    double m0_lower;
@@ -96,6 +114,14 @@ private:
    double Azero_upper;
    std::size_t Azero_npts;
    double Azero_incr;
+   double Kappa_lower;
+   double Kappa_upper;
+   std::size_t Kappa_npts;
+   double Kappa_incr;
+   double Lambda12_lower;
+   double Lambda12_upper;
+   std::size_t Lambda12_npts;
+   double Lambda12_incr;
    std::size_t total_npts;
    bool is_grid_scan;
    double output_scale;
