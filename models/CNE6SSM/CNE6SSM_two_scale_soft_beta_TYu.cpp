@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:52:57
+// File generated at Sun 22 Mar 2015 16:55:16
 
 #include "CNE6SSM_two_scale_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -122,11 +122,11 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYu_two_loop(const 
       AbsSqr(Lambdax)*TYu - AbsSqr(Lambdax)*AbsSqr(Sigmax)*TYu + 0.8*
       traceYuAdjYu*Sqr(g1)*TYu + 1.5*tracefuAdjfu*Sqr(g1p)*TYu - 0.3*
       traceYuAdjYu*Sqr(g1p)*TYu + 0.25*AbsSqr(Lambdax)*Sqr(g1p)*TYu +
-      0.17666666666666667*Sqr(g1)*Sqr(g1p)*TYu + Sqr(g1)*Sqr(g2)*TYu + 0.75*Sqr
-      (g1p)*Sqr(g2)*TYu + 16*traceYuAdjYu*Sqr(g3)*TYu + 3.022222222222222*Sqr(
-      g1)*Sqr(g3)*TYu + 0.5333333333333333*Sqr(g1p)*Sqr(g3)*TYu + 8*Sqr(g2)*Sqr
-      (g3)*TYu + 0.015*Power(g1p,4)*Sqr(QS)*TYu + 0.05*AbsSqr(Lambdax)*Sqr(g1p)
-      *Sqr(QS)*TYu - 3*Sqr(Conj(Lambdax))*Sqr(Lambdax)*TYu -
+      0.5366666666666666*Sqr(g1)*Sqr(g1p)*TYu + Sqr(g1)*Sqr(g2)*TYu + 0.75*Sqr(
+      g1p)*Sqr(g2)*TYu + 16*traceYuAdjYu*Sqr(g3)*TYu + 3.022222222222222*Sqr(g1
+      )*Sqr(g3)*TYu + 0.5333333333333333*Sqr(g1p)*Sqr(g3)*TYu + 8*Sqr(g2)*Sqr(
+      g3)*TYu + 0.015*Power(g1p,4)*Sqr(QS)*TYu + 0.05*AbsSqr(Lambdax)*Sqr(g1p)*
+      Sqr(QS)*TYu - 3*Sqr(Conj(Lambdax))*Sqr(Lambdax)*TYu -
       0.0022222222222222222*Yu*(15652*Power(g1,4)*MassB + 5157*Power(g1p,4)*
       MassBp + 25600*Power(g3,4)*MassG + 29700*Power(g2,4)*MassWB + 2700*
       traceAdjgDTpYuconjYuTgD + 2700*traceAdjYuTYuconjgDTpgD + 1800*
@@ -137,7 +137,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYu_two_loop(const 
       traceYuAdjYdTYdAdjYu + 16200*traceYuAdjYuTYuAdjYu - 720*traceAdjYuTYu*Sqr
       (g1) + 720*MassB*traceYuAdjYu*Sqr(g1) - 1350*traceAdjfuTfu*Sqr(g1p) + 270
       *traceAdjYuTYu*Sqr(g1p) + 1350*MassBp*tracefuAdjfu*Sqr(g1p) - 270*MassBp*
-      traceYuAdjYu*Sqr(g1p) + 159*MassB*Sqr(g1)*Sqr(g1p) + 159*MassBp*Sqr(g1)*
+      traceYuAdjYu*Sqr(g1p) + 483*MassB*Sqr(g1)*Sqr(g1p) + 483*MassBp*Sqr(g1)*
       Sqr(g1p) + 900*MassB*Sqr(g1)*Sqr(g2) + 900*MassWB*Sqr(g1)*Sqr(g2) + 675*
       MassBp*Sqr(g1p)*Sqr(g2) + 675*MassWB*Sqr(g1p)*Sqr(g2) - 14400*
       traceAdjYuTYu*Sqr(g3) + 14400*MassG*traceYuAdjYu*Sqr(g3) + 2720*MassB*Sqr

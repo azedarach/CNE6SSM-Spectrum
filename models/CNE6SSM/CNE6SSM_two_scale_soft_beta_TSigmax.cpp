@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:52:43
+// File generated at Sun 22 Mar 2015 16:55:03
 
 #include "CNE6SSM_two_scale_soft_parameters.hpp"
 #include "wrappers.hpp"

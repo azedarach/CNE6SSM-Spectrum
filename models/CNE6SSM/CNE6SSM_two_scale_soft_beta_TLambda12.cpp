@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:52:49
+// File generated at Sun 22 Mar 2015 16:55:08
 
 #include "CNE6SSM_two_scale_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -138,7 +138,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_TLambda12_two_loop(
       0.8*traceKappaAdjKappa*Sqr(g1)*TLambda12 + 1.2*traceLambda12AdjLambda12*
       Sqr(g1)*TLambda12 + 1.2*AbsSqr(Lambdax)*Sqr(g1)*TLambda12 + 1.95*
       traceKappaAdjKappa*Sqr(g1p)*TLambda12 + 1.3*traceLambda12AdjLambda12*Sqr(
-      g1p)*TLambda12 + 1.3*AbsSqr(Lambdax)*Sqr(g1p)*TLambda12 + 0.39*Sqr(g1)*
+      g1p)*TLambda12 + 1.3*AbsSqr(Lambdax)*Sqr(g1p)*TLambda12 + 0.27*Sqr(g1)*
       Sqr(g1p)*TLambda12 + 6*traceLambda12AdjLambda12*Sqr(g2)*TLambda12 + 6*
       AbsSqr(Lambdax)*Sqr(g2)*TLambda12 + 1.8*Sqr(g1)*Sqr(g2)*TLambda12 + 1.95*
       Sqr(g1p)*Sqr(g2)*TLambda12 + 16*traceKappaAdjKappa*Sqr(g3)*TLambda12 +
@@ -159,7 +159,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_TLambda12_two_loop(
       traceKappaAdjKappa*Sqr(g1) + 240*MassB*traceLambda12AdjLambda12*Sqr(g1) -
       390*traceAdjKappaTKappa*Sqr(g1p) - 260*traceAdjLambda12TLambda12*Sqr(g1p
       ) + 390*MassBp*traceKappaAdjKappa*Sqr(g1p) + 260*MassBp*
-      traceLambda12AdjLambda12*Sqr(g1p) + 78*MassB*Sqr(g1)*Sqr(g1p) + 78*MassBp
+      traceLambda12AdjLambda12*Sqr(g1p) + 54*MassB*Sqr(g1)*Sqr(g1p) + 54*MassBp
       *Sqr(g1)*Sqr(g1p) - 1200*traceAdjLambda12TLambda12*Sqr(g2) + 1200*MassWB*
       traceLambda12AdjLambda12*Sqr(g2) + 360*MassB*Sqr(g1)*Sqr(g2) + 360*MassWB
       *Sqr(g1)*Sqr(g2) + 390*MassBp*Sqr(g1p)*Sqr(g2) + 390*MassWB*Sqr(g1p)*Sqr(

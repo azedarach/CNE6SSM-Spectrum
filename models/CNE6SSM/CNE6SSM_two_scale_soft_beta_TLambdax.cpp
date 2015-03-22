@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:52:52
+// File generated at Sun 22 Mar 2015 16:55:11
 
 #include "CNE6SSM_two_scale_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -194,8 +194,8 @@ double CNE6SSM_soft_parameters::calc_beta_TLambdax_two_loop(const Soft_traces& s
       3.9*MassBp*traceKappaAdjKappa*Lambdax*Sqr(g1p) - 2.6*MassBp*
       traceLambda12AdjLambda12*Lambdax*Sqr(g1p) + 1.2*MassBp*traceYdAdjYd*
       Lambdax*Sqr(g1p) + 0.4*MassBp*traceYeAdjYe*Lambdax*Sqr(g1p) + 0.6*MassBp*
-      traceYuAdjYu*Lambdax*Sqr(g1p) - 0.78*MassB*Lambdax*Sqr(g1)*Sqr(g1p) -
-      0.78*MassBp*Lambdax*Sqr(g1)*Sqr(g1p) + 12*traceAdjLambda12TLambda12*
+      traceYuAdjYu*Lambdax*Sqr(g1p) - 0.54*MassB*Lambdax*Sqr(g1)*Sqr(g1p) -
+      0.54*MassBp*Lambdax*Sqr(g1)*Sqr(g1p) + 12*traceAdjLambda12TLambda12*
       Lambdax*Sqr(g2) - 12*MassWB*traceLambda12AdjLambda12*Lambdax*Sqr(g2) -
       3.6*MassB*Lambdax*Sqr(g1)*Sqr(g2) - 3.6*MassWB*Lambdax*Sqr(g1)*Sqr(g2) -
       3.9*MassBp*Lambdax*Sqr(g1p)*Sqr(g2) - 3.9*MassWB*Lambdax*Sqr(g1p)*Sqr(g2)
@@ -226,7 +226,7 @@ double CNE6SSM_soft_parameters::calc_beta_TLambdax_two_loop(const Soft_traces& s
       TLambdax + 1.95*traceKappaAdjKappa*Sqr(g1p)*TLambdax + 1.3*
       traceLambda12AdjLambda12*Sqr(g1p)*TLambdax - 0.6*traceYdAdjYd*Sqr(g1p)*
       TLambdax - 0.2*traceYeAdjYe*Sqr(g1p)*TLambdax - 0.3*traceYuAdjYu*Sqr(g1p)
-      *TLambdax + 0.39*Sqr(g1)*Sqr(g1p)*TLambdax + 6*traceLambda12AdjLambda12*
+      *TLambdax + 0.27*Sqr(g1)*Sqr(g1p)*TLambdax + 6*traceLambda12AdjLambda12*
       Sqr(g2)*TLambdax + 1.8*Sqr(g1)*Sqr(g2)*TLambdax + 1.95*Sqr(g1p)*Sqr(g2)*
       TLambdax + 16*traceKappaAdjKappa*Sqr(g3)*TLambdax + 16*traceYdAdjYd*Sqr(
       g3)*TLambdax + 16*traceYuAdjYu*Sqr(g3)*TLambdax + 0.5025*Power(g1p,4)*Sqr

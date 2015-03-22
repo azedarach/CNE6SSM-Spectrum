@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:52:42
+// File generated at Sun 22 Mar 2015 16:55:01
 
 #include "CNE6SSM_two_scale_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -121,8 +121,8 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmaL_two_loop(const Soft_traces& so
       traceAdjhEThE*SigmaL*Sqr(g1) + 0.8*MassB*tracegDAdjgD*SigmaL*Sqr(g1) -
       2.4*MassB*tracehEAdjhE*SigmaL*Sqr(g1) + 1.8*traceAdjgDTgD*SigmaL*Sqr(g1p)
       + 0.6*traceAdjhEThE*SigmaL*Sqr(g1p) - 1.8*MassBp*tracegDAdjgD*SigmaL*Sqr
-      (g1p) - 0.6*MassBp*tracehEAdjhE*SigmaL*Sqr(g1p) - 0.48*MassB*SigmaL*Sqr(
-      g1)*Sqr(g1p) - 0.48*MassBp*SigmaL*Sqr(g1)*Sqr(g1p) - 3.6*MassB*SigmaL*Sqr
+      (g1p) - 0.6*MassBp*tracehEAdjhE*SigmaL*Sqr(g1p) - 1.44*MassB*SigmaL*Sqr(
+      g1)*Sqr(g1p) - 1.44*MassBp*SigmaL*Sqr(g1)*Sqr(g1p) - 3.6*MassB*SigmaL*Sqr
       (g1)*Sqr(g2) - 3.6*MassWB*SigmaL*Sqr(g1)*Sqr(g2) - 2.4*MassBp*SigmaL*Sqr(
       g1p)*Sqr(g2) - 2.4*MassWB*SigmaL*Sqr(g1p)*Sqr(g2) + 32*traceAdjgDTgD*
       SigmaL*Sqr(g3) - 32*MassG*tracegDAdjgD*SigmaL*Sqr(g3) - 0.08*Power(g1p,4)
@@ -133,7 +133,7 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmaL_two_loop(const Soft_traces& so
       tracegDAdjKappaKappaAdjgD*TSigmaL - 3*tracehEAdjhEhEAdjhE*TSigmaL - 2*
       tracehEAdjhEYeAdjYe*TSigmaL - tracehEAdjLambda12Lambda12AdjhE*TSigmaL -
       0.4*tracegDAdjgD*Sqr(g1)*TSigmaL + 1.2*tracehEAdjhE*Sqr(g1)*TSigmaL + 0.9
-      *tracegDAdjgD*Sqr(g1p)*TSigmaL + 0.3*tracehEAdjhE*Sqr(g1p)*TSigmaL + 0.24
+      *tracegDAdjgD*Sqr(g1p)*TSigmaL + 0.3*tracehEAdjhE*Sqr(g1p)*TSigmaL + 0.72
       *Sqr(g1)*Sqr(g1p)*TSigmaL + 1.8*Sqr(g1)*Sqr(g2)*TSigmaL + 1.2*Sqr(g1p)*
       Sqr(g2)*TSigmaL + 16*tracegDAdjgD*Sqr(g3)*TSigmaL + 0.02*Power(g1p,4)*Sqr
       (QS)*TSigmaL - 8*Sqr(Conj(KappaPr))*Sqr(KappaPr)*TSigmaL - 50*Sqr(Conj(

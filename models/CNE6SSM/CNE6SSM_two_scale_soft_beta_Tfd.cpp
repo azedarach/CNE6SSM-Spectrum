@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:52:55
+// File generated at Sun 22 Mar 2015 16:55:15
 
 #include "CNE6SSM_two_scale_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -121,7 +121,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfd_two_loop(const 
       Lambdax)*Tfd - AbsSqr(Lambdax)*AbsSqr(Sigmax)*Tfd - 0.4*traceYdAdjYd*Sqr(
       g1)*Tfd + 1.2*traceYeAdjYe*Sqr(g1)*Tfd + tracefdAdjfd*Sqr(g1p)*Tfd - 0.6*
       traceYdAdjYd*Sqr(g1p)*Tfd - 0.2*traceYeAdjYe*Sqr(g1p)*Tfd - 0.25*AbsSqr(
-      Lambdax)*Sqr(g1p)*Tfd + 0.39*Sqr(g1)*Sqr(g1p)*Tfd + 1.8*Sqr(g1)*Sqr(g2)*
+      Lambdax)*Sqr(g1p)*Tfd + 0.27*Sqr(g1)*Sqr(g1p)*Tfd + 1.8*Sqr(g1)*Sqr(g2)*
       Tfd + 1.95*Sqr(g1p)*Sqr(g2)*Tfd + 16*traceYdAdjYd*Sqr(g3)*Tfd + 0.095*
       Power(g1p,4)*Sqr(QS)*Tfd + 0.05*AbsSqr(Lambdax)*Sqr(g1p)*Sqr(QS)*Tfd - 3*
       Sqr(Conj(Lambdax))*Sqr(Lambdax)*Tfd - 0.02*fd*(1188*Power(g1,4)*MassB +
@@ -136,7 +136,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfd_two_loop(const 
       g1) - 40*MassB*traceYdAdjYd*Sqr(g1) + 120*MassB*traceYeAdjYe*Sqr(g1) -
       100*traceAdjfdTfd*Sqr(g1p) + 60*traceAdjYdTYd*Sqr(g1p) + 20*traceAdjYeTYe
       *Sqr(g1p) + 100*MassBp*tracefdAdjfd*Sqr(g1p) - 60*MassBp*traceYdAdjYd*Sqr
-      (g1p) - 20*MassBp*traceYeAdjYe*Sqr(g1p) + 39*MassB*Sqr(g1)*Sqr(g1p) + 39*
+      (g1p) - 20*MassBp*traceYeAdjYe*Sqr(g1p) + 27*MassB*Sqr(g1)*Sqr(g1p) + 27*
       MassBp*Sqr(g1)*Sqr(g1p) + 180*MassB*Sqr(g1)*Sqr(g2) + 180*MassWB*Sqr(g1)*
       Sqr(g2) + 195*MassBp*Sqr(g1p)*Sqr(g2) + 195*MassWB*Sqr(g1p)*Sqr(g2) -
       1600*traceAdjYdTYd*Sqr(g3) + 1600*MassG*traceYdAdjYd*Sqr(g3) + 19*Power(
