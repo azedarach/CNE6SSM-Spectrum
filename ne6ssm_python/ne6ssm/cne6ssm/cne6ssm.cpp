@@ -364,6 +364,34 @@ const char* convert_to_latex_name(const char* name)
    return "";
 }
 
+// returns the mass dimension of the given parameter,
+// or -1 if not a valid parameter
+int get_mass_dimension(const char* name)
+{
+   if (!(is_parameter_name(name) || is_input_name(name) 
+         || is_mixing_name(name))) {
+      return -1;
+   } else if (is_mixing_name(name)) {
+      return 0;
+   } else if (is_parameter_name(name)) {
+      std::size_t loc = 0;
+      while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_PARAMETERS) {
+         if (!strcmp(name, flexiblesusy::CNE6SSM_info::parameter_names[loc]))
+            break;
+         ++loc;
+      }
+      return flexiblesusy::CNE6SSM_info::parameter_mass_dimensions[loc];
+   } else {
+      std::size_t loc = 0;
+      while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS) {
+         if (!strcmp(name, flexiblesusy::CNE6SSM_info::input_names[loc]))
+            break;
+         ++loc;
+      }
+      return flexiblesusy::CNE6SSM_info::input_mass_dimensions[loc];
+   }
+}
+
 BOOST_PYTHON_MODULE(_cne6ssm)
 {
    def("get_all_mixing_names",
@@ -392,4 +420,6 @@ BOOST_PYTHON_MODULE(_cne6ssm)
        convert_to_mixing_latex_name);
    def("convert_to_latex_name",
        convert_to_latex_name);
+   def("get_mass_dimension",
+       get_mass_dimension);
 }

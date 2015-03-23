@@ -78,8 +78,10 @@ namespace CNE6SSM_info {
    extern const char* particle_names[NUMBER_OF_PARTICLES];
    extern const char* particle_latex_names[NUMBER_OF_PARTICLES];
    extern const char* parameter_names[NUMBER_OF_PARAMETERS];
+   extern const int parameter_mass_dimensions[NUMBER_OF_PARAMETERS];
    extern const char* parameter_latex_names[NUMBER_OF_PARAMETERS];
    extern const char* input_names[NUMBER_OF_INPUTS];
+   extern const int input_mass_dimensions[NUMBER_OF_INPUTS];
    extern const char* input_latex_names[NUMBER_OF_INPUTS];
 
    extern const unsigned mixing_dimensions[NUMBER_OF_MIXINGS];

@@ -84,6 +84,19 @@ namespace CNE6SSM_info {
       "mDxbar2(1,2)", "mDxbar2(2,0)", "mDxbar2(2,1)", "mDxbar2(2,2)", "mHp2",
       "mHpbar2", "mphi2", "MassB", "MassWB", "MassG", "MassBp"};
 
+   const int parameter_mass_dimensions[NUMBER_OF_PARAMETERS] = {0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+      2, 2, 1, 1, 1, 1};
+
    const char* parameter_latex_names[NUMBER_OF_PARAMETERS] = {"y_{11}^D",
       "y_{12}^D", "y_{13}^D", "y_{21}^D", "y_{22}^D", "y_{23}^D", "y_{31}^D",
       "y_{32}^D", "y_{33}^D", "h_{11}^E", "h_{12}^E", "h_{21}^E", "h_{22}^E",
@@ -141,6 +154,11 @@ namespace CNE6SSM_info {
       "fuInput(0,0)", "fuInput(0,1)", "fuInput(1,0)", "fuInput(1,1)", "fuInput(2,0)",
       "fuInput(2,1)", "fdInput(0,0)", "fdInput(0,1)", "fdInput(1,0)", "fdInput(1,1)",
       "fdInput(2,0)", "fdInput(2,1)", "MuPrInput", "MuPhiInput", "BMuPrInput", "BMuPhiInput"};
+
+   const int input_mass_dimensions[NUMBER_OF_INPUTS] = {1, 1, 0, 0, 
+      1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2};
 
    const char* input_latex_names[NUMBER_OF_INPUTS] = {"m_0", "m_{1/2}", "\\tan\\beta", 
       "\\textrm{sgn}(\\lambda)", "A_0", "s", "\\tilde{Q}_S", "h_{11}^E", "h_{12}^E",
