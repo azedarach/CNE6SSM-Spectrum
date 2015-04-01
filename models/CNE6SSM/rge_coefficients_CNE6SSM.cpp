@@ -17,6 +17,8 @@
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
+#include <map>
+#include <vector>
 #include <random>
 
 using namespace flexiblesusy;
@@ -196,6 +198,22 @@ int main(int argc, const char * argv[])
 
    // if point is valid, calculate coefficients in RG running
    if (exit_code == EXIT_SUCCESS) {
+      // soft scalar masses to calculate coefficients for
+      std::vector<CNE6SSM_info::Parameters> soft_scalar_masses 
+         = {CNE6SSM_info::mHd2, CNE6SSM_info::mHu2, CNE6SSM_info::ms2,
+            CNE6SSM_info::msbar2, CNE6SSM_info::mphi2, CNE6SSM_info::mq200,
+            CNE6SSM_info::mu200};
+
+      // soft gaugino masses to calculate coefficients for
+      std::vector<CNE6SSM_info::Parameters> soft_gaugino_masses
+         = {CNE6SSM_info::MassB, CNE6SSM_info::MassWB, CNE6SSM_info::MassG, 
+            CNE6SSM_info::MassBp};
+
+      // soft trilinears to calculate coefficients for
+      std::vector<CNE6SSM_info::Parameters> soft_trilinears
+         = {CNE6SSM_info::TYu22, CNE6SSM_info::TYu00, CNE6SSM_info::TSigmax,
+            CNE6SSM_info::TLambdax};
+
       // get high scale
       double high_scale = spectrum_generator.get_high_scale();
 
@@ -203,160 +221,74 @@ int main(int argc, const char * argv[])
       // for comparison at
       double susy_scale = spectrum_generator.get_susy_scale();
 
-      CNE6SSM<algorithm_type> running_model(model);
-
-      running_model.run_to(high_scale);
-
-      // all though in principle 6 terms, 2 are known to vanish
-      const std::size_t num_terms = 4;
-      
-      Eigen::Matrix<double, num_terms, num_terms> input_values;
-      Eigen::VectorXd mHu2_values(num_terms);
-      Eigen::VectorXd mHd2_values(num_terms);
-      Eigen::VectorXd ms2_values(num_terms);
-      Eigen::VectorXd mq200_values(num_terms);
-      Eigen::VectorXd mu200_values(num_terms);
-
-      // additional coefficients to compute
-      const std::size_t num_terms_gaugino = 2;
-      Eigen::Matrix<double, num_terms_gaugino, num_terms_gaugino> gaugino_input_values;
-      Eigen::VectorXd MassG_values(num_terms_gaugino);
-      Eigen::VectorXd TYu11_values(num_terms_gaugino);
-      Eigen::VectorXd Yu11_values(num_terms_gaugino);
-      Eigen::VectorXd TYu22_values(num_terms_gaugino);
-      Eigen::VectorXd Yu22_values(num_terms_gaugino);
-
-      double m0_centre = model.get_input().m0;
-      double m12_centre = model.get_input().m12;
-      double Azero_centre = model.get_input().Azero;
-
-      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-      std::default_random_engine generator(seed);
-      std::normal_distribution<double> m0_distribution(m0_centre, 0.1 * m0_centre);
-      std::normal_distribution<double> m12_distribution(m12_centre, 0.1 * m12_centre);
-      std::normal_distribution<double> Azero_distribution(Azero_centre, 0.1 * Azero_centre);
-
-      for (std::size_t i = 0; i < num_terms; ++i) {
-         // generate random values from a Gaussian centred
-         // on the initial values
-         double m0_tmp = m0_distribution(generator);
-         double m12_tmp = m12_distribution(generator);
-         double Azero_tmp = Azero_distribution(generator);
-
-         input_values(i, 0) = Sqr(m0_tmp);
-         input_values(i, 1) = Sqr(m12_tmp);
-         input_values(i, 2) = m12_tmp * Azero_tmp;
-         input_values(i, 3) = Sqr(Azero_tmp);
-
-         // get the soft mass values
-         mHu2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mHu2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
-         mHd2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mHd2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
-         ms2_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::ms2, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
-         mq200_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mq200, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
-         mu200_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::mu200, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
+      // calculate coefficients and percentage errors the original way
+      std::map<CNE6SSM_info::Parameters, std::vector<double> > soft_scalar_mass_coeffs;
+      std::map<CNE6SSM_info::Parameters, double> soft_scalar_mass_errors;
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_scalar_masses.begin(),
+              end = soft_scalar_masses.end(); it != end; ++it) {
+         const Eigen::Array<double,4,1> coeffs = model.get_soft_scalar_mass_coeffs(*it, susy_scale, high_scale);
+         soft_scalar_mass_coeffs[*it] = {coeffs(0), coeffs(1), coeffs(2), coeffs(3)};
+         const double pred_value = coeffs(0) * Sqr(input.m0) + coeffs(1) * Sqr(input.m12)
+            + coeffs(2) * input.m12 * input.Azero + coeffs(3) * Sqr(input.Azero);
+         soft_scalar_mass_errors[*it] = 100.0 * Abs((model.get_parameter(*it) - pred_value) / 
+                                                    (0.5 * (model.get_parameter(*it) + pred_value)));
       }
 
-      for (std::size_t i = 0; i < num_terms_gaugino; ++i) {
-         // generate random values from a Gaussian centred
-         // on the initial values
-         double m0_tmp = m0_distribution(generator);
-         double m12_tmp = m12_distribution(generator);
-         double Azero_tmp = Azero_distribution(generator);
-         
-         gaugino_input_values(i, 0) = Azero_tmp;
-         gaugino_input_values(i, 1) = m12_tmp;
-
-         MassG_values(i) = get_parameter_from_inputs(running_model, CNE6SSM_info::MassG, m0_tmp, m12_tmp, Azero_tmp, susy_scale);
+      std::map<CNE6SSM_info::Parameters, std::vector<double> > soft_gaugino_mass_coeffs;
+      std::map<CNE6SSM_info::Parameters, double> soft_gaugino_mass_errors;
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_gaugino_masses.begin(),
+              end = soft_gaugino_masses.end(); it != end; ++it) {
+         const Eigen::Array<double,2,1> coeffs = model.get_soft_gaugino_mass_coeffs(*it, susy_scale, high_scale);
+         soft_gaugino_mass_coeffs[*it] = {coeffs(0), coeffs(1)};
+         const double pred_value = coeffs(0) * input.Azero + coeffs(1) * input.m12;
+         soft_gaugino_mass_errors[*it] = 100.0 * Abs((model.get_parameter(*it) - pred_value) / 
+                                                     (0.5 * (model.get_parameter(*it) + pred_value)));
       }
 
-      // solve for the coefficients in the expansion of mHd2 and mHu2
-      Eigen::VectorXd mHd2_coeffs = input_values.fullPivHouseholderQr().solve(mHd2_values);
-      Eigen::VectorXd mHu2_coeffs = input_values.fullPivHouseholderQr().solve(mHu2_values);
-      Eigen::VectorXd ms2_coeffs = input_values.fullPivHouseholderQr().solve(ms2_values);
-      Eigen::VectorXd mq200_coeffs = input_values.fullPivHouseholderQr().solve(mq200_values);
-      Eigen::VectorXd mu200_coeffs = input_values.fullPivHouseholderQr().solve(mu200_values);
+      std::map<CNE6SSM_info::Parameters, std::vector<double> > soft_trilinear_coeffs;
+      std::map<CNE6SSM_info::Parameters, double> soft_trilinear_errors;
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_trilinears.begin(),
+              end = soft_trilinears.end(); it != end; ++it) {
+         const Eigen::Array<double,2,1> coeffs = model.get_soft_trilinear_coeffs(*it, susy_scale, high_scale);
+         soft_trilinear_coeffs[*it] = {coeffs(0), coeffs(1)};
+         const double pred_value = coeffs(0) * input.Azero + coeffs(1) * input.m12;
+         soft_trilinear_errors[*it] = 100.0 * Abs((model.get_parameter(*it) - pred_value) /
+                                                 (0.5 * (model.get_parameter(*it) + pred_value)));
+      }
 
-      Eigen::VectorXd MassG_coeffs = gaugino_input_values.fullPivHouseholderQr().solve(MassG_values);
+      // print results
+      std::cout << "Coefficients for requested parameters:\n";
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_scalar_masses.begin(),
+              end = soft_scalar_masses.end(); it != end; ++it) {
+         std::cout << "a(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_scalar_mass_coeffs[*it][0] << "\n";
+         std::cout << "b(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_scalar_mass_coeffs[*it][1] << "\n";
+         std::cout << "c(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_scalar_mass_coeffs[*it][2] << "\n";
+         std::cout << "d(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_scalar_mass_coeffs[*it][3] << "\n";
+         std::cout << "% error = " << soft_scalar_mass_errors[*it] << "\n";
+      }
 
-      // get relative errors in estimate
-      double mHd2_estimate = mHd2_coeffs(0) * Sqr(input.m0) + mHd2_coeffs(1) * Sqr(input.m12) + mHd2_coeffs(2) * input.m12 * input.Azero + mHd2_coeffs(3) * Sqr(input.Azero);
-      double mHu2_estimate = mHu2_coeffs(0) * Sqr(input.m0) + mHu2_coeffs(1) * Sqr(input.m12) + mHu2_coeffs(2) * input.m12 * input.Azero + mHu2_coeffs(3) * Sqr(input.Azero);
-      double ms2_estimate = ms2_coeffs(0) * Sqr(input.m0) + ms2_coeffs(1) * Sqr(input.m12) + ms2_coeffs(2) * input.m12 * input.Azero + ms2_coeffs(3) * Sqr(input.Azero);
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_gaugino_masses.begin(),
+              end = soft_gaugino_masses.end(); it != end; ++it) {
+         std::cout << "p(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_gaugino_mass_coeffs[*it][0] << "\n";
+         std::cout << "q(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_gaugino_mass_coeffs[*it][1] << "\n";
+         std::cout << "% error = " << soft_scalar_mass_errors[*it] << "\n";
+      }
 
-      double mq200_estimate = mq200_coeffs(0) * Sqr(input.m0) + mq200_coeffs(1) * Sqr(input.m12) + mq200_coeffs(2) * input.m12 * input.Azero + mq200_coeffs(3) * Sqr(input.Azero);
-      double mu200_estimate = mu200_coeffs(0) * Sqr(input.m0) + mu200_coeffs(1) * Sqr(input.m12) + mu200_coeffs(2) * input.m12 * input.Azero + mu200_coeffs(3) * Sqr(input.Azero);
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_trilinears.begin(),
+              end = soft_trilinears.end(); it != end; ++it) {
+         std::cout << "e(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_trilinear_coeffs[*it][0] << "\n";
+         std::cout << "f(" << CNE6SSM_info::parameter_names[*it] 
+                   << ", " << susy_scale << " GeV) = " << soft_trilinear_coeffs[*it][1] << "\n";
+         std::cout << "% error = " << soft_trilinear_errors[*it] << "\n";
+      }
 
-
-      double percent_error_mHd2 = 100.0 * Abs((model.get_mHd2() - mHd2_estimate) / (0.5 * (model.get_mHd2() + mHd2_estimate)));
-      double percent_error_mHu2 = 100.0 * Abs((model.get_mHu2() - mHu2_estimate) / (0.5 * (model.get_mHu2() + mHu2_estimate)));
-      double percent_error_ms2 = 100.0 * Abs((model.get_ms2() - ms2_estimate) / (0.5 * (model.get_ms2() + ms2_estimate)));
-
-
-      double percent_error_mq200 = 100.0 * Abs((model.get_mq2(0,0) - mq200_estimate) / (0.5 * (model.get_mq2(0,0) + mq200_estimate)));
-      double percent_error_mu200 = 100.0 * Abs((model.get_mu2(0,0) - mu200_estimate) / (0.5 * (model.get_mu2(0,0) + mu200_estimate)));
-
-      double MassG_estimate = MassG_coeffs(0) * input.Azero + MassG_coeffs(1) * input.m12;
-
-      double percent_error_MassG = 100.0 * Abs((model.get_MassG() - MassG_estimate) / (0.5 * (model.get_MassG() + MassG_estimate)));
-
-      std::cout << "Results:\n";
-      std::cout << "m0 = " << input.m0 << "\n";
-      std::cout << "m12 = " << input.m12 << "\n";
-      std::cout << "TanBeta = " << input.TanBeta << "\n";
-      std::cout << "SignLambdax = " << input.SignLambdax << "\n";
-      std::cout << "Azero = " << input.Azero << "\n";
-      std::cout << "g1 = " << model.get_g1() << "\n";
-      std::cout << "g2 = " << model.get_g2() << "\n";
-      std::cout << "g1p = " << model.get_g1p() << "\n";
-      std::cout << "vd = " << model.get_vd() << "\n";
-      std::cout << "vu = " << model.get_vu() << "\n";
-      std::cout << "vs = " << model.get_vs() << "\n";
-      std::cout << "vsb = " << model.get_vsb() << "\n";
-      std::cout << "QS = " << model.get_input().QS << "\n";
-      std::cout << "mHd2 = " << model.get_mHd2() << "\n";
-      std::cout << "mHu2 = " << model.get_mHu2() << "\n";
-      std::cout << "ms2 = " << model.get_ms2() << "\n";
-      std::cout << "mq200 = " << model.get_mq2(0,0) << "\n";
-      std::cout << "mu200 = " << model.get_mu2(0,0) << "\n";
-      std::cout << "MassG = " << model.get_MassG() << "\n";
-      std::cout << "Lambdax = " << model.get_Lambdax() << "\n";
-      std::cout << "aHd(" << susy_scale << " GeV) = " << mHd2_coeffs(0) << "\n";
-      std::cout << "aHu(" << susy_scale << " GeV) = " << mHu2_coeffs(0) << "\n";
-      std::cout << "aS1(" << susy_scale << " GeV) = " << ms2_coeffs(0) << "\n";
-      std::cout << "bHd(" << susy_scale << " GeV) = " << mHd2_coeffs(1) << "\n";
-      std::cout << "bHu(" << susy_scale << " GeV) = " << mHu2_coeffs(1) << "\n";
-      std::cout << "bS1(" << susy_scale << " GeV) = " << ms2_coeffs(1) << "\n";
-      std::cout << "cHd(" << susy_scale << " GeV) = " << mHd2_coeffs(2) << "\n";
-      std::cout << "cHu(" << susy_scale << " GeV) = " << mHu2_coeffs(2) << "\n";
-      std::cout << "cS1(" << susy_scale << " GeV) = " << ms2_coeffs(2) << "\n";
-      std::cout << "dHd(" << susy_scale << " GeV) = " << mHd2_coeffs(3) << "\n";
-      std::cout << "dHu(" << susy_scale << " GeV) = " << mHu2_coeffs(3) << "\n";
-      std::cout << "dS1(" << susy_scale << " GeV) = " << ms2_coeffs(3) << "\n";
-      std::cout << "aq200(" << susy_scale << " GeV) = " << mq200_coeffs(0) << "\n";
-      std::cout << "bq200(" << susy_scale << " GeV) = " << mq200_coeffs(1) << "\n";
-      std::cout << "cq200(" << susy_scale << " GeV) = " << mq200_coeffs(2) << "\n";
-      std::cout << "dq200(" << susy_scale << " GeV) = " << mq200_coeffs(3) << "\n";
-      std::cout << "au200(" << susy_scale << " GeV) = " << mu200_coeffs(0) << "\n";
-      std::cout << "bu200(" << susy_scale << " GeV) = " << mu200_coeffs(1) << "\n";
-      std::cout << "cu200(" << susy_scale << " GeV) = " << mu200_coeffs(2) << "\n";
-      std::cout << "du200(" << susy_scale << " GeV) = " << mu200_coeffs(3) << "\n";
-      std::cout << "aLambdax(" << susy_scale << " GeV) = " 
-                << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(0), mHu2_coeffs(0)) << "\n";
-      std::cout << "bLambdax(" << susy_scale << " GeV) = " 
-                << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(1), mHu2_coeffs(1)) << "\n";
-      std::cout << "cLambdax(" << susy_scale << " GeV) = " 
-                << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(2), mHu2_coeffs(2)) << "\n";
-      std::cout << "dLambdax(" << susy_scale << " GeV) = " 
-                << get_tree_level_Lambdax_soft_term(model, mHd2_coeffs(3), mHu2_coeffs(3)) << "\n";
-      std::cout << "lLambdax(" << susy_scale << " GeV) = " << get_tree_level_Lambdax_constant_term(model) << "\n";
-      std::cout << "pM3(" << susy_scale << " GeV) = " << MassG_coeffs(0) << "\n";
-      std::cout << "qM3(" << susy_scale << " GeV) = " << MassG_coeffs(1) << "\n";
-      std::cout << "Percent error mHd2 = " << percent_error_mHd2 << "\n";
-      std::cout << "Percent error mHu2 = " << percent_error_mHu2 << "\n";
-      std::cout << "Percent error ms2 = " << percent_error_ms2 << "\n";
-      std::cout << "Percent error mq200 = " << percent_error_mq200 << "\n";
-      std::cout << "Percent error mu200 = " << percent_error_mu200 << "\n";
-      std::cout << "Percent error MassG = " << percent_error_MassG << "\n";
    }
 
    return exit_code;

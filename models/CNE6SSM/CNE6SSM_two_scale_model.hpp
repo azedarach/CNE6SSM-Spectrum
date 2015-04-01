@@ -161,6 +161,15 @@ public:
    void set_PhaseGlu(const std::complex<double>& PhaseGlu_) { PhaseGlu = PhaseGlu_; }
    const std::complex<double>& get_PhaseGlu() const { return PhaseGlu; }
 
+   // calculate coefficients in expansion of low energy parameters
+   Eigen::Array<double,2,1> get_soft_gaugino_mass_coeffs(CNE6SSM_info::Parameters, double, double) const;
+   Eigen::Array<double,4,1> get_soft_scalar_mass_coeffs(CNE6SSM_info::Parameters, double, double) const;
+   Eigen::Array<double,2,1> get_soft_trilinear_coeffs(CNE6SSM_info::Parameters, double, double) const;
+
+   double get_soft_mass_squared(const CNE6SSM_soft_parameters&, CNE6SSM_info::Parameters) const;
+   double get_soft_trilinear(const CNE6SSM_soft_parameters&, CNE6SSM_info::Parameters) const;
+   void set_pars_at_high_scale(CNE6SSM_soft_parameters &, double, double, double) const;
+
    void calculate_MVG();
    void calculate_MGlu();
    void calculate_MFv();
