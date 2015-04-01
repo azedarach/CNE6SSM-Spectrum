@@ -18,6 +18,8 @@
 #include <fstream>
 #include <chrono>
 #include <sys/time.h>
+#include <map>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
@@ -697,6 +699,38 @@ int main(int argc, const char* argv[])
    CNE6SSM_drbar_values_writer drbar_values_writer;
    bool must_write_comment_line = true;
 
+   // soft scalar masses to calculate coefficients for
+   std::vector<CNE6SSM_info::Parameters> soft_scalar_masses 
+      = {CNE6SSM_info::mHd2, CNE6SSM_info::mHu2, CNE6SSM_info::ms2,
+         CNE6SSM_info::msbar2, CNE6SSM_info::mphi2, CNE6SSM_info::mq200,
+         CNE6SSM_info::mu200};
+
+   bool is_calculating_mHd2_coeffs = false;
+   bool is_calculating_mHu2_coeffs = false;
+   bool can_calculate_Lambdax_coeffs = false;
+   for (std::size_t i = 0; i < soft_scalar_masses.size(); ++i) {
+      if (soft_scalar_masses[i] == CNE6SSM_info::mHd2) {
+         is_calculating_mHd2_coeffs = true;
+      } else if (soft_scalar_masses[i] == CNE6SSM_info::mHu2) {
+         is_calculating_mHu2_coeffs = true;
+      } 
+
+      if (is_calculating_mHd2_coeffs && is_calculating_mHu2_coeffs) {
+         can_calculate_Lambdax_coeffs = true;
+         break;
+      }
+   }
+
+   // soft gaugino masses to calculate coefficients for
+   std::vector<CNE6SSM_info::Parameters> soft_gaugino_masses
+      = {CNE6SSM_info::MassB, CNE6SSM_info::MassWB, CNE6SSM_info::MassG, 
+         CNE6SSM_info::MassBp};
+   
+   // soft trilinears to calculate coefficients for
+   std::vector<CNE6SSM_info::Parameters> soft_trilinears
+      = {CNE6SSM_info::TYu22, CNE6SSM_info::TYu00, CNE6SSM_info::TSigmax,
+         CNE6SSM_info::TLambdax};
+
    // print comment line to standard output for coefficients
    std::size_t width = 18;
    std::cout << "# "
@@ -764,45 +798,43 @@ int main(int argc, const char* argv[])
              << std::left << std::setw(width) << "vu(Q)/GeV" << ' '
              << std::left << std::setw(width) << "vs(Q)/GeV" << ' '
              << std::left << std::setw(width) << "vsb(Q)/GeV" << ' '
-             << std::left << std::setw(width) << "vphi(Q)/GeV" << ' '
-             << std::left << std::setw(width) << "aHd(Q)" << ' '
-             << std::left << std::setw(width) << "bHd(Q)" << ' '
-             << std::left << std::setw(width) << "cHd(Q)" << ' '
-             << std::left << std::setw(width) << "dHd(Q)" << ' '
-             << std::left << std::setw(width) << "mHd2(Q)" << ' '
-             << std::left << std::setw(width) << "mHd2Approx(Q)" << ' '
-             << std::left << std::setw(width) << "aHu(Q)" << ' '
-             << std::left << std::setw(width) << "bHu(Q)" << ' '
-             << std::left << std::setw(width) << "cHu(Q)" << ' '
-             << std::left << std::setw(width) << "dHu(Q)" << ' '
-             << std::left << std::setw(width) << "mHu2(Q)" << ' '
-             << std::left << std::setw(width) << "mHu2Approx(Q)" << ' '
-             << std::left << std::setw(width) << "aS(Q)" << ' '
-             << std::left << std::setw(width) << "bS(Q)" << ' '
-             << std::left << std::setw(width) << "cS(Q)" << ' '
-             << std::left << std::setw(width) << "dS(Q)" << ' '
-             << std::left << std::setw(width) << "ms2(Q)" << ' '
-             << std::left << std::setw(width) << "ms2Approx(Q)" << ' '
-             << std::left << std::setw(width) << "aSb(Q)" << ' '
-             << std::left << std::setw(width) << "bSb(Q)" << ' '
-             << std::left << std::setw(width) << "cSb(Q)" << ' '
-             << std::left << std::setw(width) << "dSb(Q)" << ' '
-             << std::left << std::setw(width) << "msbar2(Q)" << ' '
-             << std::left << std::setw(width) << "msbar2Approx(Q)" << ' '
-             << std::left << std::setw(width) << "aphi(Q)" << ' '
-             << std::left << std::setw(width) << "bphi(Q)" << ' '
-             << std::left << std::setw(width) << "cphi(Q)" << ' '
-             << std::left << std::setw(width) << "dphi(Q)" << ' '
-             << std::left << std::setw(width) << "mphi2(Q)" << ' '
-             << std::left << std::setw(width) << "mphi2Approx(Q)" << ' '
-             << std::left << std::setw(width) << "aLambdax(Q)" << ' '
-             << std::left << std::setw(width) << "bLambdax(Q)" << ' '
-             << std::left << std::setw(width) << "cLambdax(Q)" << ' '
-             << std::left << std::setw(width) << "dLambdax(Q)" << ' '
-             << std::left << std::setw(width) << "lLambdax(Q)" << ' '
-             << std::left << std::setw(width) << "Lambdax0lp(Q)" << ' '
-             << std::left << std::setw(width) << "Lambdax0lpApprox(Q)" << ' '
-             << std::left << std::setw(width) << "error" << '\n';
+             << std::left << std::setw(width) << "vphi(Q)/GeV" << ' ';
+   for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_scalar_masses.begin(),
+           end = soft_scalar_masses.end(); it != end; ++it) {
+      const std::string scalar_mass_name(CNE6SSM_info::parameter_names[*it]);
+      std::cout << std::left << std::setw(width) << "coeff:a(" + scalar_mass_name + ",Q)" << ' '
+                << std::left << std::setw(width) << "coeff:b(" + scalar_mass_name + ",Q)" << ' '
+                << std::left << std::setw(width) << "coeff:c(" + scalar_mass_name + ",Q)" << ' '
+                << std::left << std::setw(width) << "coeff:d(" + scalar_mass_name + ",Q)" << ' '
+                << std::left << std::setw(width) << scalar_mass_name + "(Q)" << ' '
+                << std::left << std::setw(width) << scalar_mass_name + "Approx(Q)" << ' ';
+   }
+   for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_gaugino_masses.begin(),
+           end = soft_gaugino_masses.end(); it != end; ++it) {
+      const std::string gaugino_mass_name(CNE6SSM_info::parameter_names[*it]);
+      std::cout << std::left << std::setw(width) << "coeff:p(" + gaugino_mass_name + ",Q)" << ' '
+                << std::left << std::setw(width) << "coeff:q(" + gaugino_mass_name + ",Q)" << ' '
+                << std::left << std::setw(width) << gaugino_mass_name + "(Q)" << ' '
+                << std::left << std::setw(width) << gaugino_mass_name + "Approx(Q)" << ' ';
+   }
+   for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_trilinears.begin(),
+           end = soft_trilinears.end(); it != end; ++it) {
+      const std::string trilinear_name(CNE6SSM_info::parameter_names[*it]);
+      std::cout << std::left << std::setw(width) << "coeff:e(" + trilinear_name + ",Q)" << ' '
+                << std::left << std::setw(width) << "coeff:f(" + trilinear_name + ",Q)" << ' '
+                << std::left << std::setw(width) << trilinear_name + "(Q)" << ' '
+                << std::left << std::setw(width) << trilinear_name + "Approx(Q)" << ' ';
+   }
+   if (can_calculate_Lambdax_coeffs) {
+      std::cout << std::left << std::setw(width) << "aLambdax(Q)" << ' '
+                << std::left << std::setw(width) << "bLambdax(Q)" << ' '
+                << std::left << std::setw(width) << "cLambdax(Q)" << ' '
+                << std::left << std::setw(width) << "dLambdax(Q)" << ' '
+                << std::left << std::setw(width) << "lLambdax(Q)" << ' '
+                << std::left << std::setw(width) << "Lambdax0lp(Q)" << ' '
+                << std::left << std::setw(width) << "Lambdax0lpApprox(Q)" << ' ';
+   }
+   std::cout << std::left << std::setw(width) << "error" << '\n';
    
    while (!scan.has_finished()) {
       set_minpar_values(parameters, scan.get_position(), input);
@@ -825,144 +857,102 @@ int main(int argc, const char* argv[])
          output_scale = parameters.get_output_scale();
       }
 
-      double aHd = 0.;
-      double bHd = 0.;
-      double cHd = 0.;
-      double dHd = 0.;
-      double aHu = 0.;
-      double bHu = 0.;
-      double cHu = 0.;
-      double dHu = 0.;
-      double aS = 0.;
-      double bS = 0.;
-      double cS = 0.;
-      double dS = 0.;
-      double aSb = 0.;
-      double bSb = 0.;
-      double cSb = 0.;
-      double dSb = 0.;
-      double aphi = 0.;
-      double bphi = 0.;
-      double cphi = 0.;
-      double dphi = 0.;
       double aLambdax = 0.;
       double bLambdax = 0.;
       double cLambdax = 0.;
       double dLambdax = 0.;
       double lLambdax = 0.;
 
+      const double coeffs_precision = 0.5;
       bool coeffs_error = false;
-
-      double m0_centre = model.get_input().m0;
-      double m12_centre = model.get_input().m12;
-      double Azero_centre = model.get_input().Azero;
-
-      double m0_width = 0.1;
-      double m12_width = 0.1;
-      double Azero_width = 0.1;
-
-      if (Abs(m0_centre) >= 1.)
-         m0_width = 0.1 * m0_centre;
-      if (Abs(m12_centre) >= 1.)
-         m12_width = 0.1 * m12_centre;
-      if (Abs(Azero_centre) >= 1.)
-         Azero_width = 0.1 * Azero_centre;
 
       double tree_level_Lambdax = 0.;
 
+      std::map<CNE6SSM_info::Parameters, std::vector<double> > soft_scalar_mass_coeffs;
+      std::map<CNE6SSM_info::Parameters, double> soft_scalar_mass_values;
+      std::map<CNE6SSM_info::Parameters, double> soft_scalar_mass_errors;
+      for (std::size_t i = 0; i < soft_scalar_masses.size(); ++i) {
+         soft_scalar_mass_coeffs[soft_scalar_masses[i]] = {0., 0., 0., 0.};
+         soft_scalar_mass_values[soft_scalar_masses[i]] = 0.;
+         soft_scalar_mass_errors[soft_scalar_masses[i]] = 0.;
+      }
+
+      std::map<CNE6SSM_info::Parameters, std::vector<double> > soft_gaugino_mass_coeffs;
+      std::map<CNE6SSM_info::Parameters, double> soft_gaugino_mass_values;
+      std::map<CNE6SSM_info::Parameters, double> soft_gaugino_mass_errors;
+      for (std::size_t i = 0; i < soft_gaugino_masses.size(); ++i) {
+         soft_gaugino_mass_coeffs[soft_gaugino_masses[i]] = {0., 0.};
+         soft_gaugino_mass_values[soft_gaugino_masses[i]] = 0.;
+         soft_gaugino_mass_errors[soft_gaugino_masses[i]] = 0.;
+      }
+
+      std::map<CNE6SSM_info::Parameters, std::vector<double> > soft_trilinear_coeffs;
+      std::map<CNE6SSM_info::Parameters, double> soft_trilinear_values;
+      std::map<CNE6SSM_info::Parameters, double> soft_trilinear_errors;
+      for (std::size_t i = 0; i < soft_trilinears.size(); ++i) {
+         soft_trilinear_coeffs[soft_trilinears[i]] = {0., 0.};
+         soft_trilinear_values[soft_trilinears[i]] = 0.;
+         soft_trilinear_errors[soft_trilinears[i]] = 0.;
+      }
+
       if (!error) {
+         // calculate coefficients and percentage errors the original way
+         for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_scalar_masses.begin(),
+                 end = soft_scalar_masses.end(); it != end; ++it) {
+            const Eigen::Array<double,4,1> coeffs = model.get_soft_scalar_mass_coeffs(*it, susy_scale, high_scale);
+            soft_scalar_mass_coeffs[*it] = {coeffs(0), coeffs(1), coeffs(2), coeffs(3)};
+            soft_scalar_mass_values[*it] = coeffs(0) * Sqr(model.get_input().m0) + coeffs(1) * Sqr(model.get_input().m12)
+               + coeffs(2) * model.get_input().m12 * model.get_input().Azero + coeffs(3) * Sqr(model.get_input().Azero);
+            soft_scalar_mass_errors[*it] = 100.0 * Abs((model.get_parameter(*it) - soft_scalar_mass_values[*it]) / 
+                                                       (0.5 * (model.get_parameter(*it) + soft_scalar_mass_values[*it])));
+            if (soft_scalar_mass_errors[*it] > coeffs_precision) coeffs_error = true; 
+         }
+         
+         for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_gaugino_masses.begin(),
+                 end = soft_gaugino_masses.end(); it != end; ++it) {
+            const Eigen::Array<double,2,1> coeffs = model.get_soft_gaugino_mass_coeffs(*it, susy_scale, high_scale);
+            soft_gaugino_mass_coeffs[*it] = {coeffs(0), coeffs(1)};
+            soft_gaugino_mass_values[*it] = coeffs(0) * model.get_input().Azero + coeffs(1) * model.get_input().m12;
+            soft_gaugino_mass_errors[*it] = 100.0 * Abs((model.get_parameter(*it) - soft_gaugino_mass_values[*it]) / 
+                                                        (0.5 * (model.get_parameter(*it) + soft_gaugino_mass_values[*it])));
+            if (soft_gaugino_mass_errors[*it] > coeffs_precision) coeffs_error = true; 
+         }
+         
+         for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_trilinears.begin(),
+                 end = soft_trilinears.end(); it != end; ++it) {
+            const Eigen::Array<double,2,1> coeffs = model.get_soft_trilinear_coeffs(*it, susy_scale, high_scale);
+            soft_trilinear_coeffs[*it] = {coeffs(0), coeffs(1)};
+            soft_trilinear_values[*it] = coeffs(0) * model.get_input().Azero + coeffs(1) * model.get_input().m12;
+            soft_trilinear_errors[*it] = 100.0 * Abs((model.get_parameter(*it) - soft_trilinear_values[*it]) /
+                                                     (0.5 * (model.get_parameter(*it) + soft_trilinear_values[*it])));
+            if (soft_trilinear_errors[*it] > coeffs_precision) coeffs_error = true; 
+         }
 
          CNE6SSM<algorithm_type> running_model(model);
 
          running_model.run_to(high_scale);
 
-         const std::size_t num_terms = 4;
+         if (can_calculate_Lambdax_coeffs) {
+            aLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][0], 
+                                                        soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][0]);
+            bLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][1],
+                                                        soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][1]);
+            cLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][2],
+                                                        soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][2]);
+            dLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][3],
+                                                        soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][3]);
+            lLambdax = get_tree_level_Lambdax_constant_term(model);
 
-         Eigen::Matrix<double, num_terms, num_terms> scalar_input_values;
-         Eigen::VectorXd mHu2_values(num_terms);
-         Eigen::VectorXd mHd2_values(num_terms);
-         Eigen::VectorXd ms2_values(num_terms);
-         Eigen::VectorXd msbar2_values(num_terms);
-         Eigen::VectorXd mphi2_values(num_terms);
+            running_model.run_to(susy_scale);
+            running_model.solve_ewsb_tree_level();
 
-         std::normal_distribution<double> m0_distribution(m0_centre, m0_width);
-         std::normal_distribution<double> m12_distribution(m12_centre, m12_width);
-         std::normal_distribution<double> Azero_distribution(Azero_centre, Azero_width);
-
-         for (std::size_t i = 0; i < num_terms; ++i) {
-            double m0_tmp = m0_distribution(generator);
-            double m12_tmp = m12_distribution(generator);
-            double Azero_tmp = Azero_distribution(generator);
-
-            scalar_input_values(i, 0) = Sqr(m0_tmp);
-            scalar_input_values(i, 1) = Sqr(m12_tmp);
-            scalar_input_values(i, 2) = m12_tmp * Azero_tmp;
-            scalar_input_values(i, 3) = Sqr(Azero_tmp);
-
-            // get soft mass values
-            mHu2_values(i) = get_soft_parameter_from_inputs(running_model, CNE6SSM_info::mHu2, m0_tmp, m12_tmp, Azero_tmp, output_scale);
-            mHd2_values(i) = get_soft_parameter_from_inputs(running_model, CNE6SSM_info::mHd2, m0_tmp, m12_tmp, Azero_tmp, output_scale);
-            ms2_values(i) = get_soft_parameter_from_inputs(running_model, CNE6SSM_info::ms2, m0_tmp, m12_tmp, Azero_tmp, output_scale);
-            msbar2_values(i) = get_soft_parameter_from_inputs(running_model, CNE6SSM_info::msbar2, m0_tmp, m12_tmp, Azero_tmp, output_scale);
-            mphi2_values(i) = get_soft_parameter_from_inputs(running_model, CNE6SSM_info::mphi2, m0_tmp, m12_tmp, Azero_tmp, output_scale);
+            if (parameters.get_output_scale() > 0.) {
+               running_model.run_to(output_scale);
+            }
+            
+            tree_level_Lambdax = running_model.get_Lambdax();
          }
 
-         // solve for the coefficients
-         Eigen::FullPivHouseholderQR<Eigen::Matrix<double, num_terms, num_terms> > scalar_input_values_decomp(scalar_input_values);
-
-         Eigen::VectorXd mHu2_coeffs = scalar_input_values_decomp.solve(mHu2_values);
-         Eigen::VectorXd mHd2_coeffs = scalar_input_values_decomp.solve(mHd2_values);
-         Eigen::VectorXd ms2_coeffs = scalar_input_values_decomp.solve(ms2_values);
-         Eigen::VectorXd msbar2_coeffs = scalar_input_values_decomp.solve(msbar2_values);
-         Eigen::VectorXd mphi2_coeffs = scalar_input_values_decomp.solve(mphi2_values);
-
-         if (!(scalar_input_values * mHu2_coeffs).isApprox(mHu2_values)
-             || !(scalar_input_values * mHd2_coeffs).isApprox(mHd2_values)
-             || !(scalar_input_values * ms2_coeffs).isApprox(ms2_values)
-             || !(scalar_input_values * msbar2_coeffs).isApprox(msbar2_values)
-             || !(scalar_input_values * mphi2_coeffs).isApprox(mphi2_values)) {
-            coeffs_error = true;
-         }
-
-         aHu = mHu2_coeffs(0);
-         bHu = mHu2_coeffs(1);
-         cHu = mHu2_coeffs(2);
-         dHu = mHu2_coeffs(3);
-
-         aHd = mHd2_coeffs(0);
-         bHd = mHd2_coeffs(1);
-         cHd = mHd2_coeffs(2);
-         dHd = mHd2_coeffs(3);
-
-         aS = ms2_coeffs(0);
-         bS = ms2_coeffs(1);
-         cS = ms2_coeffs(2);
-         dS = ms2_coeffs(3);
-
-         aSb = msbar2_coeffs(0);
-         bSb = msbar2_coeffs(1);
-         cSb = msbar2_coeffs(2);
-         dSb = msbar2_coeffs(3);
-
-         aphi = mphi2_coeffs(0);
-         bphi = mphi2_coeffs(1);
-         cphi = mphi2_coeffs(2);
-         dphi = mphi2_coeffs(3);
-
-         aLambdax = get_tree_level_Lambdax_soft_term(model, aHd, aHu);
-         bLambdax = get_tree_level_Lambdax_soft_term(model, bHd, bHu);
-         cLambdax = get_tree_level_Lambdax_soft_term(model, cHd, cHu);
-         dLambdax = get_tree_level_Lambdax_soft_term(model, dHd, dHu);
-         lLambdax = get_tree_level_Lambdax_constant_term(model);
-
-         running_model.run_to(susy_scale);
-         running_model.solve_ewsb_tree_level();
-
-         if (parameters.get_output_scale() > 0.) {
-            running_model.run_to(output_scale);
-         }
-
-         tree_level_Lambdax = running_model.get_Lambdax();
       }
 
       if (must_write_pole_masses)
@@ -1068,53 +1058,44 @@ int main(int argc, const char* argv[])
                 << std::left << std::setw(width) << model.get_vu() << ' '
                 << std::left << std::setw(width) << model.get_vs() << ' '
                 << std::left << std::setw(width) << model.get_vsb() << ' '
-                << std::left << std::setw(width) << model.get_vphi() << ' '
-                << std::left << std::setw(width) << aHd << ' '
-                << std::left << std::setw(width) << bHd << ' '
-                << std::left << std::setw(width) << cHd << ' '
-                << std::left << std::setw(width) << dHd << ' '
-                << std::left << std::setw(width) << model.get_mHd2() << ' '
-                << std::left << std::setw(width) << aHd * Sqr(m0_centre) + bHd * Sqr(m12_centre) 
-         + cHd * m12_centre * Azero_centre + dHd * Sqr(Azero_centre) << ' '
-                << std::left << std::setw(width) << aHu << ' '
-                << std::left << std::setw(width) << bHu << ' '
-                << std::left << std::setw(width) << cHu << ' '
-                << std::left << std::setw(width) << dHu << ' '
-                << std::left << std::setw(width) << model.get_mHu2() << ' '
-                << std::left << std::setw(width) << aHu * Sqr(m0_centre) + bHu * Sqr(m12_centre) 
-         + cHu * m12_centre * Azero_centre + dHu * Sqr(Azero_centre) << ' '
-                << std::left << std::setw(width) << aS << ' '
-                << std::left << std::setw(width) << bS << ' '
-                << std::left << std::setw(width) << cS << ' '
-                << std::left << std::setw(width) << dS << ' '
-                << std::left << std::setw(width) << model.get_ms2() << ' '
-                << std::left << std::setw(width) << aS * Sqr(m0_centre) + bS * Sqr(m12_centre) 
-         + cS * m12_centre * Azero_centre + dS * Sqr(Azero_centre) << ' '
-                << std::left << std::setw(width) << aSb << ' '
-                << std::left << std::setw(width) << bSb << ' '
-                << std::left << std::setw(width) << cSb << ' '
-                << std::left << std::setw(width) << dSb << ' '
-                << std::left << std::setw(width) << model.get_msbar2() << ' '
-                << std::left << std::setw(width) << aSb * Sqr(m0_centre) + bSb * Sqr(m12_centre) 
-         + cSb * m12_centre * Azero_centre + dSb * Sqr(Azero_centre) << ' '
-                << std::left << std::setw(width) << aphi << ' '
-                << std::left << std::setw(width) << bphi << ' '
-                << std::left << std::setw(width) << cphi << ' '
-                << std::left << std::setw(width) << dphi << ' '
-                << std::left << std::setw(width) << model.get_mphi2() << ' '
-                << std::left << std::setw(width) << aphi * Sqr(m0_centre) + bphi * Sqr(m12_centre) 
-         + cphi * m12_centre * Azero_centre + dphi * Sqr(Azero_centre) << ' '
-                << std::left << std::setw(width) << aLambdax << ' '
-                << std::left << std::setw(width) << bLambdax << ' '
-                << std::left << std::setw(width) << cLambdax << ' '
-                << std::left << std::setw(width) << dLambdax << ' '
-                << std::left << std::setw(width) << lLambdax << ' '
-                << std::left << std::setw(width) << tree_level_Lambdax << ' '
-                << std::left << std::setw(width) << input.SignLambdax * 
-         Sqrt(aLambdax * Sqr(m0_centre) + bLambdax * Sqr(m12_centre) 
-              + cLambdax * m12_centre * Azero_centre + dLambdax * Sqr(Azero_centre) + lLambdax) << ' '
-                << std::left << std::setw(width) << (error || coeffs_error);
-
+                << std::left << std::setw(width) << model.get_vphi() << ' ';
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_scalar_masses.begin(),
+              end = soft_scalar_masses.end(); it != end; ++it) {
+         std::cout << std::left << std::setw(width) << soft_scalar_mass_coeffs[*it][0]<< ' '
+                   << std::left << std::setw(width) << soft_scalar_mass_coeffs[*it][1]<< ' '
+                   << std::left << std::setw(width) << soft_scalar_mass_coeffs[*it][2]<< ' '
+                   << std::left << std::setw(width) << soft_scalar_mass_coeffs[*it][3]<< ' '
+                   << std::left << std::setw(width) << model.get_parameter(*it) << ' '
+                   << std::left << std::setw(width) << soft_scalar_mass_values[*it] << ' ';
+      }
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_gaugino_masses.begin(),
+              end = soft_gaugino_masses.end(); it != end; ++it) {
+         std::cout << std::left << std::setw(width) << soft_gaugino_mass_coeffs[*it][0] << ' '
+                   << std::left << std::setw(width) << soft_gaugino_mass_coeffs[*it][1] << ' '
+                   << std::left << std::setw(width) << model.get_parameter(*it) << ' '
+                   << std::left << std::setw(width) << soft_gaugino_mass_values[*it] << ' ';
+      }
+      for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_trilinears.begin(),
+              end = soft_trilinears.end(); it != end; ++it) {
+         std::cout << std::left << std::setw(width) << soft_trilinear_coeffs[*it][0] << ' '
+                   << std::left << std::setw(width) << soft_trilinear_coeffs[*it][1] << ' '
+                   << std::left << std::setw(width) << model.get_parameter(*it) << ' '
+                   << std::left << std::setw(width) << soft_trilinear_values[*it] << ' ';
+      }
+      if (can_calculate_Lambdax_coeffs) {
+         std::cout << std::left << std::setw(width) << aLambdax << ' '
+                   << std::left << std::setw(width) << bLambdax << ' '
+                   << std::left << std::setw(width) << cLambdax << ' '
+                   << std::left << std::setw(width) << dLambdax << ' '
+                   << std::left << std::setw(width) << lLambdax << ' '
+                   << std::left << std::setw(width) << tree_level_Lambdax << ' '
+                   << std::left << std::setw(width) << input.SignLambdax * 
+            Sqrt(aLambdax * Sqr(model.get_input().m0) + bLambdax * Sqr(model.get_input().m12) 
+                 + cLambdax * model.get_input().m12 * model.get_input().Azero + dLambdax * Sqr(model.get_input().Azero) 
+                 + lLambdax) << ' ';
+      }
+      std::cout << std::left << std::setw(width) << (error || coeffs_error);
+      
       if (error || coeffs_error) {
          if (error && !coeffs_error) {
             std::cout << "\t# " << problems;

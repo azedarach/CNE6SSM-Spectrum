@@ -20,7 +20,7 @@ EXTPAR = { {65, ssumInput},
 (* by any constraints, but should not be a problem.          *)
 EWSBOutputParameters = {vs, \[Lambda], vphi, \[Xi]F, L[\[Xi]F]};
 
-SUSYScale = Sqrt[M[Su[1]]*M[Su[6]]];
+SUSYScale = Sqrt[Product[M[Su[i]]^(Abs[ZU[i,3]]^2 + Abs[ZU[i,6]]^2), {i,6}]];
 
 SUSYScaleFirstGuess = Sqrt[m0^2 + 4 m12^2];
 
