@@ -168,6 +168,9 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(LIBCNE6SSM)
 		-rm -f $(RUN_CNE6SSM_EXE)
 		-rm -f $(SCAN_CNE6SSM_EXE)
+		-rm -f $(GRIDSCAN_CNE6SSM_EXE)
+		-rm -f $(GRIDSCAN_RGE_CNE6SSM_EXE)
+		-rm -f $(RGE_COEFF_CNE6SSM_EXE)
 
 distclean-$(MODNAME): clean-$(MODNAME)
 
