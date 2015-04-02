@@ -703,7 +703,7 @@ int main(int argc, const char* argv[])
    std::vector<CNE6SSM_info::Parameters> soft_scalar_masses 
       = {CNE6SSM_info::mHd2, CNE6SSM_info::mHu2, CNE6SSM_info::ms2,
          CNE6SSM_info::msbar2, CNE6SSM_info::mphi2, CNE6SSM_info::mq200,
-         CNE6SSM_info::mu200};
+         CNE6SSM_info::mu200, CNE6SSM_info::md200};
 
    bool is_calculating_mHd2_coeffs = false;
    bool is_calculating_mHu2_coeffs = false;
@@ -728,8 +728,10 @@ int main(int argc, const char* argv[])
    
    // soft trilinears to calculate coefficients for
    std::vector<CNE6SSM_info::Parameters> soft_trilinears
-      = {CNE6SSM_info::TYu22, CNE6SSM_info::TYu00, CNE6SSM_info::TSigmax,
-         CNE6SSM_info::TLambdax};
+      = {CNE6SSM_info::TYu22, CNE6SSM_info::TYu00, CNE6SSM_info::TYu11, 
+         CNE6SSM_info::TYd22, CNE6SSM_info::TYd11, CNE6SSM_info::TYd00, 
+         CNE6SSM_info::TSigmax, CNE6SSM_info::TLambdax, CNE6SSM_info::TKappa22,
+         CNE6SSM_info::TLambda1211};
 
    // print comment line to standard output for coefficients
    std::size_t width = 18;
