@@ -2,6 +2,7 @@
 
 # configure script for FlexibleSUSY
 # Author: Alexander Voigt
+# Edited: 7/4/2015 by Dylan Harries to include Multinest example
 
 PROGRAM_NAME=FlexibleSUSY
 FLEXIBLESUSY_MAJOR=1
@@ -86,6 +87,11 @@ CUSTOMBETAS_MAKEFILES="
  ${BASEDIR}/examples/customized-betas/Makefile"
 CUSTOMBETAS_MAKEFILE_TMPL="${BASEDIR}/config/Makefile.customized-betas.in"
 
+# target makefile file for the Multinest example
+MULTINEST_MAKEFILES="
+ ${BASEDIR}/multinest/Makefile"
+MULTINEST_MAKEFILE_TMPL="${BASEDIR}/config/Makefile.multinest.in"
+
 # options
 deprecated_options=""
 options="                    \
@@ -101,6 +107,12 @@ options="                    \
    enable_verbose            \
 "
 
+################################################################
+# allow linking to Multinest optionally? (then example cannot build though)
+options="${options}          \
+   enable_multinest          \
+"
+################################################################
 
 enable_compile="yes"
 enable_compiler_warnings="no"
@@ -109,6 +121,9 @@ enable_debug=""
 enable_fflite="no"
 enable_looptools="no"
 enable_meta="no"
+################################################################
+enable_multinest="no"
+################################################################
 enable_silent="no"
 enable_static_libs="yes"
 enable_threads="yes"
@@ -119,6 +134,9 @@ DEFINE_ENABLE_COLOR_PRINTOUT="#undef ENABLE_COLOR_PRINTOUT"
 DEFINE_ENABLE_DEBUG="#undef ENABLE_DEBUG"
 DEFINE_ENABLE_FFLITE="#undef ENABLE_FFLITE"
 DEFINE_ENABLE_LOOPTOOLS="#undef ENABLE_LOOPTOOLS"
+################################################################
+DEFINE_ENABLE_MULTINEST="#undef ENABLE_MULTINEST"
+################################################################
 DEFINE_ENABLE_RANDOM="#undef ENABLE_RANDOM"
 DEFINE_ENABLE_SILENT="#undef ENABLE_SILENT"
 DEFINE_ENABLE_THREADS="#define ENABLE_THREADS 1"
@@ -132,6 +150,10 @@ gsl_config="gsl-config"
 lapack_lib_dir=""
 looptools_lib_dir=""
 looptools_inc_dir=""
+################################################################
+multinest_lib_dir=""
+multinest_inc_dir=""
+################################################################
 GSLFLAGS=""
 CPPFLAGS=""
 CXXFLAGS="-std=c++11 -O2"
@@ -1568,6 +1590,63 @@ check_looptools_incl() {
     fi
 }
 
+################################################################
+
+#_____________________________________________________________________
+check_multinest_libs() {
+    # check for libmultinest first
+    check_library "libmultinest" "$multinest_lib_dir" \
+	"$default_lib_paths"
+    if test "x$found_lib" = "x" ; then
+	# try looking for libnest3
+	check_library "libnest3" "$multinest_lib_dir" \
+	    "$default_lib_paths"
+	if test "x$found_lib" = "x" ; then
+            message "Error: libmultinest or libnest3 must be installed if you want"
+            message "   to use MultiNest, see http://ccpforge.cse.rl.ac.uk/gf/project/multinest/"
+            message "   You can use the --with-multinest-libdir= option to specify the"
+            message "   location of the libmultinest or libnest3 library."
+            exit 1
+	else 
+	    local NESTLIBS_="-lnest3"
+	    if [ -z "$multinest_lib_dir" ]; then
+		# assume that the linker will look in the default paths
+		MULTINESTLIBS="$NESTLIBS_"
+	    else 
+		MULTINESTLIBS="-L$multinest_lib_dir $NESTLIBS_"
+	    fi
+	fi
+    else
+        local MULTINESTLIBS_="-lmultinest"
+        if [ -z "$multinest_lib_dir" ]; then
+            # assume that the linker will look in the default paths
+            MULTINESTLIBS="$MULTINESTLIBS_"
+        else
+            MULTINESTLIBS="-L$multinest_lib_dir $MULTINESTLIBS_"
+        fi
+    fi
+}
+
+#_____________________________________________________________________
+check_multinest_incl() {
+    check_header "multinest.h" "$multinest_inc_dir" \
+	"$default_inc_paths"
+    if test "x$found_hdr" = "x" ; then
+	message "Error: multinest.h must be installed if you want"
+	message "   to use MultiNest, see http://ccpforge.cse.rl.ac.uk/gf/project/multinest/"
+	message "   You can use the --with-multinest-incdir= option to specify the"
+	message "   location of the multinest.h header."
+	exit 1
+    else 
+	# assume that the compiler will look in the default paths
+	if [ -n "$multinest_inc_dir" ]; then
+	    MULTINESTFLAGS="-I$multinest_inc_dir"
+	fi
+    fi
+}
+
+################################################################
+
 #_____________________________________________________________________
 find_symbol_using_pkgconfig() {
     local symbol
@@ -1809,6 +1888,15 @@ enable_defines() {
         logmsg "   ${DEFINE_ENABLE_LOOPTOOLS}"
     fi
 
+    if test "x$enable_multinest" = "xyes" ; then
+	DEFINE_ENABLE_MULTINEST="#define ENABLE_MULTINEST 1"
+	message "Enabling usage of MultiNest"
+    else 
+	DEFINE_ENABLE_MULTINEST="#undef ENABLE_MULTINEST"
+	logmsg "Disabling usage of MultiNest"
+    fi
+    logmsg "   ${DEFINE_ENABLE_MULTINEST}"
+
     if test "x$enable_silent" = "xyes" ; then
         DEFINE_ENABLE_SILENT="#define ENABLE_SILENT 1"
         CPPFLAGS="$CPPFLAGS"
@@ -1870,6 +1958,7 @@ enable/disable options, prefix with either --enable- or --disable-
   debug             Debug messages and assertions (no default)
   fflite            Use fflite to compute the loop functions (default: $enable_fflite)
   looptools         Use LoopTools to compute the loop functions (default: $enable_looptools)
+  multinest         Enable linking to MultiNest
 EOF
 cat <<EOF
   silent            Suppress all command line output (default: $enable_silent)
@@ -1903,6 +1992,10 @@ cat <<EOF
   --with-models=            Comma separated list of models to be build
                             (default: $MODELS)
                             possible values: all <model1>,<model2>,...
+EOF
+cat <<EOF
+  --with-multinest-libdir=  Path to search for MultiNest libraries
+  --with-multinest-incdir=  Path to search for MultiNest headers
 EOF
 }
 
@@ -1990,6 +2083,8 @@ if test $# -gt 0 ; then
             --with-make-lib-cmd=*)   MAKELIB=$optarg ;;
             --with-math-cmd=*)       MATH=$optarg ;;
             --with-models=*)         MODELS=$optarg ;;
+	    --with-multinest-libdir=*) multinest_lib_dir=$optarg ;;
+	    --with-multinest-incdir=*) multinest_inc_dir=$optarg ;;
             --help|-h)               help; exit 0 ;;
             --version|-v)            version; exit 0 ;;
             *)  echo "Invalid option '$1'. Try $0 --help" ; exit 1 ;;
@@ -2046,6 +2141,13 @@ if test "x${enable_meta}" = "xyes"; then
     check_sarah
 fi
 
+################################################################
+if test "x${enable_multinest}" = "xyes"; then
+    check_multinest_incl
+    check_multinest_libs
+fi
+################################################################
+
 check_models
 
 enable_defines
@@ -2092,6 +2194,56 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@LIBEXT@|$LIBEXT|"           \
     < $MAKEFILE_TMPL > $MAKEFILE
 
+################################################################
+# for this project only write out the Makefile for MultiNest
+# if MultiNest is explicitly enabled
+if test "x${enable_multinest}" = "xyes"; then
+    sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
+	-e "s|@FLEXIBLESUSY_MAJOR@|$FLEXIBLESUSY_MAJOR|" \
+	-e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
+	-e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
+	-e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
+	-e "s|@PKGNAME@|$PROGRAM_NAME|"    \
+	-e "s|@ABSBASEDIR@|$ABSBASEDIR|"   \
+	-e "s|@INSTALL_DIR@|$INSTALL_DIR|" \
+	-e "s|@ALGORITHMS@|$ALGORITHMS|"   \
+	-e "s|@BOOSTTESTLIBS@|$BOOSTTESTLIBS|"     \
+	-e "s|@BOOSTTHREADLIBS@|$BOOSTTHREADLIBS|"     \
+	-e "s|@BOOSTFLAGS@|$BOOSTFLAGS|"   \
+	-e "s|@THREADLIBS@|$THREADLIBS|"   \
+	-e "s|@CPPFLAGS@|$CPPFLAGS|"       \
+	-e "s|@CXXFLAGS@|$CXXFLAGS|"       \
+	-e "s|@CXXFLAGS_DEP_GEN@|$CXXFLAGS_DEP_GEN|"   \
+	-e "s|@CXX@|$CXX|"                 \
+	-e "s|@CXX_DEP_GEN@|$CXX_DEP_GEN|" \
+	-e "s|@FC@|$FC|"                   \
+	-e "s|@FFLAGS@|$FFLAGS|"           \
+	-e "s|@FLIBS@|$FLIBS|"             \
+	-e "s|@FOR_DEP_GEN@|$FOR_DEP_GEN|" \
+	-e "s|@FSCONFIG@|$FSCONFIG|"       \
+	-e "s|@EIGENFLAGS@|$EIGENFLAGS|"   \
+	-e "s|@GSLLIBS@|$GSLLIBS|"         \
+	-e "s|@GSLFLAGS@|$GSLFLAGS|"       \
+	-e "s|@LAPACKLIBS@|$LAPACKLIBS|"   \
+	-e "s|@SARAH_DEP_GEN@|$SARAH_DEP_GEN|"   \
+	-e "s|@ENABLE_COMPILE@|$enable_compile|" \
+	-e "s|@ENABLE_FFLITE@|$enable_fflite|" \
+	-e "s|@ENABLE_LOOPTOOLS@|$enable_looptools|" \
+	-e "s|@ENABLE_MULTINEST@|$enable_multinest|" \
+	-e "s|@ENABLE_META@|$enable_meta|" \
+	-e "s|@ENABLE_THREADS@|$enable_threads|"  \
+	-e "s|@LOOPTOOLSLIBS@|$LOOPTOOLSLIBS|"    \
+	-e "s|@LOOPTOOLSFLAGS@|$LOOPTOOLSFLAGS|"  \
+	-e "s|@MULTINESTLIBS@|$MULTINESTLIBS|"    \
+	-e "s|@MULTINESTFLAGS@|$MULTINESTFLAGS|"  \
+	-e "s|@MODELS@|$MODELS|"           \
+	-e "s|@MAKELIB@|$MAKELIB|"         \
+	-e "s|@ENABLE_STATIC_LIBS@|$enable_static_libs|" \
+	-e "s|@MATH@|$MATH|"               \
+	-e "s|@LIBEXT@|$LIBEXT|"           \
+	< $MULTINEST_MAKEFILE_TMPL | tee $MULTINEST_MAKEFILES > /dev/null 
+fi
+################################################################
 
 sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@FLEXIBLESUSY_MAJOR@|$FLEXIBLESUSY_MAJOR|" \

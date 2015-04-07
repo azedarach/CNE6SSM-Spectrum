@@ -51,7 +51,7 @@ public:
    const std::string& get_drbar_mixings_output_file() const { return drbar_mixings_output_file; }
    const std::string& get_program_name() const { return program; }
 
-   std::string get_option_value(const std::string&, const std::string&);
+   static std::string get_option_value(const std::string&, const std::string&);
    static bool get_parameter_value(const std::string&, const std::string&, double&);
    static bool get_parameter_value(const std::string&, const std::string&, int&);
    static bool starts_with(const std::string&, const std::string&);
