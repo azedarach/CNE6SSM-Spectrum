@@ -754,7 +754,7 @@ check_modules() {
     for a in ${modules}; do
         case "$a" in
             all)
-                MODULES=`find ${ABSBASEDIR}/ne6ssm/* -maxdepth 0 -type d -print0 | tr '\0' ' ' | sed -e 's|^\./||' -e 's| \./| |g' -e 's| *$||g'`
+                MODULES=`find ${BASEDIR}/ne6ssm/* -maxdepth 0 -type d -print0 | tr '\0' ' ' | sed -e 's|^\./||' -e 's| \./| |g' -e 's| *$||g'`
                 break ;;
             *)
                 if test -d "${ABSBASEDIR}/ne6ssm/$a" ; then
