@@ -277,7 +277,7 @@ int main(int argc, char* argv[])
    options.do_mode_separation = false;
    options.use_const_efficiency = false;
    options.num_live_points = 1000;
-   options.efficiency = 0.8;
+   options.efficiency = 0.5;
    options.tolerance = 0.5;
    options.num_iters_per_update = 1000;
    options.min_log_evidence = -1.0e90;
