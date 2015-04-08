@@ -16,6 +16,8 @@ config.boost
 config.math
 config.sarah
 flexiblesusy-config
+multinest/chains/
+multinest/Makefile
 ne6ssm_python/ne6ssm-config
 ne6ssm_python/config/config.h
 ne6ssm_python/config.log
