@@ -53,7 +53,6 @@ void get_command_line_arguments(int argc, char* argv[], std::string& base_name)
 
 void set_default_parameter_values(CNE6SSM_input_parameters& input)
 {   
-   input.ssumInput = 40000.0; // GeV
    input.QS = 5.;
    
    input.hEInput(0,0) = 0.;
@@ -122,6 +121,8 @@ void transform_hypercube_to_priors(double *cube, int num_dims, int num_params, v
    const double SignLambdax_upper = 1.;
    const double Azero_lower = -15000.;
    const double Azero_upper = 15000.;
+   const double ssumInput_lower = 20000.0;
+   const double ssumInput_upper = 50000.0;
    const double Kappa_lower = -3.0;
    const double Kappa_upper = 3.0;
    const double Lambda12_lower = -3.0;
@@ -132,8 +133,9 @@ void transform_hypercube_to_priors(double *cube, int num_dims, int num_params, v
    cube[2] = TanBeta_lower + cube[2] * (TanBeta_upper - TanBeta_lower);
    cube[3] = SignLambdax_lower + cube[3] * (SignLambdax_upper - SignLambdax_lower);
    cube[4] = Azero_lower + cube[4] * (Azero_upper - Azero_lower);
-   cube[5] = Kappa_lower + cube[5] * (Kappa_upper - Kappa_lower);
-   cube[6] = Lambda12_lower + cube[6] * (Lambda12_upper - Lambda12_lower);
+   cube[5] = ssumInput_lower + cube[5] * (ssumInput_upper -ssumInput_lower);
+   cube[6] = Kappa_lower + cube[6] * (Kappa_upper - Kappa_lower);
+   cube[7] = Lambda12_lower + cube[7] * (Lambda12_upper - Lambda12_lower);
 }
 
 // Calculate the log likelihood using the physical parameters found in the first
@@ -147,11 +149,12 @@ double calculate_log_likelihood(double *cube, int &num_dims, int &num_params, vo
    input.TanBeta = cube[2];
    input.SignLambdax = Sign(cube[3]);
    input.Azero = cube[4];
-   input.KappaInput(0,0) = cube[5];
-   input.KappaInput(1,1) = cube[5];
-   input.KappaInput(2,2) = cube[5];
-   input.Lambda12Input(0,0) = cube[6];
-   input.Lambda12Input(1,1) = cube[6];
+   input.ssumInput = cube[5];
+   input.KappaInput(0,0) = cube[6];
+   input.KappaInput(1,1) = cube[6];
+   input.KappaInput(2,2) = cube[6];
+   input.Lambda12Input(0,0) = cube[7];
+   input.Lambda12Input(1,1) = cube[7];
 
    QedQcd oneset;
    oneset.toMz();
@@ -177,20 +180,20 @@ double calculate_log_likelihood(double *cube, int &num_dims, int &num_params, vo
    const double inverse_width = 0.5; // (standard deviation)^{-1}
 
    if (problems.have_serious_problem()) {
-      cube[7] = 0.;
       cube[8] = 0.;
-      cube[9] = 1.0e3;
-      cube[10] = 0.;
+      cube[9] = 0.;
+      cube[10] = 1.0e3;
+      cube[11] = 0.;
 
       return flag_log_likelihood;
    } else {
       const CNE6SSM_physical& pole_masses = model.get_physical();
 
       // output ratio and masses, and Higgs mass
-      cube[7] = pole_masses.MSu(5);
-      cube[8] = pole_masses.MGlu;
-      cube[9] = pole_masses.MSu(5) / pole_masses.MGlu;
-      cube[10] = pole_masses.Mhh(0);
+      cube[8] = pole_masses.MSu(5);
+      cube[9] = pole_masses.MGlu;
+      cube[10] = pole_masses.MSu(5) / pole_masses.MGlu;
+      cube[11] = pole_masses.Mhh(0);
 
       // use MSu(5) as an upper bound on the ratio
       return -Sqr(inverse_width * pole_masses.MSu(5) / pole_masses.MGlu);
@@ -264,7 +267,7 @@ int main(int argc, char* argv[])
 
    // number of parameters of interest in the problem,
    // specifying which have periodic boundary conditions
-   const int num_free_params = 7;
+   const int num_free_params = 8;
    const int num_derived_params = 4;
    const int num_mode_sep_params = num_free_params;
    
