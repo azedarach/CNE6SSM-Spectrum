@@ -92,6 +92,13 @@ double get_tree_level_Lambdax_soft_term(CNE6SSM<Two_scale> model, double mHd2_co
    return coeff;
 }
 
+double get_tree_level_MuSq_soft_term(CNE6SSM<Two_scale> model, double mHd2_coeff, double mHu2_coeff)
+{
+   const auto vs = model.get_vs();
+
+   return 0.5 * Sqr(vs) * get_tree_level_Lambdax_soft_term(model, mHd2_coeff, mHu2_coeff);
+}
+
 double get_tree_level_Lambdax_constant_term(CNE6SSM<Two_scale> model)
 {
    const auto g1 = model.get_g1();
@@ -108,6 +115,13 @@ double get_tree_level_Lambdax_constant_term(CNE6SSM<Two_scale> model)
       (-3.0 * Sqr(vd) - 2.0 * Sqr(vu) + QS * (Sqr(vs) - Sqr(vsb))) / (Sqr(vs) * (Sqr(vu) - Sqr(vd)));
 
    return coeff;
+}
+
+double get_tree_level_MuSq_constant_term(CNE6SSM<Two_scale> model)
+{
+   const auto vs = model.get_vs();
+
+   return 0.5 * Sqr(vs) * get_tree_level_Lambdax_constant_term(model);
 }
 
 int main(int argc, const char * argv[])
@@ -214,6 +228,35 @@ int main(int argc, const char * argv[])
          = {CNE6SSM_info::TYu22, CNE6SSM_info::TYu00, CNE6SSM_info::TSigmax,
             CNE6SSM_info::TLambdax};
 
+      double aLambdax = 0.;
+      double bLambdax = 0.;
+      double cLambdax = 0.;
+      double dLambdax = 0.;
+      double lLambdax = 0.;
+      double tree_level_Lambdax = 0.;
+
+      double aMu2 = 0.;
+      double bMu2 = 0.;
+      double cMu2 = 0.;
+      double dMu2 = 0.;
+      double lMu2 = 0.;
+
+      bool is_calculating_mHd2_coeffs = false;
+      bool is_calculating_mHu2_coeffs = false;
+      bool can_calculate_Lambdax_coeffs = false;
+      for (std::size_t i = 0; i < soft_scalar_masses.size(); ++i) {
+         if (soft_scalar_masses[i] == CNE6SSM_info::mHd2) {
+            is_calculating_mHd2_coeffs = true;
+         } else if (soft_scalar_masses[i] == CNE6SSM_info::mHu2) {
+            is_calculating_mHu2_coeffs = true;
+         } 
+         
+         if (is_calculating_mHd2_coeffs && is_calculating_mHu2_coeffs) {
+            can_calculate_Lambdax_coeffs = true;
+            break;
+         }
+      }
+
       // get high scale
       double high_scale = spectrum_generator.get_high_scale();
 
@@ -256,6 +299,36 @@ int main(int argc, const char * argv[])
                                                  (0.5 * (model.get_parameter(*it) + pred_value)));
       }
 
+      CNE6SSM<algorithm_type> running_model(model);
+      
+      running_model.run_to(high_scale);
+      
+      if (can_calculate_Lambdax_coeffs) {
+         aLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][0], 
+                                                     soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][0]);
+         bLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][1],
+                                                     soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][1]);
+         cLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][2],
+                                                     soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][2]);
+         dLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][3],
+                                                     soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][3]);
+         lLambdax = get_tree_level_Lambdax_constant_term(model);
+         
+         running_model.run_to(susy_scale);
+         running_model.solve_ewsb_tree_level();
+         tree_level_Lambdax = running_model.get_Lambdax();
+
+         aMu2 = get_tree_level_MuSq_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][0], 
+                                              soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][0]);
+         bMu2 = get_tree_level_MuSq_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][1],
+                                              soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][1]);
+         cMu2 = get_tree_level_MuSq_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][2],
+                                              soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][2]);
+         dMu2 = get_tree_level_MuSq_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][3],
+                                              soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][3]);
+         lMu2 = get_tree_level_MuSq_constant_term(model);
+      }
+      
       // print results
       std::cout << "Coefficients for requested parameters:\n";
       for (std::vector<CNE6SSM_info::Parameters>::const_iterator it = soft_scalar_masses.begin(),
@@ -288,6 +361,28 @@ int main(int argc, const char * argv[])
                    << ", " << susy_scale << " GeV) = " << soft_trilinear_coeffs[*it][1] << "\n";
          std::cout << "% error = " << soft_trilinear_errors[*it] << "\n";
       }
+
+      if (can_calculate_Lambdax_coeffs) {
+         std::cout << "a(Lambdax^2, " << susy_scale << " GeV) = " << aLambdax << "\n";
+         std::cout << "b(Lambdax^2, " << susy_scale << " GeV) = " << bLambdax << "\n";
+         std::cout << "c(Lambdax^2, " << susy_scale << " GeV) = " << cLambdax << "\n";
+         std::cout << "d(Lambdax^2, " << susy_scale << " GeV) = " << dLambdax << "\n";
+         std::cout << "l(Lambdax^2, " << susy_scale << " GeV) = " << lLambdax << "\n";
+         std::cout << "a(Mueff^2, " << susy_scale << " GeV) = " << aMu2 << "\n";
+         std::cout << "b(Mueff^2, " << susy_scale << " GeV) = " << bMu2 << "\n";
+         std::cout << "c(Mueff^2, " << susy_scale << " GeV) = " << cMu2 << "\n";
+         std::cout << "d(Mueff^2, " << susy_scale << " GeV) = " << dMu2 << "\n";
+         std::cout << "l(Mueff^2, " << susy_scale << " GeV) = " << lMu2 << "\n";
+         std::cout << "Lambdax 0lp = " << tree_level_Lambdax << "\n";
+         std::cout << "Coeffs sum = " << input.SignLambdax * 
+            Sqrt(aLambdax * Sqr(model.get_input().m0) + bLambdax * Sqr(model.get_input().m12) 
+                 + cLambdax * model.get_input().m12 * model.get_input().Azero + dLambdax * Sqr(model.get_input().Azero) 
+                 + lLambdax) << "\n";
+      }
+      Eigen::Matrix<std::complex<double>,8,8> ZN = model.get_ZN();
+      std::cout << "Higgsino = " << Sqr(std::real(ZN(2,0))) + Sqr(std::imag(ZN(2,0))) + Sqr(std::real(ZN(3,0)))
+         + Sqr(std::imag(ZN(3,0))) << "\n";
+      std::cout << "Bino = " << Sqr(std::real(ZN(0,0))) + Sqr(std::imag(ZN(0,0))) << "\n";
 
    }
 
