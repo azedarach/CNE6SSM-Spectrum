@@ -24,20 +24,51 @@ void print_usage()
    std::cout << 
       "Usage: multinest.x [options]\n"
       "Options:\n"
+      "  --num-live-points=<nlive>         number of live points to use\n"
       "  --root-file-name=<name>           base file name for output\n"
+      "  --target-efficiency=<efr>         target sampling efficiency\n"
+      "  --tolerance=<tol>                 tolerance to use\n"
       "  --help,-h                         print this help message"
              << std::endl;
 }
 
-void get_command_line_arguments(int argc, char* argv[], std::string& base_name)
+void get_command_line_arguments(int argc, char* argv[], int& nlive, std::string& base_name,
+                                double& efr, double& tol)
 {
    for (int i = 1; i < argc; ++i) {
       const std::string option(argv[i]);
+
+      if (Command_line_options::starts_with(option,"--num-live-points=")) {
+         Command_line_options::get_parameter_value(option, "--num-live-points=", nlive);
+         if (nlive <= 0) {
+            WARNING("invalid number of points, using default");
+            nlive = 1000;
+         }
+         continue;
+      }
 
       if (Command_line_options::starts_with(option,"--root-file-name=")) {
          base_name = Command_line_options::get_option_value(option, "=");
          if (base_name.empty())
             WARNING("no root file name given");
+         continue;
+      }
+
+      if (Command_line_options::starts_with(option,"--target-efficiency=")) {
+         Command_line_options::get_parameter_value(option, "--target-efficiency=", efr);
+         if (efr <= 0) {
+            WARNING("invalid target efficiency, using default");
+            efr = 0.8;
+         }
+         continue;
+      }
+
+      if (Command_line_options::starts_with(option,"--tolerance=")) {
+         Command_line_options::get_parameter_value(option, "--tolerance=", tol);
+         if (tol <= 0) {
+            WARNING("invalid tolerance, using default");
+            tol = 0.5;
+         }
          continue;
       }
 
@@ -256,7 +287,10 @@ void run_multinest(int num_free_params, int num_derived_params, int num_mode_sep
 int main(int argc, char* argv[])
 {
    std::string base_name;
-   get_command_line_arguments(argc, argv, base_name);
+   int nlive = 1000;
+   double efr = 0.8;
+   double tol = 0.5;
+   get_command_line_arguments(argc, argv, nlive, base_name, efr, tol);
 
    if (base_name.empty()) {
       WARNING("No root file name given!\n"
@@ -279,9 +313,9 @@ int main(int argc, char* argv[])
    options.do_nested_importance_samp = true;
    options.do_mode_separation = false;
    options.use_const_efficiency = false;
-   options.num_live_points = 1000;
-   options.efficiency = 0.5;
-   options.tolerance = 0.5;
+   options.num_live_points = nlive;
+   options.efficiency = efr;
+   options.tolerance = tol;
    options.num_iters_per_update = 1000;
    options.min_log_evidence = -1.0e90;
    options.expected_max_num_modes = 100;
@@ -292,7 +326,7 @@ int main(int argc, char* argv[])
    options.multinest_init_mpi = true;
    options.min_log_likelihood = -1.0e90;
    options.max_num_iters = 0;
-   
+
    run_multinest(num_free_params, num_derived_params, num_mode_sep_params,
                  periodic_bcs, options, base_name);
 
