@@ -95,7 +95,7 @@ void set_default_parameter_values(CNE6SSM_input_parameters& input)
    
    input.SigmaLInput = 3.0e-1;
    input.KappaPrInput = 2.0e-2;
-   input.SigmaxInput = 1.0e-1;
+   input.SigmaxInput = 1.0e-2;
    
    input.gDInput(0,0) = 0.;
    input.gDInput(0,1) = 0.;
@@ -107,6 +107,17 @@ void set_default_parameter_values(CNE6SSM_input_parameters& input)
    input.gDInput(2,1) = 0.;
    input.gDInput(2,2) = 0.;
    
+   // note
+   input.TanBeta = 10.0;
+   input.ssumInput = 40000.0;
+
+   input.KappaInput(0,0) = 0.2;
+   input.KappaInput(1,1) = 0.2;
+   input.KappaInput(2,2) = 0.2;
+
+   input.Lambda12Input(0,0) = 0.5;
+   input.Lambda12Input(1,1) = 0.5;
+
    input.KappaInput(0,1) = 0.;
    input.KappaInput(0,2) = 0.;
    input.KappaInput(1,0) = 0.;
@@ -143,30 +154,30 @@ void set_default_parameter_values(CNE6SSM_input_parameters& input)
 void transform_hypercube_to_priors(double *cube, int num_dims, int num_params, void *parameters)
 {
    const double m0_lower = 0.;
-   const double m0_upper = 5000.;
-   const double m12_lower = 0.;
-   const double m12_upper = 5000.;
-   const double TanBeta_lower = 5.;
-   const double TanBeta_upper = 40.;
+   const double m0_upper = 20000.0; //5000.;
+   const double m12_lower = 1500.0;
+   const double m12_upper = 20000.0; //5000.;
+   //const double TanBeta_lower = 5.;
+   //const double TanBeta_upper = 40.;
    const double SignLambdax_lower = -1.;
    const double SignLambdax_upper = 1.;
-   const double Azero_lower = -15000.;
-   const double Azero_upper = 15000.;
-   const double ssumInput_lower = 20000.0;
-   const double ssumInput_upper = 50000.0;
-   const double Kappa_lower = -3.0;
-   const double Kappa_upper = 3.0;
-   const double Lambda12_lower = -3.0;
-   const double Lambda12_upper = 3.0;
+   const double Azero_lower = -20000.0; //-15000.;
+   const double Azero_upper = 20000.0; //15000.;
+   //const double ssumInput_lower = 20000.0;
+   //const double ssumInput_upper = 50000.0;
+   //const double Kappa_lower = -3.0;
+   //const double Kappa_upper = 3.0;
+   //const double Lambda12_lower = -3.0;
+   //const double Lambda12_upper = 3.0;
    
    cube[0] = m0_lower + cube[0] * (m0_upper - m0_lower);
    cube[1] = m12_lower + cube[1] * (m12_upper - m12_lower);
-   cube[2] = TanBeta_lower + cube[2] * (TanBeta_upper - TanBeta_lower);
-   cube[3] = SignLambdax_lower + cube[3] * (SignLambdax_upper - SignLambdax_lower);
-   cube[4] = Azero_lower + cube[4] * (Azero_upper - Azero_lower);
-   cube[5] = ssumInput_lower + cube[5] * (ssumInput_upper -ssumInput_lower);
-   cube[6] = Kappa_lower + cube[6] * (Kappa_upper - Kappa_lower);
-   cube[7] = Lambda12_lower + cube[7] * (Lambda12_upper - Lambda12_lower);
+   //cube[2] = TanBeta_lower + cube[2] * (TanBeta_upper - TanBeta_lower);
+   cube[2] = SignLambdax_lower + cube[2] * (SignLambdax_upper - SignLambdax_lower);
+   cube[3] = Azero_lower + cube[3] * (Azero_upper - Azero_lower);
+   //cube[5] = ssumInput_lower + cube[5] * (ssumInput_upper -ssumInput_lower);
+   //cube[6] = Kappa_lower + cube[6] * (Kappa_upper - Kappa_lower);
+   //cube[7] = Lambda12_lower + cube[7] * (Lambda12_upper - Lambda12_lower);
 }
 
 // Calculate the log likelihood using the physical parameters found in the first
@@ -177,15 +188,15 @@ double calculate_log_likelihood(double *cube, int &num_dims, int &num_params, vo
    set_default_parameter_values(input);
    input.m0 = cube[0];
    input.m12 = cube[1];
-   input.TanBeta = cube[2];
-   input.SignLambdax = Sign(cube[3]);
-   input.Azero = cube[4];
-   input.ssumInput = cube[5];
-   input.KappaInput(0,0) = cube[6];
-   input.KappaInput(1,1) = cube[6];
-   input.KappaInput(2,2) = cube[6];
-   input.Lambda12Input(0,0) = cube[7];
-   input.Lambda12Input(1,1) = cube[7];
+   //input.TanBeta = cube[2];
+   input.SignLambdax = Sign(cube[2]);
+   input.Azero = cube[3];
+   //input.ssumInput = cube[5];
+   //input.KappaInput(0,0) = cube[6];
+   //input.KappaInput(1,1) = cube[6];
+   //input.KappaInput(2,2) = cube[6];
+   //input.Lambda12Input(0,0) = cube[7];
+   //input.Lambda12Input(1,1) = cube[7];
 
    QedQcd oneset;
    oneset.toMz();
@@ -211,23 +222,26 @@ double calculate_log_likelihood(double *cube, int &num_dims, int &num_params, vo
    const double inverse_width = 0.5; // (standard deviation)^{-1}
 
    if (problems.have_serious_problem()) {
-      cube[8] = 0.;
-      cube[9] = 0.;
-      cube[10] = 1.0e3;
-      cube[11] = 0.;
+      cube[4] = 0.;
+      //cube[8] = 0.;
+      //cube[9] = 0.;
+      //cube[10] = 1.0e3;
+      //cube[11] = 0.;
 
       return flag_log_likelihood;
    } else {
       const CNE6SSM_physical& pole_masses = model.get_physical();
 
       // output ratio and masses, and Higgs mass
-      cube[8] = pole_masses.MSu(5);
-      cube[9] = pole_masses.MGlu;
-      cube[10] = pole_masses.MSu(5) / pole_masses.MGlu;
-      cube[11] = pole_masses.Mhh(0);
+      cube[4] = model.get_Lambdax();
+      //cube[8] = pole_masses.MSu(5);
+      //cube[9] = pole_masses.MGlu;
+      //cube[10] = pole_masses.MSu(5) / pole_masses.MGlu;
+      //cube[11] = pole_masses.Mhh(0);
 
       // use MSu(5) as an upper bound on the ratio
-      return -Sqr(inverse_width * pole_masses.MSu(5) / pole_masses.MGlu);
+      //return -Sqr(inverse_width * pole_masses.MSu(5) / pole_masses.MGlu);
+      return -Sqr(model.get_Lambdax());
    }
 }
 
@@ -301,8 +315,8 @@ int main(int argc, char* argv[])
 
    // number of parameters of interest in the problem,
    // specifying which have periodic boundary conditions
-   const int num_free_params = 8;
-   const int num_derived_params = 4;
+   const int num_free_params = 4; //8;
+   const int num_derived_params = 1; //4;
    const int num_mode_sep_params = num_free_params;
    
    int periodic_bcs[num_free_params];

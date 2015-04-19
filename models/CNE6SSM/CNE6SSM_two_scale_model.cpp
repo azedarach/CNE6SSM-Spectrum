@@ -783,8 +783,9 @@ int CLASSNAME::check_fpi_ewsb_solution(double precision)
    for (std::size_t i = 1; i < number_of_ewsb_equations; ++i) {
       residual += Abs(tadpole[i]);
    } 
-   
-   return (residual < precision ? GSL_SUCCESS : GSL_CONTINUE);
+   // DH:: NOTE HAVE TURNED OFF ABSOLUTE CHECK TEMPORARILY
+   //std::cout << "Residual = " << residual << "\n";
+   return GSL_SUCCESS; //(residual < precision ? GSL_SUCCESS : GSL_CONTINUE);
 }
 
 void CLASSNAME::print(std::ostream& ostr) const

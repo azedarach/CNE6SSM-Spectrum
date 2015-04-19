@@ -302,7 +302,7 @@ int main(int argc, const char * argv[])
       CNE6SSM<algorithm_type> running_model(model);
       
       running_model.run_to(high_scale);
-      
+
       if (can_calculate_Lambdax_coeffs) {
          aLambdax = get_tree_level_Lambdax_soft_term(model, soft_scalar_mass_coeffs[CNE6SSM_info::mHd2][0], 
                                                      soft_scalar_mass_coeffs[CNE6SSM_info::mHu2][0]);
