@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:53:35
+// File generated at Sun 19 Apr 2015 20:31:40
 
 #include "CNE6SSM_two_scale_initial_guesser.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -30,14 +30,13 @@
 
 namespace flexiblesusy {
 
-#define INPUTPARAMETER(p) input_pars.p
+#define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
 #define SM(p) Electroweak_constants::p
 #define MODEL model
 
 CNE6SSM_initial_guesser<Two_scale>::CNE6SSM_initial_guesser(
    CNE6SSM<Two_scale>* model_,
-   const CNE6SSM_input_parameters& input_pars_,
    const QedQcd& oneset_,
    const CNE6SSM_low_scale_constraint<Two_scale>& low_constraint_,
    const CNE6SSM_susy_scale_constraint<Two_scale>& susy_constraint_,
@@ -45,7 +44,6 @@ CNE6SSM_initial_guesser<Two_scale>::CNE6SSM_initial_guesser(
 )
    : Initial_guesser<Two_scale>()
    , model(model_)
-   , input_pars(input_pars_)
    , oneset(oneset_)
    , mu_guess(0.)
    , mc_guess(0.)
@@ -97,6 +95,7 @@ void CNE6SSM_initial_guesser<Two_scale>::guess()
    calculate_Ye_DRbar();
    MODEL->set_XiF(Power(SM(MZ),3));
    MODEL->set_LXiF(Power(SM(MZ),3));
+   MODEL->set_Lambdax(0.05);
    MODEL->set_vs(0.7071067811865475*ssumInput);
    MODEL->set_vsb(0.7071067811865475*ssumInput);
    MODEL->set_vphi(ssumInput);
@@ -132,6 +131,7 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    // apply user-defined initial guess at the low scale
    const auto TanBeta = INPUTPARAMETER(TanBeta);
    const auto ssumInput = INPUTPARAMETER(ssumInput);
+   const auto SignLambdax = INPUTPARAMETER(SignLambdax);
 
    MODEL->set_vd(SM(vev)/Sqrt(1 + Sqr(TanBeta)));
    MODEL->set_vu((TanBeta*SM(vev))/Sqrt(1 + Sqr(TanBeta)));
@@ -140,10 +140,10 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    calculate_Ye_DRbar();
    MODEL->set_XiF(Power(SM(MZ),3));
    MODEL->set_LXiF(Power(SM(MZ),3));
+   MODEL->set_Lambdax(SignLambdax*0.05);
    MODEL->set_vs(0.7071067811865475*ssumInput);
    MODEL->set_vsb(0.7071067811865475*0.95*ssumInput);
    MODEL->set_vphi(0.5*ssumInput);
-   MODEL->set_Lambdax(0.05);
 
 }
 
@@ -238,7 +238,7 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_soft_parameters()
    model->solve_ewsb_tree_level();
 
    // calculate tree-level spectrum
-   model->calculate_DRbar_parameters();
+   model->calculate_DRbar_masses();
 }
 
 } // namespace flexiblesusy

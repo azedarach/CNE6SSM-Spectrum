@@ -58,21 +58,16 @@ inline double AbsSqrt(double x)
    return std::sqrt(std::fabs(x));
 }
 
-inline double AbsSqrt_d(double x)
-{
-   return AbsSqrt(x);
-}
-
 template <typename Derived>
 Derived AbsSqrt(const Eigen::MatrixBase<Derived>& m)
 {
-   return m.unaryExpr(std::ptr_fun(AbsSqrt_d));
+   return m.cwiseAbs().cwiseSqrt();
 }
 
 template <typename Derived>
 Derived AbsSqrt(const Eigen::ArrayBase<Derived>& m)
 {
-   return m.unaryExpr(std::ptr_fun(AbsSqrt_d));
+   return m.cwiseAbs().cwiseSqrt();
 }
 
 inline double ArcTan(double a)
@@ -90,16 +85,9 @@ inline double ArcCos(double a)
    return std::acos(a);
 }
 
-template <typename Derived>
-unsigned closest_index(double mass, Eigen::ArrayBase<Derived>& v)
+inline double Arg(const std::complex<double>& z)
 {
-   unsigned pos;
-   typename Derived::PlainObject tmp;
-   tmp.setConstant(mass);
-
-   (v - tmp).abs().minCoeff(&pos);
-
-   return pos;
+   return std::arg(z);
 }
 
 inline double Conj(double a)
@@ -172,6 +160,24 @@ inline double FiniteLog(double a)
    return a > std::numeric_limits<double>::epsilon() ? std::log(a) : 0;
 }
 
+/**
+ * Fills lower triangle of hermitian matrix from values
+ * in upper triangle.
+ *
+ * @param m matrix
+ */
+template <typename Derived>
+void Hermitianize(Eigen::MatrixBase<Derived>& m)
+{
+   static_assert(Eigen::MatrixBase<Derived>::RowsAtCompileTime ==
+                 Eigen::MatrixBase<Derived>::ColsAtCompileTime,
+                 "Hermitianize is only defined for squared matrices");
+
+   for (int i = 0; i < Eigen::MatrixBase<Derived>::RowsAtCompileTime; i++)
+      for (int k = 0; k < i; k++)
+         m(i,k) = Conj(m(k,i));
+}
+
 inline double Log(double a)
 {
    return std::log(a);
@@ -203,6 +209,17 @@ double MaxRelDiff(const Eigen::ArrayBase<Derived>& a,
    return MaxRelDiff(a.matrix(), b.matrix());
 }
 
+inline double MaxAbsValue(double x)
+{
+   return Abs(x);
+}
+
+template <class Derived>
+double MaxAbsValue(const Eigen::MatrixBase<Derived>& x)
+{
+   return x.cwiseAbs().maxCoeff();
+}
+
 inline int Sign(double x)
 {
    return (x >= 0.0 ? 1 : -1);
@@ -211,37 +228,6 @@ inline int Sign(double x)
 inline int Sign(int x)
 {
    return (x >= 0 ? 1 : -1);
-}
-
-/**
- * The element of v, which is closest to mass, is moved to the
- * position idx.
- *
- * @param idx new index of the mass eigenvalue
- * @param mass mass to compare against
- * @param v vector of masses
- * @param z corresponding mixing matrix
- */
-
-template <typename DerivedArray, typename DerivedMatrix>
-void move_goldstone_to(int idx, double mass, Eigen::ArrayBase<DerivedArray>& v,
-                       Eigen::MatrixBase<DerivedMatrix>& z)
-{
-   int pos = closest_index(mass, v);
-   if (pos == idx)
-      return;
-
-   const int sign = Sign(idx - pos);
-   int steps = std::abs(idx - pos);
-
-   // now we shuffle the states
-   while (steps--) {
-      const int new_pos = pos + sign;
-      v.row(new_pos).swap(v.row(pos));
-      z.row(new_pos).swap(z.row(pos));
-      pos = new_pos;
-   }
-
 }
 
 template <typename Base, typename Exponent>
@@ -261,6 +247,22 @@ inline double Re(const std::complex<double>& x)
    return std::real(x);
 }
 
+template<int M, int N>
+Eigen::Matrix<double,M,N> Re(const Eigen::Matrix<double,M,N>& x)
+{
+   return x;
+}
+
+template<class Derived>
+typename Eigen::Matrix<
+   double,
+   Eigen::MatrixBase<Derived>::RowsAtCompileTime,
+   Eigen::MatrixBase<Derived>::ColsAtCompileTime>
+Re(const Eigen::MatrixBase<Derived>& x)
+{
+   return x.real();
+}
+
 inline double Im(double x)
 {
    return x;
@@ -275,6 +277,11 @@ namespace {
    struct CompareAbs_d {
       bool operator() (double a, double b) { return std::abs(a) < std::abs(b); }
    };
+}
+
+inline int Round(double a)
+{
+   return static_cast<int>(a >= 0. ? a + 0.5 : a - 0.5);
 }
 
 template<int N>
@@ -294,6 +301,12 @@ T Sqr(T a)
    return a * a;
 }
 
+/**
+ * Fills lower triangle of symmetric matrix from values in upper
+ * triangle.
+ *
+ * @param m matrix
+ */
 template <typename Derived>
 void Symmetrize(Eigen::MatrixBase<Derived>& m)
 {
@@ -310,6 +323,18 @@ void Symmetrize(Eigen::MatrixBase<Derived>& m)
 #define ZEROMATRIX(rows,cols) Eigen::Matrix<double,rows,cols>::Zero()
 #define ZEROVECTOR(rows) Eigen::Matrix<double,rows,1>::Zero()
 #define ZEROARRAY(rows) Eigen::Array<double,rows,1>::Zero()
+
+template<class Scalar, int M>
+Eigen::Matrix<Scalar,M,M> ToMatrix(const Eigen::Array<Scalar,M,1>& a)
+{
+   return Eigen::Matrix<Scalar,M,M>(a.matrix().asDiagonal());
+}
+
+template<class Scalar, int M, int N>
+Eigen::Matrix<Scalar,M,N> ToMatrix(const Eigen::Matrix<Scalar,M,N>& a)
+{
+   return a;
+}
 
 template <typename T>
 std::string ToString(T a)

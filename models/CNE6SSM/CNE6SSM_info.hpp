@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:53:33
+// File generated at Sun 19 Apr 2015 20:31:38
 
 #ifndef CNE6SSM_INFO_H
 #define CNE6SSM_INFO_H
@@ -74,6 +74,11 @@ namespace CNE6SSM_info {
          ZER, ZDL, ZDR, ZUL, ZUR, ZDXL, ZDXR, UHI0, UHIPM, ZMI, ZPI, ZNI, 
          UHp0, UHpp, ZNp, NUMBER_OF_MIXINGS};
 
+   extern const double normalization_g1;
+   extern const double normalization_g2;
+   extern const double normalization_g3;
+   extern const double normalization_g1p;
+
    extern const unsigned particle_multiplicities[NUMBER_OF_PARTICLES];
    extern const char* particle_names[NUMBER_OF_PARTICLES];
    extern const char* particle_latex_names[NUMBER_OF_PARTICLES];
@@ -90,6 +95,7 @@ namespace CNE6SSM_info {
 
    extern const char* model_name;
    extern const bool is_low_energy_model;
+   extern const bool is_supersymmetric_model;
 
    void print(std::ostream&);
 }

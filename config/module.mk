@@ -24,6 +24,9 @@ REQUIRED_SARAH_VERSION_FILE := \
 FLEXIBLESUSY_VERSION_FILE := \
 		$(DIR)/version
 
+FLEXIBLESUSY_GIT_COMMIT_FILE := \
+		$(DIR)/git_commit
+
 REMOVE_EXPORT_MARKERS := \
 		$(DIR)/remove_export_markers.sh
 
@@ -39,6 +42,7 @@ install-src::
 		$(INSTALL_STRIPPED) $(MAKEFILE_IN) $(CONFIG_INSTALL_DIR) -m u=rw,g=r,o=r
 		$(INSTALL_STRIPPED) $(REMOVE_EXPORT_MARKERS) $(CONFIG_INSTALL_DIR) -m u=rwx,g=r,o=r
 		$(INSTALL_STRIPPED) $(INSTALL_STRIPPED) $(CONFIG_INSTALL_DIR) -m u=rwx,g=r,o=r
+		$(INSTALL_STRIPPED) $(CONVERT_DOS_PATHS) $(CONFIG_INSTALL_DIR) -m u=rwx,g=r,o=r
 endif
 
 clean-$(MODNAME):
@@ -46,6 +50,7 @@ clean-$(MODNAME):
 distclean-$(MODNAME): clean-$(MODNAME)
 		-rm -f $(CONFIG_HDR)
 		-rm -f $(FLEXIBLESUSY_VERSION_FILE)
+		-rm -f $(FLEXIBLESUSY_GIT_COMMIT_FILE)
 		-rm -f $(REQUIRED_SARAH_VERSION_FILE)
 
 clean::         clean-$(MODNAME)

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:46:47
+// File generated at Sun 19 Apr 2015 20:24:34
 
 #include "CNE6SSM_two_scale_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -36,8 +36,9 @@ CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(const CNE6SSM_input_parameters&
    gD(Eigen::Matrix<double,3,3>::Zero()), Kappa(Eigen::Matrix<double,3,3>
    ::Zero()), Lambda12(Eigen::Matrix<double,2,2>::Zero()), Lambdax(0), fu(
    Eigen::Matrix<double,3,2>::Zero()), fd(Eigen::Matrix<double,3,2>::Zero()),
-   Yu(Eigen::Matrix<double,3,3>::Zero()), MuPr(0), MuPhi(0), XiF(0), g1(0), 
-   g2(0), g3(0), g1p(0), vd(0), vu(0), vs(0), vsb(0), vphi(0)
+   Yu(Eigen::Matrix<double,3,3>::Zero()), MuPr(0), MuPhi(0), XiF(0), g1(0), g2(
+   0), g3(0), g1p(0), vd(0), vu(0), vs(0), vsb(0), vphi(0)
+
    , input(input_)
 {
    set_number_of_parameters(numberOfParameters);
@@ -54,12 +55,14 @@ CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(
    ,2>& fd_, const Eigen::Matrix<double,3,3>& Yu_, double MuPr_, double MuPhi_,
    double XiF_, double g1_, double g2_, double g3_, double g1p_, double vd_,
    double vu_, double vs_, double vsb_, double vphi_
+
 )
    : Beta_function()
    , Yd(Yd_), hE(hE_), Ye(Ye_), SigmaL(SigmaL_), KappaPr(KappaPr_), Sigmax(
    Sigmax_), gD(gD_), Kappa(Kappa_), Lambda12(Lambda12_), Lambdax(Lambdax_), fu
    (fu_), fd(fd_), Yu(Yu_), MuPr(MuPr_), MuPhi(MuPhi_), XiF(XiF_), g1(g1_), g2(
    g2_), g3(g3_), g1p(g1p_), vd(vd_), vu(vu_), vs(vs_), vsb(vsb_), vphi(vphi_)
+
    , input(input_)
 {
    set_number_of_parameters(numberOfParameters);
@@ -132,6 +135,7 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
       beta_vs += calc_beta_vs_two_loop(TRACE_STRUCT);
       beta_vsb += calc_beta_vsb_two_loop(TRACE_STRUCT);
       beta_vphi += calc_beta_vphi_two_loop(TRACE_STRUCT);
+
    }
 
 
@@ -172,7 +176,6 @@ void CNE6SSM_susy_parameters::clear()
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SqSq() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -204,7 +207,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SqSq() const
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SlSl() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -225,7 +227,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SlSl() const
 
 double CLASSNAME::get_SHdSHd() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    double anomDim = 0;
    const auto QS = INPUT(QS);
 
@@ -258,7 +259,6 @@ double CLASSNAME::get_SHdSHd() const
 
 double CLASSNAME::get_SHuSHu() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    double anomDim = 0;
    const auto QS = INPUT(QS);
 
@@ -289,7 +289,6 @@ double CLASSNAME::get_SHuSHu() const
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SdRSdR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -313,7 +312,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SdRSdR() const
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SuRSuR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -337,7 +335,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SuRSuR() const
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SeRSeR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -364,7 +361,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SeRSeR() const
 
 double CLASSNAME::get_SsRSsR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    double anomDim = 0;
    const auto QS = INPUT(QS);
 
@@ -399,7 +395,6 @@ double CLASSNAME::get_SsRSsR() const
 
 double CLASSNAME::get_SsbarRSsbarR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    double anomDim = 0;
    const auto QS = INPUT(QS);
 
@@ -418,7 +413,6 @@ double CLASSNAME::get_SsbarRSsbarR() const
 
 Eigen::Matrix<double,2,2> CLASSNAME::get_SH1ISH1I() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,2,2> anomDim;
    const auto QS = INPUT(QS);
 
@@ -451,7 +445,6 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH1ISH1I() const
 
 Eigen::Matrix<double,2,2> CLASSNAME::get_SH2ISH2I() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,2,2> anomDim;
    const auto QS = INPUT(QS);
 
@@ -484,7 +477,6 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH2ISH2I() const
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SSIRSSIR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -511,7 +503,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SSIRSSIR() const
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SDxLSDxL() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -535,7 +526,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxLSDxL() const
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SDxbarRSDxbarR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    Eigen::Matrix<double,3,3> anomDim;
    const auto QS = INPUT(QS);
 
@@ -564,7 +554,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxbarRSDxbarR() const
 
 double CLASSNAME::get_SHpSHp() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    double anomDim = 0;
    const auto QS = INPUT(QS);
 
@@ -593,7 +582,6 @@ double CLASSNAME::get_SHpSHp() const
 
 double CLASSNAME::get_SHpbarSHpbar() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    double anomDim = 0;
    const auto QS = INPUT(QS);
 
@@ -614,7 +602,6 @@ double CLASSNAME::get_SHpbarSHpbar() const
 
 double CLASSNAME::get_SphiRSphiR() const
 {
-   const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
    double anomDim = 0;
    const auto QS = INPUT(QS);
 
@@ -633,6 +620,7 @@ double CLASSNAME::get_SphiRSphiR() const
 
    return anomDim;
 }
+
 
 const Eigen::ArrayXd CNE6SSM_susy_parameters::get() const
 {
@@ -757,91 +745,91 @@ void CNE6SSM_susy_parameters::print(std::ostream& ostr) const
 
 }
 
-void CNE6SSM_susy_parameters::set(const Eigen::ArrayXd& v)
+void CNE6SSM_susy_parameters::set(const Eigen::ArrayXd& pars)
 {
-   Yd(0,0) = v(0);
-   Yd(0,1) = v(1);
-   Yd(0,2) = v(2);
-   Yd(1,0) = v(3);
-   Yd(1,1) = v(4);
-   Yd(1,2) = v(5);
-   Yd(2,0) = v(6);
-   Yd(2,1) = v(7);
-   Yd(2,2) = v(8);
-   hE(0,0) = v(9);
-   hE(0,1) = v(10);
-   hE(1,0) = v(11);
-   hE(1,1) = v(12);
-   hE(2,0) = v(13);
-   hE(2,1) = v(14);
-   Ye(0,0) = v(15);
-   Ye(0,1) = v(16);
-   Ye(0,2) = v(17);
-   Ye(1,0) = v(18);
-   Ye(1,1) = v(19);
-   Ye(1,2) = v(20);
-   Ye(2,0) = v(21);
-   Ye(2,1) = v(22);
-   Ye(2,2) = v(23);
-   SigmaL = v(24);
-   KappaPr = v(25);
-   Sigmax = v(26);
-   gD(0,0) = v(27);
-   gD(0,1) = v(28);
-   gD(0,2) = v(29);
-   gD(1,0) = v(30);
-   gD(1,1) = v(31);
-   gD(1,2) = v(32);
-   gD(2,0) = v(33);
-   gD(2,1) = v(34);
-   gD(2,2) = v(35);
-   Kappa(0,0) = v(36);
-   Kappa(0,1) = v(37);
-   Kappa(0,2) = v(38);
-   Kappa(1,0) = v(39);
-   Kappa(1,1) = v(40);
-   Kappa(1,2) = v(41);
-   Kappa(2,0) = v(42);
-   Kappa(2,1) = v(43);
-   Kappa(2,2) = v(44);
-   Lambda12(0,0) = v(45);
-   Lambda12(0,1) = v(46);
-   Lambda12(1,0) = v(47);
-   Lambda12(1,1) = v(48);
-   Lambdax = v(49);
-   fu(0,0) = v(50);
-   fu(0,1) = v(51);
-   fu(1,0) = v(52);
-   fu(1,1) = v(53);
-   fu(2,0) = v(54);
-   fu(2,1) = v(55);
-   fd(0,0) = v(56);
-   fd(0,1) = v(57);
-   fd(1,0) = v(58);
-   fd(1,1) = v(59);
-   fd(2,0) = v(60);
-   fd(2,1) = v(61);
-   Yu(0,0) = v(62);
-   Yu(0,1) = v(63);
-   Yu(0,2) = v(64);
-   Yu(1,0) = v(65);
-   Yu(1,1) = v(66);
-   Yu(1,2) = v(67);
-   Yu(2,0) = v(68);
-   Yu(2,1) = v(69);
-   Yu(2,2) = v(70);
-   MuPr = v(71);
-   MuPhi = v(72);
-   XiF = v(73);
-   g1 = v(74);
-   g2 = v(75);
-   g3 = v(76);
-   g1p = v(77);
-   vd = v(78);
-   vu = v(79);
-   vs = v(80);
-   vsb = v(81);
-   vphi = v(82);
+   Yd(0,0) = pars(0);
+   Yd(0,1) = pars(1);
+   Yd(0,2) = pars(2);
+   Yd(1,0) = pars(3);
+   Yd(1,1) = pars(4);
+   Yd(1,2) = pars(5);
+   Yd(2,0) = pars(6);
+   Yd(2,1) = pars(7);
+   Yd(2,2) = pars(8);
+   hE(0,0) = pars(9);
+   hE(0,1) = pars(10);
+   hE(1,0) = pars(11);
+   hE(1,1) = pars(12);
+   hE(2,0) = pars(13);
+   hE(2,1) = pars(14);
+   Ye(0,0) = pars(15);
+   Ye(0,1) = pars(16);
+   Ye(0,2) = pars(17);
+   Ye(1,0) = pars(18);
+   Ye(1,1) = pars(19);
+   Ye(1,2) = pars(20);
+   Ye(2,0) = pars(21);
+   Ye(2,1) = pars(22);
+   Ye(2,2) = pars(23);
+   SigmaL = pars(24);
+   KappaPr = pars(25);
+   Sigmax = pars(26);
+   gD(0,0) = pars(27);
+   gD(0,1) = pars(28);
+   gD(0,2) = pars(29);
+   gD(1,0) = pars(30);
+   gD(1,1) = pars(31);
+   gD(1,2) = pars(32);
+   gD(2,0) = pars(33);
+   gD(2,1) = pars(34);
+   gD(2,2) = pars(35);
+   Kappa(0,0) = pars(36);
+   Kappa(0,1) = pars(37);
+   Kappa(0,2) = pars(38);
+   Kappa(1,0) = pars(39);
+   Kappa(1,1) = pars(40);
+   Kappa(1,2) = pars(41);
+   Kappa(2,0) = pars(42);
+   Kappa(2,1) = pars(43);
+   Kappa(2,2) = pars(44);
+   Lambda12(0,0) = pars(45);
+   Lambda12(0,1) = pars(46);
+   Lambda12(1,0) = pars(47);
+   Lambda12(1,1) = pars(48);
+   Lambdax = pars(49);
+   fu(0,0) = pars(50);
+   fu(0,1) = pars(51);
+   fu(1,0) = pars(52);
+   fu(1,1) = pars(53);
+   fu(2,0) = pars(54);
+   fu(2,1) = pars(55);
+   fd(0,0) = pars(56);
+   fd(0,1) = pars(57);
+   fd(1,0) = pars(58);
+   fd(1,1) = pars(59);
+   fd(2,0) = pars(60);
+   fd(2,1) = pars(61);
+   Yu(0,0) = pars(62);
+   Yu(0,1) = pars(63);
+   Yu(0,2) = pars(64);
+   Yu(1,0) = pars(65);
+   Yu(1,1) = pars(66);
+   Yu(1,2) = pars(67);
+   Yu(2,0) = pars(68);
+   Yu(2,1) = pars(69);
+   Yu(2,2) = pars(70);
+   MuPr = pars(71);
+   MuPhi = pars(72);
+   XiF = pars(73);
+   g1 = pars(74);
+   g2 = pars(75);
+   g3 = pars(76);
+   g1p = pars(77);
+   vd = pars(78);
+   vu = pars(79);
+   vs = pars(80);
+   vsb = pars(81);
+   vphi = pars(82);
 
 }
 

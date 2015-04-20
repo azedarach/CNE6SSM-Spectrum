@@ -27,6 +27,7 @@ public:
    virtual ~Model();
 
    virtual double get_parameter(unsigned) const = 0;
+   virtual void set_parameter(unsigned, double) = 0;
 };
 
 } // namespace flexiblesusy

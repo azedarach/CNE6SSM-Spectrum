@@ -553,8 +553,6 @@ int main(int argc, const char* argv[])
    spectrum_generator.set_precision_goal(1.0e-3);
    spectrum_generator.set_max_iterations(0);   // 0 == automatic
    spectrum_generator.set_calculate_sm_masses(0); // 0 == no
-   // note: alternate ewsb flag is currently unused
-   spectrum_generator.set_alternate_ewsb(1); // 1 == yes
    spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale 
 
    std::vector<std::size_t> scan_dimensions = {parameters.get_m0_npts(), parameters.get_m12_npts(), 

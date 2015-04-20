@@ -678,8 +678,6 @@ int main(int argc, const char* argv[])
    spectrum_generator.set_precision_goal(1.0e-3);
    spectrum_generator.set_max_iterations(0);   // 0 == automatic
    spectrum_generator.set_calculate_sm_masses(0); // 0 == no
-   // note: alternate ewsb flag is currently unused
-   spectrum_generator.set_alternate_ewsb(1); // 1 == yes
    if (parameters.get_output_scale() <= 0.) {
       spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale 
    } else {
@@ -849,7 +847,7 @@ int main(int argc, const char* argv[])
       const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& problems
          = spectrum_generator.get_problems();
 
-      const bool error = problems.have_serious_problem();
+      const bool error = problems.have_problem();
 
       double high_scale = spectrum_generator.get_high_scale();
       double susy_scale = spectrum_generator.get_susy_scale();

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:58:49
+// File generated at Sun 19 Apr 2015 20:37:13
 
 #include "CNE6SSM_physical.hpp"
 
@@ -64,69 +64,69 @@ CNE6SSM_physical::CNE6SSM_physical()
 
 void CNE6SSM_physical::clear()
 {
-   MVG = 0.0;
-   MGlu = 0.0;
-   MFv = Eigen::Array<double,3,1>::Zero();
-   MChaP = 0.0;
-   MVP = 0.0;
-   MVZ = 0.0;
-   MVZp = 0.0;
-   MSd = Eigen::Array<double,6,1>::Zero();
+   MVG = 0.;
+   MGlu = 0.;
+   MFv = Eigen::Matrix<double,3,1>::Zero();
+   MChaP = 0.;
+   MVP = 0.;
+   MVZ = 0.;
+   MVZp = 0.;
+   MSd = Eigen::Matrix<double,6,1>::Zero();
    ZD = Eigen::Matrix<double,6,6>::Zero();
-   MSv = Eigen::Array<double,3,1>::Zero();
+   MSv = Eigen::Matrix<double,3,1>::Zero();
    ZV = Eigen::Matrix<double,3,3>::Zero();
-   MSu = Eigen::Array<double,6,1>::Zero();
+   MSu = Eigen::Matrix<double,6,1>::Zero();
    ZU = Eigen::Matrix<double,6,6>::Zero();
-   MSe = Eigen::Array<double,6,1>::Zero();
+   MSe = Eigen::Matrix<double,6,1>::Zero();
    ZE = Eigen::Matrix<double,6,6>::Zero();
-   MSDX = Eigen::Array<double,6,1>::Zero();
+   MSDX = Eigen::Matrix<double,6,1>::Zero();
    ZDX = Eigen::Matrix<double,6,6>::Zero();
-   Mhh = Eigen::Array<double,5,1>::Zero();
+   Mhh = Eigen::Matrix<double,5,1>::Zero();
    ZH = Eigen::Matrix<double,5,5>::Zero();
-   MAh = Eigen::Array<double,5,1>::Zero();
+   MAh = Eigen::Matrix<double,5,1>::Zero();
    ZA = Eigen::Matrix<double,5,5>::Zero();
-   MHpm = Eigen::Array<double,2,1>::Zero();
+   MHpm = Eigen::Matrix<double,2,1>::Zero();
    ZP = Eigen::Matrix<double,2,2>::Zero();
-   MChi = Eigen::Array<double,8,1>::Zero();
+   MChi = Eigen::Matrix<double,8,1>::Zero();
    ZN = Eigen::Matrix<std::complex<double>,8,8>::Zero();
-   MCha = Eigen::Array<double,2,1>::Zero();
+   MCha = Eigen::Matrix<double,2,1>::Zero();
    UM = Eigen::Matrix<std::complex<double>,2,2>::Zero();
    UP = Eigen::Matrix<std::complex<double>,2,2>::Zero();
-   MFe = Eigen::Array<double,3,1>::Zero();
+   MFe = Eigen::Matrix<double,3,1>::Zero();
    ZEL = Eigen::Matrix<std::complex<double>,3,3>::Zero();
    ZER = Eigen::Matrix<std::complex<double>,3,3>::Zero();
-   MFd = Eigen::Array<double,3,1>::Zero();
+   MFd = Eigen::Matrix<double,3,1>::Zero();
    ZDL = Eigen::Matrix<std::complex<double>,3,3>::Zero();
    ZDR = Eigen::Matrix<std::complex<double>,3,3>::Zero();
-   MFu = Eigen::Array<double,3,1>::Zero();
+   MFu = Eigen::Matrix<double,3,1>::Zero();
    ZUL = Eigen::Matrix<std::complex<double>,3,3>::Zero();
    ZUR = Eigen::Matrix<std::complex<double>,3,3>::Zero();
-   MFDX = Eigen::Array<double,3,1>::Zero();
+   MFDX = Eigen::Matrix<double,3,1>::Zero();
    ZDXL = Eigen::Matrix<std::complex<double>,3,3>::Zero();
    ZDXR = Eigen::Matrix<std::complex<double>,3,3>::Zero();
-   MSHI0 = Eigen::Array<double,7,1>::Zero();
+   MSHI0 = Eigen::Matrix<double,7,1>::Zero();
    UHI0 = Eigen::Matrix<double,7,7>::Zero();
-   MSHIPM = Eigen::Array<double,4,1>::Zero();
+   MSHIPM = Eigen::Matrix<double,4,1>::Zero();
    UHIPM = Eigen::Matrix<double,4,4>::Zero();
-   MChaI = Eigen::Array<double,2,1>::Zero();
+   MChaI = Eigen::Matrix<double,2,1>::Zero();
    ZMI = Eigen::Matrix<std::complex<double>,2,2>::Zero();
    ZPI = Eigen::Matrix<std::complex<double>,2,2>::Zero();
-   MChiI = Eigen::Array<double,7,1>::Zero();
+   MChiI = Eigen::Matrix<double,7,1>::Zero();
    ZNI = Eigen::Matrix<std::complex<double>,7,7>::Zero();
-   MSHp0 = Eigen::Array<double,2,1>::Zero();
+   MSHp0 = Eigen::Matrix<double,2,1>::Zero();
    UHp0 = Eigen::Matrix<double,2,2>::Zero();
-   MSHpp = Eigen::Array<double,2,1>::Zero();
+   MSHpp = Eigen::Matrix<double,2,1>::Zero();
    UHpp = Eigen::Matrix<double,2,2>::Zero();
-   MChiP = Eigen::Array<double,2,1>::Zero();
+   MChiP = Eigen::Matrix<double,2,1>::Zero();
    ZNp = Eigen::Matrix<std::complex<double>,2,2>::Zero();
-   MVWm = 0.0;
+   MVWm = 0.;
 
 }
 
 void CNE6SSM_physical::print(std::ostream& ostr) const
 {
    ostr << "----------------------------------------\n"
-           "one-loop pole masses:\n"
+           "pole masses:\n"
            "----------------------------------------\n";
    ostr << "MVG = " << MVG << '\n';
    ostr << "MGlu = " << MGlu << '\n';
@@ -159,7 +159,7 @@ void CNE6SSM_physical::print(std::ostream& ostr) const
    ostr << "MVWm = " << MVWm << '\n';
 
    ostr << "----------------------------------------\n"
-           "one-loop pole mixing matrices:\n"
+           "pole mass mixing matrices:\n"
            "----------------------------------------\n";
    ostr << "ZD = " << ZD << '\n';
    ostr << "ZV = " << ZV << '\n';
@@ -193,7 +193,7 @@ void CNE6SSM_physical::print(std::ostream& ostr) const
 
 std::ostream& operator<<(std::ostream& ostr, const CNE6SSM_physical& phys_pars)
 {
-   phys_pars.print(std::cout);
+   phys_pars.print(ostr);
    return ostr;
 }
 

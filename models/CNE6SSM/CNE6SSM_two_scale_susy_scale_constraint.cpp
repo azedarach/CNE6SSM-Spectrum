@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:53:35
+// File generated at Sun 19 Apr 2015 20:31:39
 
 #include "CNE6SSM_two_scale_susy_scale_constraint.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -32,7 +32,7 @@
 
 namespace flexiblesusy {
 
-#define INPUTPARAMETER(p) inputPars.p
+#define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
 #define BETAPARAMETER(p) beta_functions.get_##p()
 #define BETA(p) beta_##p
@@ -47,14 +47,13 @@ CNE6SSM_susy_scale_constraint<Two_scale>::CNE6SSM_susy_scale_constraint()
    , scale(0.)
    , initial_scale_guess(0.)
    , model(0)
-   , inputPars()
 {
 }
 
-CNE6SSM_susy_scale_constraint<Two_scale>::CNE6SSM_susy_scale_constraint(const CNE6SSM_input_parameters& inputPars_)
+CNE6SSM_susy_scale_constraint<Two_scale>::CNE6SSM_susy_scale_constraint(
+   CNE6SSM<Two_scale>* model_)
    : Constraint<Two_scale>()
-   , model(0)
-   , inputPars(inputPars_)
+   , model(model_)
 {
    initialize();
 }
@@ -65,10 +64,10 @@ CNE6SSM_susy_scale_constraint<Two_scale>::~CNE6SSM_susy_scale_constraint()
 
 void CNE6SSM_susy_scale_constraint<Two_scale>::apply()
 {
-   assert(model && "Error: CNE6SSM_susy_scale_constraint:"
+   assert(model && "Error: CNE6SSM_susy_scale_constraint::apply():"
           " model pointer must not be zero");
 
-   model->calculate_DRbar_parameters();
+   model->calculate_DRbar_masses();
    update_scale();
 
    // apply user-defined susy scale constraints
@@ -78,7 +77,6 @@ void CNE6SSM_susy_scale_constraint<Two_scale>::apply()
    // defined at this scale (at the EWSB loop level defined in the
    // model)
    model->solve_ewsb();
-
 }
 
 double CNE6SSM_susy_scale_constraint<Two_scale>::get_scale() const
@@ -91,14 +89,22 @@ double CNE6SSM_susy_scale_constraint<Two_scale>::get_initial_scale_guess() const
    return initial_scale_guess;
 }
 
-void CNE6SSM_susy_scale_constraint<Two_scale>::set_model(Two_scale_model* model_)
+const CNE6SSM_input_parameters& CNE6SSM_susy_scale_constraint<Two_scale>::get_input_parameters() const
 {
-   model = cast_model<CNE6SSM<Two_scale> >(model_);
+   assert(model && "Error: CNE6SSM_susy_scale_constraint::"
+          "get_input_parameters(): model pointer is zero.");
+
+   return model->get_input();
 }
 
-void CNE6SSM_susy_scale_constraint<Two_scale>::set_input_parameters(const CNE6SSM_input_parameters& inputPars_)
+CNE6SSM<Two_scale>* CNE6SSM_susy_scale_constraint<Two_scale>::get_model() const
 {
-   inputPars = inputPars_;
+   return model;
+}
+
+void CNE6SSM_susy_scale_constraint<Two_scale>::set_model(Two_scale_model* model_)
+{
+   model = cast_model<CNE6SSM<Two_scale>*>(model_);
 }
 
 void CNE6SSM_susy_scale_constraint<Two_scale>::clear()
@@ -110,6 +116,9 @@ void CNE6SSM_susy_scale_constraint<Two_scale>::clear()
 
 void CNE6SSM_susy_scale_constraint<Two_scale>::initialize()
 {
+   assert(model && "CNE6SSM_susy_scale_constraint<Two_scale>::"
+          "initialize(): model pointer is zero.");
+
    const auto m0 = INPUTPARAMETER(m0);
    const auto m12 = INPUTPARAMETER(m12);
 
@@ -120,9 +129,9 @@ void CNE6SSM_susy_scale_constraint<Two_scale>::initialize()
 
 void CNE6SSM_susy_scale_constraint<Two_scale>::update_scale()
 {
-   //const auto MSu = MODELPARAMETER(MSu);
+   assert(model && "CNE6SSM_susy_scale_constraint<Two_scale>::"
+          "update_scale(): model pointer is zero.");
 
-   //scale = Sqrt(MSu(0)*MSu(5));
    const auto ZU = MODELPARAMETER(ZU);
    const auto MSu = MODELPARAMETER(MSu);
 
@@ -131,6 +140,7 @@ void CNE6SSM_susy_scale_constraint<Two_scale>::update_scale()
       Sqr(Abs(ZU(2,5))))*Power(MSu(3),Sqr(Abs(ZU(3,2))) + Sqr(Abs(ZU(3,5))))*Power
       (MSu(4),Sqr(Abs(ZU(4,2))) + Sqr(Abs(ZU(4,5))))*Power(MSu(5),Sqr(Abs(ZU(5,2))
       ) + Sqr(Abs(ZU(5,5)))));
+
 
 }
 

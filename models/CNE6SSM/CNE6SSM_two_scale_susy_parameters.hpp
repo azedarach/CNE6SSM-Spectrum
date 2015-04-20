@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:46:47
+// File generated at Sun 19 Apr 2015 20:24:34
 
 #ifndef CNE6SSM_TWO_SCALE_susy_parameters_H
 #define CNE6SSM_TWO_SCALE_susy_parameters_H
@@ -46,8 +46,8 @@ public:
    Lambdax_, const Eigen::Matrix<double,3,2>& fu_, const Eigen::Matrix<double,3
    ,2>& fd_, const Eigen::Matrix<double,3,3>& Yu_, double MuPr_, double MuPhi_,
    double XiF_, double g1_, double g2_, double g3_, double g1p_, double vd_,
-   double vu_, double vs_, double vsb_, double vphi_);
-
+   double vu_, double vs_, double vsb_, double vphi_
+);
    virtual ~CNE6SSM_susy_parameters() {}
    virtual Eigen::ArrayXd beta() const;
    virtual const Eigen::ArrayXd get() const;
@@ -94,7 +94,6 @@ public:
    void set_vsb(double vsb_) { vsb = vsb_; }
    void set_vphi(double vphi_) { vphi = vphi_; }
 
-
    const Eigen::Matrix<double,3,3>& get_Yd() const { return Yd; }
    double get_Yd(int i, int k) const { return Yd(i,k); }
    const Eigen::Matrix<double,3,2>& get_hE() const { return hE; }
@@ -130,7 +129,6 @@ public:
    double get_vsb() const { return vsb; }
    double get_vphi() const { return vphi; }
 
-
    Eigen::Matrix<double,3,3> get_SqSq() const;
    Eigen::Matrix<double,3,3> get_SlSl() const;
    double get_SHdSHd() const;
@@ -148,6 +146,7 @@ public:
    double get_SHpSHp() const;
    double get_SHpbarSHpbar() const;
    double get_SphiRSphiR() const;
+
 
 protected:
    Eigen::Matrix<double,3,3> Yd;

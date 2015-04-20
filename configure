@@ -2,14 +2,15 @@
 
 # configure script for FlexibleSUSY
 # Author: Alexander Voigt
-# Edited: 7/4/2015 by Dylan Harries to include Multinest example
+# Edited: 7/4/2015 by Dylan Harries to include MultiNest example
 
 PROGRAM_NAME=FlexibleSUSY
 FLEXIBLESUSY_MAJOR=1
 FLEXIBLESUSY_MINOR=0
-FLEXIBLESUSY_PATCH=1
-FLEXIBLESUSY_EXTRA="-cpc4"
+FLEXIBLESUSY_PATCH=4
+FLEXIBLESUSY_EXTRA=""
 FLEXIBLESUSY_VERSION="${FLEXIBLESUSY_MAJOR}.${FLEXIBLESUSY_MINOR}.${FLEXIBLESUSY_PATCH}${FLEXIBLESUSY_EXTRA}"
+GIT_COMMIT="`git describe --tags 2> /dev/null || echo unknown`"
 
 # directory of this script
 BASEDIR=$(dirname $0)
@@ -21,21 +22,20 @@ ABSBASEDIR=$(cd $BASEDIR; pwd)
 CONFIGDIR="${BASEDIR}/config"
 
 # current date
-DATE="`(date --rfc-2822) 2>/dev/null || echo unknown`"
+DATE="`date 2>/dev/null || echo unknown`"
 
 # platform information
 debmultiarch=""
 
 # default library directories
-default_lib_paths="/usr/lib /usr/local/lib"
+ld_library_path="`echo ${LD_LIBRARY_PATH} | tr ':' ' '`"
+default_lib_paths="${ld_library_path} /usr/lib /usr/local/lib"
 default_inc_paths="/usr/include /usr/local/include"
 
 # configure log file
 logfile="$BASEDIR/config.log"
 statusfile="$BASEDIR/config.status"
 sarahconfig="$BASEDIR/config.sarah"
-boostconfig="$BASEDIR/config.boost"
-gppconfig="$BASEDIR/config.g++"
 mathconfig="$BASEDIR/config.math"
 
 # whether we are in 32-bit or 64-bit environment
@@ -87,9 +87,9 @@ CUSTOMBETAS_MAKEFILES="
  ${BASEDIR}/examples/customized-betas/Makefile"
 CUSTOMBETAS_MAKEFILE_TMPL="${BASEDIR}/config/Makefile.customized-betas.in"
 
-# target makefile file for the Multinest example
-MULTINEST_MAKEFILES="
- ${BASEDIR}/multinest/Makefile"
+# target makefile file for the MultiNest example
+MULTINEST_MAKEFILE="
+ ${BASEDIR}/examples/multinest/Makefile"
 MULTINEST_MAKEFILE_TMPL="${BASEDIR}/config/Makefile.multinest.in"
 
 # options
@@ -99,6 +99,7 @@ options="                    \
    enable_compile            \
    enable_compiler_warnings  \
    enable_debug              \
+   enable_mass_error_check   \
    enable_fflite             \
    enable_looptools          \
    enable_rpath              \
@@ -109,7 +110,7 @@ options="                    \
 "
 
 ################################################################
-# allow linking to Multinest optionally? (then example cannot build though)
+# allow linking to Multinest optionally
 options="${options}          \
    enable_multinest          \
 "
@@ -119,13 +120,14 @@ enable_compile="yes"
 enable_compiler_warnings="no"
 enable_colors="no"
 enable_debug=""
+enable_mass_error_check="no"
 enable_fflite="no"
 enable_looptools="no"
 enable_meta="no"
 ################################################################
 enable_multinest="no"
-################################################################
 enable_rpath="no"
+################################################################
 enable_silent="no"
 enable_static_libs="yes"
 enable_threads="yes"
@@ -134,6 +136,7 @@ enable_verbose="no"
 # corresponding preprocessor define statements
 DEFINE_ENABLE_COLOR_PRINTOUT="#undef ENABLE_COLOR_PRINTOUT"
 DEFINE_ENABLE_DEBUG="#undef ENABLE_DEBUG"
+DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR="#undef CHECK_EIGENVALUE_ERROR"
 DEFINE_ENABLE_FFLITE="#undef ENABLE_FFLITE"
 DEFINE_ENABLE_LOOPTOOLS="#undef ENABLE_LOOPTOOLS"
 ################################################################
@@ -149,6 +152,7 @@ boost_inc_dir=""
 eigen_inc_dir=""
 BOOSTFLAGS=""
 gsl_config="gsl-config"
+blas_lib_dir=""
 lapack_lib_dir=""
 looptools_lib_dir=""
 looptools_inc_dir=""
@@ -173,6 +177,7 @@ FC="gfortran"
 FOR_DEP_GEN="${FC}"
 GSLLIBS=""
 INSTALL_DIR=""
+BLASLIBS=""
 LAPACKLIBS=""
 MAKELIB="ar cru"
 MATH="math"
@@ -181,6 +186,8 @@ ALGORITHMS="two_scale"
 available_algorithms="two_scale lattice"
 # models that will be compiled
 MODELS="all"
+# addons that will be compiled
+ADDONS=""
 
 # C++ compiler type and version
 cxx_compiler_type="unknown"
@@ -207,7 +214,7 @@ std_cxx11_clang_version="3.0.0"
 std_cxx11_icpc_version="13.0.0"
 
 # required boost version
-required_boost_version="1.49.0"
+required_boost_version="1.37.0"
 
 # required Mathematica version
 required_mathematica_version="7"
@@ -281,16 +288,18 @@ logmsg() {
 
 #_____________________________________________________________________
 log_package_information() {
-    logmsg "Package: ${PROGRAM_NAME}"
-    logmsg "Version: ${FLEXIBLESUSY_VERSION}"
-    logmsg "Date:    ${DATE}"
+    logmsg "Package:    ${PROGRAM_NAME}"
+    logmsg "Version:    ${FLEXIBLESUSY_VERSION}"
+    logmsg "Date:       ${DATE}"
+    logmsg "Git commit: ${GIT_COMMIT}"
 }
 
 #_____________________________________________________________________
 guess_machine_word_size() {
     chip=`uname -m | tr '[A-Z]' '[a-z]'`
     case "$chip" in
-        *32) machine_word_size="32"; return 0 ;;
+        *32|i[36]86)
+             machine_word_size="32"; return 0 ;;
         *64) machine_word_size="64"; return 0 ;;
         *)   machine_word_size="unknown"
              message "Warning: could not guess machine word size"
@@ -899,8 +908,10 @@ check_models() {
                 MODELS=`find $BASEDIR/models/* -maxdepth 0 -type d -print0 | tr '\0' ' ' | sed -e 's|^\./||' -e 's| \./| |g' -e 's| *$||g'`
                 break ;;
             *)
-                if test -d "$BASEDIR/models/$a" ; then
-                    MODELS="$MODELS models/$a"
+                if test -d "$BASEDIR/models/$a"; then
+                    if contains_not "$MODELS" "models/$a"; then
+                        MODELS="$MODELS models/$a"
+                    fi
                     continue
                 else
                     result "not ok"
@@ -949,6 +960,50 @@ check_models() {
 }
 
 #_____________________________________________________________________
+check_addons() {
+    if test -z "${ADDONS}"; then
+        logmsg "No addons specified"
+        return 0
+    fi
+
+    checking_msg "addons"
+    addons=`echo $ADDONS | tr ',' ' '`
+    ADDONS=""
+    for a in ${addons}; do
+        case "$a" in
+            all)
+                ADDONS=`find $BASEDIR/addons/* -maxdepth 0 -type d -print0 | tr '\0' ' ' | sed -e 's|^\./||' -e 's| \./| |g' -e 's| *$||g'`
+                break ;;
+            *)
+                if test -d "$BASEDIR/addons/$a" ; then
+                    ADDONS="$ADDONS addons/$a"
+                    continue
+                else
+                    result "not ok"
+                    message "Error: addon directory \"$BASEDIR/addons/$a\" does not exist!"
+                    message "Please create the directory and put an addon in it."
+                    exit 1
+                fi ;;
+        esac
+    done
+
+    # check for Makefile module
+    for m in ${ADDONS}; do
+        if ! test -r ${m}/module.mk; then
+            result "not ok"
+            message "Error: No Makefile module found in ${m}"
+            message "   Please create ${m}/module.mk !"
+            exit 1
+        fi
+    done
+
+    local addon_names="`echo ${ADDONS} | sed -e 's|addons/||g' -e 's/^ *//' -e 's/ *$//'`"
+
+    result "ok (${addon_names})"
+    logmsg "   Addons: ${ADDONS}"
+}
+
+#_____________________________________________________________________
 check_platform() {
     # checks which platform we have
 
@@ -966,6 +1021,11 @@ check_platform() {
     local _paths="`echo $PATH | tr ':' ' '`"
     for p in ${_paths}; do
         logmsg "PATH: ${p}"
+    done
+    logmsg ""
+
+    for p in ${ld_library_path}; do
+        logmsg "LD_LIBRARY_PATH: ${p}"
     done
     logmsg ""
 
@@ -1009,9 +1069,8 @@ check_boost() {
         message "   see http://www.boost.org"
         exit 1
     else
-        # assume that the compiler will look in the default paths
-        if [ -n "$boost_inc_dir" ]; then
-            BOOSTFLAGS="-I$boost_inc_dir"
+        if contains_not "${BOOSTFLAGS}" "-I$found_dir"; then
+            BOOSTFLAGS="${BOOSTFLAGS} -I$found_dir"
         fi
     fi
 }
@@ -1052,13 +1111,15 @@ int main() {
 
 #_____________________________________________________________________
 check_boost_test_libs() {
-    check_library "libboost_unit_test_framework" "$boost_lib_dir" \
-	"$default_lib_paths"
+    check_library \
+	"libboost_unit_test_framework libboost_unit_test_framework-mt" \
+	"$boost_lib_dir" "$default_lib_paths"
     if test "x$found_lib" = "x" ; then
-        message "Warning: libboost_unit_test_framework must be installed"
+        message "Warning: libboost_unit_test_framework(-mt) must be installed"
         message "  to compile and run the tests, see http://www.boost.org"
     else
-        local BOOSTTESTLIBS_=-lboost_unit_test_framework
+        local BOOSTTESTLIBS_=-l$(
+	    echo "$found_lib" | sed 's/^lib\(.*\)\..*$/\1/')
         if [ -z "$boost_lib_dir" ]; then
             # assume that the linker will look in the default paths
             BOOSTTESTLIBS="$BOOSTTESTLIBS_"
@@ -1119,9 +1180,8 @@ check_boost_thread_incl() {
         message "  You can disable the lattice method with the --with-algorithms= flag."
         exit 1
     else
-        # assume that the compiler will look in the default paths
-        if [ -n "$boost_inc_dir" ]; then
-            BOOSTFLAGS="-I$boost_inc_dir"
+        if contains_not "${BOOSTFLAGS}" "-I$found_dir"; then
+            BOOSTFLAGS="${BOOSTFLAGS} -I$found_dir"
         fi
     fi
 }
@@ -1201,6 +1261,27 @@ check_cxx_compiler_version() {
     result "ok (version $cxx_compiler_version)"
     logmsg "   Required $CXX version: $required_cxx_compiler_version"
     logmsg "   $CXX version found: $cxx_compiler_version"
+}
+
+#_____________________________________________________________________
+check_icpc_features() {
+    local compiler="$1"
+    local version="$2"
+
+    checking_msg "$compiler compiler features"
+
+    local major minor patch
+    split_version "$version" major minor patch
+
+    # disable multi-threading for versions < 14.0.0
+    if ! major_minor_patch_at_least $major $minor $patch "14" "0" "0" &&
+       [ "$enable_threads" = "yes" ]; then
+	message ""
+	message "   Warning: multi-threading support requires $compiler 14.0.0 or newer."
+	enable_threads="no"
+    else
+	result "ok"
+    fi
 }
 
 #_____________________________________________________________________
@@ -1323,6 +1404,13 @@ get_icpc_version() {
 }
 
 #_____________________________________________________________________
+check_cxx_compiler_features() {
+    case "$cxx_compiler_type" in
+    intel) check_icpc_features "$CXX" "$cxx_compiler_version" ;;
+    esac
+}
+
+#_____________________________________________________________________
 get_clang_version() {
     if test $# -ne 2; then
         message "get_clang_version(): too few arguments"
@@ -1394,6 +1482,16 @@ check_cxxflags() {
                 fi ;;
         esac
     fi
+
+    case "$operating_system" in
+    CYGWIN_NT*)
+	! printf "%s" "${CXXFLAGS}" |
+	grep -e '-U[[:space:]]*__STRICT_ANSI__' > /dev/null 2>&1 && {
+            message "Appending -U__STRICT_ANSI__ to CXXFLAGS to enable math macros"
+	    message "   possibly disabled on Cygwin."
+            CXXFLAGS="${CXXFLAGS} -U__STRICT_ANSI__"
+	} ;;
+    esac
 }
 
 #_____________________________________________________________________
@@ -1434,6 +1532,28 @@ check_eigen_incl() {
     else
         EIGENFLAGS="-I$found_dir"
     fi
+}
+
+#_____________________________________________________________________
+check_eigen_version() {
+    checking_msg "eigen version"
+
+    try_compile_run_cpp_program "#include <iostream>
+#include <Eigen/Core>
+int main() {
+   std::cout << EIGEN_WORLD_VERSION << '.' << EIGEN_MAJOR_VERSION << '.' << EIGEN_MINOR_VERSION << '\n';
+   return 0;
+}" "$CXX" "${EIGENFLAGS}" && [ $cpp_exit = 0 ] || {
+        result "unknown"
+        message "Warning: could not determine eigen version because"
+        message "   compilation or execution of the eigen test program failed."
+	return 1
+    }
+
+    local eigen_version="$cpp_output"
+
+    result "ok (version ${eigen_version})"
+    logmsg "   Eigen version found: ${eigen_version}"
 }
 
 #_____________________________________________________________________
@@ -1500,8 +1620,8 @@ check_fflags() {
 #_____________________________________________________________________
 check_fortran_libs() {
     case "$FC" in
-        gfortran)
-            gfortran_lib_search_paths=`gfortran -print-search-dirs | sed -n -e '/libraries:/s/libraries: *=//p' | tr ':' ' '`
+        gfortran*)
+            gfortran_lib_search_paths=`${FC} -print-search-dirs | sed -n -e '/libraries:/s/libraries: *=//p' | tr ':' ' '`
             check_library "libgfortran" "$gfortran_lib_search_paths" "$default_lib_paths"
             if test "x$found_lib" = "x" ; then
                 message "Error: libgfortran not found in $gfortran_lib_search_paths $default_lib_paths"
@@ -1532,14 +1652,32 @@ check_fortran_dep_gen() {
 }
 
 #_____________________________________________________________________
+check_blas_libs_using_options() {
+    check_library "libblas" "$blas_lib_dir" \
+	"$default_lib_paths"
+    if test "x$found_lib" = "x" ; then
+        message "Error: libblas must be installed!"
+        message "  It can be downloaded from http://www.netlib.org/blas"
+        exit 1
+    else
+        local BLASLIBS_=-lblas
+        if [ -z "$blas_lib_dir" ]; then
+            # assume that the linker will look in the default paths
+            BLASLIBS="$BLASLIBS_"
+        else
+            BLASLIBS="-L$blas_lib_dir $BLASLIBS_"
+        fi
+	check_symbol ztpsv_ "$found_lib" "$found_dir"
+    fi
+}
+
+#_____________________________________________________________________
 check_lapack_libs_using_options() {
     check_library "liblapack" "$lapack_lib_dir" \
 	"$default_lib_paths"
     if test "x$found_lib" = "x" ; then
-        message "Error: liblapack must be installed"
-        message "  to run the lattice algorithm, see http://www.netlib.org/lapack"
-        message "  You can disable the lattice algorithm with the"
-        message "  --with-algorithms= flag"
+        message "Error: liblapack must be installed!"
+        message "  It can be downloaded from http://www.netlib.org/lapack"
         exit 1
     else
         local LAPACKLIBS_=-llapack
@@ -1602,7 +1740,7 @@ check_multinest_libs() {
     if test "x$found_lib" = "x" ; then
 	# try looking for libnest3
 	check_library "libnest3" "$multinest_lib_dir" \
-	    "$default_lib_paths"
+            "$default_lib_paths"
 	if test "x$found_lib" = "x" ; then
             message "Error: libmultinest or libnest3 must be installed if you want"
             message "   to use MultiNest, see http://ccpforge.cse.rl.ac.uk/gf/project/multinest/"
@@ -1610,13 +1748,13 @@ check_multinest_libs() {
             message "   location of the libmultinest or libnest3 library."
             exit 1
 	else 
-	    local NESTLIBS_="-lnest3"
-	    if [ -z "$multinest_lib_dir" ]; then
+            local NESTLIBS_="-lnest3"
+            if [ -z "$multinest_lib_dir" ]; then
 		# assume that the linker will look in the default paths
 		MULTINESTLIBS="$NESTLIBS_"
-	    else 
+            else
 		MULTINESTLIBS="-L$multinest_lib_dir $NESTLIBS_"
-	    fi
+            fi
 	fi
     else
         local MULTINESTLIBS_="-lmultinest"
@@ -1642,7 +1780,7 @@ check_multinest_incl() {
     else 
 	# assume that the compiler will look in the default paths
 	if [ -n "$multinest_inc_dir" ]; then
-	    MULTINESTFLAGS="-I$multinest_inc_dir"
+            MULTINESTFLAGS="-I$multinest_inc_dir"
 	fi
     fi
 }
@@ -1681,6 +1819,15 @@ find_symbol_using_pkgconfig() {
 	return 1
     done
     return 0
+}
+
+#_____________________________________________________________________
+check_blas_libs() {
+    if find_symbol_using_pkgconfig blas ztpsv_; then
+	BLASLIBS="$linker_flags"
+    else
+	check_blas_libs_using_options
+    fi
 }
 
 #_____________________________________________________________________
@@ -1731,6 +1878,7 @@ check_math_cmd() {
         case "$operating_system" in
             Linux)  message "   It is usually installed in /usr/local/Wolfram/Mathematica/" ;;
             Darwin) message "   It is usually installed in /Applications/Mathematica.app/"  ;;
+            CYGWIN_NT*) message "   It is usually installed in /cygdrive/c/Program Files/Wolfram Research/Mathematica/" ;;
         esac
         exit 1
     else
@@ -1752,7 +1900,7 @@ Quit[error];
 EOF
 
     checking_msg "Mathematica version >= ${required_mathematica_version}"
-    if $MATH -run "Get[\"${_math_version_check_progr}\"]" > /dev/null 2>&1;
+    if "$MATH" -run "Get[\"${_math_version_check_progr}\"]" > /dev/null 2>&1;
     then
         if test -r "${mathconfig}" ; then
             MATH_VERSION=`cat ${mathconfig}`
@@ -1789,7 +1937,7 @@ check_random_number_generator() {
 check_sarah() {
     checking_msg "SARAH installation"
     rm -f ${sarahconfig}
-    $MATH <<EOF > /dev/null
+    "$MATH" <<EOF > /dev/null
 Needs["SARAH\`"];
 If[!ValueQ[SA\`Version], Quit[1]];
 Export["${sarahconfig}", SA\`Version, "String"];
@@ -1799,16 +1947,9 @@ EOF
     if test "x${_sarah_is_available}" = "x0" ; then
         if test -r "${sarahconfig}" ; then
             SARAH_VERSION=`cat ${sarahconfig}`
-            SARAH_MAJOR=`echo ${SARAH_VERSION} | awk -F . '{ print $1 }'`
-            SARAH_MINOR=`echo ${SARAH_VERSION} | awk -F . '{ print $2 }'`
-            SARAH_PATCH=`echo ${SARAH_VERSION} | awk -F . '{ print $3 }'`
-            if test \
-                \( "${SARAH_MAJOR}" -lt "${required_sarah_major}" \) -o \
-                \( \( "${SARAH_MAJOR}" -eq "${required_sarah_major}" \) -a \
-                   \( "${SARAH_MINOR}" -lt "${required_sarah_minor}" \) \) -o \
-                \( \( "${SARAH_MAJOR}" -eq "${required_sarah_major}" \) -a \
-                   \( "${SARAH_MINOR}" -eq "${required_sarah_minor}" \) -a \
-                   \( "${SARAH_PATCH}" -lt "${required_sarah_patch}" \) \)
+            split_version "$SARAH_VERSION" SARAH_MAJOR SARAH_MINOR SARAH_PATCH
+
+            if ! major_minor_patch_at_least $SARAH_MAJOR $SARAH_MINOR $SARAH_PATCH "${required_sarah_major}" "${required_sarah_minor}" "${required_sarah_patch}"
             then
                 result "not ok"
                 message "Error: SARAH version ${SARAH_VERSION} no longer supported!"
@@ -1827,6 +1968,19 @@ EOF
         message "Error: SARAH is not installed correctly."
         message "   Please make sure Needs[\"SARAH\`\"] works correctly."
         exit 1
+    fi
+}
+
+#_____________________________________________________________________
+check_cygpath() {
+    checking_msg "cygpath.exe"
+    exists_in_path "cygpath.exe"
+    if [ -z "$cmd" ]; then
+        message "Error: cygpath.exe must be installed to locate the SARAH model files."
+        message "   Please recheck the Cygwin installation since it is a part of the"
+	message "   core cygwin package."
+    else
+	result "found $cmd"
     fi
 }
 
@@ -1860,6 +2014,16 @@ enable_defines() {
         message "Disabling debug mode and assertions"
         logmsg "   ${DEFINE_ENABLE_DEBUG}"
         logmsg "   CPPFLAGS = ${CPPFLAGS}"
+    fi
+
+    if test "x$enable_mass_error_check" = "xyes" ; then
+        DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR="#define CHECK_EIGENVALUE_ERROR 1"
+        message "Enabling mass eigenvalue error check"
+        logmsg "   ${DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR}"
+    else
+        DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR="#undef CHECK_EIGENVALUE_ERROR"
+        logmsg "Disabling eigenvalue error check"
+        logmsg "   ${DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR}"
     fi
 
     if test "$enable_fflite" = "yes" -a "$enable_looptools" = "yes"; then
@@ -1898,7 +2062,7 @@ enable_defines() {
 	logmsg "Disabling usage of MultiNest"
     fi
     logmsg "   ${DEFINE_ENABLE_MULTINEST}"
-
+    
     if test "x$enable_silent" = "xyes" ; then
         DEFINE_ENABLE_SILENT="#define ENABLE_SILENT 1"
         CPPFLAGS="$CPPFLAGS"
@@ -1944,6 +2108,62 @@ enable_defines() {
 }
 
 #_____________________________________________________________________
+replace_markers() {
+    sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
+	-e "s|@FLEXIBLESUSY_MAJOR@|$FLEXIBLESUSY_MAJOR|" \
+	-e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
+	-e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
+	-e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
+        -e "s|@GIT_COMMIT@|$GIT_COMMIT|"   \
+	-e "s|@PKGNAME@|$PROGRAM_NAME|"    \
+	-e "s|@ABSBASEDIR@|$ABSBASEDIR|"   \
+	-e "s|@ADDONS@|$ADDONS|"           \
+	-e "s|@INSTALL_DIR@|$INSTALL_DIR|" \
+	-e "s|@ALGORITHMS@|$ALGORITHMS|"   \
+	-e "s|@BLASLIBS@|$BLASLIBS|"       \
+	-e "s|@BOOSTTESTLIBS@|$BOOSTTESTLIBS|"     \
+	-e "s|@BOOSTTHREADLIBS@|$BOOSTTHREADLIBS|"     \
+	-e "s|@BOOSTFLAGS@|$BOOSTFLAGS|"   \
+	-e "s|@THREADLIBS@|$THREADLIBS|"   \
+	-e "s|@CPPFLAGS@|$CPPFLAGS|"       \
+	-e "s|@CXXFLAGS@|$CXXFLAGS|"       \
+	-e "s|@CXXFLAGS_DEP_GEN@|$CXXFLAGS_DEP_GEN|"   \
+	-e "s|@CXX@|$CXX|"                 \
+	-e "s|@CXX_DEP_GEN@|$CXX_DEP_GEN|" \
+	-e "s|@FC@|$FC|"                   \
+	-e "s|@FFLAGS@|$FFLAGS|"           \
+	-e "s|@FLIBS@|$FLIBS|"             \
+	-e "s|@FOR_DEP_GEN@|$FOR_DEP_GEN|" \
+	-e "s|@FSCONFIG@|$FSCONFIG|"       \
+	-e "s|@EIGENFLAGS@|$EIGENFLAGS|"   \
+	-e "s|@GSLLIBS@|$GSLLIBS|"         \
+	-e "s|@GSLFLAGS@|$GSLFLAGS|"       \
+	-e "s|@LAPACKLIBS@|$LAPACKLIBS|"   \
+	-e "s|@SARAH_DEP_GEN@|$SARAH_DEP_GEN|"   \
+	-e "s|@ENABLE_COMPILE@|$enable_compile|" \
+	-e "s|@ENABLE_FFLITE@|$enable_fflite|" \
+	-e "s|@ENABLE_LOOPTOOLS@|$enable_looptools|" \
+        -e "s|@ENABLE_MULTINEST@|$enable_multinest|" \
+	-e "s|@ENABLE_META@|$enable_meta|" \
+	-e "s|@ENABLE_THREADS@|$enable_threads|"  \
+	-e "s|@ENABLE_COLOR_PRINTOUT@|$enable_colors|" \
+	-e "s|@ENABLE_DEBUG@|$enable_debug|"      \
+	-e "s|@ENABLE_CHECK_EIGENVALUE_ERROR@|$enable_mass_error_check|" \
+	-e "s|@ENABLE_SILENT@|$enable_silent|"    \
+	-e "s|@ENABLE_VERBOSE@|$enable_verbose|"  \
+	-e "s|@LOOPTOOLSLIBS@|$LOOPTOOLSLIBS|"    \
+	-e "s|@LOOPTOOLSFLAGS@|$LOOPTOOLSFLAGS|"  \
+        -e "s|@MULTINESTLIBS@|$MULTINESTLIBS|"    \
+        -e "s|@MULTINESTFLAGS@|$MULTINESTFLAGS|"  \
+	-e "s|@MODELS@|$MODELS|"           \
+	-e "s|@MAKELIB@|$MAKELIB|"         \
+	-e "s|@ENABLE_RPATH@|$enable_rpath|" \
+	-e "s|@ENABLE_STATIC_LIBS@|$enable_static_libs|" \
+	-e "s|@MATH@|$MATH|"               \
+	-e "s|@LIBEXT@|$LIBEXT|"
+}
+
+#_____________________________________________________________________
 help() {
 cat <<EOF
 Usage: ./`basename $0` [options]
@@ -1958,6 +2178,7 @@ enable/disable options, prefix with either --enable- or --disable-
   compile           Compile the source code (default: $enable_compile)
   compiler-warnings Enable compiler warnings (default: $enable_compiler_warnings)
   debug             Debug messages and assertions (no default)
+  mass-error-check  Check mass eigenvalue precision (default: $enable_mass_error_check)
   fflite            Use fflite to compute the loop functions (default: $enable_fflite)
   looptools         Use LoopTools to compute the loop functions (default: $enable_looptools)
   multinest         Enable linking to MultiNest (default: $enable_multinest)
@@ -1971,9 +2192,12 @@ cat <<EOF
 
 Package directories, compilation settings and model selection
 
+  --with-addons=            Comma separated list of addons to be build
+                            (default: $ADDONS)
   --with-algorithms=        Comma separated list of RG solver algorithms
                             (default: $ALGORITHMS)
                             possible values: all $available_algorithms
+  --with-blas-libdir=       Path to search for BLAS library
   --with-boost-libdir=      Path to search for BOOST libraries
   --with-boost-incdir=      Path to search for BOOST headers
   --with-cxx=               C++ compiler (default: $CXX)
@@ -1985,7 +2209,7 @@ Package directories, compilation settings and model selection
   --with-fortran-dep-gen=   Fortran file dependency generator (default: $FOR_DEP_GEN)
   --with-gsl-config=        Path to gsl-config (default: $gsl_config)
   --with-install-dir=       Path to source code installation directory
-  --with-lapack-libdir=     Path to search for LAPACK and BLAS libraries
+  --with-lapack-libdir=     Path to search for LAPACK library
   --with-lib-ext=           Library extension (default: $LIBEXT)
   --with-looptools-libdir=  Path to search for LoopTools libraries
   --with-looptools-incdir=  Path to search for LoopTools headers
@@ -2067,7 +2291,9 @@ if test $# -gt 0 ; then
                     echo "Invalid option '$1'. Try $0 --help" ; exit 1 ;
                 fi
                 ;;
+            --with-addons=*)         ADDONS=$optarg ;;
             --with-algorithms=*)     ALGORITHMS=$optarg ;;
+            --with-blas-libdir=*)    blas_lib_dir=$optarg ;;
             --with-boost-libdir=*)   boost_lib_dir=$optarg ;;
             --with-boost-incdir=*)   boost_inc_dir=$optarg ;;
             --with-cxx=*)            CXX=$optarg ;;
@@ -2086,8 +2312,8 @@ if test $# -gt 0 ; then
             --with-make-lib-cmd=*)   MAKELIB=$optarg ;;
             --with-math-cmd=*)       MATH=$optarg ;;
             --with-models=*)         MODELS=$optarg ;;
-	    --with-multinest-libdir=*) multinest_lib_dir=$optarg ;;
-	    --with-multinest-incdir=*) multinest_inc_dir=$optarg ;;
+            --with-multinest-libdir=*) multinest_lib_dir=$optarg ;;
+            --with-multinest-incdir=*) multinest_inc_dir=$optarg ;;
             --help|-h)               help; exit 0 ;;
             --version|-v)            version; exit 0 ;;
             *)  echo "Invalid option '$1'. Try $0 --help" ; exit 1 ;;
@@ -2108,6 +2334,7 @@ if test "x${enable_compile}" = "xyes"; then
     check_cxx
     check_cxx_compiler_type
     check_cxx_compiler_version
+    check_cxx_compiler_features
     check_cxxflags
     check_cxx_dep_gen
     check_cxx_dep_gen_type
@@ -2121,8 +2348,10 @@ if test "x${enable_compile}" = "xyes"; then
     check_boost_test_incl
     check_boost_test_libs
     check_eigen_incl
+    check_eigen_version
     check_fortran_libs
     check_gsl_config
+    check_blas_libs
     check_lapack_libs
     if use_algorithm "lattice"; then
         check_boost_thread_incl
@@ -2142,6 +2371,9 @@ if test "x${enable_meta}" = "xyes"; then
     check_math_cmd
     check_mathematica_version
     check_sarah
+    case "$operating_system" in
+	CYGWIN_NT*) check_cygpath ;;
+    esac
 fi
 
 ################################################################
@@ -2152,102 +2384,16 @@ fi
 ################################################################
 
 check_models
+check_addons
 
 enable_defines
 
-sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
-    -e "s|@FLEXIBLESUSY_MAJOR@|$FLEXIBLESUSY_MAJOR|" \
-    -e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
-    -e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
-    -e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
-    -e "s|@PKGNAME@|$PROGRAM_NAME|"    \
-    -e "s|@ABSBASEDIR@|$ABSBASEDIR|"   \
-    -e "s|@INSTALL_DIR@|$INSTALL_DIR|" \
-    -e "s|@ALGORITHMS@|$ALGORITHMS|"   \
-    -e "s|@BOOSTTESTLIBS@|$BOOSTTESTLIBS|"     \
-    -e "s|@BOOSTTHREADLIBS@|$BOOSTTHREADLIBS|"     \
-    -e "s|@BOOSTFLAGS@|$BOOSTFLAGS|"   \
-    -e "s|@THREADLIBS@|$THREADLIBS|"   \
-    -e "s|@CPPFLAGS@|$CPPFLAGS|"       \
-    -e "s|@CXXFLAGS@|$CXXFLAGS|"       \
-    -e "s|@CXXFLAGS_DEP_GEN@|$CXXFLAGS_DEP_GEN|"   \
-    -e "s|@CXX@|$CXX|"                 \
-    -e "s|@CXX_DEP_GEN@|$CXX_DEP_GEN|" \
-    -e "s|@FC@|$FC|"                   \
-    -e "s|@FFLAGS@|$FFLAGS|"           \
-    -e "s|@FLIBS@|$FLIBS|"             \
-    -e "s|@FOR_DEP_GEN@|$FOR_DEP_GEN|" \
-    -e "s|@FSCONFIG@|$FSCONFIG|"       \
-    -e "s|@EIGENFLAGS@|$EIGENFLAGS|"   \
-    -e "s|@GSLLIBS@|$GSLLIBS|"         \
-    -e "s|@GSLFLAGS@|$GSLFLAGS|"       \
-    -e "s|@LAPACKLIBS@|$LAPACKLIBS|"   \
-    -e "s|@SARAH_DEP_GEN@|$SARAH_DEP_GEN|"   \
-    -e "s|@ENABLE_COMPILE@|$enable_compile|" \
-    -e "s|@ENABLE_FFLITE@|$enable_fflite|" \
-    -e "s|@ENABLE_LOOPTOOLS@|$enable_looptools|" \
-    -e "s|@ENABLE_META@|$enable_meta|" \
-    -e "s|@ENABLE_THREADS@|$enable_threads|"  \
-    -e "s|@LOOPTOOLSLIBS@|$LOOPTOOLSLIBS|"    \
-    -e "s|@LOOPTOOLSFLAGS@|$LOOPTOOLSFLAGS|"  \
-    -e "s|@MODELS@|$MODELS|"           \
-    -e "s|@MAKELIB@|$MAKELIB|"         \
-    -e "s|@ENABLE_RPATH@|$enable_rpath|" \
-    -e "s|@ENABLE_STATIC_LIBS@|$enable_static_libs|" \
-    -e "s|@MATH@|$MATH|"               \
-    -e "s|@LIBEXT@|$LIBEXT|"           \
+replace_markers \
     < $MAKEFILE_TMPL > $MAKEFILE
 
 ################################################################
-# for this project only write out the Makefile for MultiNest
-# if MultiNest is explicitly enabled
-if test "x${enable_multinest}" = "xyes"; then
-    sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
-	-e "s|@FLEXIBLESUSY_MAJOR@|$FLEXIBLESUSY_MAJOR|" \
-	-e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
-	-e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
-	-e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
-	-e "s|@PKGNAME@|$PROGRAM_NAME|"    \
-	-e "s|@ABSBASEDIR@|$ABSBASEDIR|"   \
-	-e "s|@INSTALL_DIR@|$INSTALL_DIR|" \
-	-e "s|@ALGORITHMS@|$ALGORITHMS|"   \
-	-e "s|@BOOSTTESTLIBS@|$BOOSTTESTLIBS|"     \
-	-e "s|@BOOSTTHREADLIBS@|$BOOSTTHREADLIBS|"     \
-	-e "s|@BOOSTFLAGS@|$BOOSTFLAGS|"   \
-	-e "s|@THREADLIBS@|$THREADLIBS|"   \
-	-e "s|@CPPFLAGS@|$CPPFLAGS|"       \
-	-e "s|@CXXFLAGS@|$CXXFLAGS|"       \
-	-e "s|@CXXFLAGS_DEP_GEN@|$CXXFLAGS_DEP_GEN|"   \
-	-e "s|@CXX@|$CXX|"                 \
-	-e "s|@CXX_DEP_GEN@|$CXX_DEP_GEN|" \
-	-e "s|@FC@|$FC|"                   \
-	-e "s|@FFLAGS@|$FFLAGS|"           \
-	-e "s|@FLIBS@|$FLIBS|"             \
-	-e "s|@FOR_DEP_GEN@|$FOR_DEP_GEN|" \
-	-e "s|@FSCONFIG@|$FSCONFIG|"       \
-	-e "s|@EIGENFLAGS@|$EIGENFLAGS|"   \
-	-e "s|@GSLLIBS@|$GSLLIBS|"         \
-	-e "s|@GSLFLAGS@|$GSLFLAGS|"       \
-	-e "s|@LAPACKLIBS@|$LAPACKLIBS|"   \
-	-e "s|@SARAH_DEP_GEN@|$SARAH_DEP_GEN|"   \
-	-e "s|@ENABLE_COMPILE@|$enable_compile|" \
-	-e "s|@ENABLE_FFLITE@|$enable_fflite|" \
-	-e "s|@ENABLE_LOOPTOOLS@|$enable_looptools|" \
-	-e "s|@ENABLE_MULTINEST@|$enable_multinest|" \
-	-e "s|@ENABLE_META@|$enable_meta|" \
-	-e "s|@ENABLE_THREADS@|$enable_threads|"  \
-	-e "s|@LOOPTOOLSLIBS@|$LOOPTOOLSLIBS|"    \
-	-e "s|@LOOPTOOLSFLAGS@|$LOOPTOOLSFLAGS|"  \
-	-e "s|@MULTINESTLIBS@|$MULTINESTLIBS|"    \
-	-e "s|@MULTINESTFLAGS@|$MULTINESTFLAGS|"  \
-	-e "s|@MODELS@|$MODELS|"           \
-	-e "s|@MAKELIB@|$MAKELIB|"         \
-	-e "s|@ENABLE_RPATH@|$enable_rpath|" \
-	-e "s|@ENABLE_STATIC_LIBS@|$enable_static_libs|" \
-	-e "s|@MATH@|$MATH|"               \
-	-e "s|@LIBEXT@|$LIBEXT|"           \
-	< $MULTINEST_MAKEFILE_TMPL | tee $MULTINEST_MAKEFILES > /dev/null 
-fi
+replace_markers \
+    < $MULTINEST_MAKEFILE_TMPL | tee $MULTINEST_MAKEFILE > /dev/null
 ################################################################
 
 sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
@@ -2255,13 +2401,20 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
     -e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
     -e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
+    -e "s|@GIT_COMMIT@|$GIT_COMMIT|"   \
     -e "s|@PKGNAME@|$PROGRAM_NAME|"    \
+    -e "s|@ADDONS@|$ADDONS|"           \
+    -e "s|@BOOSTFLAGS@|$BOOSTFLAGS|"   \
     -e "s|@CPPFLAGS@|$CPPFLAGS|"       \
     -e "s|@CXXFLAGS@|$CXXFLAGS|"       \
     -e "s|@CXX@|$CXX|"                 \
+    -e "s|@EIGENFLAGS@|$EIGENFLAGS|"   \
     -e "s|@FC@|$FC|"                   \
     -e "s|@FFLAGS@|$FFLAGS|"           \
     -e "s|@FLIBS@|$FLIBS|"             \
+    -e "s|@GSLFLAGS@|$GSLFLAGS|"       \
+    -e "s|@GSLLIBS@|$GSLLIBS|"         \
+    -e "s|@LOOPFUNCFLAGS@|$LOOPTOOLSFLAGS|" \
     -e "s|@MAKELIB@|$MAKELIB|"         \
     -e "s|@MATH@|$MATH|"               \
     -e "s|@MODELS@|$MODELS|"           \
@@ -2273,12 +2426,22 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
     -e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
     -e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
+    -e "s|@GIT_COMMIT@|$GIT_COMMIT|"                 \
     -e "s|@PKGNAME@|$PROGRAM_NAME|"                  \
+    -e "s|@BLASLIBS@|$BLASLIBS|"                     \
+    -e "s|@BOOSTTESTLIBS@|$BOOSTTESTLIBS|"           \
+    -e "s|@BOOSTTHREADLIBS@|$BOOSTTHREADLIBS|"       \
+    -e "s|@BOOSTFLAGS@|$BOOSTFLAGS|"                 \
+    -e "s|@THREADLIBS@|$THREADLIBS|"                 \
     -e "s|@CXX@|$CXX|"                               \
     -e "s|@CXXFLAGS@|$CXXFLAGS|"                     \
+    -e "s|@EIGENFLAGS@|$EIGENFLAGS|"                 \
     -e "s|@FC@|$FC|"                                 \
     -e "s|@FFLAGS@|$FFLAGS|"                         \
     -e "s|@FLIBS@|$FLIBS|"                           \
+    -e "s|@GSLLIBS@|$GSLLIBS|"                       \
+    -e "s|@GSLFLAGS@|$GSLFLAGS|"                     \
+    -e "s|@LAPACKLIBS@|$LAPACKLIBS|"                 \
     -e "s|@MATH_VERSION@|$MATH_VERSION|"             \
     -e "s|@SARAH_VERSION@|$SARAH_VERSION|"           \
     -e "s|@SARAH_MAJOR@|$SARAH_MAJOR|"               \
@@ -2289,6 +2452,7 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@DATE@|$DATE|"                             \
     -e "s|@DEFINE_ENABLE_COLOR_PRINTOUT@|$DEFINE_ENABLE_COLOR_PRINTOUT|" \
     -e "s|@DEFINE_ENABLE_DEBUG@|$DEFINE_ENABLE_DEBUG|"         \
+    -e "s|@DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR@|$DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR|" \
     -e "s|@DEFINE_ENABLE_FFLITE@|$DEFINE_ENABLE_FFLITE|" \
     -e "s|@DEFINE_ENABLE_LOOPTOOLS@|$DEFINE_ENABLE_LOOPTOOLS|" \
     -e "s|@DEFINE_ENABLE_MULTINEST@|$DEFINE_ENABLE_MULTINEST|" \
@@ -2303,6 +2467,7 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
     -e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
     -e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
+    -e "s|@GIT_COMMIT@|$GIT_COMMIT|"   \
     -e "s|@PKGNAME@|$PROGRAM_NAME|"    \
     < $TEXVERSION_TMPL > $TEXVERSION
 
@@ -2311,13 +2476,16 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@FLEXIBLESUSY_MINOR@|$FLEXIBLESUSY_MINOR|" \
     -e "s|@FLEXIBLESUSY_PATCH@|$FLEXIBLESUSY_PATCH|" \
     -e "s|@FLEXIBLESUSY_EXTRA@|$FLEXIBLESUSY_EXTRA|" \
+    -e "s|@GIT_COMMIT@|$GIT_COMMIT|"   \
     -e "s|@PKGNAME@|$PROGRAM_NAME|"    \
     < $DOC_MAINPAGE_TMPL > $DOC_MAINPAGE
 
 sed -e "s|@MATH@|$MATH|" \
+    -e "s|@OPERATING_SYSTEM@|$operating_system|" \
     < $SARAH_DEP_GEN_TMPL > $SARAH_DEP_GEN
 
 echo "$FLEXIBLESUSY_VERSION" > ${CONFIGDIR}/version
+echo "$GIT_COMMIT" > ${CONFIGDIR}/git_commit
 echo "{${required_sarah_major}, ${required_sarah_minor}, ${required_sarah_patch}}" > ${CONFIGDIR}/required_sarah_version.m
 
 chmod a+x $FSCONFIG

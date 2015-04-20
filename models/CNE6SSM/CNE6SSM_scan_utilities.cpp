@@ -212,9 +212,9 @@ void CNE6SSM_pole_mass_writer::write_pole_masses_line(std::ostream & filestr) co
       }
    }
 
-   filestr << std::left << std::setw(width) << pole_masses_problems.have_serious_problem() << ' ';
+   filestr << std::left << std::setw(width) << pole_masses_problems.have_problem() << ' ';
 
-   if (pole_masses_problems.have_serious_problem()) {
+   if (pole_masses_problems.have_problem()) {
       filestr << "\t# " << pole_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -478,9 +478,9 @@ void CNE6SSM_drbar_values_writer::write_drbar_masses_line(std::ostream & filestr
       }
    }
 
-   filestr << std::left << std::setw(width) << drbar_masses_problems.have_serious_problem() << ' ';
+   filestr << std::left << std::setw(width) << drbar_masses_problems.have_problem() << ' ';
 
-   if (drbar_masses_problems.have_serious_problem()) {
+   if (drbar_masses_problems.have_problem()) {
       filestr << "\t# " << drbar_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -511,9 +511,9 @@ void CNE6SSM_drbar_values_writer::write_drbar_susy_pars_line(std::ostream & file
       }
    }
 
-   filestr << std::left << std::setw(width) << drbar_susy_pars_problems.have_serious_problem() << ' ';
+   filestr << std::left << std::setw(width) << drbar_susy_pars_problems.have_problem() << ' ';
 
-   if (drbar_susy_pars_problems.have_serious_problem()) {
+   if (drbar_susy_pars_problems.have_problem()) {
       filestr << "\t# " << drbar_susy_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -544,9 +544,9 @@ void CNE6SSM_drbar_values_writer::write_drbar_soft_pars_line(std::ostream & file
       }
    }
 
-   filestr << std::left << std::setw(width) << drbar_soft_pars_problems.have_serious_problem() << ' ';
+   filestr << std::left << std::setw(width) << drbar_soft_pars_problems.have_problem() << ' ';
 
-   if (drbar_soft_pars_problems.have_serious_problem()) {
+   if (drbar_soft_pars_problems.have_problem()) {
       filestr << "\t# " << drbar_soft_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -575,9 +575,9 @@ void CNE6SSM_drbar_values_writer::write_drbar_mixings_line(std::ostream & filest
       }
    }
 
-   filestr << std::left << std::setw(width) << drbar_mixings_problems.have_serious_problem() << ' ';
+   filestr << std::left << std::setw(width) << drbar_mixings_problems.have_problem() << ' ';
 
-   if (drbar_mixings_problems.have_serious_problem()) {
+   if (drbar_mixings_problems.have_problem()) {
       filestr << "\t# " << drbar_mixings_problems << '\n';
    } else {
       filestr << '\n';

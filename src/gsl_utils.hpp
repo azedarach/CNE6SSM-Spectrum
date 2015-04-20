@@ -20,7 +20,6 @@
 #define GSL_UTILS_H
 
 #include <cstddef>
-#include <vector>
 #include <gsl/gsl_vector.h>
 
 namespace flexiblesusy {

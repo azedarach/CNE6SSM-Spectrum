@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:53:35
+// File generated at Sun 19 Apr 2015 20:31:39
 
 #ifndef CNE6SSM_TWO_SCALE_SUSY_SCALE_CONSTRAINT_H
 #define CNE6SSM_TWO_SCALE_SUSY_SCALE_CONSTRAINT_H
@@ -36,7 +36,7 @@ template<>
 class CNE6SSM_susy_scale_constraint<Two_scale> : public Constraint<Two_scale> {
 public:
    CNE6SSM_susy_scale_constraint();
-   CNE6SSM_susy_scale_constraint(const CNE6SSM_input_parameters&);
+   CNE6SSM_susy_scale_constraint(CNE6SSM<Two_scale>*);
    virtual ~CNE6SSM_susy_scale_constraint();
    virtual void apply();
    virtual double get_scale() const;
@@ -44,16 +44,17 @@ public:
 
    void clear();
    double get_initial_scale_guess() const;
+   const CNE6SSM_input_parameters& get_input_parameters() const;
+   CNE6SSM<Two_scale>* get_model() const;
    void initialize();
-   void set_input_parameters(const CNE6SSM_input_parameters&);
+
+protected:
+   void update_scale();
 
 private:
    double scale;
    double initial_scale_guess;
    CNE6SSM<Two_scale>* model;
-   CNE6SSM_input_parameters inputPars;
-
-   void update_scale();
 };
 
 } // namespace flexiblesusy

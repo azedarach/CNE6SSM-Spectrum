@@ -160,6 +160,25 @@ bool Command_line_options::starts_with(const std::string& str,
 }
 
 /**
+ * Returns a string containing the option value, for options
+ * of the form '--option<delim><value>
+ *
+ * @param str string to search in
+ * @param delim character to use a delimiter
+ *
+ * @return string containing substring starting from delimiter (empty if not found)
+ */
+std::string Command_line_options::get_option_value(const std::string& str, const std::string& delim)
+{
+   std::string value_str("");
+   std::size_t posn = str.find(delim);
+   if (posn != std::string::npos) {
+      value_str = str.substr(++posn);
+   } 
+   return value_str;
+}
+
+/**
  * Extracts the parameter value from a command line option string of
  * the form --m0=125 .
  *
@@ -178,25 +197,6 @@ bool Command_line_options::get_parameter_value(const std::string& str,
       return true;
    }
    return false;
-}
-
-/**
- * Returns a string containing the option value, for options
- * of the form '--option<delim><value>
- *
- * @param str string to search in
- * @param delim character to use a delimiter
- *
- * @return string containing substring starting from delimiter (empty if not found)
- */
-   std::string Command_line_options::get_option_value(const std::string& str, const std::string& delim)
-{
-   std::string value_str("");
-   std::size_t posn = str.find(delim);
-   if (posn != std::string::npos) {
-      value_str = str.substr(++posn);
-   } 
-   return value_str;
 }
 
 /**

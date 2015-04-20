@@ -16,13 +16,12 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:58:49
+// File generated at Sun 19 Apr 2015 20:37:13
 
 #include "CNE6SSM_input_parameters.hpp"
 #include "CNE6SSM_slha_io.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
 
-#include "error.hpp"
 #include "spectrum_generator_settings.hpp"
 #include "lowe.h"
 #include "command_line_options.hpp"
@@ -76,10 +75,8 @@ int main(int argc, const char* argv[])
       spectrum_generator_settings.get(Spectrum_generator_settings::max_iterations));
    spectrum_generator.set_calculate_sm_masses(
       spectrum_generator_settings.get(Spectrum_generator_settings::calculate_sm_masses) >= 1.0);
-   spectrum_generator.set_alternate_ewsb(
-      spectrum_generator_settings.get(Spectrum_generator_settings::alternate_ewsb) >= 1.0);
-   spectrum_generator.set_input_scale(
-      slha_io.get_input_scale());
+   spectrum_generator.set_force_output(
+      spectrum_generator_settings.get(Spectrum_generator_settings::force_output) >= 1.0);
    spectrum_generator.set_parameter_output_scale(
       slha_io.get_parameter_output_scale());
    spectrum_generator.set_pole_mass_loop_order(
@@ -88,23 +85,32 @@ int main(int argc, const char* argv[])
       spectrum_generator_settings.get(Spectrum_generator_settings::ewsb_loop_order));
    spectrum_generator.set_beta_loop_order(
       spectrum_generator_settings.get(Spectrum_generator_settings::beta_loop_order));
-   spectrum_generator.set_threshold_corrections(
-      spectrum_generator_settings.get(Spectrum_generator_settings::threshold_corrections));
+   spectrum_generator.set_threshold_corrections_loop_order(
+      spectrum_generator_settings.get(Spectrum_generator_settings::threshold_corrections_loop_order));
+   spectrum_generator.set_two_loop_corrections(
+      spectrum_generator_settings.get_two_loop_corrections());
 
    spectrum_generator.run(oneset, input);
 
-   const CNE6SSM<algorithm_type>& model
-      = spectrum_generator.get_model();
+   const CNE6SSM_slha<algorithm_type> model(spectrum_generator.get_model());
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& problems
       = spectrum_generator.get_problems();
+
+   CNE6SSM_scales scales;
+   scales.HighScale = spectrum_generator.get_high_scale();
+   scales.SUSYScale = spectrum_generator.get_susy_scale();
+   scales.LowScale  = spectrum_generator.get_low_scale();
 
    // output
    slha_io.set_spinfo(problems);
    slha_io.set_sminputs(oneset);
    slha_io.set_minpar(input);
    slha_io.set_extpar(input);
-   if (!problems.have_serious_problem())
+   if (!problems.have_problem() ||
+       spectrum_generator_settings.get(Spectrum_generator_settings::force_output)) {
       slha_io.set_spectrum(model);
+      slha_io.set_extra(model, scales);
+   }
 
    if (slha_output_file.empty()) {
       slha_io.write_to_stream(std::cout);

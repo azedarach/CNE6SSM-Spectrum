@@ -9,9 +9,13 @@ Block FlexibleSUSY
     4   2                    # pole mass loop order
     5   2                    # EWSB loop order
     6   2                    # beta-functions loop order
-    7   1                    # threshold corrections (0 = disabled, 1 = enabled)
-    8   0                    # use alternate EWSB (0 = disabled, 1 = enabled)
-    9   0                    # cutoff VEV running (0 = disabled, 1 = enabled)
+    7   1                    # threshold corrections loop order
+    8   1                    # Higgs 2-loop corrections O(alpha_t alpha_s)
+    9   1                    # Higgs 2-loop corrections O(alpha_b alpha_s)
+   10   1                    # Higgs 2-loop corrections O(alpha_t^2 + alpha_t alpha_b + alpha_b^2)
+   11   1                    # Higgs 2-loop corrections O(alpha_tau^2)
+   12   0                    # force output
+   13   1                    # Top quark 2-loop corrections QCD
 Block MODSEL                 # Select model
 #   12   1.000000000e+16                # DRbar parameter output scale (GeV)
 Block SMINPUTS               # Standard Model inputs
@@ -38,7 +42,6 @@ Block MINPAR                 # Input parameters
     4   1.000000000e+00      # sign(Lambdax)
     5   1.000000000e+03      # Azero
 Block EXTPAR
-    0   0                    # unification scale (0 = automatic)
    65   4.000000000e+04      # s = sqrt{s_1^2 + s_2^2}
    72   5.000000000e+00      # QS
 Block HMIXIN

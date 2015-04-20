@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:58:49
+// File generated at Sun 19 Apr 2015 20:37:13
 
 #ifndef CNE6SSM_SPECTRUM_GENERATOR_H
 #define CNE6SSM_SPECTRUM_GENERATOR_H
@@ -31,6 +31,7 @@
 
 #include "coupling_monitor.hpp"
 #include "error.hpp"
+#include "two_loop_corrections.hpp"
 #include "numerics.hpp"
 #include "two_scale_running_precision.hpp"
 #include "two_scale_solver.hpp"
@@ -48,14 +49,14 @@ public:
       , high_scale(0.)
       , susy_scale(0.)
       , low_scale(0.)
-      , input_scale(0.)
       , parameter_output_scale(0.)
       , precision_goal(1.0e-4)
       , max_iterations(0)
       , beta_loop_order(2)
-      , threshold_corrections(1)
+      , threshold_corrections_loop_order(2)
       , calculate_sm_masses(false)
-      , alternate_ewsb(false) {}
+      , force_output(false)
+   {}
    ~CNE6SSM_spectrum_generator() {}
 
    double get_high_scale() const { return high_scale; }
@@ -65,8 +66,7 @@ public:
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const {
       return model.get_problems();
    }
-   int get_exit_code() const { return get_problems().have_serious_problem(); };
-   void set_input_scale(double m) { input_scale = m; }
+   int get_exit_code() const { return get_problems().have_problem(); }
    void set_parameter_output_scale(double s) { parameter_output_scale = s; }
    void set_precision_goal(double precision_goal_) { precision_goal = precision_goal_; }
    void set_pole_mass_loop_order(unsigned l) { model.set_pole_mass_loop_order(l); }
@@ -74,8 +74,9 @@ public:
    void set_beta_loop_order(unsigned l) { beta_loop_order = l; }
    void set_max_iterations(unsigned n) { max_iterations = n; }
    void set_calculate_sm_masses(bool flag) { calculate_sm_masses = flag; }
-   void set_alternate_ewsb(bool flag) { alternate_ewsb = flag; }
-   void set_threshold_corrections(unsigned t) { threshold_corrections = t; }
+   void set_force_output(bool flag) { force_output = flag; }
+   void set_threshold_corrections_loop_order(unsigned t) { threshold_corrections_loop_order = t; }
+   void set_two_loop_corrections(const Two_loop_corrections& c) { model.set_two_loop_corrections(c); }
 
    void run(const QedQcd& oneset, const CNE6SSM_input_parameters& input);
    void write_running_couplings(const std::string& filename = "CNE6SSM_rge_running.dat") const;
@@ -88,14 +89,13 @@ private:
    CNE6SSM_susy_scale_constraint<T> susy_scale_constraint;
    CNE6SSM_low_scale_constraint<T>  low_scale_constraint;
    double high_scale, susy_scale, low_scale;
-   double input_scale; ///< high-scale parameter input scale
    double parameter_output_scale; ///< output scale for running parameters
    double precision_goal; ///< precision goal
    unsigned max_iterations; ///< maximum number of iterations
    unsigned beta_loop_order; ///< beta-function loop order
-   unsigned threshold_corrections; ///< disable/enable threshold corrections
+   unsigned threshold_corrections_loop_order; ///< threshold corrections loop order
    bool calculate_sm_masses; ///< calculate SM pole masses
-   bool alternate_ewsb; ///< DH:: use Roman's algorithm
+   bool force_output; ///< force output
 };
 
 /**
@@ -113,42 +113,42 @@ template <class T>
 void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
                                 const CNE6SSM_input_parameters& input)
 {
+   model.clear();
+   model.set_input_parameters(input);
+   model.do_calculate_sm_pole_masses(calculate_sm_masses);
+   model.do_force_output(force_output);
+   model.set_loops(beta_loop_order);
+   model.set_thresholds(threshold_corrections_loop_order);
+
    high_scale_constraint.clear();
    susy_scale_constraint.clear();
    low_scale_constraint .clear();
-   high_scale_constraint.set_input_parameters(input);
-   susy_scale_constraint.set_input_parameters(input);
-   low_scale_constraint .set_input_parameters(input);
+
+   // needed for constraint::initialize()
+   high_scale_constraint.set_model(&model);
+   susy_scale_constraint.set_model(&model);
+   low_scale_constraint .set_model(&model);
+
+   low_scale_constraint .set_sm_parameters(oneset);
+
    high_scale_constraint.initialize();
    susy_scale_constraint.initialize();
    low_scale_constraint .initialize();
 
-   if (!is_zero(input_scale))
-      high_scale_constraint.set_scale(input_scale);
+   std::vector<Constraint<T>*> upward_constraints(2);
+   upward_constraints[0] = &low_scale_constraint;
+   upward_constraints[1] = &high_scale_constraint;
 
-   std::vector<Constraint<T>*> upward_constraints {
-      &low_scale_constraint,
-      &high_scale_constraint
-   };
-
-   std::vector<Constraint<T>*> downward_constraints {
-      &high_scale_constraint,
-      &susy_scale_constraint,
-      &low_scale_constraint
-   };
-
-   model.clear();
-   model.set_input_parameters(input);
-   model.do_calculate_sm_pole_masses(calculate_sm_masses);
-   model.do_use_alternate_ewsb(alternate_ewsb);
-   model.set_loops(beta_loop_order);
-   model.set_thresholds(threshold_corrections);
+   std::vector<Constraint<T>*> downward_constraints(3);
+   downward_constraints[0] = &high_scale_constraint;
+   downward_constraints[1] = &susy_scale_constraint;
+   downward_constraints[2] = &low_scale_constraint;
 
    CNE6SSM_convergence_tester<T> convergence_tester(&model, precision_goal);
    if (max_iterations > 0)
       convergence_tester.set_max_iterations(max_iterations);
 
-   CNE6SSM_initial_guesser<T> initial_guesser(&model, input, oneset,
+   CNE6SSM_initial_guesser<T> initial_guesser(&model, oneset,
                                                   low_scale_constraint,
                                                   susy_scale_constraint,
                                                   high_scale_constraint);
@@ -172,17 +172,11 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
       model.run_to(susy_scale);
       model.solve_ewsb();
       model.calculate_spectrum();
-      double mst1 = 0.;
-      double mst2 = 0.;
-      double tht = 0.;
-      model.calculate_MSu_3rd_generation(mst1, mst2, tht);
-      // std::cout << "Stop 1 = " << mst1 << "\n";
-      // std::cout << "Stop 2 = " << mst2 << "\n";
-      // std::cout << "Eq 1 = " << model.get_ewsb_eq_hh_1() << "\n";
-      // std::cout << "Eq 2 = " << model.get_ewsb_eq_hh_2() << "\n";
-      // std::cout << "Eq 3 = " << model.get_ewsb_eq_hh_3() << "\n";
-      // std::cout << "Eq 4 = " << model.get_ewsb_eq_hh_4() << "\n";
-      // std::cout << "Eq 5 = " << model.get_ewsb_eq_hh_5() << "\n";
+
+      // copy calculated W pole mass
+      model.get_physical().MVWm
+         = low_scale_constraint.get_sm_parameters().displayPoleMW();
+
       // run to output scale (if scale > 0)
       if (!is_zero(parameter_output_scale)) {
          model.run_to(parameter_output_scale);
@@ -191,14 +185,16 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
       model.get_problems().flag_no_convergence();
    } catch (const NonPerturbativeRunningError&) {
       model.get_problems().flag_no_perturbative();
+   } catch (const NoRhoConvergenceError&) {
+      model.get_problems().flag_no_rho_convergence();
    } catch (const Error& error) {
-      model.get_problems().flag_thrown();
+      model.get_problems().flag_thrown(error.what());
    } catch (const std::string& str) {
-      model.get_problems().flag_thrown();
+      model.get_problems().flag_thrown(str);
    } catch (const char* str) {
-      model.get_problems().flag_thrown();
+      model.get_problems().flag_thrown(str);
    } catch (const std::exception& error) {
-      model.get_problems().flag_thrown();
+      model.get_problems().flag_thrown(error.what());
    }
 }
 

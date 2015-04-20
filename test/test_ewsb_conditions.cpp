@@ -67,53 +67,6 @@ BOOST_AUTO_TEST_CASE( test_default_ewsb_tree_level )
 
 }
 
-// Test that the custom EWSB conditions give
-// expected values for a set of parameters
-BOOST_AUTO_TEST_CASE( test_custom_ewsb_tree_level )
-{
-   CNE6SSM<Two_scale> custom_model = CNE6SSM<Two_scale>();
-   
-   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_1(), 0.);
-   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_2(), 0.);
-   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_3(), 0.);
-   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_4(), 0.);
-   BOOST_CHECK_EQUAL(custom_model.get_alternate_ewsb_eq_hh_5(), 0.);
-
-   CNE6SSM_input_parameters custom_inputs;
-   custom_inputs.QS = 3.2;
-   custom_model.set_input_parameters(custom_inputs);
-
-   custom_model.set_vd(77.792);
-   custom_model.set_vu(233.376);
-   custom_model.set_vs(675.849);
-   custom_model.set_vsb(7434.343);
-   custom_model.set_vphi(5432.);
-   custom_model.set_g1(0.34);
-   custom_model.set_g1p(0.23);
-   custom_model.set_g2(0.7);
-   custom_model.set_Lambdax(0.15);
-   custom_model.set_Sigmax(0.54);
-   custom_model.set_TLambdax(2970.8);
-   custom_model.set_TSigmax(124.);
-   custom_model.set_MuPhi(-503.2);
-   custom_model.set_BMuPhi(21.3);
-   custom_model.set_KappaPr(0.9);
-   custom_model.set_TKappaPr(-100.);
-   custom_model.set_XiF(450.9);
-   custom_model.set_LXiF(-978.6);
-   custom_model.set_mHd2(-1.4e6);
-   custom_model.set_mHu2(2.5e6);
-   custom_model.set_ms2(1.5e6);
-   custom_model.set_msbar2(-2.1e6);
-   custom_model.set_mphi2(-1.6e4);
-
-   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_1(), -3.127754243e7, 1.0e-7);
-   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_2(), -1.556226711e11, 1.0e-7);
-   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_3(), -1.398095571e14, 1.0e-7);
-   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_4(), 1.516866867e10, 1.0e-7);
-   BOOST_CHECK_CLOSE(custom_model.get_alternate_ewsb_eq_hh_5(), 1.320862322e11, 1.0e-7);
-}
-
 void randomize_model(CNE6SSM<Two_scale>& model)
 {
    static default_random_engine generator;
@@ -149,30 +102,7 @@ void randomize_model(CNE6SSM<Two_scale>& model)
 
 }
 
-// Test that the custom EWSB conditions correctly match 
-// their appropriate definitions
-BOOST_AUTO_TEST_CASE( test_custom_ewsb_tree_level_defns )
-{
-   CNE6SSM<Two_scale> compare_model = CNE6SSM<Two_scale>();
-
-   randomize_model(compare_model);
-
-   BOOST_CHECK_CLOSE_FRACTION(compare_model.get_ewsb_eq_hh_1(), 
-                              compare_model.get_alternate_ewsb_eq_hh_1(), 1.0e-14);
-   BOOST_CHECK_CLOSE_FRACTION(compare_model.get_vd()*compare_model.get_ewsb_eq_hh_1()
-                              - compare_model.get_vu()*compare_model.get_ewsb_eq_hh_2(),
-                              compare_model.get_alternate_ewsb_eq_hh_2(), 1.0e-14);
-   BOOST_CHECK_CLOSE_FRACTION(compare_model.get_vs()*compare_model.get_ewsb_eq_hh_3()
-                              - compare_model.get_vsb()*compare_model.get_ewsb_eq_hh_4(),
-                              compare_model.get_alternate_ewsb_eq_hh_3(), 1.0e-14);
-   BOOST_CHECK_CLOSE_FRACTION(compare_model.get_ewsb_eq_hh_4(), 
-                              compare_model.get_alternate_ewsb_eq_hh_4(), 1.0e-14);
-   BOOST_CHECK_CLOSE_FRACTION(compare_model.get_ewsb_eq_hh_5(),
-                              compare_model.get_alternate_ewsb_eq_hh_5(), 1.0e-14);
-}
-
-// Test that parameters that zero default EWSB conditions also zero custom
-// EWSB conditions
+// Test tree level solution of EWSB equations via soft masses
 BOOST_AUTO_TEST_CASE( test_default_zeroes_custom )
 {
    CNE6SSM<Two_scale> default_zero_model = CNE6SSM<Two_scale>();
@@ -193,12 +123,6 @@ BOOST_AUTO_TEST_CASE( test_default_zeroes_custom )
    BOOST_CHECK_SMALL(default_zero_model.get_ewsb_eq_hh_3(), 1.0e-5);
    BOOST_CHECK_SMALL(default_zero_model.get_ewsb_eq_hh_4(), 1.0e-5);
    BOOST_CHECK_SMALL(default_zero_model.get_ewsb_eq_hh_5(), 1.0e-5);
-
-   BOOST_CHECK_SMALL(default_zero_model.get_alternate_ewsb_eq_hh_1(), 1.0e-5);
-   BOOST_CHECK_SMALL(default_zero_model.get_alternate_ewsb_eq_hh_2(), 1.0e-5);
-   BOOST_CHECK_SMALL(default_zero_model.get_alternate_ewsb_eq_hh_3(), 1.0e-5);
-   BOOST_CHECK_SMALL(default_zero_model.get_alternate_ewsb_eq_hh_4(), 1.0e-5);
-   BOOST_CHECK_SMALL(default_zero_model.get_alternate_ewsb_eq_hh_5(), 1.0e-5);
 
 }
 
@@ -288,12 +212,6 @@ BOOST_AUTO_TEST_CASE( test_custom_zeroes_default )
    custom_zero_model.set_BMuPhi(BMuPhi);
    custom_zero_model.set_XiF(XiF);
    custom_zero_model.set_mHd2(mHd2);
-
-   BOOST_CHECK_SMALL(custom_zero_model.get_alternate_ewsb_eq_hh_1(), 1.0e-5);
-   BOOST_CHECK_SMALL(custom_zero_model.get_alternate_ewsb_eq_hh_2(), 1.0e-5);
-   BOOST_CHECK_SMALL(custom_zero_model.get_alternate_ewsb_eq_hh_3(), 1.0e-5);
-   BOOST_CHECK_SMALL(custom_zero_model.get_alternate_ewsb_eq_hh_4(), 1.0e-5);
-   BOOST_CHECK_SMALL(custom_zero_model.get_alternate_ewsb_eq_hh_5(), 1.0e-5);
 
    BOOST_CHECK_SMALL(custom_zero_model.get_ewsb_eq_hh_1(), 1.0e-5);
    BOOST_CHECK_SMALL(custom_zero_model.get_ewsb_eq_hh_2(), 1.0e-5);

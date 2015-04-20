@@ -59,6 +59,7 @@ void print_version_info(std::ostream& ostr)
 
    ostr <<
       "FlexibleSUSY version:            " FLEXIBLESUSY_VERSION "\n"
+      "FlexibleSUSY git commit:         " GIT_COMMIT "\n"
       "SARAH version:                   " SARAH_VERSION "\n"
       "Mathematica version:             " << MATHEMATICA_VERSION << "\n"
       "Boost version:                   " << boost_major << '.' << boost_minor
@@ -76,6 +77,14 @@ void print_build_info(std::ostream& ostr)
       "Fortran compiler (FC):           " FC "\n"
       "Fortran compiler flags (FFLAGS): " FFLAGS "\n"
       "Fortran libraries (FLIBS):       " FLIBS "\n"
+      "Blas library (BLASLIBS):         " BLASLIBS "\n"
+      "Boost flags (BOOSTFLAGS):        " BOOSTFLAGS "\n"
+      "Boost libraries:                 " BOOSTTESTLIBS " " BOOSTTHREADLIBS "\n"
+      "Eigen flags (EIGENFLAGS):        " EIGENFLAGS "\n"
+      "GSL flags (GSLFLAGS):            " GSLFLAGS "\n"
+      "GSL libraries (GSLLIBS):         " GSLLIBS "\n"
+      "Lapack library (LAPACKLIBS):     " LAPACKLIBS "\n"
+      "Thread libraries (THREADLIBS):   " THREADLIBS "\n"
       "\n"
       "Multi-threading:                 "
 #ifdef ENABLE_THREADS
@@ -93,6 +102,13 @@ void print_build_info(std::ostream& ostr)
       "\n"
       "Use fflite:                      "
 #ifdef ENABLE_FFLITE
+      "yes"
+#else
+      "no"
+#endif
+      "\n"
+      "Eigenvalue error check:          "
+#ifdef CHECK_EIGENVALUE_ERROR
       "yes"
 #else
       "no"

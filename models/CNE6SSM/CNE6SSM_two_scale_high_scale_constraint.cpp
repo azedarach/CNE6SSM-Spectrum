@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:53:34
+// File generated at Sun 19 Apr 2015 20:31:39
 
 #include "CNE6SSM_two_scale_high_scale_constraint.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -35,7 +35,7 @@
 
 namespace flexiblesusy {
 
-#define INPUTPARAMETER(p) inputPars.p
+#define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
 #define BETAPARAMETER(p) beta_functions.get_##p()
 #define BETA(p) beta_##p
@@ -49,17 +49,14 @@ CNE6SSM_high_scale_constraint<Two_scale>::CNE6SSM_high_scale_constraint()
    : Constraint<Two_scale>()
    , scale(0.)
    , initial_scale_guess(0.)
-   , fixed_scale(0.)
    , model(0)
-   , inputPars()
 {
 }
 
-CNE6SSM_high_scale_constraint<Two_scale>::CNE6SSM_high_scale_constraint(const CNE6SSM_input_parameters& inputPars_)
+CNE6SSM_high_scale_constraint<Two_scale>::CNE6SSM_high_scale_constraint(
+   CNE6SSM<Two_scale>* model_)
    : Constraint<Two_scale>()
-   , fixed_scale(0.)
-   , model(0)
-   , inputPars(inputPars_)
+   , model(model_)
 {
    initialize();
 }
@@ -70,7 +67,7 @@ CNE6SSM_high_scale_constraint<Two_scale>::~CNE6SSM_high_scale_constraint()
 
 void CNE6SSM_high_scale_constraint<Two_scale>::apply()
 {
-   assert(model && "Error: CNE6SSM_high_scale_constraint:"
+   assert(model && "Error: CNE6SSM_high_scale_constraint::apply():"
           " model pointer must not be zero");
 
    if (std::fabs(model->get_g1()) > 3.0) {
@@ -168,6 +165,95 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    MODEL->set_MassG(m12);
    MODEL->set_MassBp(m12);
 
+   {
+      const auto g1 = MODELPARAMETER(g1);
+      const auto g2 = MODELPARAMETER(g2);
+      const auto g3 = MODELPARAMETER(g3);
+      const auto g1p = MODELPARAMETER(g1p);
+      const auto Yd = MODELPARAMETER(Yd);
+      const auto hE = MODELPARAMETER(hE);
+      const auto Ye = MODELPARAMETER(Ye);
+      const auto SigmaL = MODELPARAMETER(SigmaL);
+      const auto KappaPr = MODELPARAMETER(KappaPr);
+      const auto Sigmax = MODELPARAMETER(Sigmax);
+      const auto gD = MODELPARAMETER(gD);
+      const auto Kappa = MODELPARAMETER(Kappa);
+      const auto Lambda12 = MODELPARAMETER(Lambda12);
+      const auto Lambdax = MODELPARAMETER(Lambdax);
+      const auto fu = MODELPARAMETER(fu);
+      const auto fd = MODELPARAMETER(fd);
+      const auto Yu = MODELPARAMETER(Yu);
+
+      if (MaxAbsValue(g1) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("g1", MaxAbsValue(g1), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("g1");
+      if (MaxAbsValue(g2) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("g2", MaxAbsValue(g2), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("g2");
+      if (MaxAbsValue(g3) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("g3", MaxAbsValue(g3), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("g3");
+      if (MaxAbsValue(g1p) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("g1p", MaxAbsValue(g1p), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("g1p");
+      if (MaxAbsValue(Yd) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("Yd", MaxAbsValue(Yd), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("Yd");
+      if (MaxAbsValue(hE) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("hE", MaxAbsValue(hE), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("hE");
+      if (MaxAbsValue(Ye) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("Ye", MaxAbsValue(Ye), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("Ye");
+      if (MaxAbsValue(SigmaL) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("SigmaL", MaxAbsValue(SigmaL), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("SigmaL");
+      if (MaxAbsValue(KappaPr) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("KappaPr", MaxAbsValue(KappaPr), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("KappaPr");
+      if (MaxAbsValue(Sigmax) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("Sigmax", MaxAbsValue(Sigmax), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("Sigmax");
+      if (MaxAbsValue(gD) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("gD", MaxAbsValue(gD), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("gD");
+      if (MaxAbsValue(Kappa) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("Kappa", MaxAbsValue(Kappa), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("Kappa");
+      if (MaxAbsValue(Lambda12) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("Lambda12", MaxAbsValue(Lambda12), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("Lambda12");
+      if (MaxAbsValue(Lambdax) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("Lambdax", MaxAbsValue(Lambdax), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("Lambdax");
+      if (MaxAbsValue(fu) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("fu", MaxAbsValue(fu), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("fu");
+      if (MaxAbsValue(fd) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("fd", MaxAbsValue(fd), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("fd");
+      if (MaxAbsValue(Yu) > 3.5449077018110318)
+         model->get_problems().flag_non_perturbative_parameter_warning("Yu", MaxAbsValue(Yu), model->get_scale(), 3.5449077018110318);
+      else
+         model->get_problems().unflag_non_perturbative_parameter_warning("Yu");
+
+   }
 }
 
 double CNE6SSM_high_scale_constraint<Two_scale>::get_scale() const
@@ -180,31 +266,38 @@ double CNE6SSM_high_scale_constraint<Two_scale>::get_initial_scale_guess() const
    return initial_scale_guess;
 }
 
-void CNE6SSM_high_scale_constraint<Two_scale>::set_model(Two_scale_model* model_)
+const CNE6SSM_input_parameters& CNE6SSM_high_scale_constraint<Two_scale>::get_input_parameters() const
 {
-   model = cast_model<CNE6SSM<Two_scale> >(model_);
+   return model->get_input();
 }
 
-void CNE6SSM_high_scale_constraint<Two_scale>::set_input_parameters(const CNE6SSM_input_parameters& inputPars_)
+CNE6SSM<Two_scale>* CNE6SSM_high_scale_constraint<Two_scale>::get_model() const
 {
-   inputPars = inputPars_;
+   return model;
+}
+
+void CNE6SSM_high_scale_constraint<Two_scale>::set_model(Two_scale_model* model_)
+{
+   model = cast_model<CNE6SSM<Two_scale>*>(model_);
 }
 
 void CNE6SSM_high_scale_constraint<Two_scale>::set_scale(double s)
 {
-   fixed_scale = s;
+   scale = s;
 }
 
 void CNE6SSM_high_scale_constraint<Two_scale>::clear()
 {
    scale = 0.;
    initial_scale_guess = 0.;
-   fixed_scale = 0.;
    model = NULL;
 }
 
 void CNE6SSM_high_scale_constraint<Two_scale>::initialize()
 {
+   assert(model && "CNE6SSM_high_scale_constraint<Two_scale>::"
+          "initialize(): model pointer is zero.");
+
    initial_scale_guess = 2.e16;
 
    scale = initial_scale_guess;
@@ -212,10 +305,8 @@ void CNE6SSM_high_scale_constraint<Two_scale>::initialize()
 
 void CNE6SSM_high_scale_constraint<Two_scale>::update_scale()
 {
-   if (!is_zero(fixed_scale)) {
-      scale = fixed_scale;
-      return;
-   }
+   assert(model && "CNE6SSM_high_scale_constraint<Two_scale>::"
+          "update_scale(): model pointer is zero.");
 
    const double currentScale = model->get_scale();
    const CNE6SSM_soft_parameters beta_functions(model->calc_beta());

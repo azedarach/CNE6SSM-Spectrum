@@ -35,32 +35,78 @@ enum Sparticles {
 extern const double Isospin[NUMBER_OF_MSSM_SPARTICLES];
 extern const double Hypercharge_left[NUMBER_OF_MSSM_SPARTICLES];
 extern const double Hypercharge_right[NUMBER_OF_MSSM_SPARTICLES];
-// DH:: added for NE6SSM (but note this is no good if the charges
-// are left as inputs as in a generic E6 model).
-extern const double Ncharge_left[NUMBER_OF_MSSM_SPARTICLES];
-extern const double Ncharge_right[NUMBER_OF_MSSM_SPARTICLES];
+extern const double U1prime_charge_left[NUMBER_OF_MSSM_SPARTICLES];
+extern const double U1prime_charge_right[NUMBER_OF_MSSM_SPARTICLES];
 
 /**
  * data needed to fill 2 x 2 sfermion mass matrix 
  */ 
 struct Mass_data {
+   double ml2;    ///< soft mass of left-handed sfermion
+   double mr2;    ///< soft mass of right-handed sfermion
+   double yf;     ///< Yukawa coupling
+   double vd, vu; ///< Higgs VEVs
+   double gY, g2; ///< gauge couplings (not GUT normalized)
+   double Tyf;    ///< trilinear coupling
+   double mu;     ///< Superpotential parameter
+   double T3;     ///< weak isospin
+   double Yl;     ///< Hypercharge of left-handed sfermion
+   double Yr;     ///< Hypercharge of right-handed sfermion
+};
+
+/**
+ * data needed to fill 2 x 2 sfermion mass matrix, in
+ * the case of U(1)-extended models with a single
+ * SM singlet charged under the U(1)' (i.e. the E6SSM)
+ */
+struct U1_extended_mass_data_one_singlet {
+   double ml2;        ///< soft mass of left-handed sfermion
+   double mr2;        ///< soft mass of right-handed sfermion
+   double yf;         ///< Yukawa coupling
+   double vd, vu;     ///< Higgs VEVs
+   double vs;         ///< SM singlet VEV
+   double QHd, QHu;   ///> U(1)'-charges of Higgs doublets
+   double QS;         ///< U(1)'-charge of SM singlet
+   double gY, g2, gN; ///< gauge couplings (not GUT normalized)
+   double Tyf;        ///< trilinear coupling
+   double mueff;      ///< superpotential parameter
+   double T3;         ///< weak isospin
+   double Yl;         ///< Hypercharge of left-handed sfermion
+   double Yr;         ///< Hypercharge of right-handed sfermion
+   double Ql;         ///< U(1)'-charge of left-handed sfermion
+   double Qr;         ///< U(1)'-charge of right-handed sfermion
+};
+
+/**
+ * data needed to fill 2 x 2 sfermion mass matrix, in
+ * the case of U(1)-extended models with a two
+ * SM singlets charged under the U(1)' (i.e. the NE6SSM)
+ */
+struct U1_extended_mass_data_two_singlets {
    double ml2;         ///< soft mass of left-handed sfermion
    double mr2;         ///< soft mass of right-handed sfermion
    double yf;          ///< Yukawa coupling
    double vd, vu;      ///< Higgs VEVs
-   double vs, vsb;     ///< singlet VEVs
-   double QS;          ///< N-charge of singlet
+   double vs, vsb;     ///< SM singlet VEV
+   double QHd, QHu;   ///> U(1)'-charges of Higgs doublets
+   double QS, QSb;     ///< U(1)'-charges of SM singlets
    double gY, g2, gN;  ///< gauge couplings (not GUT normalized)
    double Tyf;         ///< trilinear coupling
-   double mu;          ///< Effective superpotential parameter
+   double mueff;       ///< superpotential parameter
    double T3;          ///< weak isospin
    double Yl;          ///< Hypercharge of left-handed sfermion
    double Yr;          ///< Hypercharge of right-handed sfermion
-   double Ql;          ///< N-charge of left-handed sfermion
-   double Qr;          ///< N-charge of right-handed sfermion
+   double Ql;          ///< U(1)'-charge of left-handed sfermion
+   double Qr;          ///< U(1)'-charge of right-handed sfermion
 };
 
 double diagonalize_sfermions_2x2(const Mass_data&,
+                                 Eigen::Array<double,2,1>&);
+
+double diagonalize_sfermions_2x2(const U1_extended_mass_data_one_singlet&,
+                                 Eigen::Array<double,2,1>&);
+
+double diagonalize_sfermions_2x2(const U1_extended_mass_data_two_singlets&,
                                  Eigen::Array<double,2,1>&);
 
 } // namespace sfermions

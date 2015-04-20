@@ -3,11 +3,12 @@
 
 #define PKGNAME "@PKGNAME@"
 
-#define FLEXIBLESUSY_VERSION "@FLEXIBLESUSY_VERSION@"
-#define FLEXIBLESUSY_MAJOR @FLEXIBLESUSY_MAJOR@
-#define FLEXIBLESUSY_MINOR @FLEXIBLESUSY_MINOR@
-#define FLEXIBLESUSY_PATCH @FLEXIBLESUSY_PATCH@
-#define FLEXIBLESUSY_EXTRA "@FLEXIBLESUSY_EXTRA@"
+#define FLEXIBLESUSY_VERSION  "@FLEXIBLESUSY_VERSION@"
+#define FLEXIBLESUSY_MAJOR    @FLEXIBLESUSY_MAJOR@
+#define FLEXIBLESUSY_MINOR    @FLEXIBLESUSY_MINOR@
+#define FLEXIBLESUSY_PATCH    @FLEXIBLESUSY_PATCH@
+#define FLEXIBLESUSY_EXTRA    "@FLEXIBLESUSY_EXTRA@"
+#define GIT_COMMIT            "@GIT_COMMIT@"
 
 #define SARAH_VERSION         "@SARAH_VERSION@"
 #define SARAH_MAJOR           @SARAH_MAJOR@
@@ -21,16 +22,28 @@
 #define KERNEL_VERSION        "@KERNEL_VERSION@"
 
 /* Build variables */
+#define BLASLIBS              "@BLASLIBS@"
+#define BOOSTFLAGS            "@BOOSTFLAGS@"
+#define BOOSTTESTLIBS         "@BOOSTTESTLIBS@"
+#define BOOSTTHREADLIBS       "@BOOSTTHREADLIBS@"
 #define CXX                   "@CXX@"
 #define CXXFLAGS              "@CXXFLAGS@"
+#define EIGENFLAGS            "@EIGENFLAGS@"
 #define FC                    "@FC@"
 #define FFLAGS                "@FFLAGS@"
 #define FLIBS                 "@FLIBS@"
+#define GSLFLAGS              "@GSLFLAGS@"
+#define GSLLIBS               "@GSLLIBS@"
+#define LAPACKLIBS            "@LAPACKLIBS@"
+#define THREADLIBS            "@THREADLIBS@"
 
 /* Switches */
 
 /* Enable colored printout */
 @DEFINE_ENABLE_COLOR_PRINTOUT@
+
+/* Enable eigenvalues error check */
+@DEFINE_ENABLE_CHECK_EIGENVALUE_ERROR@
 
 /* Enable debug mode */
 @DEFINE_ENABLE_DEBUG@

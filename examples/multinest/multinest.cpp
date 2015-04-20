@@ -206,11 +206,10 @@ double calculate_log_likelihood(double *cube, int &num_dims, int &num_params, vo
    spectrum_generator.set_max_iterations(0);
    spectrum_generator.set_calculate_sm_masses(0);
    spectrum_generator.set_parameter_output_scale(0);
-   spectrum_generator.set_alternate_ewsb(1);
    spectrum_generator.set_pole_mass_loop_order(2);
    spectrum_generator.set_ewsb_loop_order(2);
    spectrum_generator.set_beta_loop_order(2);
-   spectrum_generator.set_threshold_corrections(1);
+   spectrum_generator.set_threshold_corrections_loop_order(1);
 
    spectrum_generator.run(oneset, input);
 
@@ -221,7 +220,7 @@ double calculate_log_likelihood(double *cube, int &num_dims, int &num_params, vo
    const double flag_log_likelihood = -2.0e90;
    const double inverse_width = 0.5; // (standard deviation)^{-1}
 
-   if (problems.have_serious_problem()) {
+   if (problems.have_problem()) {
       cube[4] = 0.;
       //cube[8] = 0.;
       //cube[9] = 0.;

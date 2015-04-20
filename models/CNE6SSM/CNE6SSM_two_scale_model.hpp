@@ -15,13 +15,18 @@
 // along with FlexibleSUSY.  If not, see
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
+
+// File generated at Sun 19 Apr 2015 20:37:13
+
 /**
  * @file CNE6SSM_two_scale_model.hpp
- * @brief contains class for model with routines needed to solve boundary 
- *        value problem using the two_scale solver by solvingt EWSB 
+ * @brief contains class for model with routines needed to solve boundary
+ *        value problem using the two_scale solver by solvingt EWSB
  *        and determine the pole masses and mixings
+ *
+ * This file was generated at Sun 19 Apr 2015 20:37:13 with FlexibleSUSY
+ * 1.0.4 (git commit: v1.0.3-cpc6-749-g227a308) and SARAH 4.5.3 .
  */
-// File generated at Fri 26 Sep 2014 11:58:49
 
 #ifndef CNE6SSM_TWO_SCALE_H
 #define CNE6SSM_TWO_SCALE_H
@@ -32,6 +37,7 @@
 #include "CNE6SSM_info.hpp"
 #include "model.hpp"
 #include "two_scale_model.hpp"
+#include "two_loop_corrections.hpp"
 #include "problems.hpp"
 #include "config.h"
 
@@ -43,37 +49,36 @@
 #endif
 
 #include <gsl/gsl_vector.h>
-#include <gsl/gsl_multiroots.h>
 #include <Eigen/Core>
 
 namespace flexiblesusy {
 
+class EWSB_solver;
 class Two_scale;
 /**
  * @class CNE6SSM<Two_scale>
  * @brief model class with routines for determing masses and mixinga and EWSB
  */
 template<>
-class CNE6SSM<Two_scale> 
-   : public Model 
-   , public Two_scale_model
-   , public CNE6SSM_soft_parameters {
+class CNE6SSM<Two_scale> : public Model, public Two_scale_model, public CNE6SSM_soft_parameters {
 public:
    explicit CNE6SSM(const CNE6SSM_input_parameters& input_ = CNE6SSM_input_parameters());
    virtual ~CNE6SSM();
 
+   void calculate_DRbar_masses();
    void calculate_DRbar_parameters();
    void calculate_pole_masses();
    virtual void clear();
    void clear_DRbar_parameters();
    void do_calculate_sm_pole_masses(bool);
    bool do_calculate_sm_pole_masses() const;
-   void do_use_alternate_ewsb(bool);
-   bool do_use_alternate_ewsb() const;
+   void do_force_output(bool);
+   bool do_force_output() const;
    void reorder_DRbar_masses();
    void reorder_pole_masses();
    void set_ewsb_iteration_precision(double);
    void set_ewsb_loop_order(unsigned);
+   void set_two_loop_corrections(const Two_loop_corrections&);
    void set_number_of_ewsb_iterations(std::size_t);
    void set_number_of_mass_iterations(std::size_t);
    void set_pole_mass_loop_order(unsigned);
@@ -84,6 +89,7 @@ public:
    CNE6SSM_physical& get_physical();
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems();
+   // DH:: better to make this const by declaring mutable maybe?
    const Eigen::Array<double,5,1> get_ewsb_tree_level_soft_masses();
    int solve_ewsb_tree_level();
    int solve_ewsb_one_loop();
@@ -91,72 +97,126 @@ public:
 
    // interface functions
    virtual void calculate_spectrum();
+   virtual void clear_problems();
    virtual std::string name() const;
    virtual void run_to(double scale, double eps = -1.0);
    virtual void print(std::ostream&) const;
    virtual void set_precision(double);
 
-   // Model interface
+   // model interface
    double get_parameter(unsigned) const;
    void set_parameter(unsigned, double);
 
    double get_MVG() const { return MVG; }
    double get_MGlu() const { return MGlu; }
    const Eigen::Array<double,3,1>& get_MFv() const { return MFv; }
+   double get_MFv(int i) const { return MFv(i); }
    double get_MChaP() const { return MChaP; }
    double get_MVP() const { return MVP; }
    double get_MVZ() const { return MVZ; }
    double get_MVZp() const { return MVZp; }
    const Eigen::Array<double,6,1>& get_MSd() const { return MSd; }
+   double get_MSd(int i) const { return MSd(i); }
    const Eigen::Array<double,3,1>& get_MSv() const { return MSv; }
+   double get_MSv(int i) const { return MSv(i); }
    const Eigen::Array<double,6,1>& get_MSu() const { return MSu; }
+   double get_MSu(int i) const { return MSu(i); }
    const Eigen::Array<double,6,1>& get_MSe() const { return MSe; }
+   double get_MSe(int i) const { return MSe(i); }
    const Eigen::Array<double,6,1>& get_MSDX() const { return MSDX; }
+   double get_MSDX(int i) const { return MSDX(i); }
    const Eigen::Array<double,5,1>& get_Mhh() const { return Mhh; }
+   double get_Mhh(int i) const { return Mhh(i); }
    const Eigen::Array<double,5,1>& get_MAh() const { return MAh; }
+   double get_MAh(int i) const { return MAh(i); }
    const Eigen::Array<double,2,1>& get_MHpm() const { return MHpm; }
+   double get_MHpm(int i) const { return MHpm(i); }
    const Eigen::Array<double,8,1>& get_MChi() const { return MChi; }
+   double get_MChi(int i) const { return MChi(i); }
    const Eigen::Array<double,2,1>& get_MCha() const { return MCha; }
+   double get_MCha(int i) const { return MCha(i); }
    const Eigen::Array<double,3,1>& get_MFe() const { return MFe; }
+   double get_MFe(int i) const { return MFe(i); }
    const Eigen::Array<double,3,1>& get_MFd() const { return MFd; }
+   double get_MFd(int i) const { return MFd(i); }
    const Eigen::Array<double,3,1>& get_MFu() const { return MFu; }
+   double get_MFu(int i) const { return MFu(i); }
    const Eigen::Array<double,3,1>& get_MFDX() const { return MFDX; }
+   double get_MFDX(int i) const { return MFDX(i); }
    const Eigen::Array<double,7,1>& get_MSHI0() const { return MSHI0; }
+   double get_MSHI0(int i) const { return MSHI0(i); }
    const Eigen::Array<double,4,1>& get_MSHIPM() const { return MSHIPM; }
+   double get_MSHIPM(int i) const { return MSHIPM(i); }
    const Eigen::Array<double,2,1>& get_MChaI() const { return MChaI; }
+   double get_MChaI(int i) const { return MChaI(i); }
    const Eigen::Array<double,7,1>& get_MChiI() const { return MChiI; }
+   double get_MChiI(int i) const { return MChiI(i); }
    const Eigen::Array<double,2,1>& get_MSHp0() const { return MSHp0; }
+   double get_MSHp0(int i) const { return MSHp0(i); }
    const Eigen::Array<double,2,1>& get_MSHpp() const { return MSHpp; }
+   double get_MSHpp(int i) const { return MSHpp(i); }
    const Eigen::Array<double,2,1>& get_MChiP() const { return MChiP; }
+   double get_MChiP(int i) const { return MChiP(i); }
    double get_MVWm() const { return MVWm; }
 
+Eigen::Array<double,1,1> get_MChargedHiggs() const;
+
+Eigen::Array<double,3,1> get_MPseudoscalarHiggs() const;
+
    const Eigen::Matrix<double,6,6>& get_ZD() const { return ZD; }
+   double get_ZD(int i, int k) const { return ZD(i,k); }
    const Eigen::Matrix<double,3,3>& get_ZV() const { return ZV; }
+   double get_ZV(int i, int k) const { return ZV(i,k); }
    const Eigen::Matrix<double,6,6>& get_ZU() const { return ZU; }
+   double get_ZU(int i, int k) const { return ZU(i,k); }
    const Eigen::Matrix<double,6,6>& get_ZE() const { return ZE; }
+   double get_ZE(int i, int k) const { return ZE(i,k); }
    const Eigen::Matrix<double,6,6>& get_ZDX() const { return ZDX; }
+   double get_ZDX(int i, int k) const { return ZDX(i,k); }
    const Eigen::Matrix<double,5,5>& get_ZH() const { return ZH; }
+   double get_ZH(int i, int k) const { return ZH(i,k); }
    const Eigen::Matrix<double,5,5>& get_ZA() const { return ZA; }
+   double get_ZA(int i, int k) const { return ZA(i,k); }
    const Eigen::Matrix<double,2,2>& get_ZP() const { return ZP; }
+   double get_ZP(int i, int k) const { return ZP(i,k); }
    const Eigen::Matrix<std::complex<double>,8,8>& get_ZN() const { return ZN; }
+   const std::complex<double>& get_ZN(int i, int k) const { return ZN(i,k); }
    const Eigen::Matrix<std::complex<double>,2,2>& get_UM() const { return UM; }
+   const std::complex<double>& get_UM(int i, int k) const { return UM(i,k); }
    const Eigen::Matrix<std::complex<double>,2,2>& get_UP() const { return UP; }
+   const std::complex<double>& get_UP(int i, int k) const { return UP(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZEL() const { return ZEL; }
+   const std::complex<double>& get_ZEL(int i, int k) const { return ZEL(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZER() const { return ZER; }
+   const std::complex<double>& get_ZER(int i, int k) const { return ZER(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZDL() const { return ZDL; }
+   const std::complex<double>& get_ZDL(int i, int k) const { return ZDL(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZDR() const { return ZDR; }
+   const std::complex<double>& get_ZDR(int i, int k) const { return ZDR(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZUL() const { return ZUL; }
+   const std::complex<double>& get_ZUL(int i, int k) const { return ZUL(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZUR() const { return ZUR; }
+   const std::complex<double>& get_ZUR(int i, int k) const { return ZUR(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZDXL() const { return ZDXL; }
+   const std::complex<double>& get_ZDXL(int i, int k) const { return ZDXL(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZDXR() const { return ZDXR; }
+   const std::complex<double>& get_ZDXR(int i, int k) const { return ZDXR(i,k); }
    const Eigen::Matrix<double,7,7>& get_UHI0() const { return UHI0; }
+   double get_UHI0(int i, int k) const { return UHI0(i,k); }
    const Eigen::Matrix<double,4,4>& get_UHIPM() const { return UHIPM; }
+   double get_UHIPM(int i, int k) const { return UHIPM(i,k); }
    const Eigen::Matrix<std::complex<double>,2,2>& get_ZMI() const { return ZMI; }
+   const std::complex<double>& get_ZMI(int i, int k) const { return ZMI(i,k); }
    const Eigen::Matrix<std::complex<double>,2,2>& get_ZPI() const { return ZPI; }
+   const std::complex<double>& get_ZPI(int i, int k) const { return ZPI(i,k); }
    const Eigen::Matrix<std::complex<double>,7,7>& get_ZNI() const { return ZNI; }
+   const std::complex<double>& get_ZNI(int i, int k) const { return ZNI(i,k); }
    const Eigen::Matrix<double,2,2>& get_UHp0() const { return UHp0; }
+   double get_UHp0(int i, int k) const { return UHp0(i,k); }
    const Eigen::Matrix<double,2,2>& get_UHpp() const { return UHpp; }
+   double get_UHpp(int i, int k) const { return UHpp(i,k); }
    const Eigen::Matrix<std::complex<double>,2,2>& get_ZNp() const { return ZNp; }
+   const std::complex<double>& get_ZNp(int i, int k) const { return ZNp(i,k); }
 
    void set_PhaseGlu(const std::complex<double>& PhaseGlu_) { PhaseGlu = PhaseGlu_; }
    const std::complex<double>& get_PhaseGlu() const { return PhaseGlu; }
@@ -170,12 +230,19 @@ public:
    double get_soft_trilinear(const CNE6SSM_soft_parameters&, CNE6SSM_info::Parameters) const;
    void set_pars_at_high_scale(CNE6SSM_soft_parameters &, double, double, double) const;
 
+   double get_mass_matrix_VG() const;
    void calculate_MVG();
+   double get_mass_matrix_Glu() const;
    void calculate_MGlu();
+   Eigen::Matrix<double,3,3> get_mass_matrix_Fv() const;
    void calculate_MFv();
+   double get_mass_matrix_ChaP() const;
    void calculate_MChaP();
+   double get_mass_matrix_VP() const;
    void calculate_MVP();
+   double get_mass_matrix_VZ() const;
    void calculate_MVZ();
+   double get_mass_matrix_VZp() const;
    void calculate_MVZp();
    Eigen::Matrix<double,6,6> get_mass_matrix_Sd() const;
    void calculate_MSd();
@@ -219,6 +286,7 @@ public:
    void calculate_MSHpp();
    Eigen::Matrix<double,2,2> get_mass_matrix_ChiP() const;
    void calculate_MChiP();
+   double get_mass_matrix_VWm() const;
    void calculate_MVWm();
 
    double get_ewsb_eq_hh_1() const;
@@ -226,18 +294,6 @@ public:
    double get_ewsb_eq_hh_3() const;
    double get_ewsb_eq_hh_4() const;
    double get_ewsb_eq_hh_5() const;
-
-   double get_alternate_ewsb_eq_hh_1() const;
-   double get_alternate_ewsb_eq_hh_2() const;
-   double get_alternate_ewsb_eq_hh_3() const;
-   double get_alternate_ewsb_eq_hh_4() const;
-   double get_alternate_ewsb_eq_hh_5() const;
-
-   double get_next_fpi_param_1() const;
-   double get_next_fpi_param_2() const;
-   double get_next_fpi_param_3() const;
-   double get_next_fpi_param_4() const;
-   double get_next_fpi_param_5() const;
 
    std::complex<double> CpUSdconjUSdVZVZ(unsigned gO1, unsigned gO2) const;
    std::complex<double> CpUSdconjUSdVZpVZp(unsigned gO1, unsigned gO2) const;
@@ -1231,16 +1287,19 @@ public:
    std::complex<double> self_energy_Fu_1_heavy_rotated(double p , unsigned gO1, unsigned gO2) const;
    std::complex<double> self_energy_Fu_PR_heavy_rotated(double p , unsigned gO1, unsigned gO2) const;
    std::complex<double> self_energy_Fu_PL_heavy_rotated(double p , unsigned gO1, unsigned gO2) const;
+   std::complex<double> self_energy_Fu_1_heavy(double p , unsigned gO1, unsigned gO2) const;
+   std::complex<double> self_energy_Fu_PR_heavy(double p , unsigned gO1, unsigned gO2) const;
+   std::complex<double> self_energy_Fu_PL_heavy(double p , unsigned gO1, unsigned gO2) const;
    std::complex<double> tadpole_hh(unsigned gO1) const;
 
    void calculate_MSu_3rd_generation(double&, double&, double&) const;
    void calculate_MSd_3rd_generation(double&, double&, double&) const;
    void calculate_MSv_3rd_generation(double&, double&, double&) const;
    void calculate_MSe_3rd_generation(double&, double&, double&) const;
-
+ 
    void self_energy_hh_2loop(double result[6]) const;
    void self_energy_Ah_2loop(double result[6]) const;
-
+ 
    void tadpole_hh_2loop(double result[3]) const;
 
    void calculate_MVG_pole();
@@ -1272,6 +1331,8 @@ public:
    void calculate_MSHpp_pole();
    void calculate_MChiP_pole();
    void calculate_MVWm_pole();
+   double calculate_MVWm_pole(double);
+   double calculate_MVZ_pole(double);
 
    double calculate_MFu_DRbar(double, int) const;
    double calculate_MFd_DRbar(double, int) const;
@@ -1287,11 +1348,12 @@ public:
 
 
 private:
-   struct Ewsb_parameters {
+   struct EWSB_args {
       CNE6SSM<Two_scale>* model;
       unsigned ewsb_loop_order;
    };
 
+#ifdef ENABLE_THREADS
    struct Thread {
       typedef void(CNE6SSM<Two_scale>::*Memfun_t)();
       CNE6SSM<Two_scale>* model;
@@ -1307,40 +1369,35 @@ private:
          }
       }
    };
+#endif
 
    std::size_t number_of_ewsb_iterations;
    std::size_t number_of_mass_iterations;
    unsigned ewsb_loop_order;
    unsigned pole_mass_loop_order;
    bool calculate_sm_pole_masses; ///< switch to calculate the pole masses of the Standard Model particles
-   bool use_alternate_ewsb;
+   bool force_output;             ///< switch to force output of pole masses
    double precision;              ///< RG running precision
    double ewsb_iteration_precision;
    static const std::size_t number_of_ewsb_equations = 5;
    CNE6SSM_physical physical; ///< contains the pole masses and mixings
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> problems;
-   std::exception_ptr thread_exception;
+   Two_loop_corrections two_loop_corrections; ///< used 2-loop corrections
 #ifdef ENABLE_THREADS
+   std::exception_ptr thread_exception;
    static std::mutex mtx_fortran; /// locks fortran functions
 #endif
 
    int solve_ewsb_iteratively();
    int solve_ewsb_iteratively(unsigned);
-   int solve_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
-   void ewsb_initial_guess(double[number_of_ewsb_equations]);
-   static int tadpole_equations(const gsl_vector*, void*, gsl_vector*);
-
-   int solve_alternate_ewsb_iteratively_with(const gsl_multiroot_fsolver_type*, const double[number_of_ewsb_equations]);
-   void alternate_ewsb_initial_guess(double[number_of_ewsb_equations]);
-   static int alternate_tadpole_equations(const gsl_vector*, void*, gsl_vector*);
-
-   int solve_alternate_ewsb_fpi(const double[number_of_ewsb_equations]);
-   int check_fpi_ewsb_solution(double);
-   void alternate_ewsb_fpi_initial_guess(double[number_of_ewsb_equations]);
-   static int calculate_fpi_update_step(const gsl_vector*, void*, gsl_vector*);
-
+   int solve_ewsb_iteratively_with(EWSB_solver*, const double[number_of_ewsb_equations]);
    int solve_ewsb_tree_level_via_soft_higgs_masses();
-
+   int check_ewsb_solution(double);
+   void ewsb_initial_guess(double[number_of_ewsb_equations]);
+   int ewsb_step(double[number_of_ewsb_equations]);
+   static int ewsb_step(const gsl_vector*, void*, gsl_vector*);
+   void tadpole_equations(double[number_of_ewsb_equations]) const;
+   static int tadpole_equations(const gsl_vector*, void*, gsl_vector*);
    void copy_DRbar_masses_to_pole_masses();
 
    // Passarino-Veltman loop functions

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:53:31
+// File generated at Sun 19 Apr 2015 20:31:35
 
 #ifndef CNE6SSM_INPUT_PARAMETERS_H
 #define CNE6SSM_INPUT_PARAMETERS_H
@@ -49,7 +49,7 @@ struct CNE6SSM_input_parameters {
    double BMuPhiInput;
 
    CNE6SSM_input_parameters()
-      : m0(0), m12(0), TanBeta(0), SignLambdax(0), Azero(0), ssumInput(0), QS(0),
+      : m0(0), m12(0), TanBeta(0), SignLambdax(1), Azero(0), ssumInput(0), QS(0),
    hEInput(Eigen::Matrix<double,3,2>::Zero()), SigmaLInput(0), KappaPrInput(0),
    SigmaxInput(0), gDInput(Eigen::Matrix<double,3,3>::Zero()), KappaInput(
    Eigen::Matrix<double,3,3>::Zero()), Lambda12Input(Eigen::Matrix<double,2,2>
@@ -59,6 +59,8 @@ struct CNE6SSM_input_parameters {
 
    {}
 };
+
+std::ostream& operator<<(std::ostream&, const CNE6SSM_input_parameters&);
 
 } // namespace flexiblesusy
 

@@ -48,17 +48,22 @@ void Spectrum_generator_settings::set(Settings o, double value)
 /**
  * Resets all spectrum generator settings to their defaults.
  *
- * | enum                  | possible values              | default value   |
- * |-----------------------|------------------------------|-----------------|
- * | precision             | any positive double          | 1.0e-4          |
- * | max_iterations        | any positive double          | 0 (= automatic) |
- * | algorithm             | 0 (two-scale) or 1 (lattice) | 0 (= two-scale) |
- * | calculate_sm_masses   | 0 (no) or 1 (yes)            | 0 (= no)        |
- * | pole_mass_loop_order  | 0, 1, 2                      | 2 (= 2-loop)    |
- * | ewsb_loop_order       | 0, 1, 2                      | 2 (= 2-loop)    |
- * | beta_loop_order       | 0, 1, 2                      | 2 (= 2-loop)    |
- * | threshold_corrections | 0 (disabled), 1 (enabled)    | 1 (= enabled)   |
- * | alternate_ewsb        | 0 (disabled), 1 (enabled)    | 0 (= disabled)  |
+ * | enum                             | possible values              | default value   |
+ * |----------------------------------|------------------------------|-----------------|
+ * | precision                        | any positive double          | 1.0e-4          |
+ * | max_iterations                   | any positive double          | 0 (= automatic) |
+ * | algorithm                        | 0 (two-scale) or 1 (lattice) | 0 (= two-scale) |
+ * | calculate_sm_masses              | 0 (no) or 1 (yes)            | 0 (= no)        |
+ * | pole_mass_loop_order             | 0, 1, 2                      | 2 (= 2-loop)    |
+ * | ewsb_loop_order                  | 0, 1, 2                      | 2 (= 2-loop)    |
+ * | beta_loop_order                  | 0, 1, 2                      | 2 (= 2-loop)    |
+ * | threshold_corrections_loop_order | 0, 1, 2                      | 2 (= 2-loop)    |
+ * | higgs_2loop_correction_at_as     | 0, 1                         | 1 (= enabled)   |
+ * | higgs_2loop_correction_ab_as     | 0, 1                         | 1 (= enabled)   |
+ * | higgs_2loop_correction_at_at     | 0, 1                         | 1 (= enabled)   |
+ * | higgs_2loop_correction_atau_atau | 0, 1                         | 1 (= enabled)   |
+ * | force_output                     | 0 (no) or 1 (yes)            | 0 (= no)        |
+ * | top_2loop_corrections_qcd        | 0, 1                         | 1 (= enabled)   |
  */
 void Spectrum_generator_settings::reset()
 {
@@ -69,8 +74,25 @@ void Spectrum_generator_settings::reset()
    values[pole_mass_loop_order]  = 2.;
    values[ewsb_loop_order]       = 2.;
    values[beta_loop_order]       = 2.;
-   values[threshold_corrections] = 1.;
-   values[alternate_ewsb]        = 0.;
+   values[threshold_corrections_loop_order] = 2.;
+   values[higgs_2loop_correction_at_as]     = 1.;
+   values[higgs_2loop_correction_ab_as]     = 1.;
+   values[higgs_2loop_correction_at_at]     = 1.;
+   values[higgs_2loop_correction_atau_atau] = 1.;
+   values[calculate_sm_masses]   = 0.; // 0 = false
+   values[top_2loop_corrections_qcd]        = 1.;
+}
+
+Two_loop_corrections Spectrum_generator_settings::get_two_loop_corrections() const
+{
+   Two_loop_corrections two_loop_corrections;
+   two_loop_corrections.higgs_at_as     = get(higgs_2loop_correction_at_as);
+   two_loop_corrections.higgs_ab_as     = get(higgs_2loop_correction_ab_as);
+   two_loop_corrections.higgs_at_at     = get(higgs_2loop_correction_at_at);
+   two_loop_corrections.higgs_atau_atau = get(higgs_2loop_correction_atau_atau);
+   two_loop_corrections.top_qcd         = get(top_2loop_corrections_qcd);
+
+   return two_loop_corrections;
 }
 
 } // namespace flexiblesusy

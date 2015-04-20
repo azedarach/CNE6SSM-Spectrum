@@ -29,12 +29,13 @@ BOOST_AUTO_TEST_CASE( test_absolute_fixedpoint_1dim )
          }
    };
 
-   const int max_iters = 100;
+   const std::size_t max_iters = 100;
    const double tolerance = 1.0e-5;
-   bool use_absolute_check = true;
 
-   Fixed_point_iterator<1> fp_iter_1d(FixedPoint1D::func, NULL, max_iters, 
-                                      tolerance, use_absolute_check);
+   fixed_point_iterator::Convergence_tester_absolute convergence_tester(tolerance);
+
+   Fixed_point_iterator<1, fixed_point_iterator::Convergence_tester_absolute> 
+      fp_iter_1d(FixedPoint1D::func, NULL, max_iters, convergence_tester);
 
    const double start[1] = { 0.499 };
 
@@ -60,12 +61,13 @@ BOOST_AUTO_TEST_CASE( test_relative_fixedpoint_1dim )
          }
    };
 
-   const int max_iters = 100;
+   const std::size_t max_iters = 100;
    const double tolerance = 1.0e-5;
-   bool use_absolute_check = false;
 
-   Fixed_point_iterator<1> fp_iter_1d(FixedPoint1D::func, NULL, max_iters, 
-                                      tolerance, use_absolute_check);
+   fixed_point_iterator::Convergence_tester_relative convergence_tester(tolerance);
+
+   Fixed_point_iterator<1, fixed_point_iterator::Convergence_tester_relative> 
+      fp_iter_1d(FixedPoint1D::func, NULL, max_iters, convergence_tester);
 
    const double start[1] = { 0.499 };
 
@@ -123,8 +125,13 @@ BOOST_AUTO_TEST_CASE( test_runaway_iteration )
             return GSL_SUCCESS;
          }
    };
-   
-   Fixed_point_iterator<2> fp_iter(Repeller::repel, NULL, 100, 1.0e-5, false);
+
+   const std::size_t max_iters = 100;
+   const double tolerance = 1.0e-5;
+
+   fixed_point_iterator::Convergence_tester_relative convergence_tester(tolerance);   
+
+   Fixed_point_iterator<2> fp_iter(Repeller::repel, NULL, max_iters, convergence_tester);
 
    const double start[2] = {1., 0.5};
 
@@ -171,8 +178,10 @@ unsigned Parabola::number_of_calls = 0;
 BOOST_AUTO_TEST_CASE( test_parabola_2dim )
 {
    const double precision = 1.0e-4;
+   const std::size_t max_iters = 1000;
    const double start[2] = {4.95, 1.01};
-   Fixed_point_iterator<2> fpi(Parabola::func, NULL, 1000, precision);
+   fixed_point_iterator::Convergence_tester_relative convergence_tester(precision);
+   Fixed_point_iterator<2> fpi(Parabola::func, NULL, max_iters, convergence_tester);
    int status = GSL_SUCCESS;
 
    Parabola::reset();

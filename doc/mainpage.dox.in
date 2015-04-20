@@ -47,7 +47,7 @@ A quick installation guide can be found in the \ref README file.
 
  - FlexibleSUSY — A spectrum generator generator for supersymmetric
    models
-   [<a href="http://arxiv.org/abs/1406.2319">arxiv:1406:2319</a>]
+   [<a href="http://arxiv.org/abs/1406.2319">CPC 190 (2015) 139-172</a>]
 
 If you use FlexibleSUSY in your work please cite the <a
   href="http://inspirehep.net/record/1299998">FlexibleSUSY manual</a>.
@@ -64,6 +64,6 @@ with FlexibleSUSY:
 
  -  SoftSUSY
     [<a href="http://arxiv.org/abs/hep-ph/0104145">CPC 143 (2002) 305-331</a>,
-     <a href="http://arxiv.org/abs/1311.7659">arxiv:1311.7659</a>]
+     <a href="http://arxiv.org/abs/1311.7659">CPC 185 (2014) 2322</a>]
 
 */

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Fri 26 Sep 2014 11:53:33
+// File generated at Sun 19 Apr 2015 20:31:38
 
 #include "CNE6SSM_info.hpp"
 
@@ -25,6 +25,11 @@
 namespace flexiblesusy {
 
 namespace CNE6SSM_info {
+   const double normalization_g1 = 0.7745966692414834;
+   const double normalization_g2 = 1;
+   const double normalization_g3 = 1;
+   const double normalization_g1p = 0.15811388300841897;
+
    const unsigned particle_multiplicities[NUMBER_OF_PARTICLES] = {1, 1, 3, 1, 1
       , 1, 1, 6, 3, 6, 6, 6, 5, 5, 2, 8, 2, 3, 3, 3, 3, 7, 4, 2, 7, 2, 2, 2, 1};
 
@@ -188,21 +193,24 @@ namespace CNE6SSM_info {
 
    const char* model_name = "CNE6SSM";
    const bool is_low_energy_model = false;
+   const bool is_supersymmetric_model = true;
 
 void print(std::ostream& ostr)
 {
    ostr
       << "Model information\n"
       << "=================\n"
-      << "Model name:            " << model_name << '\n'
-      << "Is a low-energy model: "
-      << (is_low_energy_model ? "true" : "false") << '\n'
-      << "Number of multiplets:  " << NUMBER_OF_PARTICLES << '\n'
-      << "Number of parameters:  " << NUMBER_OF_PARAMETERS << '\n'
+      << "Model name:                " << model_name << '\n'
+      << "Is a low-energy model:     "
+      << (is_low_energy_model ? "yes" : "no") << '\n'
+      << "Is a supersymmetric model: "
+      << (is_supersymmetric_model ? "yes" : "no") << '\n'
+      << "Number of multiplets:      " << NUMBER_OF_PARTICLES << '\n'
+      << "Number of parameters:      " << NUMBER_OF_PARAMETERS << '\n'
       ;
 
    ostr << "\n"
-      "Multiplets:            ";
+      "Multiplets:                ";
    for (unsigned i = 0; i < NUMBER_OF_PARTICLES; i++) {
       ostr << particle_names[i]
            << '[' << particle_multiplicities[i] << ']';
@@ -211,7 +219,7 @@ void print(std::ostream& ostr)
    }
 
    ostr << "\n\n"
-      "Parameters:            ";
+      "Parameters:                ";
    for (unsigned i = 0; i < NUMBER_OF_PARAMETERS; i++) {
       ostr << parameter_names[i];
       if (i + 1 < NUMBER_OF_PARAMETERS)

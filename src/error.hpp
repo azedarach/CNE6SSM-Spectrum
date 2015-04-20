@@ -58,9 +58,38 @@ public:
               << " after " << number_of_iterations << " iterations";
       return message.str();
    }
-   unsigned get_number_of_iterations() { return number_of_iterations; }
+   unsigned get_number_of_iterations() const { return number_of_iterations; }
 private:
    unsigned number_of_iterations;
+};
+
+/**
+ * @class NoRhoConvergenceError
+ * @brief No convergence while calculating the rho-hat parameter
+ */
+class NoRhoConvergenceError : public Error {
+public:
+   explicit NoRhoConvergenceError(unsigned number_of_iterations_,
+                                  double sin_theta_, double rho_hat_)
+      : number_of_iterations(number_of_iterations_)
+      , sin_theta(sin_theta_)
+      , rho_hat(rho_hat_)
+      {}
+   virtual ~NoRhoConvergenceError() {}
+   virtual std::string what() const {
+      std::stringstream message;
+      message << "RGFlow<Two_scale>::NoRhoConvergenceError: no convergence"
+              << " after " << number_of_iterations << " iterations "
+              << " (sin(theta)=" << sin_theta << ", rho-hat=" << rho_hat
+              << ")";
+      return message.str();
+   }
+   unsigned get_number_of_iterations() const { return number_of_iterations; }
+   double get_sin_theta() const { return sin_theta; }
+   double get_rho_hat() const { return rho_hat; }
+private:
+   unsigned number_of_iterations;
+   double sin_theta, rho_hat;
 };
 
 /**
@@ -95,11 +124,26 @@ public:
    virtual ~OutOfMemoryError() {}
    virtual std::string what() const {
       std::stringstream message;
-      message << "OutOfMemoryError: Not enough memory: " << msg;
+      message << "OutOfMemoryError: Not enought memory: " << msg;
       return message.str();
    }
 private:
    std::string msg;
+};
+
+/**
+ * @class FailedDiagonalizationError
+ * @brief Failed diagonalization of a matrix
+ */
+class FailedDiagonalizationError : public Error {
+public:
+   explicit FailedDiagonalizationError()
+      {}
+   virtual ~FailedDiagonalizationError() {}
+   virtual std::string what() const {
+      return std::string("FailedDiagonalizationError:"
+                         " Mass matrix diagonalization failed");
+   }
 };
 
 /**
@@ -132,12 +176,30 @@ public:
       : msg(msg_)
       {}
    virtual ~ReadError() {}
-   virtual std::string what() const
-      {
+   virtual std::string what() const {
          std::stringstream message;
-         message << "ReadError: Error reading file: "<< msg;
+         message << "ReadError: Error reading file: " << msg;
          return message.str();
       }
+private:
+   std::string msg;
+};
+
+/**
+ * @class DivideByZeroError
+ * @brief Attempted to divide by zero
+ */
+class DivideByZeroError : public Error {
+public:
+   explicit DivideByZeroError(const std::string& msg_)
+      : msg(msg_)
+      {}
+   virtual ~DivideByZeroError() {}
+   virtual std::string what() const {
+      std::stringstream message;
+      message << "DivideByZeroError: attempted to divide by zero: " << msg;
+      return message.str();
+   }
 private:
    std::string msg;
 };
