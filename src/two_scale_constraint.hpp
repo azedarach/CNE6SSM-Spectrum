@@ -37,21 +37,6 @@ public:
    virtual void set_model(Two_scale_model*) = 0; ///< set model where to apply the constraint
 };
 
-template <class TargetModel, class TwoScaleModel>
-TargetModel cast_model(TwoScaleModel abstract_model)
-{
-#ifdef ENABLE_DEBUG
-   TargetModel tmp = dynamic_cast<TargetModel>(abstract_model);
-   if (!tmp) {
-      FATAL("model " << abstract_model << " is not of type "
-            << typeid(TargetModel).name());
-   }
-   return tmp;
-#else
-   return static_cast<TargetModel>(abstract_model);
-#endif
-}
-
 } // namespace flexiblesusy
 
 #endif

@@ -19,12 +19,14 @@
 #ifndef TWO_SCALE_MODEL_H
 #define TWO_SCALE_MODEL_H
 
+#include "model.hpp"
+
 #include <string>
 #include <ostream>
 
 namespace flexiblesusy {
 
-class Two_scale_model {
+class Two_scale_model : public Model {
 public:
    virtual ~Two_scale_model() {}
    virtual void calculate_spectrum() = 0;
