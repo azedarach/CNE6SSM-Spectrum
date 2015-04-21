@@ -21,7 +21,6 @@
 
 #include "constraint.hpp"
 #include "logger.hpp"
-#include <typeinfo>
 
 namespace flexiblesusy {
 
