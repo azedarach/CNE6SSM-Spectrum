@@ -29,10 +29,8 @@ namespace flexiblesusy {
 class Two_scale_model : public Model {
 public:
    virtual ~Two_scale_model() {}
-   virtual void calculate_spectrum() = 0;
    virtual void clear_problems() {}
    virtual std::string name() const { return "unnamed"; }
-   virtual void run_to(double, double eps = -1.0) = 0;
    virtual void print(std::ostream& out) const { out << "Model: " << name(); }
    friend std::ostream& operator<<(std::ostream& out, const Two_scale_model& model) {
       model.print(out);
