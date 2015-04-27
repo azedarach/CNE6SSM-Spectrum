@@ -671,19 +671,6 @@ int main(int argc, const char* argv[])
 
    // attempt to read scan input file
 
-   QedQcd oneset;
-   oneset.toMz();
-
-   CNE6SSM_spectrum_generator<algorithm_type> spectrum_generator;
-   spectrum_generator.set_precision_goal(1.0e-3);
-   spectrum_generator.set_max_iterations(0);   // 0 == automatic
-   spectrum_generator.set_calculate_sm_masses(0); // 0 == no
-   if (parameters.get_output_scale() <= 0.) {
-      spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale 
-   } else {
-      spectrum_generator.set_parameter_output_scale(parameters.get_output_scale());
-   }
-
    std::vector<std::size_t> scan_dimensions = {parameters.get_m0_npts(), parameters.get_m12_npts(), 
                                                parameters.get_TanBeta_npts(), 
                                                parameters.get_SignLambdax_npts(), 
@@ -839,6 +826,19 @@ int main(int argc, const char* argv[])
    while (!scan.has_finished()) {
       set_minpar_values(parameters, scan.get_position(), input);
 
+      QedQcd oneset;
+      oneset.toMz();
+
+      CNE6SSM_spectrum_generator<algorithm_type> spectrum_generator;
+      spectrum_generator.set_precision_goal(1.0e-3);
+      spectrum_generator.set_max_iterations(0);   // 0 == automatic
+      spectrum_generator.set_calculate_sm_masses(0); // 0 == no
+      if (parameters.get_output_scale() <= 0.) {
+         spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale 
+      } else {
+         spectrum_generator.set_parameter_output_scale(parameters.get_output_scale());
+      }
+      
       spectrum_generator.run(oneset, input);
 
       const CNE6SSM<algorithm_type>& model = spectrum_generator.get_model();

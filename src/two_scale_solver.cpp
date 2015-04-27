@@ -112,7 +112,7 @@ void RGFlow<Two_scale>::check_setup() const
          throw SetupError(message.str());
       }
 
-      // check wether last model has a non-zero matching condition
+      // check whether last model has a non-zero matching condition
       if (m + 1 == models.size()) {
          if (model->matching_condition)
             WARNING("the matching condition of the " << model->model->name()
