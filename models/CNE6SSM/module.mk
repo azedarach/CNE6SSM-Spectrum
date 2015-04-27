@@ -8,18 +8,17 @@ CNE6SSM_MK     := \
 		$(DIR)/module.mk
 
 CNE6SSM_TWO_SCALE_SUSY_MK := \
-		$(DIR)/two_scale_susy.mk
+		$(DIR)/susy.mk
 
 CNE6SSM_TWO_SCALE_SOFT_MK := \
-		$(DIR)/two_scale_soft.mk
+		$(DIR)/soft.mk
 
 CNE6SSM_TWO_SCALE_MK := \
 		$(CNE6SSM_TWO_SCALE_SUSY_MK) \
 		$(CNE6SSM_TWO_SCALE_SOFT_MK)
 
 CNE6SSM_SLHA_INPUT := \
-		$(DIR)/LesHouches.in.CNE6SSM \
-		$(DIR)/LesHouches.in.CNE6SSM~
+		$(DIR)/LesHouches.in.CNE6SSM
 
 CNE6SSM_GNUPLOT := \
 		$(DIR)/CNE6SSM_plot_rgflow.gnuplot \
