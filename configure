@@ -183,7 +183,7 @@ MAKELIB="ar cru"
 MATH="math"
 # available RG algorithms
 ALGORITHMS="two_scale"
-available_algorithms="two_scale lattice"
+available_algorithms="two_scale lattice semianalytic"
 # models that will be compiled
 MODELS="all"
 # addons that will be compiled
@@ -875,7 +875,7 @@ check_algorithms() {
         case "$a" in
             all)
                 ALGORITHMS="$available_algorithms"; break ;;
-            two_scale|lattice)
+            two_scale|lattice|semianalytic)
                 ALGORITHMS="$ALGORITHMS $a"
                 continue ;;
             *)

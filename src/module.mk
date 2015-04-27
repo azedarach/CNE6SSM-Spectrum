@@ -110,6 +110,27 @@ LIBFLEXI_HDR += \
 		$(DIR)/two_scale_solver.hpp
 endif
 
+ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
+LIBFLEXI_SRC += \
+		$(DIR)/semianalytic_convergence_tester.cpp \
+		$(DIR)/two_scale_running_precision.cpp \
+		$(DIR)/semianalytic_solver.cpp
+
+LIBFLEXI_HDR += \
+		$(DIR)/semianalytic_constraint.hpp \
+		$(DIR)/semianalytic_convergence_tester.hpp \
+		$(DIR)/semianalytic_convergence_tester_drbar.hpp \
+		$(DIR)/semianalytic_initial_guesser.hpp \
+		$(DIR)/semianalytic_matching.hpp \
+		$(DIR)/semianalytic_model.hpp \
+		$(DIR)/two_scale_running_precision.hpp \
+		$(DIR)/semianalytic_solver.hpp
+endif
+
+# remove duplicates in case all algorithms are used
+LIBFLEXI_SRC := $(sort $(LIBFLEXI_SRC))
+LIBFLEXI_HDR := $(sort $(LIBFLEXI_HDR))
+
 LIBFLEXI_OBJ := \
 		$(patsubst %.cpp, %.o, $(filter %.cpp, $(LIBFLEXI_SRC))) \
 		$(patsubst %.f, %.o, $(filter %.f, $(LIBFLEXI_SRC)))
