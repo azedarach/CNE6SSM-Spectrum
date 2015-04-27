@@ -18,7 +18,7 @@
 
 // File generated at Sun 19 Apr 2015 20:30:59
 
-#include "CNE6SSM_two_scale_soft_parameters.hpp"
+#include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
 
 namespace flexiblesusy {

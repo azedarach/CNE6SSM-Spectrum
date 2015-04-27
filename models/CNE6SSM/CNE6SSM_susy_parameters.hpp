@@ -18,8 +18,8 @@
 
 // File generated at Sun 19 Apr 2015 20:24:34
 
-#ifndef CNE6SSM_TWO_SCALE_susy_parameters_H
-#define CNE6SSM_TWO_SCALE_susy_parameters_H
+#ifndef CNE6SSM_susy_parameters_H
+#define CNE6SSM_susy_parameters_H
 
 #include "betafunction.hpp"
 #include "CNE6SSM_input_parameters.hpp"

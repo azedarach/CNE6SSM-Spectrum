@@ -32,7 +32,7 @@
 #define CNE6SSM_TWO_SCALE_H
 
 #include "CNE6SSM_model.hpp"
-#include "CNE6SSM_two_scale_soft_parameters.hpp"
+#include "CNE6SSM_soft_parameters.hpp"
 #include "CNE6SSM_physical.hpp"
 #include "CNE6SSM_info.hpp"
 #include "two_scale_model.hpp"

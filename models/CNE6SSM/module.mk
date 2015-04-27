@@ -48,8 +48,8 @@ LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_two_scale_low_scale_constraint.cpp \
 		$(DIR)/CNE6SSM_two_scale_model.cpp \
 		$(DIR)/CNE6SSM_two_scale_model_slha.cpp \
-		$(DIR)/CNE6SSM_two_scale_susy_parameters.cpp \
-		$(DIR)/CNE6SSM_two_scale_soft_parameters.cpp \
+		$(DIR)/CNE6SSM_susy_parameters.cpp \
+		$(DIR)/CNE6SSM_soft_parameters.cpp \
 		$(DIR)/CNE6SSM_two_scale_susy_scale_constraint.cpp
 EXECNE6SSM_SRC += \
 		$(DIR)/gridscan_CNE6SSM.cpp \
@@ -80,8 +80,8 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_two_scale_low_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_two_scale_model.hpp \
 		$(DIR)/CNE6SSM_two_scale_model_slha.hpp \
-		$(DIR)/CNE6SSM_two_scale_soft_parameters.hpp \
-		$(DIR)/CNE6SSM_two_scale_susy_parameters.hpp \
+		$(DIR)/CNE6SSM_soft_parameters.hpp \
+		$(DIR)/CNE6SSM_susy_parameters.hpp \
 		$(DIR)/CNE6SSM_two_scale_susy_scale_constraint.hpp
 
 ifneq ($(MAKECMDGOALS),showbuild)

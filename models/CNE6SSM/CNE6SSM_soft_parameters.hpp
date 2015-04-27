@@ -18,11 +18,11 @@
 
 // File generated at Sun 19 Apr 2015 20:30:36
 
-#ifndef CNE6SSM_TWO_SCALE_soft_parameters_H
-#define CNE6SSM_TWO_SCALE_soft_parameters_H
+#ifndef CNE6SSM_soft_parameters_H
+#define CNE6SSM_soft_parameters_H
 
 #include "rge.h"
-#include "CNE6SSM_two_scale_susy_parameters.hpp"
+#include "CNE6SSM_susy_parameters.hpp"
 
 #include <iosfwd>
 
