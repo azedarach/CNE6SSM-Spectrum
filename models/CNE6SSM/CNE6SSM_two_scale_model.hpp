@@ -57,7 +57,7 @@ class EWSB_solver;
 class Two_scale;
 /**
  * @class CNE6SSM<Two_scale>
- * @brief model class with routines for determing masses and mixinga and EWSB
+ * @brief model class with routines for determing masses and mixings and EWSB
  */
 template<>
 class CNE6SSM<Two_scale> : public Two_scale_model, public CNE6SSM_soft_parameters {
