@@ -5,7 +5,7 @@
 //     parameters defined in CNE6SSM_input_parameters)
 // ====================================================================
 
-#include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "CNE6SSM_scan_parameters.hpp"
 #include "CNE6SSM_scan_utilities.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
@@ -29,7 +29,7 @@ static std::minstd_rand generator(seed);
 
 namespace flexiblesusy {
    
-   void set_default_parameter_values(CNE6SSM_input_parameters& input)
+   void set_default_parameter_values(CNE6SSM_input_parameters<Two_scale>& input)
    {
       if (is_zero(input.TanBeta))
          input.TanBeta = 10.0;
@@ -97,7 +97,7 @@ namespace flexiblesusy {
       
    }
 
-   void set_minpar_values(CNE6SSM_scan_parameters params, const std::vector<std::size_t>& posn, CNE6SSM_input_parameters& input)
+   void set_minpar_values(CNE6SSM_scan_parameters params, const std::vector<std::size_t>& posn, CNE6SSM_input_parameters<Two_scale>& input)
    {
       if (params.get_is_grid_scan()) {
 
@@ -541,7 +541,7 @@ int main(int argc, const char* argv[])
       drbar_mixings_out_stream.open(drbar_mixings_output_file, std::ofstream::out);
    }
 
-   CNE6SSM_input_parameters input;
+   CNE6SSM_input_parameters<Two_scale> input;
    set_default_parameter_values(input);
 
    // attempt to read scan input file

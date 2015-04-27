@@ -22,7 +22,6 @@
 #define CNE6SSM_susy_parameters_H
 
 #include "betafunction.hpp"
-#include "CNE6SSM_input_parameters.hpp"
 
 #include <iosfwd>
 #include <string>

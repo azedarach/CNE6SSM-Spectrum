@@ -35,6 +35,7 @@
 #include "CNE6SSM_soft_parameters.hpp"
 #include "CNE6SSM_physical.hpp"
 #include "CNE6SSM_info.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "two_scale_model.hpp"
 #include "two_loop_corrections.hpp"
 #include "problems.hpp"
@@ -61,7 +62,7 @@ class Two_scale;
 template<>
 class CNE6SSM<Two_scale> : public Two_scale_model, public CNE6SSM_soft_parameters {
 public:
-   explicit CNE6SSM(const CNE6SSM_input_parameters& input_ = CNE6SSM_input_parameters());
+   explicit CNE6SSM(const CNE6SSM_input_parameters<Two_scale>& input_ = CNE6SSM_input_parameters<Two_scale>());
    virtual ~CNE6SSM();
 
    void calculate_DRbar_masses();
@@ -82,8 +83,8 @@ public:
    void set_number_of_mass_iterations(std::size_t);
    void set_pole_mass_loop_order(unsigned);
    void set_physical(const CNE6SSM_physical&);
-   const CNE6SSM_input_parameters& get_input() const;
-   void set_input_parameters(const CNE6SSM_input_parameters&);
+   const CNE6SSM_input_parameters<Two_scale>& get_input() const;
+   void set_input_parameters(const CNE6SSM_input_parameters<Two_scale>&);
    double get_ewsb_iteration_precision() const;
    double get_ewsb_loop_order() const;
    const CNE6SSM_physical& get_physical() const;
@@ -1372,7 +1373,7 @@ private:
 #endif
 
    // input parameters
-   CNE6SSM_input_parameters input;
+   CNE6SSM_input_parameters<Two_scale> input;
 
    std::size_t number_of_ewsb_iterations;
    std::size_t number_of_mass_iterations;

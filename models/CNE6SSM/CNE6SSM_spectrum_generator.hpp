@@ -78,7 +78,7 @@ public:
    void set_threshold_corrections_loop_order(unsigned t) { threshold_corrections_loop_order = t; }
    void set_two_loop_corrections(const Two_loop_corrections& c) { model.set_two_loop_corrections(c); }
 
-   void run(const QedQcd& oneset, const CNE6SSM_input_parameters& input);
+   void run(const QedQcd& oneset, const CNE6SSM_input_parameters<T>& input);
    void write_running_couplings(const std::string& filename = "CNE6SSM_rge_running.dat") const;
    void write_spectrum(const std::string& filename = "CNE6SSM_spectrum.dat") const;
 
@@ -111,7 +111,7 @@ private:
  */
 template <class T>
 void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
-                                const CNE6SSM_input_parameters& input)
+                                        const CNE6SSM_input_parameters<T>& input)
 {
    model.clear();
    model.set_input_parameters(input);

@@ -22,7 +22,6 @@
 #define CNE6SSM_TWO_SCALE_LOW_SCALE_CONSTRAINT_H
 
 #include "CNE6SSM_low_scale_constraint.hpp"
-#include "CNE6SSM_input_parameters.hpp"
 #include "two_scale_constraint.hpp"
 #include "lowe.h"
 #include <Eigen/Core>

@@ -19,7 +19,7 @@
 // File generated at Sun 19 Apr 2015 20:31:38
 
 #include "CNE6SSM_slha_io.hpp"
-#include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
 #include "numerics.hpp"
@@ -59,7 +59,7 @@ void CNE6SSM_slha_io::clear()
  *
  * @param input struct of input parameters
  */
-void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters& input)
+void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters<Two_scale>& input)
 {
    std::ostringstream extpar;
 
@@ -75,7 +75,7 @@ void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters& input)
  *
  * @param input struct of input parameters
  */
-void CNE6SSM_slha_io::set_minpar(const CNE6SSM_input_parameters& input)
+void CNE6SSM_slha_io::set_minpar(const CNE6SSM_input_parameters<Two_scale>& input)
 {
    std::ostringstream minpar;
 
@@ -341,7 +341,7 @@ void CNE6SSM_slha_io::read_from_file(const std::string& file_name)
  *
  * @param input struct of model input parameters
  */
-void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters& input) const
+void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters<Two_scale>& input) const
 {
    SLHA_io::Tuple_processor minpar_processor
       = boost::bind(&CNE6SSM_slha_io::fill_minpar_tuple, boost::ref(input), _1, _2);
@@ -381,7 +381,7 @@ void CNE6SSM_slha_io::fill(Spectrum_generator_settings& settings) const
    slha_io.read_block("FlexibleSUSY", flexiblesusy_processor);
 }
 
-void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters& input,
+void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters<Two_scale>& input,
                                                 int key, double value)
 {
    switch (key) {
@@ -395,7 +395,7 @@ void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters& input,
 
 }
 
-void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_input_parameters& input,
+void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_input_parameters<Two_scale>& input,
                                                 int key, double value)
 {
    switch (key) {

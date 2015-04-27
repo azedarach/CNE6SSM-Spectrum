@@ -42,7 +42,8 @@ class Two_scale;
 template<>
 class CNE6SSM_slha<Two_scale> : public CNE6SSM<Two_scale> {
 public:
-   explicit CNE6SSM_slha(const CNE6SSM_input_parameters& input_ = CNE6SSM_input_parameters());
+   explicit CNE6SSM_slha(const CNE6SSM_input_parameters<Two_scale>& input_
+                         = CNE6SSM_input_parameters<Two_scale>());
    explicit CNE6SSM_slha(const CNE6SSM<Two_scale>&);
    virtual ~CNE6SSM_slha();
 

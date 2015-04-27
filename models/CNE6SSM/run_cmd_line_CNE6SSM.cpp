@@ -18,7 +18,7 @@
 
 // File generated at Sun 19 Apr 2015 20:37:13
 
-#include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
 #include "CNE6SSM_slha_io.hpp"
 
@@ -49,7 +49,7 @@ void print_usage()
 }
 
 void set_command_line_parameters(int argc, char* argv[],
-                                 CNE6SSM_input_parameters& input)
+                                 CNE6SSM_input_parameters<Two_scale>& input)
 {
    for (int i = 1; i < argc; ++i) {
       const char* option = argv[i];
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
    using namespace softsusy;
    typedef Two_scale algorithm_type;
 
-   CNE6SSM_input_parameters input;
+   CNE6SSM_input_parameters<Two_scale> input;
    set_command_line_parameters(argc, argv, input);
 
    QedQcd oneset;

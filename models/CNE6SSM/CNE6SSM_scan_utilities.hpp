@@ -22,7 +22,7 @@
 
 namespace flexiblesusy {
 
-void write_CNE6SSM_inputs(const CNE6SSM_input_parameters&, std::ostream &, std::size_t);
+void write_CNE6SSM_inputs(const CNE6SSM_input_parameters<Two_scale>&, std::ostream &, std::size_t);
 void write_CNE6SSM_inputs_list(std::ostream &, std::size_t);
 std::valarray<double> to_valarray(double);
 
@@ -78,7 +78,7 @@ private:
    typedef std::vector<TPoleMass> TPoleMasses;
    TPoleMasses pole_masses;
 
-   CNE6SSM_input_parameters pole_masses_inputs;
+   CNE6SSM_input_parameters<Two_scale> pole_masses_inputs;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> pole_masses_problems;
 
    double pole_masses_scale;
@@ -166,10 +166,10 @@ private:
    TSoftPars drbar_soft_pars;
    TMixings drbar_mixings;
 
-   CNE6SSM_input_parameters drbar_masses_inputs;
-   CNE6SSM_input_parameters drbar_susy_pars_inputs;
-   CNE6SSM_input_parameters drbar_soft_pars_inputs;
-   CNE6SSM_input_parameters drbar_mixings_inputs;
+   CNE6SSM_input_parameters<Two_scale> drbar_masses_inputs;
+   CNE6SSM_input_parameters<Two_scale> drbar_susy_pars_inputs;
+   CNE6SSM_input_parameters<Two_scale> drbar_soft_pars_inputs;
+   CNE6SSM_input_parameters<Two_scale> drbar_mixings_inputs;
 
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> drbar_masses_problems;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> drbar_susy_pars_problems;

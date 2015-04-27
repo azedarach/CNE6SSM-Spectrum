@@ -5,7 +5,7 @@
 #ifndef CNE6SSM_SCAN_PARAMETERS_H
 #define CNE6SSM_SCAN_PARAMETERS_H
 
-#include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 
 #include "scan.hpp"
 

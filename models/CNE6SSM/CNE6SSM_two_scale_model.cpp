@@ -82,7 +82,7 @@ using namespace CNE6SSM_info;
    #define UNLOCK_MUTEX()
 #endif
 
-CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters& input_)
+CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters<Two_scale>& input_)
    : Two_scale_model()
    , input(input_)
    , number_of_ewsb_iterations(200)
@@ -207,12 +207,12 @@ double CLASSNAME::get_ewsb_loop_order() const
    return ewsb_loop_order;
 }
 
-const CNE6SSM_input_parameters& CLASSNAME::get_input() const
+const CNE6SSM_input_parameters<Two_scale>& CLASSNAME::get_input() const
 {
    return input;
 }
 
-void CLASSNAME::set_input_parameters(const CNE6SSM_input_parameters& input_)
+void CLASSNAME::set_input_parameters(const CNE6SSM_input_parameters<Two_scale>& input_)
 {
    input = input_;
 }

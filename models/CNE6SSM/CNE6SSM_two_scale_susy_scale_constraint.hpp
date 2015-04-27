@@ -22,7 +22,7 @@
 #define CNE6SSM_TWO_SCALE_SUSY_SCALE_CONSTRAINT_H
 
 #include "CNE6SSM_susy_scale_constraint.hpp"
-#include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "two_scale_constraint.hpp"
 
 namespace flexiblesusy {
@@ -44,7 +44,7 @@ public:
 
    void clear();
    double get_initial_scale_guess() const;
-   const CNE6SSM_input_parameters& get_input_parameters() const;
+   const CNE6SSM_input_parameters<Two_scale>& get_input_parameters() const;
    CNE6SSM<Two_scale>* get_model() const;
    void initialize();
 

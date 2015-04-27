@@ -266,7 +266,7 @@ double CNE6SSM_high_scale_constraint<Two_scale>::get_initial_scale_guess() const
    return initial_scale_guess;
 }
 
-const CNE6SSM_input_parameters& CNE6SSM_high_scale_constraint<Two_scale>::get_input_parameters() const
+const CNE6SSM_input_parameters<Two_scale>& CNE6SSM_high_scale_constraint<Two_scale>::get_input_parameters() const
 {
    return model->get_input();
 }

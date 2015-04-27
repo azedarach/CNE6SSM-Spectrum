@@ -1,5 +1,5 @@
 #include "CNE6SSM_scan_utilities.hpp"
-#include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
 
@@ -76,7 +76,7 @@ void write_CNE6SSM_inputs_list(std::ostream & filestr, std::size_t width)
            << std::left << std::setw(width) << "BMuPhiInput/GeV^2" << ' ';
 }
 
-void write_CNE6SSM_inputs(const CNE6SSM_input_parameters& inputs, std::ostream & filestr, std::size_t width)
+void write_CNE6SSM_inputs(const CNE6SSM_input_parameters<Two_scale>& inputs, std::ostream & filestr, std::size_t width)
 {
    if (!filestr.good()) {
       ERROR("flexiblesusy::write_CNE6SSM_inputs: "

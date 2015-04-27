@@ -35,7 +35,6 @@ LIBCNE6SSM_HDR :=
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_info.cpp \
-		$(DIR)/CNE6SSM_input_parameters.cpp \
 		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_physical.cpp \
 		$(DIR)/CNE6SSM_scan_parameters.cpp \
@@ -44,6 +43,7 @@ LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.cpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.cpp \
 		$(DIR)/CNE6SSM_two_scale_initial_guesser.cpp \
+		$(DIR)/CNE6SSM_two_scale_input_parameters.cpp \
 		$(DIR)/CNE6SSM_two_scale_low_scale_constraint.cpp \
 		$(DIR)/CNE6SSM_two_scale_model.cpp \
 		$(DIR)/CNE6SSM_two_scale_model_slha.cpp \
@@ -76,6 +76,7 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.hpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_two_scale_initial_guesser.hpp \
+		$(DIR)/CNE6SSM_two_scale_input_parameters.hpp \
 		$(DIR)/CNE6SSM_two_scale_low_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_two_scale_model.hpp \
 		$(DIR)/CNE6SSM_two_scale_model_slha.hpp \

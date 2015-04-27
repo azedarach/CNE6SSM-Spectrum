@@ -33,7 +33,7 @@ namespace flexiblesusy {
 #define CLASSNAME CNE6SSM_slha<Two_scale>
 #define LOCALPHYSICAL(p) physical.p
 
-CLASSNAME::CNE6SSM_slha(const CNE6SSM_input_parameters& input_)
+CLASSNAME::CNE6SSM_slha(const CNE6SSM_input_parameters<Two_scale>& input_)
    : CNE6SSM<Two_scale>(input_)
    , physical_slha()
    , ckm(Eigen::Matrix<std::complex<double>,3,3>::Identity())

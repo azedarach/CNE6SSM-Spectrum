@@ -3,7 +3,7 @@
 // then gets the coefficients of m0, m12, Azero etc. in mHd2, mHu2
 // ====================================================================
 
-#include "CNE6SSM_input_parameters.hpp"
+#include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "CNE6SSM_slha_io.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
 
@@ -141,7 +141,7 @@ int main(int argc, const char * argv[])
    CNE6SSM_slha_io slha_io;
    Spectrum_generator_settings spectrum_generator_settings;
    QedQcd oneset;
-   CNE6SSM_input_parameters input;
+   CNE6SSM_input_parameters<Two_scale> input;
    
    if (slha_input_file.empty()) {
       ERROR("No SLHA input file given!\n"

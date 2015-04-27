@@ -19,7 +19,6 @@
 // File generated at Sun 19 Apr 2015 20:31:38
 
 #include "CNE6SSM_utilities.hpp"
-#include "CNE6SSM_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
 
