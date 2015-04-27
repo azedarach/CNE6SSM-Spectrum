@@ -91,7 +91,7 @@ void write_CNE6SSM_inputs(const CNE6SSM_input_parameters& inputs, std::ostream &
            << std::left << std::setw(width) << inputs.SignLambdax << ' '
            << std::left << std::setw(width) << inputs.Azero << ' '
            << std::left << std::setw(width) << inputs.ssumInput << ' '
-           << std::left << std::setw(width) << inputs.QS << ' '
+           << std::left << std::setw(width) << inputs.QSInput << ' '
            << std::left << std::setw(width) << inputs.hEInput(0,0) << ' '
            << std::left << std::setw(width) << inputs.hEInput(1,0) << ' '
            << std::left << std::setw(width) << inputs.hEInput(2,0) << ' '

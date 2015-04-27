@@ -82,6 +82,8 @@ public:
    void set_number_of_mass_iterations(std::size_t);
    void set_pole_mass_loop_order(unsigned);
    void set_physical(const CNE6SSM_physical&);
+   const CNE6SSM_input_parameters& get_input() const;
+   void set_input_parameters(const CNE6SSM_input_parameters&);
    double get_ewsb_iteration_precision() const;
    double get_ewsb_loop_order() const;
    const CNE6SSM_physical& get_physical() const;
@@ -157,9 +159,9 @@ public:
    double get_MChiP(int i) const { return MChiP(i); }
    double get_MVWm() const { return MVWm; }
 
-Eigen::Array<double,1,1> get_MChargedHiggs() const;
+   Eigen::Array<double,1,1> get_MChargedHiggs() const;
 
-Eigen::Array<double,3,1> get_MPseudoscalarHiggs() const;
+   Eigen::Array<double,3,1> get_MPseudoscalarHiggs() const;
 
    const Eigen::Matrix<double,6,6>& get_ZD() const { return ZD; }
    double get_ZD(int i, int k) const { return ZD(i,k); }
@@ -1368,6 +1370,9 @@ private:
       }
    };
 #endif
+
+   // input parameters
+   CNE6SSM_input_parameters input;
 
    std::size_t number_of_ewsb_iterations;
    std::size_t number_of_mass_iterations;

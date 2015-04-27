@@ -43,7 +43,7 @@ void print_usage()
       "  --SignLambdax=<value>\n"
       "  --Azero=<value>\n"
       "  --ssumInput=<value>\n"
-      "  --QS=<value>\n"
+      "  --QSInput=<value>\n"
 
       "  --help,-h                         print this help message"
              << std::endl;
@@ -73,7 +73,7 @@ void set_command_line_parameters(int argc, char* argv[],
       if(Command_line_options::get_parameter_value(option, "--ssumInput=", input.ssumInput))
          continue;
 
-      if(Command_line_options::get_parameter_value(option, "--QS=", input.QS))
+      if(Command_line_options::get_parameter_value(option, "--QSInput=", input.QSInput))
          continue;
 
       

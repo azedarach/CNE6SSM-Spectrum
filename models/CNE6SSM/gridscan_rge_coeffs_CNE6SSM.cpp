@@ -39,7 +39,7 @@ namespace flexiblesusy {
          input.SignLambdax = 1;
 
       input.ssumInput = 40000.0; // GeV
-      input.QS = 5.;
+      input.QSInput = 5.;
       
       input.hEInput(0,0) = 0.;
       input.hEInput(0,1) = 0.;
@@ -563,7 +563,7 @@ namespace flexiblesusy {
       const auto vu = model.get_vu();
       const auto vs = model.get_vs();
       const auto vsb = model.get_vsb();
-      const auto QS = model.get_input().QS;
+      const auto QS = model.get_input().QSInput;
       
       double coeff = - 0.25 * (Sqr(g2) + 0.6 * Sqr(g1)) * (Sqr(vd) + Sqr(vu)) / Sqr(vs)
          + 0.025 * Sqr(g1p) * (2.0 * Sqr(vu) - 3.0 * Sqr(vd)) * 
@@ -1000,7 +1000,7 @@ int main(int argc, const char* argv[])
                 << std::left << std::setw(width) << input.SignLambdax << ' '
                 << std::left << std::setw(width) << input.Azero << ' '
                 << std::left << std::setw(width) << input.ssumInput << ' '
-                << std::left << std::setw(width) << input.QS << ' '
+                << std::left << std::setw(width) << input.QSInput << ' '
                 << std::left << std::setw(width) << input.hEInput(0,0) << ' '
                 << std::left << std::setw(width) << input.hEInput(1,0) << ' '
                 << std::left << std::setw(width) << input.hEInput(2,0) << ' '

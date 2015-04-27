@@ -33,7 +33,6 @@ namespace flexiblesusy {
  */
 Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TKappa_one_loop(const Soft_traces& soft_traces) const
 {
-   const auto QS = INPUT(QS);
    const double traceAdjKappaTKappa = TRACE_STRUCT.traceAdjKappaTKappa;
    const double traceAdjLambda12TLambda12 =
       TRACE_STRUCT.traceAdjLambda12TLambda12;
@@ -66,7 +65,6 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TKappa_one_loop(con
  */
 Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TKappa_two_loop(const Soft_traces& soft_traces) const
 {
-   const auto QS = INPUT(QS);
    const double traceKappaAdjKappa = TRACE_STRUCT.traceKappaAdjKappa;
    const double traceLambda12AdjLambda12 =
       TRACE_STRUCT.traceLambda12AdjLambda12;

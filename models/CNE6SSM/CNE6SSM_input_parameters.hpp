@@ -33,7 +33,7 @@ struct CNE6SSM_input_parameters {
    int SignLambdax;
    double Azero;
    double ssumInput;
-   double QS;
+   double QSInput;
    Eigen::Matrix<double,3,2> hEInput;
    double SigmaLInput;
    double KappaPrInput;
@@ -49,7 +49,7 @@ struct CNE6SSM_input_parameters {
    double BMuPhiInput;
 
    CNE6SSM_input_parameters()
-      : m0(0), m12(0), TanBeta(0), SignLambdax(1), Azero(0), ssumInput(0), QS(0),
+      : m0(0), m12(0), TanBeta(0), SignLambdax(1), Azero(0), ssumInput(0), QSInput(0),
    hEInput(Eigen::Matrix<double,3,2>::Zero()), SigmaLInput(0), KappaPrInput(0),
    SigmaxInput(0), gDInput(Eigen::Matrix<double,3,3>::Zero()), KappaInput(
    Eigen::Matrix<double,3,3>::Zero()), Lambda12Input(Eigen::Matrix<double,2,2>

@@ -38,23 +38,22 @@ namespace flexiblesusy {
 
 class CNE6SSM_susy_parameters : public Beta_function {
 public:
-   explicit CNE6SSM_susy_parameters(const CNE6SSM_input_parameters& input_ = CNE6SSM_input_parameters());
-   CNE6SSM_susy_parameters(double scale_, double loops_, double thresholds_, const CNE6SSM_input_parameters& input_, const Eigen::Matrix<double,3,3>& Yd_, const Eigen::Matrix<double,3,2>& hE_
+   explicit CNE6SSM_susy_parameters();
+   CNE6SSM_susy_parameters(double scale_, double loops_, double thresholds_,
+   const Eigen::Matrix<double,3,3>& Yd_, const Eigen::Matrix<double,3,2>& hE_
    , const Eigen::Matrix<double,3,3>& Ye_, double SigmaL_, double KappaPr_,
    double Sigmax_, const Eigen::Matrix<double,3,3>& gD_, const Eigen::Matrix<
    double,3,3>& Kappa_, const Eigen::Matrix<double,2,2>& Lambda12_, double
    Lambdax_, const Eigen::Matrix<double,3,2>& fu_, const Eigen::Matrix<double,3
    ,2>& fd_, const Eigen::Matrix<double,3,3>& Yu_, double MuPr_, double MuPhi_,
    double XiF_, double g1_, double g2_, double g3_, double g1p_, double vd_,
-   double vu_, double vs_, double vsb_, double vphi_
+   double vu_, double vs_, double vsb_, double vphi_, double QS_
 );
    virtual ~CNE6SSM_susy_parameters() {}
    virtual Eigen::ArrayXd beta() const;
    virtual const Eigen::ArrayXd get() const;
    virtual void print(std::ostream&) const;
    virtual void set(const Eigen::ArrayXd&);
-   const CNE6SSM_input_parameters& get_input() const;
-   void set_input_parameters(const CNE6SSM_input_parameters&);
 
    CNE6SSM_susy_parameters calc_beta() const;
    virtual void clear();
@@ -93,6 +92,7 @@ public:
    void set_vs(double vs_) { vs = vs_; }
    void set_vsb(double vsb_) { vsb = vsb_; }
    void set_vphi(double vphi_) { vphi = vphi_; }
+   void set_QS(double QS_) { QS = QS_; }
 
    const Eigen::Matrix<double,3,3>& get_Yd() const { return Yd; }
    double get_Yd(int i, int k) const { return Yd(i,k); }
@@ -128,6 +128,7 @@ public:
    double get_vs() const { return vs; }
    double get_vsb() const { return vsb; }
    double get_vphi() const { return vphi; }
+   double get_QS() const { return QS; }
 
    Eigen::Matrix<double,3,3> get_SqSq() const;
    Eigen::Matrix<double,3,3> get_SlSl() const;
@@ -175,10 +176,13 @@ protected:
    double vsb;
    double vphi;
 
-   CNE6SSM_input_parameters input;
+   // DH:: replacing input parameters dependence with
+   // just QS, everything else is initialised in the constructor
+   // or has setter method
+   double QS;
 
 private:
-   static const int numberOfParameters = 83;
+   static const int numberOfParameters = 84;
 
    struct Susy_traces {
       double tracefdAdjfd;

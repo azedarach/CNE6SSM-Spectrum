@@ -66,7 +66,6 @@ double CNE6SSM_soft_parameters::calc_beta_mHu2_one_loop(const Soft_traces& soft_
  */
 double CNE6SSM_soft_parameters::calc_beta_mHu2_two_loop(const Soft_traces& soft_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracefdAdjfd = TRACE_STRUCT.tracefdAdjfd;
    const double tracefuAdjfu = TRACE_STRUCT.tracefuAdjfu;
    const double traceYdAdjYd = TRACE_STRUCT.traceYdAdjYd;

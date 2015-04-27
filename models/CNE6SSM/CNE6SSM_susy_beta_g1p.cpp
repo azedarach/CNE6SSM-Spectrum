@@ -33,7 +33,6 @@ namespace flexiblesusy {
  */
 double CNE6SSM_susy_parameters::calc_beta_g1p_one_loop(const Susy_traces& susy_traces) const
 {
-   const auto QS = INPUT(QS);
 
 
    double beta_g1p;
@@ -51,7 +50,6 @@ double CNE6SSM_susy_parameters::calc_beta_g1p_one_loop(const Susy_traces& susy_t
  */
 double CNE6SSM_susy_parameters::calc_beta_g1p_two_loop(const Susy_traces& susy_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracefdAdjfd = TRACE_STRUCT.tracefdAdjfd;
    const double tracefuAdjfu = TRACE_STRUCT.tracefuAdjfu;
    const double tracegDAdjgD = TRACE_STRUCT.tracegDAdjgD;

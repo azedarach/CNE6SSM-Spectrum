@@ -108,7 +108,7 @@ double get_tree_level_Lambdax_constant_term(CNE6SSM<Two_scale> model)
    const auto vu = model.get_vu();
    const auto vs = model.get_vs();
    const auto vsb = model.get_vsb();
-   const auto QS = model.get_input().QS;
+   const auto QS = model.get_input().QSInput;
 
    double coeff = - 0.25 * (Sqr(g2) + 0.6 * Sqr(g1)) * (Sqr(vd) + Sqr(vu)) / Sqr(vs)
       + 0.025 * Sqr(g1p) * (2.0 * Sqr(vu) - 3.0 * Sqr(vd)) * 

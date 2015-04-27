@@ -38,7 +38,7 @@ namespace flexiblesusy {
          input.SignLambdax = 1;
 
       input.ssumInput = 40000.0; // GeV
-      input.QS = 5.;
+      input.QSInput = 5.;
       
       input.hEInput(0,0) = 0.;
       input.hEInput(0,1) = 0.;

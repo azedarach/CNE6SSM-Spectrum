@@ -62,7 +62,6 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_mH1I2_one_loop(cons
  */
 Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_mH1I2_two_loop(const Soft_traces& soft_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracefuAdjfu = TRACE_STRUCT.tracefuAdjfu;
    const double traceYuAdjYu = TRACE_STRUCT.traceYuAdjYu;
    const double traceconjTfuTpTfu = TRACE_STRUCT.traceconjTfuTpTfu;

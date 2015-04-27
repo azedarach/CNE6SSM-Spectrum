@@ -84,7 +84,7 @@ using namespace CNE6SSM_info;
 
 CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters& input_)
    : Two_scale_model()
-   , CNE6SSM_soft_parameters(input_)
+   , input(input_)
    , number_of_ewsb_iterations(200)
    , number_of_mass_iterations(20)
    , ewsb_loop_order(2)
@@ -205,6 +205,16 @@ double CLASSNAME::get_ewsb_iteration_precision() const
 double CLASSNAME::get_ewsb_loop_order() const
 {
    return ewsb_loop_order;
+}
+
+const CNE6SSM_input_parameters& CLASSNAME::get_input() const
+{
+   return input;
+}
+
+void CLASSNAME::set_input_parameters(const CNE6SSM_input_parameters& input_)
+{
+   input = input_;
 }
 
 const CNE6SSM_physical& CLASSNAME::get_physical() const
@@ -472,8 +482,6 @@ int CLASSNAME::solve_ewsb_tree_level_via_soft_higgs_masses()
 {
    int error = 0;
 
-   const auto QS = LOCALINPUT(QS);
-
    const double new_mHd2 = (0.0125*(28.284271247461902*vs*vu*Conj(TLambdax) -
       20*vphi*vsb*vu*Conj(Sigmax)*Lambdax - 20*vphi*vsb*vu*Conj(Lambdax)*Sigmax -
       6*Power(vd,3)*Sqr(g1) - 9*Power(vd,3)*Sqr(g1p) - 10*Power(vd,3)*Sqr(g2) - 40
@@ -590,7 +598,6 @@ int CLASSNAME::solve_ewsb()
 void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 {
 
-   const auto QS = LOCALINPUT(QS);
    const auto s = LOCALINPUT(ssumInput);
    const auto sgnLambdax = Sign(LOCALINPUT(SignLambdax));
 
@@ -707,7 +714,6 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
    double LXiF_new;
 
    const double s = LOCALINPUT(ssumInput);
-   const double QS = LOCALINPUT(QS);
    const double SignLambdax = Sign(LOCALINPUT(SignLambdax));
 
    // update TanTheta
@@ -1429,7 +1435,6 @@ Eigen::Array<double,2,1> CLASSNAME::get_soft_gaugino_mass_coeffs(CNE6SSM_info::P
    run_model.set_loops(get_loops());
    run_model.set_scale(get_scale());
    run_model.set_thresholds(get_thresholds());
-   run_model.set_input_parameters(input);
    run_model.set(get());
 
    run_model.run_to(high_scale);
@@ -1546,7 +1551,6 @@ Eigen::Array<double,4,1> CLASSNAME::get_soft_scalar_mass_coeffs(CNE6SSM_info::Pa
    run_model.set_loops(get_loops());
    run_model.set_scale(get_scale());
    run_model.set_thresholds(get_thresholds());
-   run_model.set_input_parameters(input);
    run_model.set(get());
 
    run_model.run_to(high_scale);
@@ -2137,7 +2141,6 @@ Eigen::Array<double,2,1> CLASSNAME::get_soft_trilinear_coeffs(CNE6SSM_info::Para
    run_model.set_loops(get_loops());
    run_model.set_scale(get_scale());
    run_model.set_thresholds(get_thresholds());
-   run_model.set_input_parameters(input);
    run_model.set(get());
 
    run_model.run_to(high_scale);
@@ -3966,8 +3969,6 @@ void CLASSNAME::calculate_MVP()
 
 double CLASSNAME::get_mass_matrix_VZ() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    const double mass_matrix_VZ = 0.25*(0.9797958971132712*g1*g1p*Cos(
       ThetaWp())*Sin(ThetaW())*Sin(ThetaWp())*Sqr(vu) + 0.31622776601683794*g1p
       *g2*Cos(ThetaW())*Sin(2*ThetaWp())*(-3*Sqr(vd) + 2*Sqr(vu)) +
@@ -3983,8 +3984,6 @@ double CLASSNAME::get_mass_matrix_VZ() const
 
 void CLASSNAME::calculate_MVZ()
 {
-   const auto QS = LOCALINPUT(QS);
-
    MVZ = get_mass_matrix_VZ();
 
    if (MVZ < 0.)
@@ -3995,8 +3994,6 @@ void CLASSNAME::calculate_MVZ()
 
 double CLASSNAME::get_mass_matrix_VZp() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    const double mass_matrix_VZp = 0.25*((g2*Cos(ThetaW()) +
       0.7745966692414834*g1*Sin(ThetaW()))*Sin(ThetaWp())*(0.6324555320336759*
       g1p*Cos(ThetaWp())*(3*Sqr(vd) - 2*Sqr(vu)) + (g2*Cos(ThetaW()) +
@@ -4009,8 +4006,6 @@ double CLASSNAME::get_mass_matrix_VZp() const
 
 void CLASSNAME::calculate_MVZp()
 {
-   const auto QS = LOCALINPUT(QS);
-
    MVZp = get_mass_matrix_VZp();
 
    if (MVZp < 0.)
@@ -4021,8 +4016,6 @@ void CLASSNAME::calculate_MVZp()
 
 Eigen::Matrix<double,6,6> CLASSNAME::get_mass_matrix_Sd() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,6,6> mass_matrix_Sd;
 
    mass_matrix_Sd(0,0) = mq2(0,0) + 0.5*AbsSqr(Yd(0,0))*Sqr(vd) - 0.025*
@@ -4094,8 +4087,6 @@ void CLASSNAME::calculate_MSd()
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_mass_matrix_Sv() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,3,3> mass_matrix_Sv;
 
    mass_matrix_Sv(0,0) = ml2(0,0) + 0.075*Sqr(g1)*Sqr(vd) - 0.075*Sqr(g1p
@@ -4140,8 +4131,6 @@ void CLASSNAME::calculate_MSv()
 
 Eigen::Matrix<double,6,6> CLASSNAME::get_mass_matrix_Su() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,6,6> mass_matrix_Su;
 
    mass_matrix_Su(0,0) = mq2(0,0) - 0.025*Sqr(g1)*Sqr(vd) - 0.0375*Sqr(
@@ -4210,8 +4199,6 @@ void CLASSNAME::calculate_MSu()
 
 Eigen::Matrix<double,6,6> CLASSNAME::get_mass_matrix_Se() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,6,6> mass_matrix_Se;
 
    mass_matrix_Se(0,0) = ml2(0,0) + 0.5*AbsSqr(Ye(0,0))*Sqr(vd) + 0.075*
@@ -4283,8 +4270,6 @@ void CLASSNAME::calculate_MSe()
 
 Eigen::Matrix<double,6,6> CLASSNAME::get_mass_matrix_SDX() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,6,6> mass_matrix_SDX;
 
    mass_matrix_SDX(0,0) = mDx2(0,0) + 0.05*Sqr(g1)*Sqr(vd) + 0.075*Sqr(
@@ -4357,8 +4342,6 @@ void CLASSNAME::calculate_MSDX()
 
 Eigen::Matrix<double,5,5> CLASSNAME::get_mass_matrix_hh() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,5,5> mass_matrix_hh;
 
    mass_matrix_hh(0,0) = mHd2 + 0.225*Sqr(g1)*Sqr(vd) + 0.3375*Sqr(g1p)*
@@ -4446,8 +4429,6 @@ void CLASSNAME::calculate_Mhh()
 
 Eigen::Matrix<double,5,5> CLASSNAME::get_mass_matrix_Ah() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,5,5> mass_matrix_Ah;
 
    mass_matrix_Ah(0,0) = mHd2 + 0.075*Sqr(g1)*Sqr(vd) + 0.1125*Sqr(g1p)*
@@ -4559,8 +4540,6 @@ void CLASSNAME::calculate_MAh()
 
 Eigen::Matrix<double,2,2> CLASSNAME::get_mass_matrix_Hpm() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,2,2> mass_matrix_Hpm;
 
    mass_matrix_Hpm(0,0) = mHd2 + 0.075*Sqr(g1)*Sqr(vd) + 0.1125*Sqr(g1p)*
@@ -4600,8 +4579,6 @@ void CLASSNAME::calculate_MHpm()
 
 Eigen::Matrix<double,8,8> CLASSNAME::get_mass_matrix_Chi() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,8,8> mass_matrix_Chi;
 
    mass_matrix_Chi(0,0) = MassB;
@@ -4808,8 +4785,6 @@ void CLASSNAME::calculate_MFDX()
 
 Eigen::Matrix<double,7,7> CLASSNAME::get_mass_matrix_SHI0() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,7,7> mass_matrix_SHI0;
 
    mass_matrix_SHI0(0,0) = mH1I2(0,0) + 0.075*Sqr(g1)*Sqr(vd) + 0.1125*
@@ -4911,8 +4886,6 @@ void CLASSNAME::calculate_MSHI0()
 
 Eigen::Matrix<double,4,4> CLASSNAME::get_mass_matrix_SHIPM() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,4,4> mass_matrix_SHIPM;
 
    mass_matrix_SHIPM(0,0) = mH1I2(0,0) + 0.075*Sqr(g1)*Sqr(vd) + 0.1125*
@@ -5049,8 +5022,6 @@ void CLASSNAME::calculate_MChiI()
 
 Eigen::Matrix<double,2,2> CLASSNAME::get_mass_matrix_SHp0() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,2,2> mass_matrix_SHp0;
 
    mass_matrix_SHp0(0,0) = mHp2 + AbsSqr(MuPr) - 0.7071067811865475*vphi*
@@ -5096,8 +5067,6 @@ void CLASSNAME::calculate_MSHp0()
 
 Eigen::Matrix<double,2,2> CLASSNAME::get_mass_matrix_SHpp() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    Eigen::Matrix<double,2,2> mass_matrix_SHpp;
 
    mass_matrix_SHpp(0,0) = mHp2 + AbsSqr(MuPr) - 0.7071067811865475*vphi*
@@ -5189,8 +5158,6 @@ void CLASSNAME::calculate_MVWm()
 
 double CLASSNAME::get_ewsb_eq_hh_1() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    double result = mHd2*vd - 0.35355339059327373*vs*vu*Conj(TLambdax) + 0.25*
       vphi*vsb*vu*Conj(Sigmax)*Lambdax + 0.25*vphi*vsb*vu*Conj(Lambdax)*Sigmax +
       0.075*Power(vd,3)*Sqr(g1) + 0.1125*Power(vd,3)*Sqr(g1p) + 0.125*Power(vd,3)*
@@ -5204,8 +5171,6 @@ double CLASSNAME::get_ewsb_eq_hh_1() const
 
 double CLASSNAME::get_ewsb_eq_hh_2() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    double result = mHu2*vu - 0.35355339059327373*vd*vs*Conj(TLambdax) + 0.25*vd
       *vphi*vsb*Conj(Sigmax)*Lambdax + 0.25*vd*vphi*vsb*Conj(Lambdax)*Sigmax +
       0.075*Power(vu,3)*Sqr(g1) + 0.05*Power(vu,3)*Sqr(g1p) + 0.125*Power(vu,3)*
@@ -5219,8 +5184,6 @@ double CLASSNAME::get_ewsb_eq_hh_2() const
 
 double CLASSNAME::get_ewsb_eq_hh_3() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    double result = ms2*vs - 0.35355339059327373*MuPhi*vphi*vsb*Conj(Sigmax) -
       0.35355339059327373*vd*vu*Conj(TLambdax) - 0.35355339059327373*vphi*vsb*Conj
       (TSigmax) - 0.5*vsb*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vsb*Conj(
@@ -5237,8 +5200,6 @@ double CLASSNAME::get_ewsb_eq_hh_3() const
 
 double CLASSNAME::get_ewsb_eq_hh_4() const
 {
-   const auto QS = LOCALINPUT(QS);
-
    double result = msbar2*vsb - 0.35355339059327373*MuPhi*vphi*vs*Conj(Sigmax)
       - 0.35355339059327373*vphi*vs*Conj(TSigmax) + 0.25*vd*vphi*vu*Conj(Sigmax)*
       Lambdax - 0.5*vs*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vs*Conj(MuPhi)*
@@ -6010,8 +5971,6 @@ std::complex<double> CLASSNAME::CpUSdconjUSdconjSHIPMSHIPM(unsigned gO1, unsigne
 
 std::complex<double> CLASSNAME::CpUSdconjUSdAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_122;
@@ -6116,8 +6075,6 @@ std::complex<double> CLASSNAME::CpUSdconjUSdAhAh(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUSdconjUSdhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_136;
@@ -7411,8 +7368,6 @@ std::complex<double> CLASSNAME::CpconjUSdSdAh(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpconjUSdSdhh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_436;
@@ -8099,8 +8054,6 @@ std::complex<double> CLASSNAME::CpUSvconjUSvconjSvSv(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpconjUSvSvhh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    if (gI1 < 3) {
@@ -8220,8 +8173,6 @@ std::complex<double> CLASSNAME::CpUSvconjUSvconjSHIPMSHIPM(unsigned gO1, unsigne
 
 std::complex<double> CLASSNAME::CpUSvconjUSvAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*KroneckerDelta(gO1,gO2)*((-3*Sqr(g1) + 3*Sqr(g1p) - 5*Sqr(g2))
@@ -8233,8 +8184,6 @@ std::complex<double> CLASSNAME::CpUSvconjUSvAhAh(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUSvconjUSvhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*KroneckerDelta(gO1,gO2)*(QS*(-(Conj(ZH(gI1,2))*Conj(ZH(gI2,2))
@@ -9320,8 +9269,6 @@ std::complex<double> CLASSNAME::CpUSuconjUSuconjSHIPMSHIPM(unsigned gO1, unsigne
 
 std::complex<double> CLASSNAME::CpUSuconjUSuAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_741;
@@ -9426,8 +9373,6 @@ std::complex<double> CLASSNAME::CpUSuconjUSuAhAh(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUSuconjUSuhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result += -0.025*QS*Conj(ZH(gI1,2))*Conj(ZH(gI2,2))*KroneckerDelta(gO1,gO2)*
@@ -10623,8 +10568,6 @@ std::complex<double> CLASSNAME::CpconjUSuSuAh(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpconjUSuSuhh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_1039;
@@ -12076,8 +12019,6 @@ std::complex<double> CLASSNAME::CpUSeconjUSeconjSHIPMSHIPM(unsigned gO1, unsigne
 
 std::complex<double> CLASSNAME::CpUSeconjUSeAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_1311;
@@ -12182,8 +12123,6 @@ std::complex<double> CLASSNAME::CpUSeconjUSeAhAh(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUSeconjUSehhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_1325;
@@ -13316,8 +13255,6 @@ std::complex<double> CLASSNAME::CpconjUSeSeAh(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpconjUSeSehh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_1593;
@@ -14608,8 +14545,6 @@ std::complex<double> CLASSNAME::CpUSDXconjUSDXconjSHIPMSHIPM(unsigned gO1, unsig
 
 std::complex<double> CLASSNAME::CpUSDXconjUSDXAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_1853;
@@ -14724,8 +14659,6 @@ std::complex<double> CLASSNAME::CpUSDXconjUSDXAhAh(unsigned gO1, unsigned gO2, u
 
 std::complex<double> CLASSNAME::CpUSDXconjUSDXhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_1867;
@@ -16003,8 +15936,6 @@ std::complex<double> CLASSNAME::CpconjUSDXSDXAh(unsigned gO2, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpconjUSDXSDXhh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2173;
@@ -16495,8 +16426,6 @@ std::complex<double> CLASSNAME::CpconjUSDXVZpSDX(unsigned gO2, unsigned gI2) con
 
 std::complex<double> CLASSNAME::CpUhhVZVZ(unsigned gO2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((vs*KroneckerDelta(2,gO2) + vsb*KroneckerDelta(3,gO2))*Sqr(
@@ -16517,8 +16446,6 @@ std::complex<double> CLASSNAME::CpUhhVZVZ(unsigned gO2) const
 
 std::complex<double> CLASSNAME::CpUhhVZpVZ(unsigned gO2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*((vs*KroneckerDelta(2,gO2) + vsb*KroneckerDelta(3,gO2))*Sin(2
@@ -16542,8 +16469,6 @@ std::complex<double> CLASSNAME::CpUhhVZpVZ(unsigned gO2) const
 
 std::complex<double> CLASSNAME::CpUhhVZpVZp(unsigned gO2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((vs*KroneckerDelta(2,gO2) + vsb*KroneckerDelta(3,gO2))*Sqr(
@@ -16592,8 +16517,6 @@ std::complex<double> CLASSNAME::CpUhhbargWmCgWmC(unsigned gO1) const
 
 std::complex<double> CLASSNAME::CpUhhbargZgZ(unsigned gO1) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-((vs*KroneckerDelta(2,gO1) + vsb*KroneckerDelta(3,gO1))*Sqr
@@ -16614,8 +16537,6 @@ std::complex<double> CLASSNAME::CpUhhbargZgZ(unsigned gO1) const
 
 std::complex<double> CLASSNAME::CpUhhbargZpgZ(unsigned gO1) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.0125*(-((vs*KroneckerDelta(2,gO1) + vsb*KroneckerDelta(3,gO1))*
@@ -16638,8 +16559,6 @@ std::complex<double> CLASSNAME::CpUhhbargZpgZ(unsigned gO1) const
 
 std::complex<double> CLASSNAME::CpUhhbargZpgZp(unsigned gO1) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-((vs*KroneckerDelta(2,gO1) + vsb*KroneckerDelta(3,gO1))*Sqr
@@ -16659,8 +16578,6 @@ std::complex<double> CLASSNAME::CpUhhbargZpgZp(unsigned gO1) const
 
 std::complex<double> CLASSNAME::CpUhhUhhVZVZ(unsigned gO1, unsigned gO2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((KroneckerDelta(2,gO1)*KroneckerDelta(2,gO2) + KroneckerDelta
@@ -16682,8 +16599,6 @@ std::complex<double> CLASSNAME::CpUhhUhhVZVZ(unsigned gO1, unsigned gO2) const
 
 std::complex<double> CLASSNAME::CpUhhUhhVZpVZp(unsigned gO1, unsigned gO2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((KroneckerDelta(2,gO1)*KroneckerDelta(2,gO2) + KroneckerDelta
@@ -16714,8 +16629,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjVWmVWm(unsigned gO1, unsigned gO2) c
 
 std::complex<double> CLASSNAME::CpUhhUhhconjHpmHpm(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-(Conj(ZP(gI2,0))*(40*AbsSqr(Lambdax)*KroneckerDelta(2,gO1)*
@@ -16747,8 +16660,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjHpmHpm(unsigned gO1, unsigned gO2, u
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSHp0SHp0(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHp0(gI2,0))*(-20*AbsSqr(SigmaL)*KroneckerDelta(4,gO1)*
@@ -16774,8 +16685,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSHp0SHp0(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSHppSHpp(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHpp(gI2,0))*(-20*AbsSqr(SigmaL)*KroneckerDelta(4,gO1)*
@@ -16801,8 +16710,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSHppSHpp(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpUhhconjHpmHpm(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-(Conj(ZP(gI2,0))*(40*vs*AbsSqr(Lambdax)*KroneckerDelta(2,
@@ -16829,8 +16736,6 @@ std::complex<double> CLASSNAME::CpUhhconjHpmHpm(unsigned gO2, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpUhhconjSHp0SHp0(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHp0(gI2,0))*(-20*vphi*AbsSqr(SigmaL)*KroneckerDelta(4,
@@ -16859,8 +16764,6 @@ std::complex<double> CLASSNAME::CpUhhconjSHp0SHp0(unsigned gO2, unsigned gI1, un
 
 std::complex<double> CLASSNAME::CpUhhconjSHppSHpp(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHpp(gI2,0))*(-20*vphi*AbsSqr(SigmaL)*KroneckerDelta(4,
@@ -16961,8 +16864,6 @@ std::complex<double> CLASSNAME::CpUhhChiPChiPPL(unsigned gO1, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSvSv(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*KroneckerDelta(gI1,gI2)*(QS*(-(KroneckerDelta(2,gO1)*
@@ -16976,8 +16877,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSvSv(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUhhconjSvSv(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*KroneckerDelta(gI1,gI2)*(QS*(-(vs*KroneckerDelta(2,gO2)) + vsb
@@ -17110,8 +17009,6 @@ std::complex<double> CLASSNAME::CpUhhbarFuFuPL(unsigned gO1, unsigned gI1, unsig
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSHIPMSHIPM(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2291;
@@ -17335,8 +17232,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSHIPMSHIPM(unsigned gO1, unsigned gO
 
 std::complex<double> CLASSNAME::CpUhhconjSHIPMSHIPM(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2344;
@@ -17577,8 +17472,6 @@ std::complex<double> CLASSNAME::CpUhhconjSHIPMSHIPM(unsigned gO2, unsigned gI1, 
 
 std::complex<double> CLASSNAME::CpUhhUhhAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*AbsSqr(Lambdax)*KroneckerDelta(2,gO1)*KroneckerDelta(2,
@@ -17681,8 +17574,6 @@ std::complex<double> CLASSNAME::CpUhhUhhAhAh(unsigned gO1, unsigned gO2, unsigne
 
 std::complex<double> CLASSNAME::CpUhhUhhhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*AbsSqr(Lambdax)*Conj(ZH(gI1,2))*Conj(ZH(gI2,2))*
@@ -17869,8 +17760,6 @@ std::complex<double> CLASSNAME::CpUhhUhhhhhh(unsigned gO1, unsigned gO2, unsigne
 
 std::complex<double> CLASSNAME::CpUhhAhAh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*vs*AbsSqr(Lambdax)*KroneckerDelta(2,gO2)*ZA(gI1,0)*ZA(
@@ -18116,8 +18005,6 @@ std::complex<double> CLASSNAME::CpUhhhhAh(unsigned gO2, unsigned gI1, unsigned g
 
 std::complex<double> CLASSNAME::CpUhhhhhh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*vs*AbsSqr(Lambdax)*Conj(ZH(gI1,2))*Conj(ZH(gI2,0))*
@@ -18317,8 +18204,6 @@ std::complex<double> CLASSNAME::CpUhhhhhh(unsigned gO2, unsigned gI1, unsigned g
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSdSd(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2401;
@@ -18489,8 +18374,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSdSd(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSDXSDX(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2442;
@@ -18678,8 +18561,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSDXSDX(unsigned gO1, unsigned gO2, u
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSeSe(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2487;
@@ -18850,8 +18731,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSeSe(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSuSu(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2528;
@@ -18994,8 +18873,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSuSu(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUhhconjSdSd(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2561;
@@ -19182,8 +19059,6 @@ std::complex<double> CLASSNAME::CpUhhconjSdSd(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUhhconjSDXSDX(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2606;
@@ -19387,8 +19262,6 @@ std::complex<double> CLASSNAME::CpUhhconjSDXSDX(unsigned gO2, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpUhhconjSeSe(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2655;
@@ -19575,8 +19448,6 @@ std::complex<double> CLASSNAME::CpUhhconjSeSe(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUhhconjSuSu(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2700;
@@ -19749,8 +19620,6 @@ std::complex<double> CLASSNAME::CpUhhconjSuSu(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUhhUhhconjSHI0SHI0(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2741;
@@ -20194,8 +20063,6 @@ std::complex<double> CLASSNAME::CpUhhUhhconjSHI0SHI0(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpUhhconjSHI0SHI0(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_2858;
@@ -21078,8 +20945,6 @@ std::complex<double> CLASSNAME::CpUhhChiIChiIPL(unsigned gO1, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpUhhChiChiPR(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(1.4142135623730951*(10*Conj(Lambdax)*KroneckerDelta(2,gO2)*(
@@ -21107,8 +20972,6 @@ std::complex<double> CLASSNAME::CpUhhChiChiPR(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUhhChiChiPL(unsigned gO1, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(-10*g2*Conj(ZN(gI1,1))*Conj(ZN(gI2,2))*KroneckerDelta(0,gO1)
@@ -21157,8 +21020,6 @@ std::complex<double> CLASSNAME::CpUhhconjVWmHpm(unsigned gO2, unsigned gI2) cons
 
 std::complex<double> CLASSNAME::CpUhhVZAh(unsigned gO2, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,-0.05)*(KroneckerDelta(0,gO2)*(10*g2*Cos(
@@ -21174,8 +21035,6 @@ std::complex<double> CLASSNAME::CpUhhVZAh(unsigned gO2, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpUhhVZpAh(unsigned gO2, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,0.05)*(KroneckerDelta(0,gO2)*(
@@ -21229,8 +21088,6 @@ std::complex<double> CLASSNAME::CpUAhbargWmCgWmC(unsigned gO1) const
 
 std::complex<double> CLASSNAME::CpUAhUAhVZVZ(unsigned gO1, unsigned gO2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((KroneckerDelta(2,gO1)*KroneckerDelta(2,gO2) + KroneckerDelta
@@ -21252,8 +21109,6 @@ std::complex<double> CLASSNAME::CpUAhUAhVZVZ(unsigned gO1, unsigned gO2) const
 
 std::complex<double> CLASSNAME::CpUAhUAhVZpVZp(unsigned gO1, unsigned gO2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((KroneckerDelta(2,gO1)*KroneckerDelta(2,gO2) + KroneckerDelta
@@ -21284,8 +21139,6 @@ std::complex<double> CLASSNAME::CpUAhUAhconjVWmVWm(unsigned gO1, unsigned gO2) c
 
 std::complex<double> CLASSNAME::CpUAhUAhconjHpmHpm(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(2*Conj(ZP(gI2,1))*(-10*Conj(Lambdax)*KroneckerDelta(3,gO2)*
@@ -21317,8 +21170,6 @@ std::complex<double> CLASSNAME::CpUAhUAhconjHpmHpm(unsigned gO1, unsigned gO2, u
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSHp0SHp0(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHp0(gI2,0))*(-20*AbsSqr(SigmaL)*KroneckerDelta(4,gO1)*
@@ -21344,8 +21195,6 @@ std::complex<double> CLASSNAME::CpUAhUAhconjSHp0SHp0(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSHppSHpp(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHpp(gI2,0))*(-20*AbsSqr(SigmaL)*KroneckerDelta(4,gO1)*
@@ -21507,8 +21356,6 @@ std::complex<double> CLASSNAME::CpUAhChiPChiPPL(unsigned gO1, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSvSv(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*KroneckerDelta(gI1,gI2)*(QS*(-(KroneckerDelta(2,gO1)*
@@ -21650,8 +21497,6 @@ std::complex<double> CLASSNAME::CpUAhbarFuFuPL(unsigned gO1, unsigned gI1, unsig
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSHIPMSHIPM(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_3114;
@@ -21960,8 +21805,6 @@ std::complex<double> CLASSNAME::CpUAhconjSHIPMSHIPM(unsigned gO2, unsigned gI1, 
 
 std::complex<double> CLASSNAME::CpUAhUAhAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*AbsSqr(Lambdax)*KroneckerDelta(2,gO1)*KroneckerDelta(2,
@@ -22121,8 +21964,6 @@ std::complex<double> CLASSNAME::CpUAhUAhAhAh(unsigned gO1, unsigned gO2, unsigne
 
 std::complex<double> CLASSNAME::CpUAhUAhhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*AbsSqr(Lambdax)*Conj(ZH(gI1,2))*Conj(ZH(gI2,2))*
@@ -22348,8 +22189,6 @@ std::complex<double> CLASSNAME::CpUAhAhAh(unsigned gO2, unsigned gI1, unsigned g
 
 std::complex<double> CLASSNAME::CpUAhhhAh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*vs*AbsSqr(Lambdax)*Conj(ZH(gI1,2))*KroneckerDelta(0,gO2)
@@ -22617,8 +22456,6 @@ std::complex<double> CLASSNAME::CpUAhhhhh(unsigned gO2, unsigned gI1, unsigned g
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSdSd(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_3188;
@@ -22789,8 +22626,6 @@ std::complex<double> CLASSNAME::CpUAhUAhconjSdSd(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSDXSDX(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_3229;
@@ -22978,8 +22813,6 @@ std::complex<double> CLASSNAME::CpUAhUAhconjSDXSDX(unsigned gO1, unsigned gO2, u
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSeSe(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_3274;
@@ -23150,8 +22983,6 @@ std::complex<double> CLASSNAME::CpUAhUAhconjSeSe(unsigned gO1, unsigned gO2, uns
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSuSu(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_3315;
@@ -23558,8 +23389,6 @@ std::complex<double> CLASSNAME::CpUAhconjSuSu(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUAhUAhconjSHI0SHI0(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_3416;
@@ -24582,8 +24411,6 @@ std::complex<double> CLASSNAME::CpUAhChiIChiIPL(unsigned gO1, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpUAhChiChiPR(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,-0.05)*(1.4142135623730951*(10*Conj(Lambdax)
@@ -24612,8 +24439,6 @@ std::complex<double> CLASSNAME::CpUAhChiChiPR(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUAhChiChiPL(unsigned gO1, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,0.05)*(10*g2*Conj(ZN(gI1,1))*Conj(ZN(gI2,2))
@@ -24663,8 +24488,6 @@ std::complex<double> CLASSNAME::CpUAhconjVWmHpm(unsigned gO2, unsigned gI2) cons
 
 std::complex<double> CLASSNAME::CpUAhVZhh(unsigned gO2, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,-0.05)*(3.1622776601683795*g1p*QS*(Conj(ZH(
@@ -24680,8 +24503,6 @@ std::complex<double> CLASSNAME::CpUAhVZhh(unsigned gO2, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpUAhVZphh(unsigned gO2, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,0.05)*(3.1622776601683795*g1p*QS*Cos(ThetaWp
@@ -24969,8 +24790,6 @@ std::complex<double> CLASSNAME::CpconjUHpmHpmAh(unsigned gO2, unsigned gI1, unsi
 
 std::complex<double> CLASSNAME::CpconjUHpmHpmhh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*vs*AbsSqr(Lambdax)*Conj(ZH(gI2,2))*Conj(ZP(gI1,0))*
@@ -25385,8 +25204,6 @@ std::complex<double> CLASSNAME::CpconjUHpmSHIPMSHI0(unsigned gO2, unsigned gI1, 
 
 std::complex<double> CLASSNAME::CpUHpmconjUHpmAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-(KroneckerDelta(0,gO1)*(KroneckerDelta(0,gO2)*((6*Sqr(g1) +
@@ -25408,8 +25225,6 @@ std::complex<double> CLASSNAME::CpUHpmconjUHpmAhAh(unsigned gO1, unsigned gO2, u
 
 std::complex<double> CLASSNAME::CpUHpmconjUHpmhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*(-40*AbsSqr(Lambdax)*Conj(ZH(gI1,2))*Conj(ZH(gI2,2))*
@@ -27676,8 +27491,6 @@ std::complex<double> CLASSNAME::CpconjUSHI0conjSHIPMHpm(unsigned gO2, unsigned g
 
 std::complex<double> CLASSNAME::CpUSHI0conjUSHI0AhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_4279;
@@ -27996,8 +27809,6 @@ std::complex<double> CLASSNAME::CpUSHI0conjUSHI0AhAh(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpUSHI0conjUSHI0hhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_4349;
@@ -31060,8 +30871,6 @@ std::complex<double> CLASSNAME::CpconjUSHI0SHI0Ah(unsigned gO2, unsigned gI1, un
 
 std::complex<double> CLASSNAME::CpconjUSHI0SHI0hh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_5155;
@@ -32826,8 +32635,6 @@ std::complex<double> CLASSNAME::CpconjUSHIPMSHIPMAh(unsigned gO2, unsigned gI1, 
 
 std::complex<double> CLASSNAME::CpconjUSHIPMSHIPMhh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_5521;
@@ -32988,8 +32795,6 @@ std::complex<double> CLASSNAME::CpconjUSHIPMSHIPMhh(unsigned gO2, unsigned gI1, 
 
 std::complex<double> CLASSNAME::CpUSHIPMconjUSHIPMAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_5549;
@@ -33124,8 +32929,6 @@ std::complex<double> CLASSNAME::CpUSHIPMconjUSHIPMAhAh(unsigned gO1, unsigned gO
 
 std::complex<double> CLASSNAME::CpUSHIPMconjUSHIPMhhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    std::complex<double> tmp_5567;
@@ -35142,8 +34945,6 @@ std::complex<double> CLASSNAME::CpconjUSHp0SHp0Ah(unsigned gO2, unsigned gI1, un
 
 std::complex<double> CLASSNAME::CpconjUSHp0SHp0hh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHp0(gI1,1))*(-14.142135623730951*Conj(TSigmaL)*Conj(ZH(
@@ -35460,8 +35261,6 @@ std::complex<double> CLASSNAME::CpconjUSHp0conjSHIPMSe(unsigned gO2, unsigned gI
 
 std::complex<double> CLASSNAME::CpUSHp0conjUSHp0AhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(KroneckerDelta(0,gO1)*(KroneckerDelta(0,gO2)*((-3*Sqr(g1) + 3
@@ -35482,8 +35281,6 @@ std::complex<double> CLASSNAME::CpUSHp0conjUSHp0AhAh(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpUSHp0conjUSHp0hhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(-20*AbsSqr(SigmaL)*Conj(ZH(gI1,4))*Conj(ZH(gI2,4))*
@@ -36294,8 +36091,6 @@ std::complex<double> CLASSNAME::CpconjUSHppSHppAh(unsigned gO2, unsigned gI1, un
 
 std::complex<double> CLASSNAME::CpconjUSHppSHpphh(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(UHpp(gI1,1))*(14.142135623730951*Conj(TSigmaL)*Conj(ZH(
@@ -36502,8 +36297,6 @@ std::complex<double> CLASSNAME::CpUSHppconjUSHppconjSHIPMSHIPM(unsigned gO1, uns
 
 std::complex<double> CLASSNAME::CpUSHppconjUSHppAhAh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(KroneckerDelta(0,gO1)*(KroneckerDelta(0,gO2)*((-3*Sqr(g1) + 3
@@ -36524,8 +36317,6 @@ std::complex<double> CLASSNAME::CpUSHppconjUSHppAhAh(unsigned gO1, unsigned gO2,
 
 std::complex<double> CLASSNAME::CpUSHppconjUSHpphhhh(unsigned gO1, unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(-20*AbsSqr(SigmaL)*Conj(ZH(gI1,4))*Conj(ZH(gI2,4))*
@@ -37826,8 +37617,6 @@ std::complex<double> CLASSNAME::CpVZconjSHIPMSHIPM(unsigned gI1, unsigned gI2) c
 
 std::complex<double> CLASSNAME::CpVZVZAhAh(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((-14.696938456699067*g1*g1p*Cos(ThetaWp())*Sin(ThetaW())*Sin(
@@ -37847,8 +37636,6 @@ std::complex<double> CLASSNAME::CpVZVZAhAh(unsigned gI1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZVZhhhh(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((Conj(ZH(gI1,2))*Conj(ZH(gI2,2)) + Conj(ZH(gI1,3))*Conj(ZH(
@@ -37869,8 +37656,6 @@ std::complex<double> CLASSNAME::CpVZVZhhhh(unsigned gI1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZhhAh(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,-0.5)*(Conj(ZH(gI1,0))*(g2*Cos(ThetaW())*Cos
@@ -38516,8 +38301,6 @@ std::complex<double> CLASSNAME::CpVZChiIChiIPR(unsigned gI1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZChiChiPL(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(Conj(ZN(gI2,2))*(-10*g2*Cos(ThetaW())*Cos(ThetaWp()) -
@@ -38532,8 +38315,6 @@ std::complex<double> CLASSNAME::CpVZChiChiPL(unsigned gI1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZChiChiPR(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.5*(Conj(ZN(gI1,2))*(g2*Cos(ThetaW())*Cos(ThetaWp()) +
@@ -38560,8 +38341,6 @@ std::complex<double> CLASSNAME::CpVZconjVWmHpm(unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZVZhh(unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.5*(0.1*(vs*Conj(ZH(gI2,2)) + vsb*Conj(ZH(gI2,3)))*Sqr(g1p)*Sqr(QS
@@ -38576,8 +38355,6 @@ std::complex<double> CLASSNAME::CpVZVZhh(unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZVZphh(unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*((vs*Conj(ZH(gI2,2)) + vsb*Conj(ZH(gI2,3)))*Sin(2*ThetaWp())*
@@ -39077,8 +38854,6 @@ std::complex<double> CLASSNAME::CpVZpconjSHIPMSHIPM(unsigned gI1, unsigned gI2) 
 
 std::complex<double> CLASSNAME::CpVZpVZpAhAh(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((6*Cos(ThetaWp())*(3.1622776601683795*g1p*g2*Cos(ThetaW())*
@@ -39097,8 +38872,6 @@ std::complex<double> CLASSNAME::CpVZpVZpAhAh(unsigned gI1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZpVZphhhh(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*((Conj(ZH(gI1,2))*Conj(ZH(gI2,2)) + Conj(ZH(gI1,3))*Conj(ZH(
@@ -39118,8 +38891,6 @@ std::complex<double> CLASSNAME::CpVZpVZphhhh(unsigned gI1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZphhAh(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,0.05)*(Conj(ZH(gI1,0))*(9.486832980505138*
@@ -39755,8 +39526,6 @@ std::complex<double> CLASSNAME::CpVZpChiIChiIPR(unsigned gI1, unsigned gI2) cons
 
 std::complex<double> CLASSNAME::CpVZpChiChiPL(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.5*(Conj(ZN(gI2,2))*(0.9486832980505138*g1p*Cos(ThetaWp()) + g2*
@@ -39771,8 +39540,6 @@ std::complex<double> CLASSNAME::CpVZpChiChiPL(unsigned gI1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZpChiChiPR(unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(-(Conj(ZN(gI1,2))*(9.486832980505138*g1p*Cos(ThetaWp()) + 2*(
@@ -39799,8 +39566,6 @@ std::complex<double> CLASSNAME::CpVZpconjVWmHpm(unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZpVZhh(unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.025*((vs*Conj(ZH(gI2,2)) + vsb*Conj(ZH(gI2,3)))*Sin(2*ThetaWp())*
@@ -39823,8 +39588,6 @@ std::complex<double> CLASSNAME::CpVZpVZhh(unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpVZpVZphh(unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.5*(0.1*(vs*Conj(ZH(gI2,2)) + vsb*Conj(ZH(gI2,3)))*Sqr(g1p)*Sqr(QS
@@ -40600,8 +40363,6 @@ std::complex<double> CLASSNAME::CpUChiconjSHIPMChaIPR(unsigned gO1, unsigned gI1
 
 std::complex<double> CLASSNAME::CpUChihhChiPL(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(-2*Conj(ZH(gI1,1))*(3.872983346207417*g1*Conj(ZN(gI2,0))*
@@ -40634,8 +40395,6 @@ std::complex<double> CLASSNAME::CpUChihhChiPL(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUChihhChiPR(unsigned gO1, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(1.4142135623730951*(10*Conj(Lambdax)*Conj(ZH(gI1,2))*(
@@ -41096,8 +40855,6 @@ std::complex<double> CLASSNAME::CpUChiconjSHI0ChiIPR(unsigned gO1, unsigned gI1,
 
 std::complex<double> CLASSNAME::CpUChiChiAhPL(unsigned gO2, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,0.05)*(10*g2*Conj(ZN(gI1,1))*KroneckerDelta(
@@ -41133,8 +40890,6 @@ std::complex<double> CLASSNAME::CpUChiChiAhPL(unsigned gO2, unsigned gI1, unsign
 
 std::complex<double> CLASSNAME::CpUChiChiAhPR(unsigned gO1, unsigned gI1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = std::complex<double>(0,0.05)*(7.745966692414834*g1*KroneckerDelta(0
@@ -41188,8 +40943,6 @@ std::complex<double> CLASSNAME::CpUChiconjVWmChaPL(unsigned gO1, unsigned gI2) c
 
 std::complex<double> CLASSNAME::CpUChiVZChiPR(unsigned gO2, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(KroneckerDelta(2,gO2)*(10*g2*Cos(ThetaW())*Cos(ThetaWp()) +
@@ -41205,8 +40958,6 @@ std::complex<double> CLASSNAME::CpUChiVZChiPR(unsigned gO2, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpUChiVZChiPL(unsigned gO1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(3.1622776601683795*g1p*QS*(-(Conj(ZN(gI2,4))*KroneckerDelta(4
@@ -41222,8 +40973,6 @@ std::complex<double> CLASSNAME::CpUChiVZChiPL(unsigned gO1, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpUChiVZpChiPR(unsigned gO2, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(-(KroneckerDelta(2,gO2)*(9.486832980505138*g1p*Cos(ThetaWp())
@@ -41238,8 +40987,6 @@ std::complex<double> CLASSNAME::CpUChiVZpChiPR(unsigned gO2, unsigned gI2) const
 
 std::complex<double> CLASSNAME::CpUChiVZpChiPL(unsigned gO1, unsigned gI2) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    std::complex<double> result;
 
    result = 0.05*(3.1622776601683795*g1p*QS*Cos(ThetaWp())*(-(Conj(ZN(gI2,4))*
@@ -56947,8 +56694,6 @@ std::complex<double> CLASSNAME::tadpole_hh(unsigned gO1) const
 
 void CLASSNAME::calculate_MSu_3rd_generation(double& msf1, double& msf2, double& theta) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    sfermions::U1_extended_mass_data_two_singlets sf_data;
    sf_data.ml2   = mq2(2,2);
    sf_data.mr2   = mu2(2,2);
@@ -56981,8 +56726,6 @@ void CLASSNAME::calculate_MSu_3rd_generation(double& msf1, double& msf2, double&
 
 void CLASSNAME::calculate_MSd_3rd_generation(double& msf1, double& msf2, double& theta) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    sfermions::U1_extended_mass_data_two_singlets sf_data;
    sf_data.ml2   = mq2(2,2);
    sf_data.mr2   = md2(2,2);
@@ -57015,8 +56758,6 @@ void CLASSNAME::calculate_MSd_3rd_generation(double& msf1, double& msf2, double&
 
 void CLASSNAME::calculate_MSv_3rd_generation(double& msf1, double& msf2, double& theta) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    sfermions::U1_extended_mass_data_two_singlets sf_data;
    sf_data.ml2   = ml2(2,2);
    sf_data.mr2   = 0.;
@@ -57049,8 +56790,6 @@ void CLASSNAME::calculate_MSv_3rd_generation(double& msf1, double& msf2, double&
 
 void CLASSNAME::calculate_MSe_3rd_generation(double& msf1, double& msf2, double& theta) const
 {
-   const auto QS = LOCALINPUT(QS);
-
    sfermions::U1_extended_mass_data_two_singlets sf_data;
    sf_data.ml2   = ml2(2,2);
    sf_data.mr2   = me2(2,2);

@@ -65,7 +65,7 @@ void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters& input)
 
    extpar << "Block EXTPAR\n";
    extpar << FORMAT_ELEMENT(65, input.ssumInput, "ssumInput");
-   extpar << FORMAT_ELEMENT(72, input.QS, "QS");
+   extpar << FORMAT_ELEMENT(72, input.QSInput, "QS");
    slha_io.set_block(extpar);
 
 }
@@ -400,7 +400,7 @@ void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_input_parameters& input,
 {
    switch (key) {
    case 65: input.ssumInput = value; break;
-   case 72: input.QS = value; break;
+   case 72: input.QSInput = value; break;
    default: WARNING("Unrecognized key: " << key); break;
    }
 

@@ -33,7 +33,6 @@ namespace flexiblesusy {
  */
 double CNE6SSM_soft_parameters::calc_beta_TSigmax_one_loop(const Soft_traces& soft_traces) const
 {
-   const auto QS = INPUT(QS);
    const double traceKappaAdjKappa = TRACE_STRUCT.traceKappaAdjKappa;
    const double traceLambda12AdjLambda12 =
       TRACE_STRUCT.traceLambda12AdjLambda12;
@@ -63,7 +62,6 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmax_one_loop(const Soft_traces& so
  */
 double CNE6SSM_soft_parameters::calc_beta_TSigmax_two_loop(const Soft_traces& soft_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracegDAdjgD = TRACE_STRUCT.tracegDAdjgD;
    const double tracehEAdjhE = TRACE_STRUCT.tracehEAdjhE;
    const double traceKappaAdjKappa = TRACE_STRUCT.traceKappaAdjKappa;

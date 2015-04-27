@@ -106,6 +106,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    const auto TanBeta = INPUTPARAMETER(TanBeta);
    const auto g1 = MODELPARAMETER(g1);
    const auto g2 = MODELPARAMETER(g2);
+   const auto QSInput = INPUTPARAMETER(QSInput);
 
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
@@ -114,7 +115,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
       )));
    MODEL->set_vu((2*MZDRbar*TanBeta)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(
       TanBeta))));
-
+   MODEL->set_QS(QSInput);
 
    model->set_g1(new_g1);
    model->set_g2(new_g2);

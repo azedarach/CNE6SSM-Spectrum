@@ -132,6 +132,7 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    const auto TanBeta = INPUTPARAMETER(TanBeta);
    const auto ssumInput = INPUTPARAMETER(ssumInput);
    const auto SignLambdax = INPUTPARAMETER(SignLambdax);
+   const auto QSInput = INPUTPARAMETER(QSInput);
 
    MODEL->set_vd(SM(vev)/Sqrt(1 + Sqr(TanBeta)));
    MODEL->set_vu((TanBeta*SM(vev))/Sqrt(1 + Sqr(TanBeta)));
@@ -144,6 +145,7 @@ void CNE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    MODEL->set_vs(0.7071067811865475*ssumInput);
    MODEL->set_vsb(0.7071067811865475*0.95*ssumInput);
    MODEL->set_vphi(0.5*ssumInput);
+   MODEL->set_QS(QSInput);
 
 }
 

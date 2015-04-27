@@ -53,7 +53,6 @@ double CNE6SSM_susy_parameters::calc_beta_MuPr_one_loop(const Susy_traces& susy_
  */
 double CNE6SSM_susy_parameters::calc_beta_MuPr_two_loop(const Susy_traces& susy_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracegDAdjgD = TRACE_STRUCT.tracegDAdjgD;
    const double tracehEAdjhE = TRACE_STRUCT.tracehEAdjhE;
    const double tracefuAdjhEhEAdjfu = TRACE_STRUCT.tracefuAdjhEhEAdjfu;

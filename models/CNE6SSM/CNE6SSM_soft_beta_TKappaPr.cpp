@@ -52,7 +52,6 @@ double CNE6SSM_soft_parameters::calc_beta_TKappaPr_one_loop(const Soft_traces& s
  */
 double CNE6SSM_soft_parameters::calc_beta_TKappaPr_two_loop(const Soft_traces& soft_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracegDAdjgD = TRACE_STRUCT.tracegDAdjgD;
    const double tracehEAdjhE = TRACE_STRUCT.tracehEAdjhE;
    const double traceAdjgDTgD = TRACE_STRUCT.traceAdjgDTgD;

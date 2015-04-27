@@ -55,7 +55,6 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yu_one_loop(const S
  */
 Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yu_two_loop(const Susy_traces& susy_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracefuAdjfu = TRACE_STRUCT.tracefuAdjfu;
    const double traceYuAdjYu = TRACE_STRUCT.traceYuAdjYu;
    const double tracefdAdjfd = TRACE_STRUCT.tracefdAdjfd;

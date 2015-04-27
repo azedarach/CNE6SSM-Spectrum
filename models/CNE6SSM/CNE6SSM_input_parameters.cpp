@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream& ostr, const CNE6SSM_input_parameters& inp
    ostr << "SignLambdax = " << INPUT(SignLambdax) << ", ";
    ostr << "Azero = " << INPUT(Azero) << ", ";
    ostr << "ssumInput = " << INPUT(ssumInput) << ", ";
-   ostr << "QS = " << INPUT(QS) << ", ";
+   ostr << "QS = " << INPUT(QSInput) << ", ";
    ostr << "hEInput = " << INPUT(hEInput) << ", ";
    ostr << "SigmaLInput = " << INPUT(SigmaLInput) << ", ";
    ostr << "KappaPrInput = " << INPUT(KappaPrInput) << ", ";

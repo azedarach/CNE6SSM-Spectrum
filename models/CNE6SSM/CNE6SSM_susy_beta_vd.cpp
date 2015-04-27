@@ -55,7 +55,6 @@ double CNE6SSM_susy_parameters::calc_beta_vd_one_loop(const Susy_traces& susy_tr
  */
 double CNE6SSM_susy_parameters::calc_beta_vd_two_loop(const Susy_traces& susy_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracefdAdjfd = TRACE_STRUCT.tracefdAdjfd;
    const double traceYdAdjYd = TRACE_STRUCT.traceYdAdjYd;
    const double traceYeAdjYe = TRACE_STRUCT.traceYeAdjYe;

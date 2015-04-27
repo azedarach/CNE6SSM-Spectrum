@@ -35,7 +35,7 @@ namespace flexiblesusy {
 
 class CNE6SSM_soft_parameters : public CNE6SSM_susy_parameters {
 public:
-   explicit CNE6SSM_soft_parameters(const CNE6SSM_input_parameters& input_ = CNE6SSM_input_parameters());
+   explicit CNE6SSM_soft_parameters();
    CNE6SSM_soft_parameters(const CNE6SSM_susy_parameters& , const Eigen::Matrix<double,3,3>& TYd_, const Eigen::Matrix<double,3,2>&
    ThE_, const Eigen::Matrix<double,3,3>& TYe_, double TSigmaL_, double
    TKappaPr_, double TSigmax_, const Eigen::Matrix<double,3,3>& TgD_, const
@@ -217,7 +217,7 @@ protected:
 
 
 private:
-   static const int numberOfParameters = 248;
+   static const int numberOfParameters = 249;
 
    struct Soft_traces {
       double traceAdjfdTfd;

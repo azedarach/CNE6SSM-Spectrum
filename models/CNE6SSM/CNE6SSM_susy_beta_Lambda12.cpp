@@ -33,7 +33,6 @@ namespace flexiblesusy {
  */
 Eigen::Matrix<double,2,2> CNE6SSM_susy_parameters::calc_beta_Lambda12_one_loop(const Susy_traces& susy_traces) const
 {
-   const auto QS = INPUT(QS);
    const double traceKappaAdjKappa = TRACE_STRUCT.traceKappaAdjKappa;
    const double traceLambda12AdjLambda12 =
       TRACE_STRUCT.traceLambda12AdjLambda12;
@@ -58,7 +57,6 @@ Eigen::Matrix<double,2,2> CNE6SSM_susy_parameters::calc_beta_Lambda12_one_loop(c
  */
 Eigen::Matrix<double,2,2> CNE6SSM_susy_parameters::calc_beta_Lambda12_two_loop(const Susy_traces& susy_traces) const
 {
-   const auto QS = INPUT(QS);
    const double tracefdAdjfd = TRACE_STRUCT.tracefdAdjfd;
    const double tracefuAdjfu = TRACE_STRUCT.tracefuAdjfu;
    const double traceYdAdjYd = TRACE_STRUCT.traceYdAdjYd;

@@ -29,7 +29,7 @@ namespace flexiblesusy {
 #define INPUT(parameter) input.parameter
 #define TRACE_STRUCT susy_traces
 
-CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(const CNE6SSM_input_parameters& input_)
+CNE6SSM_susy_parameters::CNE6SSM_susy_parameters()
    : Beta_function()
    , Yd(Eigen::Matrix<double,3,3>::Zero()), hE(Eigen::Matrix<double,3,2>::Zero(
    )), Ye(Eigen::Matrix<double,3,3>::Zero()), SigmaL(0), KappaPr(0), Sigmax(0),
@@ -37,24 +37,21 @@ CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(const CNE6SSM_input_parameters&
    ::Zero()), Lambda12(Eigen::Matrix<double,2,2>::Zero()), Lambdax(0), fu(
    Eigen::Matrix<double,3,2>::Zero()), fd(Eigen::Matrix<double,3,2>::Zero()),
    Yu(Eigen::Matrix<double,3,3>::Zero()), MuPr(0), MuPhi(0), XiF(0), g1(0), g2(
-   0), g3(0), g1p(0), vd(0), vu(0), vs(0), vsb(0), vphi(0)
-
-   , input(input_)
+   0), g3(0), g1p(0), vd(0), vu(0), vs(0), vsb(0), vphi(0), QS(0)
 {
    set_number_of_parameters(numberOfParameters);
 }
 
 CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(
    double scale_, double loops_, double thresholds_,
-   const CNE6SSM_input_parameters& input_
-   , const Eigen::Matrix<double,3,3>& Yd_, const Eigen::Matrix<double,3,2>& hE_
+   const Eigen::Matrix<double,3,3>& Yd_, const Eigen::Matrix<double,3,2>& hE_
    , const Eigen::Matrix<double,3,3>& Ye_, double SigmaL_, double KappaPr_,
    double Sigmax_, const Eigen::Matrix<double,3,3>& gD_, const Eigen::Matrix<
    double,3,3>& Kappa_, const Eigen::Matrix<double,2,2>& Lambda12_, double
    Lambdax_, const Eigen::Matrix<double,3,2>& fu_, const Eigen::Matrix<double,3
    ,2>& fd_, const Eigen::Matrix<double,3,3>& Yu_, double MuPr_, double MuPhi_,
    double XiF_, double g1_, double g2_, double g3_, double g1p_, double vd_,
-   double vu_, double vs_, double vsb_, double vphi_
+   double vu_, double vs_, double vsb_, double vphi_, double QS_
 
 )
    : Beta_function()
@@ -62,8 +59,7 @@ CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(
    Sigmax_), gD(gD_), Kappa(Kappa_), Lambda12(Lambda12_), Lambdax(Lambdax_), fu
    (fu_), fd(fd_), Yu(Yu_), MuPr(MuPr_), MuPhi(MuPhi_), XiF(XiF_), g1(g1_), g2(
    g2_), g3(g3_), g1p(g1p_), vd(vd_), vu(vu_), vs(vs_), vsb(vsb_), vphi(vphi_)
-
-   , input(input_)
+   , QS(QS_)
 {
    set_number_of_parameters(numberOfParameters);
    set_scale(scale_);
@@ -108,6 +104,7 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
    double beta_vs(calc_beta_vs_one_loop(TRACE_STRUCT));
    double beta_vsb(calc_beta_vsb_one_loop(TRACE_STRUCT));
    double beta_vphi(calc_beta_vphi_one_loop(TRACE_STRUCT));
+   const double beta_QS = 0.;
 
    if (get_loops() > 1) {
       beta_Yd += calc_beta_Yd_two_loop(TRACE_STRUCT);
@@ -139,8 +136,8 @@ CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
    }
 
 
-   return CNE6SSM_susy_parameters(get_scale(), get_loops(), get_thresholds(), input,
-                    beta_Yd, beta_hE, beta_Ye, beta_SigmaL, beta_KappaPr, beta_Sigmax, beta_gD, beta_Kappa, beta_Lambda12, beta_Lambdax, beta_fu, beta_fd, beta_Yu, beta_MuPr, beta_MuPhi, beta_XiF, beta_g1, beta_g2, beta_g3, beta_g1p, beta_vd, beta_vu, beta_vs, beta_vsb, beta_vphi);
+   return CNE6SSM_susy_parameters(get_scale(), get_loops(), get_thresholds(),
+                                  beta_Yd, beta_hE, beta_Ye, beta_SigmaL, beta_KappaPr, beta_Sigmax, beta_gD, beta_Kappa, beta_Lambda12, beta_Lambdax, beta_fu, beta_fd, beta_Yu, beta_MuPr, beta_MuPhi, beta_XiF, beta_g1, beta_g2, beta_g3, beta_g1p, beta_vd, beta_vu, beta_vs, beta_vsb, beta_vphi, beta_QS);
 }
 
 void CNE6SSM_susy_parameters::clear()
@@ -171,13 +168,12 @@ void CNE6SSM_susy_parameters::clear()
    vs = 0.;
    vsb = 0.;
    vphi = 0.;
-
+   QS = 0.;
 }
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_SqSq() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(Yd.adjoint()*Yd + Yu.adjoint()*Yu +
       gD.conjugate()*gD.transpose() - 0.016666666666666666*(2*Sqr(g1) + 3*Sqr(
@@ -208,7 +204,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SqSq() const
 Eigen::Matrix<double,3,3> CLASSNAME::get_SlSl() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(Ye.adjoint()*Ye - 0.1*(3*Sqr(g1) + 2*Sqr(g1p
       ) + 15*Sqr(g2))*UNITMATRIX(3));
@@ -228,7 +223,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SlSl() const
 double CLASSNAME::get_SHdSHd() const
 {
    double anomDim = 0;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(AbsSqr(Lambdax) - 0.3*Sqr(g1) - 0.45*Sqr(g1p
       ) - 1.5*Sqr(g2) + (fd*fd.adjoint()).trace() + 3*(Yd*Yd.adjoint()).trace()
@@ -260,7 +254,6 @@ double CLASSNAME::get_SHdSHd() const
 double CLASSNAME::get_SHuSHu() const
 {
    double anomDim = 0;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(AbsSqr(Lambdax) - 0.3*Sqr(g1) - 0.2*Sqr(g1p)
       - 1.5*Sqr(g2) + (fu*fu.adjoint()).trace() + 3*(Yu*Yu.adjoint()).trace())
@@ -290,7 +283,6 @@ double CLASSNAME::get_SHuSHu() const
 Eigen::Matrix<double,3,3> CLASSNAME::get_SdRSdR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = 0.06666666666666667*oneOver16PiSqr*(30*(Yd.conjugate()*
       Yd.transpose()) - (2*Sqr(g1) + 3*Sqr(g1p) + 40*Sqr(g3))*UNITMATRIX(3));
@@ -313,7 +305,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SdRSdR() const
 Eigen::Matrix<double,3,3> CLASSNAME::get_SuRSuR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(2*(Yu.conjugate()*Yu.transpose()) -
       0.016666666666666666*(32*Sqr(g1) + 3*Sqr(g1p) + 160*Sqr(g3))*UNITMATRIX(3
@@ -336,7 +327,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SuRSuR() const
 Eigen::Matrix<double,3,3> CLASSNAME::get_SeRSeR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(2*(hE.conjugate()*hE.transpose() +
       Ye.conjugate()*Ye.transpose()) - 0.05*(24*Sqr(g1) + Sqr(g1p))*UNITMATRIX(
@@ -362,7 +352,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SeRSeR() const
 double CLASSNAME::get_SsRSsR() const
 {
    double anomDim = 0;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(2*AbsSqr(Lambdax) + AbsSqr(Sigmax) - 0.05*
       Sqr(g1p)*Sqr(QS) + 3*(Kappa*(Kappa).adjoint()).trace() + 2*(Lambda12*(
@@ -396,7 +385,6 @@ double CLASSNAME::get_SsRSsR() const
 double CLASSNAME::get_SsbarRSsbarR() const
 {
    double anomDim = 0;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(AbsSqr(Sigmax) - 0.05*Sqr(g1p)*Sqr(QS));
 
@@ -414,7 +402,6 @@ double CLASSNAME::get_SsbarRSsbarR() const
 Eigen::Matrix<double,2,2> CLASSNAME::get_SH1ISH1I() const
 {
    Eigen::Matrix<double,2,2> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(fu.adjoint()*fu + hE.adjoint()*hE + (
       Lambda12).adjoint()*Lambda12 - 0.15*(2*Sqr(g1) + 3*Sqr(g1p) + 10*Sqr(g2))
@@ -446,7 +433,6 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH1ISH1I() const
 Eigen::Matrix<double,2,2> CLASSNAME::get_SH2ISH2I() const
 {
    Eigen::Matrix<double,2,2> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(fd.adjoint()*fd + Lambda12.conjugate()*(
       Lambda12).transpose() - 0.1*(3*Sqr(g1) + 2*Sqr(g1p) + 15*Sqr(g2))*
@@ -478,7 +464,6 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH2ISH2I() const
 Eigen::Matrix<double,3,3> CLASSNAME::get_SSIRSSIR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(2*(fd.conjugate()*fd.transpose() +
       fu.conjugate()*fu.transpose()) - 1.25*Sqr(g1p)*UNITMATRIX(3));
@@ -504,7 +489,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SSIRSSIR() const
 Eigen::Matrix<double,3,3> CLASSNAME::get_SDxLSDxL() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(Kappa.conjugate()*(Kappa).transpose() -
       0.06666666666666667*(2*Sqr(g1) + 3*Sqr(g1p) + 40*Sqr(g3))*UNITMATRIX(3));
@@ -527,7 +511,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxLSDxL() const
 Eigen::Matrix<double,3,3> CLASSNAME::get_SDxbarRSDxbarR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(2*(gD.adjoint()*gD) + (Kappa).adjoint()*
       Kappa - 0.016666666666666666*(8*Sqr(g1) + 27*Sqr(g1p) + 160*Sqr(g3))*
@@ -555,7 +538,6 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxbarRSDxbarR() const
 double CLASSNAME::get_SHpSHp() const
 {
    double anomDim = 0;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(AbsSqr(SigmaL) - 0.3*Sqr(g1) - 0.2*Sqr(g1p)
       - 1.5*Sqr(g2) + 3*(gD*gD.adjoint()).trace() + (hE*hE.adjoint()).trace());
@@ -583,7 +565,6 @@ double CLASSNAME::get_SHpSHp() const
 double CLASSNAME::get_SHpbarSHpbar() const
 {
    double anomDim = 0;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(AbsSqr(SigmaL) + 0.1*(-3*Sqr(g1) - 2*Sqr(g1p
       ) - 15*Sqr(g2)));
@@ -603,7 +584,6 @@ double CLASSNAME::get_SHpbarSHpbar() const
 double CLASSNAME::get_SphiRSphiR() const
 {
    double anomDim = 0;
-   const auto QS = INPUT(QS);
 
    anomDim = oneOver16PiSqr*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax) + 2*
       AbsSqr(SigmaL));
@@ -709,6 +689,7 @@ const Eigen::ArrayXd CNE6SSM_susy_parameters::get() const
    pars(80) = vs;
    pars(81) = vsb;
    pars(82) = vphi;
+   pars(83) = QS;
 
 
    return pars;
@@ -742,6 +723,7 @@ void CNE6SSM_susy_parameters::print(std::ostream& ostr) const
    ostr << "vs = " << vs << '\n';
    ostr << "vsb = " << vsb << '\n';
    ostr << "vphi = " << vphi << '\n';
+   ostr << "QS = " << QS << '\n';
 
 }
 
@@ -830,17 +812,8 @@ void CNE6SSM_susy_parameters::set(const Eigen::ArrayXd& pars)
    vs = pars(80);
    vsb = pars(81);
    vphi = pars(82);
+   QS = pars(83);
 
-}
-
-const CNE6SSM_input_parameters& CNE6SSM_susy_parameters::get_input() const
-{
-   return input;
-}
-
-void CNE6SSM_susy_parameters::set_input_parameters(const CNE6SSM_input_parameters& input_)
-{
-   input = input_;
 }
 
 void CNE6SSM_susy_parameters::calc_susy_traces(Susy_traces& susy_traces) const
