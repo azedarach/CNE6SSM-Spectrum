@@ -8,6 +8,7 @@
 #include "CNE6SSM_scan_parameters.hpp"
 #include "CNE6SSM_scan_utilities.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
+#include "CNE6SSM_slha_io.hpp"
 
 #include "scan_command_line_options.hpp"
 #include "error.hpp"
@@ -50,7 +51,7 @@ namespace flexiblesusy {
       
       input.SigmaLInput = 3.0e-1;
       input.KappaPrInput = 2.0e-2;
-      input.SigmaxInput = 1.0e-1;
+      input.SigmaxInput = 1.0e-2;
       
       input.gDInput(0,0) = 0.;
       input.gDInput(0,1) = 0.;
@@ -823,7 +824,10 @@ int main(int argc, const char* argv[])
    }
    std::cout << std::left << std::setw(width) << "error" << '\n';
    
+   // note
+   std::size_t count = 0;
    while (!scan.has_finished()) {
+      ++count;
       set_minpar_values(parameters, scan.get_position(), input);
 
       QedQcd oneset;
@@ -833,6 +837,8 @@ int main(int argc, const char* argv[])
       spectrum_generator.set_precision_goal(1.0e-3);
       spectrum_generator.set_max_iterations(0);   // 0 == automatic
       spectrum_generator.set_calculate_sm_masses(0); // 0 == no
+      // note
+      spectrum_generator.set_threshold_corrections_loop_order(1);
       if (parameters.get_output_scale() <= 0.) {
          spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale 
       } else {
@@ -848,6 +854,19 @@ int main(int argc, const char* argv[])
          = spectrum_generator.get_problems();
 
       const bool error = problems.have_problem();
+
+      // note
+      if (!error) {
+         std::string slha_file = "/home/dylan/Documents/Postgraduate/CNE6SSM-Spectrum/scans/cne6ssm_small_lambdax_searches/slha_files/cne6ssm_small_lambdax_m0_scan_7_slha_" + boost::lexical_cast<std::string>(count) + ".txt";
+         CNE6SSM_slha_io slha_io;
+
+         slha_io.set_spinfo(problems);
+         slha_io.set_sminputs(oneset);
+         slha_io.set_minpar(input);
+         slha_io.set_extpar(input);
+         slha_io.set_spectrum(model);
+         slha_io.write_to_file(slha_file);
+      }
 
       double high_scale = spectrum_generator.get_high_scale();
       double susy_scale = spectrum_generator.get_susy_scale();

@@ -697,7 +697,9 @@ const Eigen::ArrayXd CNE6SSM_susy_parameters::get() const
 
 void CNE6SSM_susy_parameters::print(std::ostream& ostr) const
 {
-   ostr << "susy parameters:\n";
+   ostr << "----------------------------------------\n"
+           "susy parameters:\n"
+           "----------------------------------------\n";
    ostr << "Yd = " << Yd << '\n';
    ostr << "hE = " << hE << '\n';
    ostr << "Ye = " << Ye << '\n';

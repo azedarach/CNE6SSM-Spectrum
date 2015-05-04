@@ -404,7 +404,9 @@ const Eigen::ArrayXd CNE6SSM_soft_parameters::get() const
 void CNE6SSM_soft_parameters::print(std::ostream& ostr) const
 {
    CNE6SSM_susy_parameters::print(ostr);
-   ostr << "soft parameters:\n";
+   ostr << "----------------------------------------\n"
+           "soft parameters:\n"
+           "----------------------------------------\n";
    ostr << "TYd = " << TYd << '\n';
    ostr << "ThE = " << ThE << '\n';
    ostr << "TYe = " << TYe << '\n';
