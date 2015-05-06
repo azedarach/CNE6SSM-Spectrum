@@ -37,7 +37,7 @@ namespace CNE6SSM_info {
       , Kappa20, Kappa21, Kappa22, Lambda1200, Lambda1201, Lambda1210, Lambda1211,
       Lambdax, fu00, fu01, fu10, fu11, fu20, fu21, fd00, fd01, fd10, fd11, fd20,
       fd21, Yu00, Yu01, Yu02, Yu10, Yu11, Yu12, Yu20, Yu21, Yu22, MuPr, MuPhi, XiF
-      , g1, g2, g3, g1p, vd, vu, vs, vsb, vphi, TYd00, TYd01, TYd02, TYd10, TYd11,
+      , g1, g2, g3, g1p, vd, vu, vs, vsb, vphi, QS, TYd00, TYd01, TYd02, TYd10, TYd11,
       TYd12, TYd20, TYd21, TYd22, ThE00, ThE01, ThE10, ThE11, ThE20, ThE21, TYe00
       , TYe01, TYe02, TYe10, TYe11, TYe12, TYe20, TYe21, TYe22, TSigmaL, TKappaPr,
       TSigmax, TgD00, TgD01, TgD02, TgD10, TgD11, TgD12, TgD20, TgD21, TgD22,
@@ -58,16 +58,17 @@ namespace CNE6SSM_info {
       NUMBER_OF_PARAMETERS};
 
    // DH:: added enum for input parameters as well
-   enum Inputs : unsigned {m0, m12, TanBeta, SignLambdax, Azero, ssumInput, QS, 
-         hEInput00, hEInput01, hEInput10, hEInput11, hEInput20, hEInput21, 
-         SigmaLInput, KappaPrInput, SigmaxInput, gDInput00, gDInput01, 
-         gDInput02, gDInput10, gDInput11, gDInput12, gDInput20, gDInput21,
-         gDInput22, KappaInput00, KappaInput01, KappaInput02, KappaInput10,
-         KappaInput11, KappaInput12, KappaInput20, KappaInput21, KappaInput22,
-         Lambda12Input00, Lambda12Input01, Lambda12Input10, Lambda12Input11, 
-         fuInput00, fuInput01, fuInput10, fuInput11, fuInput20, fuInput21,
-         fdInput00, fdInput01, fdInput10, fdInput11, fdInput20, fdInput21,
-         MuPrInput, MuPhiInput, BMuPrInput, BMuPhiInput, NUMBER_OF_INPUTS};
+   enum Inputs : unsigned {m0, m12, TanBeta, SignLambdax, Azero, ssumInput,
+         QSInput, hEInput00, hEInput01, hEInput10, hEInput11, hEInput20,
+         hEInput21, SigmaLInput, KappaPrInput, SigmaxInput, gDInput00,
+         gDInput01, gDInput02, gDInput10, gDInput11, gDInput12, gDInput20,
+         gDInput21, gDInput22, KappaInput00, KappaInput01, KappaInput02,
+         KappaInput10, KappaInput11, KappaInput12, KappaInput20, KappaInput21,
+         KappaInput22, Lambda12Input00, Lambda12Input01, Lambda12Input10,
+         Lambda12Input11, fuInput00, fuInput01, fuInput10, fuInput11,
+         fuInput20, fuInput21, fdInput00, fdInput01, fdInput10, fdInput11,
+         fdInput20, fdInput21, MuPrInput, MuPhiInput, BMuPrInput, BMuPhiInput,
+         NUMBER_OF_INPUTS};
 
    // DH:: and enum for mixings
    enum Mixings : unsigned {ZD, ZV, ZU, ZE, ZDX, ZH, ZA, ZP, ZN, UM, UP, ZEL,
