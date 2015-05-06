@@ -35,6 +35,7 @@ LIBCNE6SSM_HDR :=
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_info.cpp \
+		$(DIR)/CNE6SSM_mass_eigenstates.cpp \
 		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_physical.cpp \
 		$(DIR)/CNE6SSM_scan_parameters.cpp \
@@ -64,6 +65,7 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_initial_guesser.hpp \
 		$(DIR)/CNE6SSM_input_parameters.hpp \
 		$(DIR)/CNE6SSM_low_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_mass_eigenstates.hpp \
 		$(DIR)/CNE6SSM_model.hpp \
 		$(DIR)/CNE6SSM_model_slha.hpp \
 		$(DIR)/CNE6SSM_physical.hpp \
