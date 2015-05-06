@@ -27,38 +27,16 @@ CNE6SSM_GNUPLOT := \
 CNE6SSM_TARBALL := \
 		$(MODNAME).tar.gz
 
-LIBCNE6SSM_SRC :=
-EXECNE6SSM_SRC :=
-
-LIBCNE6SSM_HDR :=
-
-ifneq ($(findstring two_scale,$(ALGORITHMS)),)
-LIBCNE6SSM_SRC += \
+LIBCNE6SSM_SRC := \
 		$(DIR)/CNE6SSM_info.cpp \
 		$(DIR)/CNE6SSM_mass_eigenstates.cpp \
-		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_physical.cpp \
-		$(DIR)/CNE6SSM_scan_parameters.cpp \
-		$(DIR)/CNE6SSM_scan_utilities.cpp \
-		$(DIR)/CNE6SSM_utilities.cpp \
-		$(DIR)/CNE6SSM_two_scale_convergence_tester.cpp \
-		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.cpp \
-		$(DIR)/CNE6SSM_two_scale_initial_guesser.cpp \
-		$(DIR)/CNE6SSM_two_scale_input_parameters.cpp \
-		$(DIR)/CNE6SSM_two_scale_low_scale_constraint.cpp \
-		$(DIR)/CNE6SSM_two_scale_model.cpp \
-		$(DIR)/CNE6SSM_two_scale_model_slha.cpp \
 		$(DIR)/CNE6SSM_susy_parameters.cpp \
-		$(DIR)/CNE6SSM_soft_parameters.cpp \
-		$(DIR)/CNE6SSM_two_scale_susy_scale_constraint.cpp
-EXECNE6SSM_SRC += \
-		$(DIR)/gridscan_CNE6SSM.cpp \
-		$(DIR)/gridscan_rge_coeffs_CNE6SSM.cpp \
-		$(DIR)/rge_coefficients_CNE6SSM.cpp \
-		$(DIR)/run_CNE6SSM.cpp \
-		$(DIR)/run_cmd_line_CNE6SSM.cpp \
-		$(DIR)/scan_CNE6SSM.cpp
-LIBCNE6SSM_HDR += \
+		$(DIR)/CNE6SSM_soft_parameters.cpp
+
+EXECNE6SSM_SRC :=
+
+LIBCNE6SSM_HDR := \
 		$(DIR)/CNE6SSM_convergence_tester.hpp \
 		$(DIR)/CNE6SSM_high_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_info.hpp \
@@ -69,11 +47,36 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_model.hpp \
 		$(DIR)/CNE6SSM_model_slha.hpp \
 		$(DIR)/CNE6SSM_physical.hpp \
+		$(DIR)/CNE6SSM_soft_parameters.hpp \
+		$(DIR)/CNE6SSM_susy_parameters.hpp \
+		$(DIR)/CNE6SSM_susy_scale_constraint.hpp
+
+ifneq ($(findstring two_scale,$(ALGORITHMS)),)
+LIBCNE6SSM_SRC += \
+		$(DIR)/CNE6SSM_scan_parameters.cpp \
+		$(DIR)/CNE6SSM_scan_utilities.cpp \
+		$(DIR)/CNE6SSM_slha_io.cpp \
+		$(DIR)/CNE6SSM_utilities.cpp \
+		$(DIR)/CNE6SSM_two_scale_convergence_tester.cpp \
+		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.cpp \
+		$(DIR)/CNE6SSM_two_scale_initial_guesser.cpp \
+		$(DIR)/CNE6SSM_two_scale_input_parameters.cpp \
+		$(DIR)/CNE6SSM_two_scale_low_scale_constraint.cpp \
+		$(DIR)/CNE6SSM_two_scale_model.cpp \
+		$(DIR)/CNE6SSM_two_scale_model_slha.cpp \
+		$(DIR)/CNE6SSM_two_scale_susy_scale_constraint.cpp
+EXECNE6SSM_SRC += \
+		$(DIR)/gridscan_CNE6SSM.cpp \
+		$(DIR)/gridscan_rge_coeffs_CNE6SSM.cpp \
+		$(DIR)/rge_coefficients_CNE6SSM.cpp \
+		$(DIR)/run_CNE6SSM.cpp \
+		$(DIR)/run_cmd_line_CNE6SSM.cpp \
+		$(DIR)/scan_CNE6SSM.cpp
+LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_scan_parameters.hpp \
 		$(DIR)/CNE6SSM_scan_utilities.hpp \
 		$(DIR)/CNE6SSM_slha_io.hpp \
 		$(DIR)/CNE6SSM_spectrum_generator.hpp \
-		$(DIR)/CNE6SSM_susy_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_utilities.hpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.hpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.hpp \
@@ -82,8 +85,6 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_two_scale_low_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_two_scale_model.hpp \
 		$(DIR)/CNE6SSM_two_scale_model_slha.hpp \
-		$(DIR)/CNE6SSM_soft_parameters.hpp \
-		$(DIR)/CNE6SSM_susy_parameters.hpp \
 		$(DIR)/CNE6SSM_two_scale_susy_scale_constraint.hpp
 
 ifneq ($(MAKECMDGOALS),showbuild)
