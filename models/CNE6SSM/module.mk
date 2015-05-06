@@ -93,12 +93,16 @@ endif
 
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
-		$(DIR)/CNE6SSM_semianalytic_input_parameters.cpp
+		$(DIR)/CNE6SSM_semianalytic_convergence_tester.cpp \
+		$(DIR)/CNE6SSM_semianalytic_input_parameters.cpp \
+		$(DIR)/CNE6SSM_semianalytic_model.cpp
 
 EXECNE6SSM_SRC +=
 
 LIBCNE6SSM_HDR += \
-		$(DIR)/CNE6SSM_semianalytic_input_parameters.hpp
+		$(DIR)/CNE6SSM_semianalytic_convergence_tester.hpp \
+		$(DIR)/CNE6SSM_semianalytic_input_parameters.hpp \
+		$(DIR)/CNE6SSM_semianalytic_model.hpp
 endif
 
 ifneq ($(MAKECMDGOALS),showbuild)
