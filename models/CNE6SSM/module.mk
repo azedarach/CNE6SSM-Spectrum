@@ -7,15 +7,15 @@ CNE6SSM_INSTALL_DIR := $(INSTALL_DIR)/$(DIR)
 CNE6SSM_MK     := \
 		$(DIR)/module.mk
 
-CNE6SSM_TWO_SCALE_SUSY_MK := \
+CNE6SSM_SUSY_BETAS_MK := \
 		$(DIR)/susy.mk
 
-CNE6SSM_TWO_SCALE_SOFT_MK := \
+CNE6SSM_SOFT_BETAS_MK := \
 		$(DIR)/soft.mk
 
-CNE6SSM_TWO_SCALE_MK := \
-		$(CNE6SSM_TWO_SCALE_SUSY_MK) \
-		$(CNE6SSM_TWO_SCALE_SOFT_MK)
+CNE6SSM_BETAS_MK := \
+		$(CNE6SSM_SUSY_BETAS_MK) \
+		$(CNE6SSM_SOFT_BETAS_MK)
 
 CNE6SSM_SLHA_INPUT := \
 		$(DIR)/LesHouches.in.CNE6SSM
@@ -91,17 +91,17 @@ ifneq ($(MAKECMDGOALS),showbuild)
 ifneq ($(MAKECMDGOALS),tag)
 ifneq ($(MAKECMDGOALS),release)
 ifneq ($(MAKECMDGOALS),doc)
--include $(CNE6SSM_TWO_SCALE_SUSY_MK)
--include $(CNE6SSM_TWO_SCALE_SOFT_MK)
+-include $(CNE6SSM_SUSY_BETAS_MK)
+-include $(CNE6SSM_SOFT_BETAS_MK)
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),distclean)
 ifneq ($(MAKECMDGOALS),pack-$(MODNAME)-src)
 ifeq ($(findstring clean-,$(MAKECMDGOALS)),)
 ifeq ($(findstring distclean-,$(MAKECMDGOALS)),)
 ifeq ($(findstring doc-,$(MAKECMDGOALS)),)
-$(CNE6SSM_TWO_SCALE_SUSY_MK): run-metacode-$(MODNAME)
+$(CNE6SSM_SUSY_BETAS_MK): run-metacode-$(MODNAME)
 		@$(CONVERT_DOS_PATHS) $@
-$(CNE6SSM_TWO_SCALE_SOFT_MK): run-metacode-$(MODNAME)
+$(CNE6SSM_SOFT_BETAS_MK): run-metacode-$(MODNAME)
 		@$(CONVERT_DOS_PATHS) $@
 endif
 endif
@@ -175,7 +175,7 @@ install-src::
 		install -m u=rw,g=r,o=r $(LIBCNE6SSM_HDR) $(CNE6SSM_INSTALL_DIR)
 		install -m u=rw,g=r,o=r $(EXECNE6SSM_SRC) $(CNE6SSM_INSTALL_DIR)
 		$(INSTALL_STRIPPED) $(CNE6SSM_MK) $(CNE6SSM_INSTALL_DIR) -m u=rw,g=r,o=r
-		install -m u=rw,g=r,o=r $(CNE6SSM_TWO_SCALE_MK) $(CNE6SSM_INSTALL_DIR)
+		install -m u=rw,g=r,o=r $(CNE6SSM_BETAS_MK) $(CNE6SSM_INSTALL_DIR)
 ifneq ($(CNE6SSM_SLHA_INPUT),)
 		install -m u=rw,g=r,o=r $(CNE6SSM_SLHA_INPUT) $(CNE6SSM_INSTALL_DIR)
 endif
@@ -210,7 +210,7 @@ pack-$(MODNAME)-src:
 		tar -czf $(CNE6SSM_TARBALL) \
 		$(LIBCNE6SSM_SRC) $(LIBCNE6SSM_HDR) \
 		$(EXECNE6SSM_SRC) \
-		$(CNE6SSM_MK) $(CNE6SSM_TWO_SCALE_MK) \
+		$(CNE6SSM_MK) $(CNE6SSM_BETAS_MK) \
 		$(CNE6SSM_SLHA_INPUT) $(CNE6SSM_GNUPLOT)
 
 $(LIBCNE6SSM_SRC) $(LIBCNE6SSM_HDR) $(EXECNE6SSM_SRC) \
