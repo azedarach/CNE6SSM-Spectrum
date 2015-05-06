@@ -39,7 +39,7 @@ protected:
 
 private:
    Model<Semianalytic>* model;                ///< pointer to model
-   Model<Semianalytic>* last_iteration_model; ///< model state at last iteration
+   Model<Semianalytic> last_iteration_model; ///< model state at last iteration
    unsigned int inner_it_count;  ///< inner iteration
    unsigned int outer_it_count;  ///< outer iteration
    unsigned int max_it;    ///< maximum number of iterations
@@ -69,7 +69,7 @@ Convergence_tester_DRbar<Model<Semianalytic> >::~Convergence_tester_DRbar()
 template <template<class Method> class Model>
 bool Convergence_tester_DRbar<Model<Semianalytic> >::inner_accuracy_goal_reached()
 {
-   bool precision_reached();
+   bool precision_reached;
    if (inner_it_count == 0) {
       // this is the first run => no comparison possible => assume
       // that accuracy goal has not been reached
@@ -78,7 +78,7 @@ bool Convergence_tester_DRbar<Model<Semianalytic> >::inner_accuracy_goal_reached
       const double scale_accuracy_goal = accuracy_goal * 16 * M_PI * M_PI;
       if (rel_scale_difference() < scale_accuracy_goal) {
          const double current_accuracy = max_rel_diff_inner();
-         precision_reached = currrent_accuracy < accuracy_goal;
+         precision_reached = current_accuracy < accuracy_goal;
          VERBOSE_MSG("Convergence_tester_DRbar: current accuracy = "
                      << current_accuracy
                      << ", accuracy goal = " << accuracy_goal);
@@ -91,8 +91,8 @@ bool Convergence_tester_DRbar<Model<Semianalytic> >::inner_accuracy_goal_reached
    }
 
    // save old model parameters
-   last_iteration_model = *model
-      ++inner_it_count;
+   last_iteration_model = *model;
+   ++inner_it_count;
 
    return precision_reached;
 }
@@ -100,7 +100,7 @@ bool Convergence_tester_DRbar<Model<Semianalytic> >::inner_accuracy_goal_reached
 template <template<class Method> class Model>
 bool Convergence_tester_DRbar<Model<Semianalytic> >::outer_accuracy_goal_reached()
 {
-   bool precision_reached();
+   bool precision_reached;
    if (outer_it_count == 0) {
       // this is the first run => no comparison possible => assume
       // that accuracy goal has not been reached
@@ -109,7 +109,7 @@ bool Convergence_tester_DRbar<Model<Semianalytic> >::outer_accuracy_goal_reached
       const double scale_accuracy_goal = accuracy_goal * 16 * M_PI * M_PI;
       if (rel_scale_difference() < scale_accuracy_goal) {
          const double current_accuracy = max_rel_diff_outer();
-         precision_reached = currrent_accuracy < accuracy_goal;
+         precision_reached = current_accuracy < accuracy_goal;
          VERBOSE_MSG("Convergence_tester_DRbar: current accuracy = "
                      << current_accuracy
                      << ", accuracy goal = " << accuracy_goal);
@@ -122,8 +122,8 @@ bool Convergence_tester_DRbar<Model<Semianalytic> >::outer_accuracy_goal_reached
    }
 
    // save old model parameters
-   last_iteration_model = *model
-      ++outer_it_count;
+   last_iteration_model = *model;
+   ++outer_it_count;
 
    return precision_reached;
 }
