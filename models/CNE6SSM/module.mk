@@ -86,6 +86,17 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_two_scale_model.hpp \
 		$(DIR)/CNE6SSM_two_scale_model_slha.hpp \
 		$(DIR)/CNE6SSM_two_scale_susy_scale_constraint.hpp
+endif
+
+ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
+LIBCNE6SSM_SRC += \
+		$(DIR)/CNE6SSM_semianalytic_input_parameters.cpp
+
+EXECNE6SSM_SRC +=
+
+LIBCNE6SSM_HDR += \
+		$(DIR)/CNE6SSM_semianalytic_input_parameters.hpp
+endif
 
 ifneq ($(MAKECMDGOALS),showbuild)
 ifneq ($(MAKECMDGOALS),tag)
@@ -112,8 +123,6 @@ endif
 endif
 endif
 endif
-endif
-
 endif
 
 # remove duplicates in case all algorithms are used
