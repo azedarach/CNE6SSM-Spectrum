@@ -31,8 +31,9 @@ LIBCNE6SSM_SRC := \
 		$(DIR)/CNE6SSM_info.cpp \
 		$(DIR)/CNE6SSM_mass_eigenstates.cpp \
 		$(DIR)/CNE6SSM_physical.cpp \
+		$(DIR)/CNE6SSM_soft_parameters.cpp \
 		$(DIR)/CNE6SSM_susy_parameters.cpp \
-		$(DIR)/CNE6SSM_soft_parameters.cpp
+		$(DIR)/CNE6SSM_utilities.cpp
 
 EXECNE6SSM_SRC :=
 
@@ -50,14 +51,14 @@ LIBCNE6SSM_HDR := \
 		$(DIR)/CNE6SSM_physical.hpp \
 		$(DIR)/CNE6SSM_soft_parameters.hpp \
 		$(DIR)/CNE6SSM_susy_parameters.hpp \
-		$(DIR)/CNE6SSM_susy_scale_constraint.hpp
+		$(DIR)/CNE6SSM_susy_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_utilities.hpp
 
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_scan_parameters.cpp \
 		$(DIR)/CNE6SSM_scan_utilities.cpp \
 		$(DIR)/CNE6SSM_slha_io.cpp \
-		$(DIR)/CNE6SSM_utilities.cpp \
 		$(DIR)/CNE6SSM_two_scale_constraint_handler.cpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.cpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.cpp \
@@ -79,7 +80,6 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_scan_utilities.hpp \
 		$(DIR)/CNE6SSM_slha_io.hpp \
 		$(DIR)/CNE6SSM_spectrum_generator.hpp \
-		$(DIR)/CNE6SSM_utilities.hpp \
 		$(DIR)/CNE6SSM_two_scale_constraint_handler.hpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.hpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.hpp \
