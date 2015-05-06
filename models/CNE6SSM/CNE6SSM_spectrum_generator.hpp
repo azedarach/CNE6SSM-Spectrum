@@ -22,11 +22,10 @@
 #define CNE6SSM_SPECTRUM_GENERATOR_H
 
 #include "CNE6SSM_two_scale_model.hpp"
-#include "CNE6SSM_two_scale_high_scale_constraint.hpp"
-#include "CNE6SSM_two_scale_susy_scale_constraint.hpp"
-#include "CNE6SSM_two_scale_low_scale_constraint.hpp"
 #include "CNE6SSM_two_scale_convergence_tester.hpp"
 #include "CNE6SSM_two_scale_initial_guesser.hpp"
+#include "CNE6SSM_two_scale_constraint_handler.hpp"
+
 #include "CNE6SSM_utilities.hpp"
 
 #include "coupling_monitor.hpp"
@@ -43,9 +42,7 @@ class CNE6SSM_spectrum_generator {
 public:
    CNE6SSM_spectrum_generator()
       : solver(), model()
-      , high_scale_constraint()
-      , susy_scale_constraint()
-      , low_scale_constraint()
+      , constraint_handler()
       , high_scale(0.)
       , susy_scale(0.)
       , low_scale(0.)
@@ -85,9 +82,7 @@ public:
 private:
    RGFlow<T> solver;
    CNE6SSM<T> model;
-   CNE6SSM_high_scale_constraint<T> high_scale_constraint;
-   CNE6SSM_susy_scale_constraint<T> susy_scale_constraint;
-   CNE6SSM_low_scale_constraint<T>  low_scale_constraint;
+   CNE6SSM_constraint_handler<T> constraint_handler;
    double high_scale, susy_scale, low_scale;
    double parameter_output_scale; ///< output scale for running parameters
    double precision_goal; ///< precision goal
@@ -120,38 +115,13 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    model.set_loops(beta_loop_order);
    model.set_thresholds(threshold_corrections_loop_order);
 
-   high_scale_constraint.clear();
-   susy_scale_constraint.clear();
-   low_scale_constraint .clear();
-
-   // needed for constraint::initialize()
-   high_scale_constraint.set_model(&model);
-   susy_scale_constraint.set_model(&model);
-   low_scale_constraint .set_model(&model);
-
-   low_scale_constraint .set_sm_parameters(oneset);
-
-   high_scale_constraint.initialize();
-   susy_scale_constraint.initialize();
-   low_scale_constraint .initialize();
-
-   std::vector<Constraint<T>*> upward_constraints(2);
-   upward_constraints[0] = &low_scale_constraint;
-   upward_constraints[1] = &high_scale_constraint;
-
-   std::vector<Constraint<T>*> downward_constraints(3);
-   downward_constraints[0] = &high_scale_constraint;
-   downward_constraints[1] = &susy_scale_constraint;
-   downward_constraints[2] = &low_scale_constraint;
+   constraint_handler.initialize_constraints(&model, oneset);
 
    CNE6SSM_convergence_tester<T> convergence_tester(&model, precision_goal);
    if (max_iterations > 0)
       convergence_tester.set_max_iterations(max_iterations);
 
-   CNE6SSM_initial_guesser<T> initial_guesser(&model, oneset,
-                                                  low_scale_constraint,
-                                                  susy_scale_constraint,
-                                                  high_scale_constraint);
+   CNE6SSM_initial_guesser<T> initial_guesser(constraint_handler.get_initial_guesser(&model, oneset));
 
    Two_scale_increasing_precision precision(10.0, precision_goal);
 
@@ -159,15 +129,15 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    solver.set_convergence_tester(&convergence_tester);
    solver.set_running_precision(&precision);
    solver.set_initial_guesser(&initial_guesser);
-   solver.add_model(&model, upward_constraints, downward_constraints);
+   constraint_handler.add_constraints_to_solver(&model, solver);
 
    high_scale = susy_scale = low_scale = 0.;
 
    try {
       solver.solve();
-      high_scale = high_scale_constraint.get_scale();
-      susy_scale = susy_scale_constraint.get_scale();
-      low_scale  = low_scale_constraint.get_scale();
+      high_scale = constraint_handler.get_highest_scale();
+      susy_scale = constraint_handler.get_susy_scale();
+      low_scale = constraint_handler.get_lowest_scale();
 
       model.run_to(susy_scale);
       model.solve_ewsb();
@@ -175,7 +145,7 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
 
       // copy calculated W pole mass
       model.get_physical().MVWm
-         = low_scale_constraint.get_sm_parameters().displayPoleMW();
+         = constraint_handler.get_sm_parameters().displayPoleMW();
 
       // run to output scale (if scale > 0)
       if (!is_zero(parameter_output_scale)) {
