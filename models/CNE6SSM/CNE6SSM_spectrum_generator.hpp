@@ -197,7 +197,7 @@ template <class T>
 void CNE6SSM_spectrum_generator<T>::write_spectrum(const std::string& filename) const
 {
    CNE6SSM_spectrum_plotter plotter;
-   plotter.extract_spectrum<T>(model);
+   plotter.extract_spectrum(model);
    plotter.write_to_file(filename);
 }
 

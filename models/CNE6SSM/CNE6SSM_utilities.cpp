@@ -58,6 +58,46 @@ void CNE6SSM_spectrum_plotter::write_to_file(const std::string& file_name) const
                << file_name.c_str());
 }
 
+void CNE6SSM_spectrum_plotter::extract_spectrum(const CNE6SSM_mass_eigenstates& model)
+{
+   spectrum.clear();
+   scale = model.get_scale();
+
+   spectrum.push_back(TParticle("Glu", "\\tilde{g}", to_valarray(PHYSICAL(MGlu))));
+   spectrum.push_back(TParticle("ChaP", "\\tilde{\\chi}^{'-}", to_valarray(PHYSICAL(MChaP))));
+   spectrum.push_back(TParticle("VZp", "{Z'}", to_valarray(PHYSICAL(MVZp))));
+   spectrum.push_back(TParticle("Sd", "\\tilde{d}", to_valarray(PHYSICAL(MSd))));
+   spectrum.push_back(TParticle("Sv", "\\tilde{\\nu}", to_valarray(PHYSICAL(MSv))));
+   spectrum.push_back(TParticle("Su", "\\tilde{u}", to_valarray(PHYSICAL(MSu))));
+   spectrum.push_back(TParticle("Se", "\\tilde{e}", to_valarray(PHYSICAL(MSe))));
+   spectrum.push_back(TParticle("SDX", "\\tilde{x}", to_valarray(PHYSICAL(MSDX))));
+   spectrum.push_back(TParticle("hh", "h", to_valarray(PHYSICAL(Mhh))));
+   spectrum.push_back(TParticle("Ah", "A^0", to_valarray(PHYSICAL(MAh))));
+   spectrum.push_back(TParticle("Hpm", "H^-", to_valarray(PHYSICAL(MHpm))));
+   spectrum.push_back(TParticle("Chi", "\\tilde{\\chi}^0", to_valarray(PHYSICAL(MChi))));
+   spectrum.push_back(TParticle("Cha", "\\tilde{\\chi}^-", to_valarray(PHYSICAL(MCha))));
+   spectrum.push_back(TParticle("FDX", "x", to_valarray(PHYSICAL(MFDX))));
+   spectrum.push_back(TParticle("SHI0", "h^{0,Inert}", to_valarray(PHYSICAL(MSHI0))));
+   spectrum.push_back(TParticle("SHIPM", "h^{-,Inert}", to_valarray(PHYSICAL(MSHIPM))));
+   spectrum.push_back(TParticle("ChaI", "\\tilde{\\chi}^{-,Inert}", to_valarray(PHYSICAL(MChaI))));
+   spectrum.push_back(TParticle("ChiI", "\\tilde{\\chi}^{0,Inert}", to_valarray(PHYSICAL(MChiI))));
+   spectrum.push_back(TParticle("SHp0", "H^{'0}", to_valarray(PHYSICAL(MSHp0))));
+   spectrum.push_back(TParticle("SHpp", "H^{'-}", to_valarray(PHYSICAL(MSHpp))));
+   spectrum.push_back(TParticle("ChiP", "\\tilde{\\chi}^{'0}", to_valarray(PHYSICAL(MChiP))));
+
+   if (model.do_calculate_sm_pole_masses()) {
+      spectrum.push_back(TParticle("Fd", "d", to_valarray(PHYSICAL(MFd))));
+      spectrum.push_back(TParticle("Fe", "e", to_valarray(PHYSICAL(MFe))));
+      spectrum.push_back(TParticle("Fu", "u", to_valarray(PHYSICAL(MFu))));
+      spectrum.push_back(TParticle("Fv", "\\nu", to_valarray(PHYSICAL(MFv))));
+      spectrum.push_back(TParticle("VG", "g", to_valarray(PHYSICAL(MVG))));
+      spectrum.push_back(TParticle("VP", "\\gamma", to_valarray(PHYSICAL(MVP))));
+      spectrum.push_back(TParticle("VWm", "W^-", to_valarray(PHYSICAL(MVWm))));
+      spectrum.push_back(TParticle("VZ", "Z", to_valarray(PHYSICAL(MVZ))));
+
+   }
+}
+
 void CNE6SSM_spectrum_plotter::write_spectrum(const TSpectrum& spectrum, std::ofstream& filestr) const
 {
    for (std::size_t s = 0; s < spectrum.size(); ++s) {
