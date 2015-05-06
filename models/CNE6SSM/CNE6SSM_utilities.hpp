@@ -21,7 +21,6 @@
 #ifndef CNE6SSM_UTILITIES_H
 #define CNE6SSM_UTILITIES_H
 
-#include "CNE6SSM_two_scale_model.hpp"
 #include "CNE6SSM_info.hpp"
 #include "wrappers.hpp"
 
@@ -36,12 +35,17 @@
 
 namespace flexiblesusy {
 
+template <class T>
+class CNE6SSM;
+
 class CNE6SSM_parameter_getter {
 public:
-   Eigen::ArrayXd get_parameters(const CNE6SSM<Two_scale>& model) {
+   template <class T>
+   Eigen::ArrayXd get_parameters(const CNE6SSM<T>& model) {
       return model.get();
    }
-   std::vector<std::string> get_parameter_names(const CNE6SSM<Two_scale>&) const {
+   template <class T>
+   std::vector<std::string> get_parameter_names(const CNE6SSM<T>&) const {
       using namespace CNE6SSM_info;
       return std::vector<std::string>(parameter_names,
                                       parameter_names + NUMBER_OF_PARAMETERS);

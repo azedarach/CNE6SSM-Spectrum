@@ -27,8 +27,6 @@
 #include <iostream>
 #include <iomanip>
 
-using namespace softsusy;
-
 namespace flexiblesusy {
 
 CNE6SSM_spectrum_plotter::CNE6SSM_spectrum_plotter()
