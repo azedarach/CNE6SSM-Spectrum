@@ -37,6 +37,7 @@ LIBCNE6SSM_SRC := \
 EXECNE6SSM_SRC :=
 
 LIBCNE6SSM_HDR := \
+		$(DIR)/CNE6SSM_constraint_handler.hpp \
 		$(DIR)/CNE6SSM_convergence_tester.hpp \
 		$(DIR)/CNE6SSM_high_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_info.hpp \
@@ -57,6 +58,7 @@ LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_scan_utilities.cpp \
 		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_utilities.cpp \
+		$(DIR)/CNE6SSM_two_scale_constraint_handler.cpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.cpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.cpp \
 		$(DIR)/CNE6SSM_two_scale_initial_guesser.cpp \
@@ -78,6 +80,7 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_slha_io.hpp \
 		$(DIR)/CNE6SSM_spectrum_generator.hpp \
 		$(DIR)/CNE6SSM_utilities.hpp \
+		$(DIR)/CNE6SSM_two_scale_constraint_handler.hpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.hpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_two_scale_initial_guesser.hpp \
