@@ -18,9 +18,9 @@ class Semianalytic;
 template<>
 struct CNE6SSM_input_parameters<Semianalytic> {
    double m12;
+   double Azero;
    double TanBeta;
    double sInput;
-   double TanTheta;
    double QSInput;
    Eigen::Matrix<double,3,2> hEInput;
    double SigmaLInput;
@@ -38,7 +38,7 @@ struct CNE6SSM_input_parameters<Semianalytic> {
    double BMuPhiInput;
 
    CNE6SSM_input_parameters()
-      : m12(0), TanBeta(0), sInput(0), TanTheta(0), QSInput(0)
+      : m12(0), Azero(0), TanBeta(0), sInput(0), QSInput(0)
       , hEInput(Eigen::Matrix<double,3,2>::Zero()), SigmaLInput(0)
       , KappaPrInput(0), SigmaxInput(0)
       , gDInput(Eigen::Matrix<double,3,3>::Zero())

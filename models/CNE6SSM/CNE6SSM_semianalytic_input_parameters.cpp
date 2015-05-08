@@ -12,9 +12,9 @@ namespace flexiblesusy {
 std::ostream& operator<<(std::ostream& ostr, const CNE6SSM_input_parameters<Semianalytic>& input)
 {
    ostr << "m12 = " << INPUT(m12) << ", ";
+   ostr << "Azero = " << INPUT(Azero) << ", ";
    ostr << "TanBeta = " << INPUT(TanBeta) << ", ";
    ostr << "sInput = " << INPUT(sInput) << ", ";
-   ostr << "TanTheta = " << INPUT(TanTheta) << ", ";
    ostr << "QSInput = " << INPUT(QSInput) << ", ";
    ostr << "hEInput = " << INPUT(hEInput) << ", ";
    ostr << "SigmaLInput = " << INPUT(SigmaLInput) << ", ";
