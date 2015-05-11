@@ -68,6 +68,8 @@ public:
    void reset();
    /// pick valid model and run it to the given scale
    void run_to(double);
+   /// set flag to only solve inner iteration
+   void solve_inner_iteration_only(bool);
    /// set convergence tester
    void set_convergence_tester(Convergence_tester<Semianalytic>*);
    /// set running precision calculator
@@ -121,6 +123,7 @@ private:
    double inner_running_precision; ///< RG running precision used in inner solver
    double outer_running_precision; ///< RG running precision
    Semianalytic_model* model_at_this_scale; ///< model at current scale
+   bool only_solve_inner_iteration; ///< flag to only solve inner two-scale iteration
 
    bool accuracy_goal_reached(Iteration_stage) const; ///< check if accuracy goal is reached
    void check_setup() const; ///< check the setup

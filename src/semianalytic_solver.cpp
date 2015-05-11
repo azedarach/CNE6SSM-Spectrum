@@ -26,6 +26,20 @@
 
 namespace flexiblesusy {
 
+RGFlow<Semianalytic>::RGFlow()
+   : models()
+   , inner_iteration(0)
+   , outer_iteration(0)
+   , convergence_tester(NULL)
+   , initial_guesser(NULL)
+   , running_precision_calculator(NULL)
+   , inner_running_precision(1.0e-3)
+   , outer_running_precision(1.0e-3)
+   , model_at_this_scale(NULL)
+   , only_solve_inner_iteration(false)
+{
+}
+
 RGFlow<Semianalytic>::~RGFlow()
 {
    delete_models();
@@ -56,25 +70,30 @@ void RGFlow<Semianalytic>::solve()
 
    outer_iteration = 0;
    bool outer_accuracy_reached = false;
-   while (outer_iteration < max_iterations && !outer_accuracy_reached) {
-      update_running_precision(Iteration_stage::Outer);
 
-      // do inner two scale iteration
+   if (!only_solve_inner_iteration) {
+      while (outer_iteration < max_iterations && !outer_accuracy_reached) {
+         update_running_precision(Iteration_stage::Outer);
+
+         // do inner two scale iteration
+         solve_inner_iteration();
+         
+         // apply semianalytic step
+         clear_problems();
+         run_up(Iteration_stage::Outer);
+         run_down(Iteration_stage::Outer);
+         
+         outer_accuracy_reached = accuracy_goal_reached(Iteration_stage::Outer);
+         ++outer_iteration;
+      }
+
+      apply_lowest_constraint(Iteration_stage::Outer);
+      
+      if (!outer_accuracy_reached)
+         throw NoConvergenceError(max_iterations);
+   } else {
       solve_inner_iteration();
-
-      // apply semianalytic step
-      clear_problems();
-      run_up(Iteration_stage::Outer);
-      run_down(Iteration_stage::Outer);
-
-      outer_accuracy_reached = accuracy_goal_reached(Iteration_stage::Outer);
-      ++outer_iteration;
    }
-
-   apply_lowest_constraint(Iteration_stage::Outer);
-
-   if (!outer_accuracy_reached)
-      throw NoConvergenceError(max_iterations);
 
    VERBOSE_MSG("convergence reached after " << iteration << " iterations");
 }
@@ -403,6 +422,16 @@ bool RGFlow<Semianalytic>::accuracy_goal_reached(Iteration_stage stage) const
    return (stage == Iteration_stage::Inner ?
            convergence_tester->inner_accuracy_goal_reached()
            : convergence_tester->outer_accuracy_goal_reached());
+}
+
+/**
+ * Sets a flag indicating whether to only solve the inner iteration
+ *
+ * @param flag flag determining if only inner iteration should be solved
+ */
+void RGFlow<Semianalytic>::solve_inner_iteration_only(bool flag)
+{
+   only_solve_inner_iteration = flag;
 }
 
 /**
