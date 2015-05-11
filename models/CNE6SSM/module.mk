@@ -94,15 +94,23 @@ endif
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_semianalytic_convergence_tester.cpp \
+		$(DIR)/CNE6SSM_semianalytic_high_scale_constraint.cpp \
+		$(DIR)/CNE6SSM_semianalytic_initial_guesser.cpp \
 		$(DIR)/CNE6SSM_semianalytic_input_parameters.cpp \
-		$(DIR)/CNE6SSM_semianalytic_model.cpp
+		$(DIR)/CNE6SSM_semianalytic_low_scale_constraint.cpp \
+		$(DIR)/CNE6SSM_semianalytic_model.cpp \
+		$(DIR)/CNE6SSM_semianalytic_susy_scale_constraint.cpp
 
 EXECNE6SSM_SRC +=
 
 LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_semianalytic_convergence_tester.hpp \
+		$(DIR)/CNE6SSM_semianalytic_high_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_semianalytic_initial_guesser.hpp \
 		$(DIR)/CNE6SSM_semianalytic_input_parameters.hpp \
-		$(DIR)/CNE6SSM_semianalytic_model.hpp
+		$(DIR)/CNE6SSM_semianalytic_low_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_semianalytic_model.hpp \
+		$(DIR)/CNE6SSM_semianalytic_susy_scale_constraint.cpp
 endif
 
 ifneq ($(MAKECMDGOALS),showbuild)

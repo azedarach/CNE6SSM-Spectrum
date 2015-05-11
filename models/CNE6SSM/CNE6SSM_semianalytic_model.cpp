@@ -47,6 +47,82 @@ CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters<Semianalytic>& input_)
    , ewsb_loop_order(2)
    , precision(1.0e-3)
    , ewsb_iteration_precision(1.0e-5)
+   , ewsb_solution(Eigen::Array<double,number_of_ewsb_equations,1>::Zero())
+   , TYd_Azero_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TYd_m12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , ThE_Azero_coeff(Eigen::Matrix<double,3,2>::Zero())
+   , ThE_m12_coeff(Eigen::Matrix<double,3,2>::Zero())
+   , TYe_Azero_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TYe_m12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TSigmaL_Azero_coeff(0), TSigmaL_m12_coeff(0)
+   , TKappaPr_Azero_coeff(0), TKappaPr_m12_coeff(0)
+   , TSigmax_Azero_coeff(0), TSigmax_m12_coeff(0)
+   , TgD_Azero_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TgD_m12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TKappa_Azero_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TKappa_m12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TLambda12_Azero_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , TLambda12_m12_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , TLambdax_Azero_coeff(0), TLambdax_m12_coeff(0)
+   , Tfu_Azero_coeff(Eigen::Matrix<double,3,2>::Zero())
+   , Tfu_m12_coeff(Eigen::Matrix<double,3,2>::Zero())
+   , Tfd_Azero_coeff(Eigen::Matrix<double,3,2>::Zero())
+   , Tfd_m12_coeff(Eigen::Matrix<double,3,2>::Zero())
+   , TYu_Azero_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , TYu_m12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mq2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mq2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mq2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mq2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , ml2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , ml2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , ml2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , ml2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mHd2_m02_coeff(0), mHd2_m122_coeff(0), mHd2_Azerom12_coeff(0)
+   , mHd2_Azero2_coeff(0), mHu2_m02_coeff(0), mHu2_m122_coeff(0)
+   , mHu2_Azerom12_coeff(0), mHu2_Azero2_coeff(0)
+   , md2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , md2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , md2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , md2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mu2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mu2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mu2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mu2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , me2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , me2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , me2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , me2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , ms2_m02_coeff(0), ms2_m122_coeff(0), ms2_Azerom12_coeff(0)
+   , ms2_Azero2_coeff(0), msbar2_m02_coeff(0), msbar2_m122_coeff(0)
+   , msbar2_Azerom12_coeff(0), msbar2_Azero2_coeff(0)
+   , mH1I2_m02_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mH1I2_m122_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mH1I2_Azerom12_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mH1I2_Azero2_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mH2I2_m02_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mH2I2_m122_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mH2I2_Azerom12_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mH2I2_Azero2_coeff(Eigen::Matrix<double,2,2>::Zero())
+   , mSI2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mSI2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mSI2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mSI2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDx2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDx2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDx2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDx2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDxbar2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDxbar2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDxbar2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mDxbar2_Azero2_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , mHp2_m02_coeff(0), mHp2_m122_coeff(0), mHp2_Azerom12_coeff(0)
+   , mHp2_Azero2_coeff(0), mHpbar2_m02_coeff(0), mHpbar2_m122_coeff(0)
+   , mHpbar2_Azerom12_coeff(0), mHpbar2_Azero2_coeff(0), mphi2_m02_coeff(0)
+   , mphi2_m122_coeff(0), mphi2_Azerom12_coeff(0), mphi2_Azero2_coeff(0)
+   , MassB_Azero_coeff(0), MassB_m12_coeff(0), MassWB_Azero_coeff(0)
+   , MassWB_m12_coeff(0), MassG_Azero_coeff(0), MassG_m12_coeff(0)
+   , MassBp_Azero_coeff(0), MassBp_m12_coeff(0)
 {
 }
 
@@ -150,7 +226,23 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    CNE6SSM* model = ewsb_args->model;
    const unsigned ewsb_loop_order = ewsb_args->ewsb_loop_order;
 
-   // TODO to be implemented
+   // EWSB output parameters are TanTheta, m0, vphi, XiF, LXiF
+   const double s = model->get_input().sInput;
+   const double m12 = model->get_input().m12;
+   const double Azero = model->get_input().Azero;
+
+   const double m0 = gsl_vector_get(x, 0);
+   const double TanTheta = gsl_vector_get(x, 1);
+   const double vphi = gsl_vector_get(x, 2);
+   const double XiF = gsl_vector_get(x, 3);
+   const double LXiF = gsl_vector_get(x, 4);
+
+   model->set_soft_parameters_at_current_scale(m0, m12, Azero);
+   model->set_vs(s * Cos(ArcTan(TanTheta)));
+   model->set_vsb(s * Sin(ArcTan(TanTheta)));
+   model->set_vphi(vphi);
+   model->set_XiF(XiF);
+   model->set_LXiF(LXiF);
 
    if (ewsb_loop_order > 0)
       model->calculate_DRbar_masses();
@@ -187,6 +279,11 @@ int CLASSNAME::solve_ewsb_iteratively()
 
    const std::size_t number_of_solvers = sizeof(solvers)/sizeof(*solvers);
    double x_init[number_of_ewsb_equations];
+
+#ifdef ENABLE_VERBOSE
+   std::cout << "Getting EWSB initial guess ...\n";
+#endif
+
    ewsb_initial_guess(x_init);
 
 #ifdef ENABLE_VERBOSE
@@ -243,7 +340,23 @@ int CLASSNAME::solve_ewsb_iteratively_with(
 {
    const int status = solver->solve(x_init);
 
-   // TODO to be implemented
+   const double s = LOCALINPUT(sInput);
+   const double m12 = LOCALINPUT(m12);
+   const double Azero = LOCALINPUT(Azero);
+
+   ewsb_solution(0) = solver->get_solution(0);
+   ewsb_solution(1) = solver->get_solution(1);
+   ewsb_solution(2) = solver->get_solution(2);
+   ewsb_solution(3) = solver->get_solution(3);
+   ewsb_solution(4) = solver->get_solution(4);
+
+   set_soft_parameters_at_current_scale(ewsb_solution(0), m12, Azero);
+
+   vs = s * Cos(ArcTan(ewsb_solution(1)));
+   vsb = s * Sin(ArcTan(ewsb_solution(1)));
+   vphi = ewsb_solution(2);
+   XiF = ewsb_solution(3);
+   LXiF = ewsb_solution(4);
 
 
    return status;
@@ -307,9 +420,93 @@ int CLASSNAME::solve_ewsb()
 
 void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 {
+   const double s = LOCALINPUT(sInput);
+   const double m12 = LOCALINPUT(m12);
+   const double Azero = LOCALINPUT(Azero);
 
-   // TODO to be implemented
+   // initially guess m0, assuming TanTheta = 1 (or approximately so)
+   x_init[0] = (mHd2_m122_coeff * Sqr(vd) - mHu2_m122_coeff * Sqr(vu)) * Sqr(m12)
+      + (mHd2_Azerom12_coeff * Sqr(vd) - mHu2_Azerom12_coeff * Sqr(vu)) * m12 * Azero
+      + (mHd2_Azero2_coeff * Sqr(vd) - mHu2_Azero2_coeff * Sqr(vu)) * Sqr(Azero)
+      + 0.25 * Sqr(Lambdax) * Sqr(s) * (Sqr(vd) - Sqr(vu)) +
+      0.125 * Sqr(g2) * (Power(vd, 4) - Power(vu, 4)) + 0.075 * Sqr(g1) *
+      (Power(vd, 4) - Power(vu, 4)) + 0.0125 * Sqr(g1p) *
+      (9.0 * Power(vd, 4) - 4.0 * Power(vu, 4));
+   
+   x_init[0] /= (mHu2_m02_coeff * Sqr(vu) - mHd2_m02_coeff * Sqr(vd));
 
+#ifdef ENABLE_VERBOSE
+   if (x_init[0] < 0.) {
+      WARNING("\tSqr(m0) < 0 in initial guess!"); 
+   }
+#endif
+   x_init[0] = AbsSqrt(x_init[0]);
+
+   // set soft masses using initial guess for m0
+   const double m0 = x_init[0];
+   double mHd2 = mHd2_m02_coeff * Sqr(m0) + mHd2_m122_coeff * Sqr(m12)
+      + mHd2_Azerom12_coeff * Azero * m12 + mHd2_Azero2_coeff * Sqr(Azero);
+   double ms2 = ms2_m02_coeff * Sqr(m0) + ms2_m122_coeff * Sqr(m12)
+      + ms2_Azerom12_coeff * Azero * m12 + ms2_Azero2_coeff * Sqr(Azero);
+   double msbar2 = msbar2_m02_coeff * Sqr(m0) + msbar2_m122_coeff * Sqr(m12)
+      + msbar2_Azerom12_coeff * Azero * m12 + msbar2_Azero2_coeff * Sqr(Azero);
+   double mphi2 = mphi2_m02_coeff * Sqr(m0) + mphi2_m122_coeff * Sqr(m12)
+      + mphi2_Azerom12_coeff * Azero * m12 + mphi2_Azero2_coeff * Sqr(Azero);
+
+   // initial guess for TanTheta
+   x_init[1] = (ms2 + 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(s)) 
+      / (msbar2 + 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(s));
+
+#ifdef ENABLE_VERBOSE
+   if (x_init[1] < 0.) {
+      WARNING("\tSqr(TanTheta) < 0 in initial guess!");
+   }
+#endif
+   x_init[1] = AbsSqrt(x_init[1]);
+
+   double vs = s * Cos(ArcTan(x_init[1]));
+   double vsb = s * Sin(ArcTan(x_init[1]));
+
+   // initial guess for vphi
+   x_init[2] = (-4. / (vsb * vu * Lambdax * Conj(Sigmax) +
+                       vsb * vu * Sigmax * Conj(Lambdax))) *
+      (mHd2 * vd - 0.35355339059327373 * vs * vu * TLambdax
+       - 0.35355339059327373 * vs * vu * Conj(TLambdax) + 0.5 * AbsSqr(Lambdax) * vd *
+       (Sqr(vu) + Sqr(vs)) + 0.125 * Sqr(g2) * Power(vd,3) + 0.075 * Sqr(g1) * Power(vd,3)
+       - 0.125 * Sqr(g2) * vd * Sqr(vu) - 0.075 * Sqr(g1) * vd * Sqr(vu) + 0.1125 * Sqr(g1p) *
+       Power(vd,3) + 0.075 * Sqr(g1p) * vd * Sqr(vu) - 0.0375 * Sqr(g1p) * QS * vd *
+       (Sqr(vs) - Sqr(vsb)));
+
+   double vphi = x_init[2];
+
+   // initial guess for XiF
+   x_init[3] = (2. / (vs * Sigmax + vs * Conj(Sigmax))) *
+      (msbar2 * vsb - 0.35355339059327373 * vphi * vs * MuPhi * Conj(Sigmax)
+       - 0.35355339059327373 * vphi * vs * Sigmax * Conj(MuPhi) - 0.35355339059327373 * vphi *
+       vs * TSigmax - 0.35355339059327373 * vphi * vs * Conj(TSigmax) + 0.25 * vphi * vd * vu *
+       Lambdax * Conj(Sigmax) + 0.25 * vphi * vd * vu * Sigmax * Conj(Lambdax) 
+       + 0.5 * AbsSqr(Sigmax) * vsb * Sqr(vphi) + 0.5 * AbsSqr(Sigmax) * vsb * Sqr(vs) - 0.25 * vs
+       * Sqr(vphi) * KappaPr * Conj(Sigmax) - 0.25 * vs * Sqr(vphi) * Sigmax * Conj(KappaPr)
+       + 0.0375 * Sqr(g1p) * QS * vsb * Sqr(vd) + 0.025 * Sqr(g1p) * QS * vsb * Sqr(vu) - 0.0125 *
+       Sqr(g1p) * Sqr(QS) * vsb * Sqr(vs) + 0.0125 * Sqr(g1p) * Sqr(QS) * Power(vsb,3));
+
+   double XiF = x_init[3];
+
+   // initial guess for LXiF
+   x_init[4] = -0.7071067811865475 *
+      (mphi2 * vphi + vphi * AbsSqr(MuPhi) + Power(vphi,3) * AbsSqr(
+         KappaPr) + 0.5 * vphi * BMuPhi + 0.5 * vphi * Conj(BMuPhi) + 0.7071067811865475 *
+       MuPhi * Conj(XiF) - 0.35355339059327373 * MuPhi * vs * vsb * Conj(Sigmax) 
+       - 0.35355339059327373 * vs * vsb * Conj(TSigmax) +
+       vphi * Conj(XiF) * KappaPr - 0.5 * vphi * vs * vsb * Conj(Sigmax) *KappaPr + 0.25 * vd * vsb *
+       vu * Conj(Sigmax) * Lambdax + 0.7071067811865475 * Conj(MuPhi) * XiF + vphi * Conj(
+          KappaPr) * XiF - 0.35355339059327373 * vs * vsb * Conj(MuPhi) * Sigmax - 0.5 * vphi *
+       vs * vsb * Conj(KappaPr) * Sigmax + 0.25 * vd * vsb * vu * Conj(Lambdax) * Sigmax
+       + 1.0606601717798212 * MuPhi * Conj(KappaPr) * Sqr(vphi) +
+       0.35355339059327373 * Conj(TKappaPr) * Sqr(vphi) + 1.0606601717798212 * Conj(
+          MuPhi) * KappaPr * Sqr(vphi) + 0.5 * vphi * AbsSqr(Sigmax) * Sqr(vs) + 0.5 * vphi * AbsSqr
+       (Sigmax) * Sqr(vsb) + 0.35355339059327373 * Sqr(vphi) * TKappaPr -
+       0.35355339059327373 * vs * vsb *TSigmax);
 }
 
 /**
@@ -324,24 +521,147 @@ void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
 {
 
-   int error;
-   // TODO to be implemented
+   // save initial parameters
+   CNE6SSM_soft_parameters saved_pars;
+   saved_pars.set(get());
 
-   const bool is_finite = true; //std::isfinite(TanTheta) && std::isfinite(Lambdax) 
-//      && std::isfinite(vphi) && std::isfinite(XiF) && std::isfinite(LXiF);
+   int error;
+
+   const double s = LOCALINPUT(sInput);
+   const double m12 = LOCALINPUT(m12);
+   const double Azero = LOCALINPUT(Azero);
+
+   // update m0
+   double m0 = (mHd2_m122_coeff * Sqr(vd) - mHu2_m122_coeff * Sqr(vu)) * Sqr(m12)
+      + (mHd2_Azerom12_coeff * Sqr(vd) - mHu2_Azerom12_coeff * Sqr(vu)) * m12 * Azero
+      + (mHd2_Azero2_coeff * Sqr(vd) - mHu2_Azero2_coeff * Sqr(vu)) * Sqr(Azero)
+      + 0.25 * Sqr(Lambdax) * Sqr(vs) * (Sqr(vd) - Sqr(vu)) +
+      0.125 * Sqr(g2) * (Power(vd, 4) - Power(vu, 4)) + 0.075 * Sqr(g1) *
+      (Power(vd, 4) - Power(vu, 4)) + 0.0125 * Sqr(g1p) *
+      (9.0 * Power(vd, 4) - 4.0 * Power(vu, 4)) + 0.0125 * Sqr(g1p) * QS *
+      (-3.0 * Sqr(vd) - 2.0 * Sqr(vu)) * (Sqr(vs) - Sqr(vsb));
+
+   if (ewsb_loop_order > 0) {
+      m0 -= (vd * Re(tadpole_hh(0)) - vu * Re(tadpole_hh(1)));
+      if (ewsb_loop_order > 1) {
+         double two_loop_tadpole[3];
+         tadpole_hh_2loop(two_loop_tadpole);
+         m0 -= (vd * two_loop_tadpole[0] - vu * two_loop_tadpole[1]);
+      }
+   }
+
+   m0 = AbsSqrt(m0 / (mHu2_m02_coeff * Sqr(vu) - mHd2_m02_coeff * Sqr(vd)));
+
+   set_soft_parameters_at_current_scale(m0, m12, Azero);
+
+   // update TanTheta
+   double delta = 0.5 * AbsSqr(Lambdax) * Sqr(vs) * (Sqr(vd) + Sqr(vu))
+      + 0.5 * AbsSqr(Sigmax) * Sqr(vs) * Sqr(vphi) - 0.5 * AbsSqr(Sigmax) * Sqr(vsb) * Sqr(vphi)
+      - 0.35355339059327373 * vd * vu * vs * TLambdax - 0.35355339059327373 * vd * vu * vs * Conj(TLambdax) 
+      - 0.25 * vphi * vsb * vd * vu * Lambdax * Conj(Sigmax) - 0.25 * vphi * vsb * vd * vu * Sigmax * Conj(Lambdax)
+      - 0.0375 * QS * Sqr(g1p) * Sqr(s) * Sqr(vd) - 0.025 * QS * Sqr(g1p) * Sqr(s) * Sqr(vu);
+
+   if (ewsb_loop_order > 0) {
+      delta -= (vs * Re(tadpole_hh(2)) - vsb * Re(tadpole_hh(3)));
+      if (ewsb_loop_order > 1) {
+         double two_loop_tadpole[3];
+         tadpole_hh_2loop(two_loop_tadpole);
+         delta -= vs * two_loop_tadpole[2];
+      }
+   }
+
+   const double TanTheta = AbsSqrt((ms2 + 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(s) + delta / (Sqr(vs)))
+                                   / (msbar2 + 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(s)));
+
+   vs = s * Cos(ArcTan(TanTheta));
+   vsb = s * Sin(ArcTan(TanTheta));
+
+   // update vphi
+   double rhs_vphi = mHd2 * vd - 0.35355339059327373 * vs * vu * TLambdax
+      - 0.35355339059327373 * vs * vu * Conj(TLambdax) + 0.5 * AbsSqr(Lambdax) * vd *
+      (Sqr(vu) + Sqr(vs)) + 0.125 * Sqr(g2) * Power(vd,3) + 0.075 * Sqr(g1) * Power(vd,3)
+      - 0.125 * Sqr(g2) * vd * Sqr(vu) - 0.075 * Sqr(g1) * vd * Sqr(vu) + 0.1125 * Sqr(g1p) *
+      Power(vd,3) + 0.075 * Sqr(g1p) * vd * Sqr(vu) - 0.0375 * Sqr(g1p) * QS * vd *
+      (Sqr(vs) - Sqr(vsb));
+
+   if (ewsb_loop_order > 0) {
+      rhs_vphi -= Re(tadpole_hh(0));
+      if (ewsb_loop_order > 1) {
+         double two_loop_tadpole[3];
+         tadpole_hh_2loop(two_loop_tadpole);
+         rhs_vphi -= two_loop_tadpole[0];
+      }
+   }
+
+   rhs_vphi *= (-4. / (vsb * vu * Lambdax * Conj(Sigmax) + vsb * vu * Sigmax * Conj(Lambdax)));
+
+   vphi = rhs_vphi;
+
+   // update XiF
+   double rhs_XiF = msbar2 * vsb - 0.35355339059327373 * vphi * vs * MuPhi * Conj(Sigmax)
+      - 0.35355339059327373 * vphi * vs * Sigmax * Conj(MuPhi) - 0.35355339059327373 * vphi *
+      vs * TSigmax - 0.35355339059327373 * vphi * vs * Conj(TSigmax) + 0.25 * vphi * vd * vu *
+      Lambdax * Conj(Sigmax) + 0.25 * vphi * vd * vu * Sigmax * Conj(Lambdax) 
+      + 0.5 * AbsSqr(Sigmax) * vsb * Sqr(vphi) + 0.5 * AbsSqr(Sigmax) * vsb * Sqr(vs) - 0.25 * vs
+      * Sqr(vphi) * KappaPr * Conj(Sigmax) - 0.25 * vs * Sqr(vphi) * Sigmax * Conj(KappaPr)
+      + 0.0375 * Sqr(g1p) * QS * vsb * Sqr(vd) + 0.025 * Sqr(g1p) * QS * vsb * Sqr(vu) - 0.0125 *
+      Sqr(g1p) * Sqr(QS) * vsb * Sqr(vs) + 0.0125 * Sqr(g1p) * Sqr(QS) * Power(vsb,3);
+
+   if (ewsb_loop_order > 0) {
+      rhs_XiF -= Re(tadpole_hh(3));
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+
+   rhs_XiF *= ( 2. / (vs * Sigmax + vs * Conj(Sigmax)));
+
+   XiF = rhs_XiF;
+
+   // update LXiF
+   double rhs_LXiF = mphi2 * vphi + vphi * AbsSqr(MuPhi) + Power(vphi,3) * AbsSqr(
+      KappaPr) + 0.5 * vphi * BMuPhi + 0.5 * vphi * Conj(BMuPhi) + 0.7071067811865475 *
+      MuPhi * Conj(XiF) - 0.35355339059327373 * MuPhi * vs * vsb * Conj(Sigmax) 
+      - 0.35355339059327373 * vs * vsb * Conj(TSigmax) +
+      vphi * Conj(XiF) * KappaPr - 0.5 * vphi * vs * vsb * Conj(Sigmax) * KappaPr + 0.25 * vd * vsb *
+      vu * Conj(Sigmax) * Lambdax + 0.7071067811865475 * Conj(MuPhi) * XiF + vphi * Conj(
+      KappaPr) * XiF - 0.35355339059327373 * vs * vsb * Conj(MuPhi) * Sigmax - 0.5 * vphi * vs *
+      vsb * Conj(KappaPr) * Sigmax + 0.25 * vd * vsb * vu * Conj(Lambdax) * Sigmax
+      + 1.0606601717798212 * MuPhi * Conj(KappaPr) * Sqr(vphi) +
+      0.35355339059327373 * Conj(TKappaPr) * Sqr(vphi) + 1.0606601717798212 * Conj(
+      MuPhi) * KappaPr * Sqr(vphi) + 0.5 * vphi * AbsSqr(Sigmax) * Sqr(vs) + 0.5 * vphi * AbsSqr
+      (Sigmax) * Sqr(vsb) + 0.35355339059327373 * Sqr(vphi) * TKappaPr -
+      0.35355339059327373 * vs * vsb * TSigmax;
+
+   if (ewsb_loop_order > 0) {
+      rhs_LXiF -= Re(tadpole_hh(4));
+      if (ewsb_loop_order > 1) {
+
+      }
+   }
+
+   rhs_LXiF *= -0.7071067811865475;
+
+   LXiF = rhs_LXiF;
+
+   const bool is_finite = std::isfinite(m0) && std::isfinite(TanTheta)
+      && std::isfinite(vphi) && std::isfinite(XiF) && std::isfinite(LXiF);
 
    if (is_finite) {
       error = GSL_SUCCESS;
-      // TODO assign parameters
-      // ewsb_parameters[0] = TanTheta_new;
-      // ewsb_parameters[1] = Lambdax_new;
-      // ewsb_parameters[2] = vphi_new;
-      // ewsb_parameters[3] = XiF_new;
-      // ewsb_parameters[4] = LXiF_new;
+
+      ewsb_parameters[0] = m0;
+      ewsb_parameters[1] = TanTheta;
+      ewsb_parameters[2] = vphi;
+      ewsb_parameters[3] = XiF;
+      ewsb_parameters[4] = LXiF;
 
    } else {
       error = GSL_EDOM;
    }
+
+   // reset old parameters
+   set(saved_pars.get());
 
    return error;
 }
@@ -368,16 +688,29 @@ int CLASSNAME::ewsb_step(const gsl_vector* x, void* params, gsl_vector* f)
    CNE6SSM* model = ewsb_args->model;
    const unsigned ewsb_loop_order = ewsb_args->ewsb_loop_order;
 
-   // TODO to be implemented
+   const double s = INPUT(sInput);
+   const double m12 = INPUT(m12);
+   const double Azero = INPUT(Azero);
+
+   const double m0 = gsl_vector_get(x, 0);
+   const double TanTheta = gsl_vector_get(x, 1);
+   const double vphi = gsl_vector_get(x, 2);
+   const double XiF = gsl_vector_get(x, 3);
+   const double LXiF = gsl_vector_get(x, 4);
+
+   model->set_soft_parameters_at_current_scale(m0, m12, Azero);
+   model->set_vs(s * Cos(ArcTan(TanTheta)));
+   model->set_vsb(s * Sin(ArcTan(TanTheta)));
+   model->set_vphi(vphi);
+   model->set_XiF(XiF);
+   model->set_LXiF(LXiF);
 
 
    if (ewsb_loop_order > 0)
       model->calculate_DRbar_masses();
 
    double ewsb_parameters[number_of_ewsb_equations] =
-      { model->get_vsb() / model->get_vs(), 
-        model->get_Lambdax(), model->get_vphi(), model->get_XiF(), 
-        model->get_LXiF() };
+      { m0, TanTheta, vphi, XiF, LXiF};
 
    const int status = model->ewsb_step(ewsb_parameters);
 
@@ -1704,6 +2037,503 @@ void CLASSNAME::set_parameter(unsigned parameter, double x)
    default:
       throw UnknownModelParameterError(parameter);
    }
+}
+
+void CLASSNAME::calculate_coefficients(double input_scale)
+{
+   static const double fit_Azero_values[number_of_fit_points] = {0., 1., 0., 1.};
+   static const double fit_m12_values[number_of_fit_points] = {1., 0., 0., 1.};
+   static const double fit_m0_values[number_of_fit_points] = {0., 0., 1., 0.};
+
+   // save current set of parameters
+   CNE6SSM_soft_parameters saved_pars;
+   saved_pars.set(get());
+
+   const double current_scale = get_scale();
+
+   run_to(input_scale, precision);
+
+   CNE6SSM_soft_parameters input_scale_pars;
+   input_scale_pars.set(get());
+
+   std::vector<CNE6SSM_soft_parameters> parameter_values;
+
+   Eigen::Matrix<double,number_of_fit_points,2> dimension_one_inputs;
+   Eigen::Matrix<double,number_of_fit_points,4> dimension_two_inputs;
+
+   for (std::size_t i = 0; i < number_of_fit_points; ++i) {
+      dimension_one_inputs(i,0) = fit_Azero_values[i];
+      dimension_one_inputs(i,1) = fit_m12_values[i];
+
+      dimension_two_inputs(i,0) = Sqr(fit_m0_values[i]);
+      dimension_two_inputs(i,1) = Sqr(fit_m12_values[i]);
+      dimension_two_inputs(i,2) = fit_m12_values[i] * fit_Azero_values[i];
+      dimension_two_inputs(i,3) = Sqr(fit_Azero_values[i]);
+
+      set_soft_parameters_at_input_scale(fit_m0_values[i], fit_m12_values[i], fit_Azero_values[i]);
+
+      run_to(current_scale, precision);
+
+      CNE6SSM_soft_parameters params;
+      params.set(get());
+
+      parameter_values.push_back(params);
+
+      set(input_scale_pars.get());
+      set_scale(input_scale);
+   }
+
+   // solve for coefficients using least squares
+   Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,2> > dimension_one_svd(dimension_one_inputs);
+   Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,4> > dimension_two_svd(dimension_two_inputs);
+
+   Eigen::Matrix<double,number_of_fit_points,1> rhs;
+   Eigen::Matrix<double,2,1> dimension_one_solution;
+   Eigen::Matrix<double,4,1> dimension_two_solution;
+
+   // TODO temporary working (awful!) solution, needs to be replaced...
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_TYd(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         TYd_Azero_coeff(i,j) = dimension_one_solution(0);
+         TYd_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+   
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 2; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_ThE(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         ThE_Azero_coeff(i,j) = dimension_one_solution(0);
+         ThE_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+   
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_TYe(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         TYe_Azero_coeff(i,j) = dimension_one_solution(0);
+         TYe_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+   
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_TSigmaL();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   TSigmaL_Azero_coeff = dimension_one_solution(0);
+   TSigmaL_m12_coeff = dimension_one_solution(1);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_TKappaPr();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   TKappaPr_Azero_coeff = dimension_one_solution(0);
+   TKappaPr_m12_coeff = dimension_one_solution(1);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_TSigmax();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   TSigmax_Azero_coeff = dimension_one_solution(0);
+   TSigmax_m12_coeff = dimension_one_solution(1);
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_TgD(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         TgD_Azero_coeff(i,j) = dimension_one_solution(0);
+         TgD_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_TKappa(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         TKappa_Azero_coeff(i,j) = dimension_one_solution(0);
+         TKappa_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+
+   for (std::size_t i = 0; i < 2; ++i) {
+      for (std::size_t j = 0; j < 2; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_TLambda12(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         TLambda12_Azero_coeff(i,j) = dimension_one_solution(0);
+         TLambda12_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_TLambdax();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   TLambdax_Azero_coeff = dimension_one_solution(0);
+   TLambdax_m12_coeff = dimension_one_solution(1);
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 2; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_Tfu(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         Tfu_Azero_coeff(i,j) = dimension_one_solution(0);
+         Tfu_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 2; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_Tfd(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         Tfd_Azero_coeff(i,j) = dimension_one_solution(0);
+         Tfd_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_TYu(i,j);
+         }
+         dimension_one_solution = dimension_one_svd.solve(rhs);
+         TYu_Azero_coeff(i,j) = dimension_one_solution(0);
+         TYu_m12_coeff(i,j) = dimension_one_solution(1);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_mq2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         mq2_m02_coeff(i,j) = dimension_two_solution(0);
+         mq2_m122_coeff(i,j) = dimension_two_solution(1);
+         mq2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         mq2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_ml2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         ml2_m02_coeff(i,j) = dimension_two_solution(0);
+         ml2_m122_coeff(i,j) = dimension_two_solution(1);
+         ml2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         ml2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_mHd2();
+   }
+   dimension_two_solution = dimension_two_svd.solve(rhs);
+   mHd2_m02_coeff = dimension_two_solution(0);
+   mHd2_m122_coeff = dimension_two_solution(1);
+   mHd2_Azerom12_coeff = dimension_two_solution(2);
+   mHd2_Azero2_coeff = dimension_two_solution(3);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_mHu2();
+   }
+   dimension_two_solution = dimension_two_svd.solve(rhs);
+   mHu2_m02_coeff = dimension_two_solution(0);
+   mHu2_m122_coeff = dimension_two_solution(1);
+   mHu2_Azerom12_coeff = dimension_two_solution(2);
+   mHu2_Azero2_coeff = dimension_two_solution(3);
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_md2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         md2_m02_coeff(i,j) = dimension_two_solution(0);
+         md2_m122_coeff(i,j) = dimension_two_solution(1);
+         md2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         md2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_mu2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         mu2_m02_coeff(i,j) = dimension_two_solution(0);
+         mu2_m122_coeff(i,j) = dimension_two_solution(1);
+         mu2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         mu2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_me2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         me2_m02_coeff(i,j) = dimension_two_solution(0);
+         me2_m122_coeff(i,j) = dimension_two_solution(1);
+         me2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         me2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_ms2();
+   }
+   dimension_two_solution = dimension_two_svd.solve(rhs);
+   ms2_m02_coeff = dimension_two_solution(0);
+   ms2_m122_coeff = dimension_two_solution(1);
+   ms2_Azerom12_coeff = dimension_two_solution(2);
+   ms2_Azero2_coeff = dimension_two_solution(3);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_msbar2();
+   }
+   dimension_two_solution = dimension_two_svd.solve(rhs);
+   msbar2_m02_coeff = dimension_two_solution(0);
+   msbar2_m122_coeff = dimension_two_solution(1);
+   msbar2_Azerom12_coeff = dimension_two_solution(2);
+   msbar2_Azero2_coeff = dimension_two_solution(3);
+
+   for (std::size_t i = 0; i < 2; ++i) {
+      for (std::size_t j = 0; j < 2; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_mH1I2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         mH1I2_m02_coeff(i,j) = dimension_two_solution(0);
+         mH1I2_m122_coeff(i,j) = dimension_two_solution(1);
+         mH1I2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         mH1I2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t i = 0; i < 2; ++i) {
+      for (std::size_t j = 0; j < 2; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_mH2I2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         mH2I2_m02_coeff(i,j) = dimension_two_solution(0);
+         mH2I2_m122_coeff(i,j) = dimension_two_solution(1);
+         mH2I2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         mH2I2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_mSI2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         mSI2_m02_coeff(i,j) = dimension_two_solution(0);
+         mSI2_m122_coeff(i,j) = dimension_two_solution(1);
+         mSI2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         mSI2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_mDx2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         mDx2_m02_coeff(i,j) = dimension_two_solution(0);
+         mDx2_m122_coeff(i,j) = dimension_two_solution(1);
+         mDx2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         mDx2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      for (std::size_t j = 0; j < 3; ++j) {
+         for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+            rhs(k) = parameter_values[k].get_mDxbar2(i,j);
+         }
+         dimension_two_solution = dimension_two_svd.solve(rhs);
+         mDxbar2_m02_coeff(i,j) = dimension_two_solution(0);
+         mDxbar2_m122_coeff(i,j) = dimension_two_solution(1);
+         mDxbar2_Azerom12_coeff(i,j) = dimension_two_solution(2);
+         mDxbar2_Azero2_coeff(i,j) = dimension_two_solution(3);
+      }
+   }
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_mHp2();
+   }
+   dimension_two_solution = dimension_two_svd.solve(rhs);
+   mHp2_m02_coeff = dimension_two_solution(0);
+   mHp2_m122_coeff = dimension_two_solution(1);
+   mHp2_Azerom12_coeff = dimension_two_solution(2);
+   mHp2_Azero2_coeff = dimension_two_solution(3);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_mHpbar2();
+   }
+   dimension_two_solution = dimension_two_svd.solve(rhs);
+   mHpbar2_m02_coeff = dimension_two_solution(0);
+   mHpbar2_m122_coeff = dimension_two_solution(1);
+   mHpbar2_Azerom12_coeff = dimension_two_solution(2);
+   mHpbar2_Azero2_coeff = dimension_two_solution(3);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_mphi2();
+   }
+   dimension_two_solution = dimension_two_svd.solve(rhs);
+   mphi2_m02_coeff = dimension_two_solution(0);
+   mphi2_m122_coeff = dimension_two_solution(1);
+   mphi2_Azerom12_coeff = dimension_two_solution(2);
+   mphi2_Azero2_coeff = dimension_two_solution(3);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_MassB();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   MassB_Azero_coeff = dimension_one_solution(0);
+   MassB_m12_coeff = dimension_one_solution(1);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_MassWB();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   MassWB_Azero_coeff = dimension_one_solution(0);
+   MassWB_m12_coeff = dimension_one_solution(1);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_MassG();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   MassG_Azero_coeff = dimension_one_solution(0);
+   MassG_m12_coeff = dimension_one_solution(1);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_MassBp();
+   }
+   dimension_one_solution = dimension_one_svd.solve(rhs);
+   MassBp_Azero_coeff = dimension_one_solution(0);
+   MassBp_m12_coeff = dimension_one_solution(1);
+
+   // reset parameters at initial scale
+   set(saved_pars.get());
+   set_scale(current_scale);
+}
+
+void CLASSNAME::set_soft_parameters_at_input_scale(double m0, double m12, double Azero)
+{
+   TYd = Azero * Yd;
+   ThE = Azero * hE;
+   TYe = Azero * Ye;
+   TSigmaL = Azero * SigmaL;
+   TKappaPr = Azero * KappaPr;
+   TSigmax = Azero * Sigmax;
+   TgD = Azero * gD;
+   TKappa = Azero * Kappa;
+   TLambda12 = Azero * Lambda12;
+   TLambdax = Azero * Lambdax;
+   Tfu = Azero * fu;
+   Tfd = Azero * fd;
+   mq2 = Sqr(m0) * UNITMATRIX(3);
+   ml2 = Sqr(m0) * UNITMATRIX(3);
+   mHd2 = Sqr(m0);
+   mHu2 = Sqr(m0);
+   md2 = Sqr(m0) * UNITMATRIX(3);
+   mu2 = Sqr(m0) * UNITMATRIX(3);
+   me2 = Sqr(m0) * UNITMATRIX(3);
+   ms2 = Sqr(m0);
+   msbar2 = Sqr(m0);
+   mH1I2 = Sqr(m0) * UNITMATRIX(2);
+   mH2I2 = Sqr(m0) * UNITMATRIX(2);
+   mSI2 = Sqr(m0) * UNITMATRIX(3);
+   mDx2 = Sqr(m0) * UNITMATRIX(3);
+   mDxbar2 = Sqr(m0) * UNITMATRIX(3);
+   mHp2 = Sqr(m0);
+   mHpbar2 = Sqr(m0);
+   mphi2 = Sqr(m0);
+   MassB = m12;
+   MassWB = m12;
+   MassG = m12;
+   MassBp = m12;
+}
+
+void CLASSNAME::set_soft_parameters_at_current_scale(double m0, double m12, double Azero)
+{
+   TYd = TYd_Azero_coeff * Azero + TYd_m12_coeff * m12;
+   ThE = ThE_Azero_coeff * Azero + ThE_m12_coeff * m12;
+   TYe = TYe_Azero_coeff * Azero + TYe_m12_coeff * m12;
+   TSigmaL = TSigmaL_Azero_coeff * Azero + TSigmaL_m12_coeff * m12;
+   TKappaPr = TKappaPr_Azero_coeff * Azero + TKappaPr_m12_coeff * m12;
+   TSigmax = TSigmax_Azero_coeff * Azero + TSigmax_m12_coeff * m12;
+   TgD = TgD_Azero_coeff * Azero + TgD_m12_coeff * m12;
+   TKappa = TKappa_Azero_coeff * Azero + TKappa_m12_coeff * m12;
+   TLambda12 = TLambda12_Azero_coeff * Azero + TLambda12_m12_coeff * m12;
+   TLambdax = TLambdax_Azero_coeff * Azero + TLambdax_m12_coeff * m12;
+   Tfu = Tfu_Azero_coeff * Azero + Tfu_m12_coeff * m12;
+   Tfd = Tfd_Azero_coeff * Azero + Tfd_m12_coeff * m12;
+   mq2 = mq2_m02_coeff * Sqr(m0) + mq2_m122_coeff * Sqr(m12)
+      + mq2_Azerom12_coeff * Azero * m12 + mq2_Azero2_coeff * Sqr(Azero);
+   ml2 = ml2_m02_coeff * Sqr(m0) + ml2_m122_coeff * Sqr(m12)
+      + ml2_Azerom12_coeff * Azero * m12 + ml2_Azero2_coeff * Sqr(Azero);
+   mHd2 = mHd2_m02_coeff * Sqr(m0) + mHd2_m122_coeff * Sqr(m12)
+      + mHd2_Azerom12_coeff * Azero * m12 + mHd2_Azero2_coeff * Sqr(Azero);
+   mHu2 = mHu2_m02_coeff * Sqr(m0) + mHu2_m122_coeff * Sqr(m12)
+      + mHu2_Azerom12_coeff * Azero * m12 + mHu2_Azero2_coeff * Sqr(Azero);
+   md2 = md2_m02_coeff * Sqr(m0) + md2_m122_coeff * Sqr(m12)
+      + md2_Azerom12_coeff * Azero * m12 + md2_Azero2_coeff * Sqr(Azero);
+   mu2 = mu2_m02_coeff * Sqr(m0) + mu2_m122_coeff * Sqr(m12)
+      + mu2_Azerom12_coeff * Azero * m12 + mu2_Azero2_coeff * Sqr(Azero);
+   me2 = me2_m02_coeff * Sqr(m0) + me2_m122_coeff * Sqr(m12)
+      + me2_Azerom12_coeff * Azero * m12 + me2_Azero2_coeff * Sqr(Azero);
+   ms2 = ms2_m02_coeff * Sqr(m0) + ms2_m122_coeff * Sqr(m12)
+      + ms2_Azerom12_coeff * Azero * m12 + ms2_Azero2_coeff * Sqr(Azero);
+   msbar2 = msbar2_m02_coeff * Sqr(m0) + msbar2_m122_coeff * Sqr(m12)
+      + msbar2_Azerom12_coeff * Azero * m12 + msbar2_Azero2_coeff * Sqr(Azero);
+   mH1I2 = mH1I2_m02_coeff * Sqr(m0) + mH1I2_m122_coeff * Sqr(m12)
+      + mH1I2_Azerom12_coeff * Azero * m12 + mH1I2_Azero2_coeff * Sqr(Azero);
+   mH2I2 = mH2I2_m02_coeff * Sqr(m0) + mH2I2_m122_coeff * Sqr(m12)
+      + mH2I2_Azerom12_coeff * Azero * m12 + mH2I2_Azero2_coeff * Sqr(Azero);;
+   mSI2 = mSI2_m02_coeff * Sqr(m0) + mSI2_m122_coeff * Sqr(m12)
+      + mSI2_Azerom12_coeff * Azero * m12 + mSI2_Azero2_coeff * Sqr(Azero);
+   mDx2 = mDx2_m02_coeff * Sqr(m0) + mDx2_m122_coeff * Sqr(m12)
+      + mDx2_Azerom12_coeff * Azero * m12 + mDx2_Azero2_coeff * Sqr(Azero);
+   mDxbar2 = mDxbar2_m02_coeff * Sqr(m0) + mDxbar2_m122_coeff * Sqr(m12)
+      + mDxbar2_Azerom12_coeff * Azero * m12 + mDxbar2_Azero2_coeff * Sqr(Azero);
+   mHp2 = mHp2_m02_coeff * Sqr(m0) + mHp2_m122_coeff * Sqr(m12)
+      + mHp2_Azerom12_coeff * Azero * m12 + mHp2_Azero2_coeff * Sqr(Azero);
+   mHpbar2 = mHpbar2_m02_coeff * Sqr(m0) + mHpbar2_m122_coeff * Sqr(m12)
+      + mHpbar2_Azerom12_coeff * Azero * m12 + mHpbar2_Azero2_coeff * Sqr(Azero);
+   mphi2 = mphi2_m02_coeff * Sqr(m0) + mphi2_m122_coeff * Sqr(m12)
+      + mphi2_Azerom12_coeff * Azero * m12 + mphi2_Azero2_coeff * Sqr(Azero);
+   MassB = MassB_Azero_coeff * Azero + MassB_m12_coeff * m12;
+   MassWB = MassWB_Azero_coeff * Azero + MassWB_m12_coeff * m12;
+   MassG = MassG_Azero_coeff * Azero + MassG_m12_coeff * m12;
+   MassBp = MassBp_Azero_coeff * Azero + MassBp_m12_coeff * m12;
 }
 
 std::ostream& operator<<(std::ostream& ostr, const CNE6SSM<Semianalytic>& model)
