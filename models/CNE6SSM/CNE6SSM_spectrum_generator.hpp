@@ -26,6 +26,11 @@
 #include "CNE6SSM_two_scale_initial_guesser.hpp"
 #include "CNE6SSM_two_scale_constraint_handler.hpp"
 
+#include "CNE6SSM_semianalytic_model.hpp"
+#include "CNE6SSM_semianalytic_convergence_tester.hpp"
+#include "CNE6SSM_semianalytic_initial_guesser.hpp"
+#include "CNE6SSM_semianalytic_constraint_handler.hpp"
+
 #include "CNE6SSM_utilities.hpp"
 
 #include "coupling_monitor.hpp"
