@@ -34,6 +34,9 @@ public:
    CNE6SSM<Semianalytic>* get_model() const;
    void initialize();
 
+   CNE6SSM_high_scale_constraint<Semianalytic>* get_input_scale_constraint() const;
+   void set_input_scale_constraint(CNE6SSM_high_scale_constraint<Semianalytic>*);
+
 protected:
    void update_scale();
 

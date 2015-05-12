@@ -32,6 +32,7 @@ CNE6SSM_susy_scale_constraint<Semianalytic>::CNE6SSM_susy_scale_constraint()
    , scale(0.)
    , initial_scale_guess(0.)
    , model(0)
+   , high_constraint(0)
 {
 }
 
@@ -39,6 +40,7 @@ CNE6SSM_susy_scale_constraint<Semianalytic>::CNE6SSM_susy_scale_constraint(
    CNE6SSM<Semianalytic>* model_)
    : Constraint<Semianalytic>()
    , model(model_)
+   , high_constraint(0)
 {
    initialize();
 }
@@ -52,7 +54,14 @@ void CNE6SSM_susy_scale_constraint<Semianalytic>::apply()
    assert(model && "Error: CNE6SSM_susy_scale_constraint::apply():"
           " model pointer must not be zero");
 
-   model->calculate_coefficients(high_constraint->get_scale());
+   double input_scale;
+   if (high_constraint) {
+      input_scale = high_constraint->get_scale();
+   } else {
+      input_scale = scale;
+   }
+
+   model->calculate_coefficients(input_scale);
    model->calculate_DRbar_masses();
    update_scale();
 
@@ -92,11 +101,22 @@ void CNE6SSM_susy_scale_constraint<Semianalytic>::set_model(Semianalytic_model* 
    model = cast_model<CNE6SSM<Semianalytic>*>(model_);
 }
 
+CNE6SSM_high_scale_constraint<Semianalytic>* CNE6SSM_susy_scale_constraint<Semianalytic>::get_input_scale_constraint() const
+{
+   return high_constraint;
+}
+
+void CNE6SSM_susy_scale_constraint<Semianalytic>::set_input_scale_constraint(CNE6SSM_high_scale_constraint<Semianalytic>* constraint)
+{
+   high_constraint = constraint;
+}
+
 void CNE6SSM_susy_scale_constraint<Semianalytic>::clear()
 {
    scale = 0.;
    initial_scale_guess = 0.;
    model = NULL;
+   high_constraint = NULL;
 }
 
 void CNE6SSM_susy_scale_constraint<Semianalytic>::initialize()
