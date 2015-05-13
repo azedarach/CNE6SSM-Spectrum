@@ -44,6 +44,7 @@ LIBCNE6SSM_HDR := \
 		$(DIR)/CNE6SSM_info.hpp \
 		$(DIR)/CNE6SSM_initial_guesser.hpp \
 		$(DIR)/CNE6SSM_input_parameters.hpp \
+		$(DIR)/CNE6SSM_input_parameters_slha.hpp \
 		$(DIR)/CNE6SSM_low_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_mass_eigenstates.hpp \
 		$(DIR)/CNE6SSM_model.hpp \
