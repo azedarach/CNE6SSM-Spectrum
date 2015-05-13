@@ -21,6 +21,7 @@
 #ifndef CNE6SSM_SLHA_IO_H
 #define CNE6SSM_SLHA_IO_H
 
+#include "CNE6SSM_semianalytic_model_slha.hpp"
 #include "CNE6SSM_two_scale_model_slha.hpp"
 #include "CNE6SSM_info.hpp"
 #include "CNE6SSM_physical.hpp"
@@ -49,6 +50,7 @@ template <class T>
 struct CNE6SSM_input_parameters;
 
 class Two_scale;
+class Semianalytic;
 class Spectrum_generator_settings;
 
 struct CNE6SSM_scales {
@@ -64,15 +66,21 @@ public:
    void clear();
 
    void fill(QedQcd& qedqcd) const { slha_io.fill(qedqcd); }
+   // introducing overloads for each set of input parameters
+   // - this is a (not ideal) workaround for using the same class
+   //   with either solver
    void fill(CNE6SSM_input_parameters<Two_scale>&) const;
+   void fill(CNE6SSM_input_parameters<Semianalytic>&) const;
    template <class T> void fill(CNE6SSM_slha<T>&) const;
    void fill(Spectrum_generator_settings&) const;
    double get_parameter_output_scale() const;
    const SLHA_io& get_slha_io() const { return slha_io; }
    void read_from_file(const std::string&);
    void set_extpar(const CNE6SSM_input_parameters<Two_scale>&);
+   void set_extpar(const CNE6SSM_input_parameters<Semianalytic>&);
    template <class T> void set_extra(const CNE6SSM_slha<T>&, const CNE6SSM_scales&);
    void set_minpar(const CNE6SSM_input_parameters<Two_scale>&);
+   void set_minpar(const CNE6SSM_input_parameters<Semianalytic>&);
    void set_sminputs(const softsusy::QedQcd&);
    template <class T> void set_spectrum(const CNE6SSM_slha<T>&);
    template <class T> void set_spectrum(const CNE6SSM<T>&);
@@ -82,6 +90,8 @@ public:
 
    static void fill_minpar_tuple(CNE6SSM_input_parameters<Two_scale>&, int, double);
    static void fill_extpar_tuple(CNE6SSM_input_parameters<Two_scale>&, int, double);
+   static void fill_minpar_tuple(CNE6SSM_input_parameters<Semianalytic>&, int, double);
+   static void fill_extpar_tuple(CNE6SSM_input_parameters<Semianalytic>&, int, double);
    static void fill_flexiblesusy_tuple(Spectrum_generator_settings&, int, double);
 
    template <class T>
@@ -534,7 +544,7 @@ void CNE6SSM_slha_io::fill_slhaea(
    const QedQcd& qedqcd, const CNE6SSM_scales& scales)
 {
    CNE6SSM_slha_io slha_io;
-   const CNE6SSM_input_parameters<Two_scale>& input = model.get_input();
+   const CNE6SSM_input_parameters<T>& input = model.get_input();
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& problems
       = model.get_problems();
    const bool error = problems.have_problem();

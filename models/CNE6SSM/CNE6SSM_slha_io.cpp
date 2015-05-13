@@ -19,6 +19,7 @@
 // File generated at Sun 19 Apr 2015 20:31:38
 
 #include "CNE6SSM_slha_io.hpp"
+#include "CNE6SSM_semianalytic_input_parameters.hpp"
 #include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
@@ -65,7 +66,23 @@ void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters<Two_scale>& inpu
 
    extpar << "Block EXTPAR\n";
    extpar << FORMAT_ELEMENT(65, input.ssumInput, "ssumInput");
-   extpar << FORMAT_ELEMENT(72, input.QSInput, "QS");
+   extpar << FORMAT_ELEMENT(72, input.QSInput, "QSInput");
+   slha_io.set_block(extpar);
+
+}
+
+/**
+ * Stores the EXTPAR input parameters in the SLHA object.
+ *
+ * @param input struct of input parameters
+ */
+void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters<Semianalytic>& input)
+{
+   std::ostringstream extpar;
+
+   extpar << "Block EXTPAR\n";
+   extpar << FORMAT_ELEMENT(65, input.sInput, "ssumInput");
+   extpar << FORMAT_ELEMENT(72, input.QSInput, "QSInput");
    slha_io.set_block(extpar);
 
 }
@@ -84,6 +101,23 @@ void CNE6SSM_slha_io::set_minpar(const CNE6SSM_input_parameters<Two_scale>& inpu
    minpar << FORMAT_ELEMENT(2, input.m12, "m12");
    minpar << FORMAT_ELEMENT(3, input.TanBeta, "TanBeta");
    minpar << FORMAT_ELEMENT(4, input.SignLambdax, "SignLambdax");
+   minpar << FORMAT_ELEMENT(5, input.Azero, "Azero");
+   slha_io.set_block(minpar);
+
+}
+
+/**
+ * Stores the MINPAR input parameters in the SLHA object.
+ *
+ * @param input struct of input parameters
+ */
+void CNE6SSM_slha_io::set_minpar(const CNE6SSM_input_parameters<Semianalytic>& input)
+{
+   std::ostringstream minpar;
+
+   minpar << "Block MINPAR\n";
+   minpar << FORMAT_ELEMENT(2, input.m12, "m12");
+   minpar << FORMAT_ELEMENT(3, input.TanBeta, "TanBeta");
    minpar << FORMAT_ELEMENT(5, input.Azero, "Azero");
    slha_io.set_block(minpar);
 
@@ -343,14 +377,59 @@ void CNE6SSM_slha_io::read_from_file(const std::string& file_name)
  */
 void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters<Two_scale>& input) const
 {
+   // part of the reason the workaround is not ideal - need
+   // to disambiguate between which overload is used...
+   void (*fill_two_scale_minpar_tuple) (CNE6SSM_input_parameters<Two_scale>&,
+                                        int, double) = &CNE6SSM_slha_io::fill_minpar_tuple;
+   void (*fill_two_scale_extpar_tuple) (CNE6SSM_input_parameters<Two_scale>&,
+                                        int, double) = &CNE6SSM_slha_io::fill_extpar_tuple;
    SLHA_io::Tuple_processor minpar_processor
-      = boost::bind(&CNE6SSM_slha_io::fill_minpar_tuple, boost::ref(input), _1, _2);
+      = boost::bind(fill_two_scale_minpar_tuple, boost::ref(input), _1, _2);
    SLHA_io::Tuple_processor extpar_processor
-      = boost::bind(&CNE6SSM_slha_io::fill_extpar_tuple, boost::ref(input), _1, _2);
+      = boost::bind(fill_two_scale_extpar_tuple, boost::ref(input), _1, _2);
 
    slha_io.read_block("MINPAR", minpar_processor);
    slha_io.read_block("EXTPAR", extpar_processor);
 
+   input.MuPhiInput = slha_io.read_entry("HMIXIN", 31);
+   input.KappaPrInput = slha_io.read_entry("HMIXIN", 32);
+   input.SigmaxInput = slha_io.read_entry("HMIXIN", 33);
+   slha_io.read_block("ESIXHEYUKIN", input.hEInput);
+   input.SigmaLInput = slha_io.read_entry("ESIXRUNIN", 42);
+   slha_io.read_block("ESIXGDYUKIN", input.gDInput);
+   slha_io.read_block("ESIXFUYUKIN", input.fuInput);
+   slha_io.read_block("ESIXFDYUKIN", input.fdInput);
+   input.BMuPhiInput = slha_io.read_entry("ESIXRUNIN", 30);
+   slha_io.read_block("ESIXKAPPAIN", input.KappaInput);
+   slha_io.read_block("ESIXLAMBDAIN", input.Lambda12Input);
+   input.MuPrInput = slha_io.read_entry("ESIXRUNIN", 0);
+   input.BMuPrInput = slha_io.read_entry("ESIXRUNIN", 101);
+
+}
+
+/**
+ * Fill struct of model input parameters from SLHA object (MINPAR and
+ * EXTPAR blocks)
+ *
+ * @param input struct of model input parameters
+ */
+void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters<Semianalytic>& input) const
+{
+   // part of the reason the workaround is not ideal - need
+   // to disambiguate between which overload is used...
+   void (*fill_semianalytic_minpar_tuple) (CNE6SSM_input_parameters<Semianalytic>&,
+                                           int, double) = &CNE6SSM_slha_io::fill_minpar_tuple;
+   void (*fill_semianalytic_extpar_tuple) (CNE6SSM_input_parameters<Semianalytic>&,
+                                           int, double) = &CNE6SSM_slha_io::fill_extpar_tuple;
+   SLHA_io::Tuple_processor minpar_processor
+      = boost::bind(fill_semianalytic_minpar_tuple, boost::ref(input), _1, _2);
+   SLHA_io::Tuple_processor extpar_processor
+      = boost::bind(fill_semianalytic_extpar_tuple, boost::ref(input), _1, _2);
+
+   slha_io.read_block("MINPAR", minpar_processor);
+   slha_io.read_block("EXTPAR", extpar_processor);
+
+   input.LambdaxInput = slha_io.read_entry("ESIXRUNIN", 1); 
    input.MuPhiInput = slha_io.read_entry("HMIXIN", 31);
    input.KappaPrInput = slha_io.read_entry("HMIXIN", 32);
    input.SigmaxInput = slha_io.read_entry("HMIXIN", 33);
@@ -395,11 +474,34 @@ void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters<Two_scale>& inp
 
 }
 
+void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters<Semianalytic>& input,
+                                                int key, double value)
+{
+   switch (key) {
+   case 2: input.m12 = value; break;
+   case 3: input.TanBeta = value; break;
+   case 5: input.Azero = value; break;
+   default: WARNING("Unrecognized key: " << key); break;
+   }
+
+}
+
 void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_input_parameters<Two_scale>& input,
                                                 int key, double value)
 {
    switch (key) {
    case 65: input.ssumInput = value; break;
+   case 72: input.QSInput = value; break;
+   default: WARNING("Unrecognized key: " << key); break;
+   }
+
+}
+
+void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_input_parameters<Semianalytic>& input,
+                                                int key, double value)
+{
+   switch (key) {
+   case 65: input.sInput = value; break;
    case 72: input.QSInput = value; break;
    default: WARNING("Unrecognized key: " << key); break;
    }
