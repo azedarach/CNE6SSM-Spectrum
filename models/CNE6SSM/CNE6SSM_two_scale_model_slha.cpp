@@ -133,7 +133,7 @@ void CLASSNAME::convert_trilinear_couplings_to_slha()
 }
 
 /**
- * Convert trilinear couplings to SLHA convention
+ * Convert soft squared masses to SLHA convention
  */
 void CLASSNAME::convert_soft_squared_masses_to_slha()
 {
