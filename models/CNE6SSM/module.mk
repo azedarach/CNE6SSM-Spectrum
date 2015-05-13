@@ -100,6 +100,7 @@ LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_semianalytic_input_parameters.cpp \
 		$(DIR)/CNE6SSM_semianalytic_low_scale_constraint.cpp \
 		$(DIR)/CNE6SSM_semianalytic_model.cpp \
+		$(DIR)/CNE6SSM_semianalytic_model_slha.cpp \
 		$(DIR)/CNE6SSM_semianalytic_susy_scale_constraint.cpp
 
 EXECNE6SSM_SRC +=
@@ -112,6 +113,7 @@ LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_semianalytic_input_parameters.hpp \
 		$(DIR)/CNE6SSM_semianalytic_low_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_semianalytic_model.hpp \
+		$(DIR)/CNE6SSM_semianalytic_model_slha.hpp \
 		$(DIR)/CNE6SSM_semianalytic_susy_scale_constraint.hpp
 endif
 
