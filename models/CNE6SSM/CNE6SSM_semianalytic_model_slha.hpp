@@ -26,16 +26,16 @@ class Semianalytic;
 template<>
 class CNE6SSM_slha<Semianalytic> : public CNE6SSM<Semianalytic> {
 public:
-   explict CNE6SSM_slha(const CNE6SSM_input_parameters<Semianalytic>& input_
+   explicit CNE6SSM_slha(const CNE6SSM_input_parameters<Semianalytic>& input_
                         = CNE6SSM_input_parameters<Semianalytic>());
-   explict CNE6SSM_slha(const CNE6SSM<Semianalytic>&);
+   explicit CNE6SSM_slha(const CNE6SSM<Semianalytic>&);
    virtual ~CNE6SSM_slha();
 
    virtual void clear();
    void convert_to_slha(); ///< converts pole masses and couplings to SLHA convention
    // the following is not ideal - too much duplication
    static void convert_to_slha(CNE6SSM_physical&); ///< converts pole masses to SLHA convention
-   const Eigen::Matrix<std::complex<double>,3,3>& get_ckm_matrix const { return ckm; }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ckm_matrix() const { return ckm; }
    const Eigen::Matrix<std::complex<double>,3,3>& get_pmns_matrix() const { return pmns; }
    const CNE6SSM_physical& get_physical_slha() const; ///< returns pole masses to SLHA convention
    CNE6SSM_physical& get_physical_slha(); ///< return pole masses to SLHA convention
