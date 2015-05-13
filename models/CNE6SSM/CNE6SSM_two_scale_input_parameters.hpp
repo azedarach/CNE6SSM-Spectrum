@@ -7,7 +7,6 @@
 #define CNE6SSM_TWO_SCALE_INPUT_PARAMETERS_H
 
 #include "CNE6SSM_input_parameters.hpp"
-#include "CNE6SSM_input_parameters_slha.hpp"
 
 #include <complex>
 #include <Eigen/Core>
@@ -49,9 +48,6 @@ struct CNE6SSM_input_parameters<Two_scale> {
    BMuPhiInput(0)
 
    {}
-
-   CNE6SSM_input_parameters_slha get_slha_format() const;
-
 };
 
 std::ostream& operator<<(std::ostream&, const CNE6SSM_input_parameters<Two_scale>&);
