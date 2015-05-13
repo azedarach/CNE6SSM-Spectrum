@@ -31,10 +31,11 @@ BOOST_AUTO_TEST_CASE( test_default_ewsb_tree_level )
    BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_4(), 0.);
    BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_5(), 0.);
 
-   CNE6SSM_input_parameters default_inputs;
-   default_inputs.QS = 5.;
+   CNE6SSM_input_parameters<Two_scale> default_inputs;
+   default_inputs.QSInput = 5.;
    default_model.set_input_parameters(default_inputs);
 
+   default_model.set_QS(default_inputs.QSInput);
    default_model.set_vd(24.4779);
    default_model.set_vu(244.779);
    default_model.set_vs(5381.382);
@@ -72,10 +73,11 @@ void randomize_model(CNE6SSM<Two_scale>& model)
    static default_random_engine generator;
    static uniform_real_distribution<double> distribution(-50., 50.);
 
-   CNE6SSM_input_parameters random_inputs;
-   random_inputs.QS = distribution(generator);
+   CNE6SSM_input_parameters<Two_scale> random_inputs;
+   random_inputs.QSInput = distribution(generator);
    model.set_input_parameters(random_inputs);
 
+   model.set_QS(random_inputs.QSInput);
    model.set_vd(distribution(generator));
    model.set_vu(distribution(generator));
    model.set_vs(distribution(generator));
@@ -134,7 +136,7 @@ BOOST_AUTO_TEST_CASE( test_custom_zeroes_default )
 
    randomize_model(custom_zero_model);
 
-   double QS = custom_zero_model.get_input().QS;
+   double QS = custom_zero_model.get_QS();
    double vd = custom_zero_model.get_vd();
    double vu = custom_zero_model.get_vu();
    double vs = custom_zero_model.get_vs();
