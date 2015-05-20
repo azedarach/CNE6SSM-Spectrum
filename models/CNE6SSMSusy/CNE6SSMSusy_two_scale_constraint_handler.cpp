@@ -57,9 +57,9 @@ void CNE6SSMSusy_constraint_handler<Two_scale>::add_constraints_to_solver(Two_sc
    upward_constraints[0] = &low_scale_constraint;
    upward_constraints[1] = &high_scale_constraint;
 
-   std::vector<Constraint<Two_scale>*> downward_constraints(3);
+   std::vector<Constraint<Two_scale>*> downward_constraints(2);
    downward_constraints[0] = &high_scale_constraint;
-   downward_constraints[2] = &low_scale_constraint;
+   downward_constraints[1] = &low_scale_constraint;
 
    solver.add_model(model, upward_constraints, downward_constraints);
 }

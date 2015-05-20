@@ -18,7 +18,7 @@
 
 // File generated at Sun 19 Apr 2015 20:24:34
 
-#include "CNE6SSM_susy_parameters.hpp"
+#include "CNE6SSMSusy_susy_parameters.hpp"
 #include "wrappers.hpp"
 
 namespace flexiblesusy {
@@ -31,7 +31,7 @@ namespace flexiblesusy {
  *
  * @return one-loop beta function
  */
-Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yd_one_loop(const Susy_traces& susy_traces) const
+Eigen::Matrix<double,3,3> CNE6SSMSusy_susy_parameters::calc_beta_Yd_one_loop(const Susy_traces& susy_traces) const
 {
    const double tracefdAdjfd = TRACE_STRUCT.tracefdAdjfd;
    const double traceYdAdjYd = TRACE_STRUCT.traceYdAdjYd;
@@ -54,7 +54,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yd_one_loop(const S
  *
  * @return two-loop beta function
  */
-Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yd_two_loop(const Susy_traces& susy_traces) const
+Eigen::Matrix<double,3,3> CNE6SSMSusy_susy_parameters::calc_beta_Yd_two_loop(const Susy_traces& susy_traces) const
 {
    const double tracefdAdjfd = TRACE_STRUCT.tracefdAdjfd;
    const double traceYdAdjYd = TRACE_STRUCT.traceYdAdjYd;

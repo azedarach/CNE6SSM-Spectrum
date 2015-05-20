@@ -37,22 +37,27 @@ LIBCNE6SSMSusy_HDR := \
 		$(DIR)/CNE6SSMSusy_input_parameters.hpp \
 		$(DIR)/CNE6SSMSusy_low_scale_constraint.hpp \
 		$(DIR)/CNE6SSMSusy_model.hpp \
+		$(DIR)/CNE6SSMSusy_model_slha.hpp \
 		$(DIR)/CNE6SSMSusy_susy_parameters.hpp \
 		$(DIR)/CNE6SSMSusy_utilities.hpp
 
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 LIBCNE6SSMSusy_SRC += \
+		$(DIR)/CNE6SSMSusy_slha_io.cpp \
 		$(DIR)/CNE6SSMSusy_two_scale_constraint_handler.cpp \
 		$(DIR)/CNE6SSMSusy_two_scale_convergence_tester.cpp \
 		$(DIR)/CNE6SSMSusy_two_scale_high_scale_constraint.cpp \
 		$(DIR)/CNE6SSMSusy_two_scale_initial_guesser.cpp \
 		$(DIR)/CNE6SSMSusy_two_scale_input_parameters.cpp \
 		$(DIR)/CNE6SSMSusy_two_scale_low_scale_constraint.cpp \
-		$(DIR)/CNE6SSMSusy_two_scale_model.cpp
+		$(DIR)/CNE6SSMSusy_two_scale_model.cpp \
+		$(DIR)/CNE6SSMSusy_two_scale_model_slha.cpp
 
-EXECNE6SSMSusy_SRC +=
+EXECNE6SSMSusy_SRC += \
+		$(DIR)/run_CNE6SSMSusy.cpp
 
 LIBCNE6SSMSusy_HDR += \
+		$(DIR)/CNE6SSMSusy_slha_io.hpp \
 		$(DIR)/CNE6SSMSusy_spectrum_generator.hpp \
 		$(DIR)/CNE6SSMSusy_two_scale_constraint_handler.hpp \
 		$(DIR)/CNE6SSMSusy_two_scale_convergence_tester.hpp \
@@ -60,7 +65,8 @@ LIBCNE6SSMSusy_HDR += \
 		$(DIR)/CNE6SSMSusy_two_scale_initial_guesser.hpp \
 		$(DIR)/CNE6SSMSusy_two_scale_input_parameters.hpp \
 		$(DIR)/CNE6SSMSusy_two_scale_low_scale_constraint.hpp \
-		$(DIR)/CNE6SSMSusy_two_scale_model.hpp
+		$(DIR)/CNE6SSMSusy_two_scale_model.hpp \
+		$(DIR)/CNE6SSMSusy_two_scale_model_slha.hpp
 endif
 
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
@@ -114,7 +120,10 @@ LIBCNE6SSMSusy_DEP := \
 EXECNE6SSMSusy_DEP := \
 		$(EXECNE6SSMSusy_OBJ:.o=.d)
 
-LIBCNE6SSM     := $(DIR)/lib$(MODNAME)$(LIBEXT)
+LIBCNE6SSMSusy     := $(DIR)/lib$(MODNAME)$(LIBEXT)
+
+RUN_CNE6SSMSusy_OBJ := $(DIR)/run_CNE6SSMSusy.o
+RUN_CNE6SSMSusy_EXE := $(DIR)/run_CNE6SSMSusy.x
 
 METACODE_STAMP_CNE6SSMSusy := $(DIR)/00_DELETE_ME_TO_RERUN_METACODE
 
@@ -128,7 +137,7 @@ endif
 		distclean-$(MODNAME) run-metacode-$(MODNAME) \
 		pack-$(MODNAME)-src
 
-all-$(MODNAME): $(LIBCNE6SSM)
+all-$(MODNAME): $(LIBCNE6SSMSusy)
 
 ifneq ($(INSTALL_DIR),)
 install-src::
@@ -146,13 +155,16 @@ endif
 
 clean-$(MODNAME)-dep:
 		-rm -f $(LIBCNE6SSMSusy_DEP)
+		-rm -f $(EXECNE6SSMSusy_DEP)
 
 clean-$(MODNAME)-obj:
 		-rm -f $(LIBCNE6SSMSusy_OBJ)
+		-rm -f $(EXECNE6SSMSusy_OBJ)
 
 
 clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
-		-rm -f $(LIBCNE6SSM)
+		-rm -f $(LIBCNE6SSMSusy)
+		-rm -f $(RUN_CNE6SSMSusy_EXE)
 
 distclean-$(MODNAME): clean-$(MODNAME)
 
@@ -193,10 +205,13 @@ ifneq (,$(findstring yes,$(ENABLE_LOOPTOOLS)$(ENABLE_FFLITE)))
 $(LIBCNE6SSMSusy_DEP) $(EXECNE6SSMSusy_DEP) $(LIBCNE6SSMSusy_OBJ) $(EXECNE6SSMSusy_OBJ): CPPFLAGS += $(LOOPFUNCFLAGS)
 endif
 
-$(LIBCNE6SSM): $(LIBCNE6SSMSusy_OBJ)
+$(LIBCNE6SSMSusy): $(LIBCNE6SSMSusy_OBJ)
 		$(MAKELIB) $@ $^
+
+$(RUN_CNE6SSMSusy_EXE): $(RUN_CNE6SSMSusy_OBJ) $(LIBCNE6SSMSusy) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
 ALLDEP += $(LIBCNE6SSMSusy_DEP) $(EXECNE6SSMSusy_DEP)
 ALLSRC += $(LIBCNE6SSMSusy_SRC) $(EXECNE6SSMSusy_SRC)
-ALLLIB += $(LIBCNE6SSM)
-ALLEXE +=
+ALLLIB += $(LIBCNE6SSMSusy)
+ALLEXE += $(RUN_CNE6SSMSusy_EXE)
