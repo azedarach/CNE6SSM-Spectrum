@@ -33,6 +33,8 @@
 #include <iostream>
 #include <boost/bind.hpp>
 
+#define LOCALPHYSICAL(p) physical.p
+
 using namespace softsusy;
 
 namespace flexiblesusy {
