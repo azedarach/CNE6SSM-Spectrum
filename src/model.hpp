@@ -21,6 +21,7 @@
 
 #include <string>
 #include <ostream>
+#include <typeinfo>
 
 namespace flexiblesusy {
 

@@ -54419,6 +54419,11 @@ void CNE6SSM_mass_eigenstates::calculate_Mhh_pole()
       iteration++;
    } while (diff > diagonalization_precision
             && iteration < number_of_mass_iterations);
+
+   if (diff > diagonalization_precision)
+      problems.flag_no_pole_mass_convergence(CNE6SSM_info::hh);
+   else
+      problems.unflag_no_pole_mass_convergence(CNE6SSM_info::hh);
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MAh_pole()
@@ -54486,6 +54491,11 @@ void CNE6SSM_mass_eigenstates::calculate_MAh_pole()
       iteration++;
    } while (diff > diagonalization_precision
             && iteration < number_of_mass_iterations);
+
+   if (diff > diagonalization_precision)
+      problems.flag_no_pole_mass_convergence(CNE6SSM_info::Ah);
+   else
+      problems.unflag_no_pole_mass_convergence(CNE6SSM_info::Ah);
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MHpm_pole()
@@ -54541,6 +54551,11 @@ void CNE6SSM_mass_eigenstates::calculate_MHpm_pole()
       iteration++;
    } while (diff > diagonalization_precision
             && iteration < number_of_mass_iterations);
+
+   if (diff > diagonalization_precision)
+      problems.flag_no_pole_mass_convergence(CNE6SSM_info::Hpm);
+   else
+      problems.unflag_no_pole_mass_convergence(CNE6SSM_info::Hpm);
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MChi_pole()
