@@ -135,9 +135,7 @@ CNE6SSMSusy_susy_parameters CNE6SSMSusy_susy_parameters::calc_beta() const
 
    }
 
-   // note
-   std::cout << "g1 = " << g1 << ", g2 = " << g2 << ", g3 = " << g3 << ", g1p = " << g1p << "\n";
-   std::cout << "scale = " << get_scale() << ", QS = " << QS << "\n";
+
    return CNE6SSMSusy_susy_parameters(get_scale(), get_loops(), get_thresholds(),
                                   beta_Yd, beta_hE, beta_Ye, beta_SigmaL, beta_KappaPr, beta_Sigmax, beta_gD, beta_Kappa, beta_Lambda12, beta_Lambdax, beta_fu, beta_fd, beta_Yu, beta_MuPr, beta_MuPhi, beta_XiF, beta_g1, beta_g2, beta_g3, beta_g1p, beta_vd, beta_vu, beta_vs, beta_vsb, beta_vphi, beta_QS);
 }
