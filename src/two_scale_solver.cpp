@@ -99,11 +99,11 @@ void RGFlow<Two_scale>::solve()
 }
 
 /**
- * Sanity checks the models and boundary condtitions.
+ * Sanity checks the models and boundary conditions.
  */
 void RGFlow<Two_scale>::check_setup() const
 {
-   for (size_t m = 0; m < models.size(); ++m) {
+   for (size_t m = 0, num_models = models.size(); m < num_models; ++m) {
       const TModel* model = models[m];
       if (!model->model) {
          std::stringstream message;
@@ -432,7 +432,7 @@ unsigned int RGFlow<Two_scale>::get_max_iterations() const
  *
  * The pointers to the models, matching conditions, convergence
  * tester, initial guesser, and running precision calculator are set
- * to zero.  The runnin precision is set to the default value 0.001.
+ * to zero.  The running precision is set to the default value 0.001.
  */
 void RGFlow<Two_scale>::reset()
 {
