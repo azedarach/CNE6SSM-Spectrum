@@ -95,7 +95,7 @@ void RGFlow<Semianalytic>::solve()
       solve_inner_iteration();
    }
 
-   VERBOSE_MSG("convergence reached after " << iteration << " iterations");
+   VERBOSE_MSG("convergence reached after " << outer_iteration << " iterations");
 }
 
 void RGFlow<Semianalytic>::solve_inner_iteration()
@@ -351,6 +351,24 @@ void RGFlow<Semianalytic>::reset_inner_iteration_convergence_test()
 }
 
 /**
+ * Add a model and the corresponding model constraints. Note that the
+ * order of the model registration is important: Models that are added
+ * later are assumed to be valid at a higher scale. The same is true
+ * for the constraints: they are assumed to be ordered from low to
+ * high energies.
+ *
+ * @param model model
+ * @param inner_constraints vector of model constraints for inner iteration
+ * @param outer_constraints vector of model constraints for outer iteration
+ */
+void RGFlow<Semianalytic>::add_model(Semianalytic_model* model,
+                                     const std::vector<Constraint<Semianalytic>*>& inner_constraints,
+                                     const std::vector<Constraint<Semianalytic>*>& outer_constraints)
+{
+   add_model(model, NULL, inner_constraints, outer_constraints);
+}
+
+/**
  * Add a model and the corresponding model constraints.  With this
  * function the user can use different contraints for the up and down
  * running of the model tower.
@@ -369,6 +387,31 @@ void RGFlow<Semianalytic>::add_model(Semianalytic_model* model,
 {
    add_model(model, NULL, inner_upwards_constraints, inner_downwards_constraints,
              outer_upwards_constraints, outer_downwards_constraints);
+}
+
+/**
+ * Add a model, the corresponding model constraints and the matching
+ * condition to the next model.
+ * @param model model
+ * @param mc matching condition to the next higher model
+ * @param inner_constraints vector of model constraints for inner iteration
+ * @param outer_constraints vector of model constraints for outer iteration
+ */
+void RGFlow<Semianalytic>::add_model(Semianalytic_model* model,
+                                     Matching<Semianalytic>* mc,
+                                     const std::vector<Constraint<Semianalytic>*>& inner_constraints,
+                                     const std::vector<Constraint<Semianalytic>*>& outer_constraints)
+{
+   // create vectors of downward constraints
+   std::vector<Constraint<Semianalytic>*> inner_downward_constraints;
+   std::reverse_copy(inner_constraints.begin(), inner_constraints.end(),
+                     std::back_inserter(inner_downward_constraints));
+   std::vector<Constraint<Semianalytic>*> outer_downward_constraints;
+   std::reverse_copy(outer_constraints.begin(), outer_constraints.end(),
+                     std::back_inserter(outer_downward_constraints));
+
+   add_model(model, mc, inner_constraints, inner_downward_constraints,
+             outer_constraints, outer_downward_constraints);
 }
 
 /**
@@ -409,6 +452,10 @@ void RGFlow<Semianalytic>::add_model(Semianalytic_model* model,
    for (Constraint_container::iterator it = new_model->outer_downwards_constraints.begin(),
            end = new_model->outer_downwards_constraints.end(); it != end; ++it)
       (*it)->set_model(model);
+
+   if (!models.empty())
+      models.back()->matching_condition->set_models(models.back()->model,
+                                                    model);
 
    models.push_back(new_model);
 }

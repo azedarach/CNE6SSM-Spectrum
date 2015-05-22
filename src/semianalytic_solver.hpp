@@ -48,9 +48,22 @@ public:
    /// add models and constraints
    void add_model(Semianalytic_model*,
                   const std::vector<Constraint<Semianalytic>*>&,
+                  const std::vector<Constraint<Semianalytic>*>&);
+
+   /// add models and constraints
+   void add_model(Semianalytic_model*,
+                  const std::vector<Constraint<Semianalytic>*>&,
                   const std::vector<Constraint<Semianalytic>*>&,
                   const std::vector<Constraint<Semianalytic>*>&,
                   const std::vector<Constraint<Semianalytic>*>&);
+
+   /// add model, constraints and matching condition
+   void add_model(Semianalytic_model*,
+                  Matching<Semianalytic>* m = NULL,
+                  const std::vector<Constraint<Semianalytic>*>&
+                  inner_constraints = std::vector<Constraint<Semianalytic>*>(),
+                  const std::vector<Constraint<Semianalytic>*>&
+                  outer_constraints = std::vector<Constraint<Semianalytic>*>());
 
    /// add models, constraints and matching condition
    void add_model(Semianalytic_model*,
