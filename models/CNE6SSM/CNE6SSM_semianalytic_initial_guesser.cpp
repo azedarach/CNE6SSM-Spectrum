@@ -64,8 +64,13 @@ CNE6SSM_initial_guesser<Semianalytic>::~CNE6SSM_initial_guesser()
  */
 void CNE6SSM_initial_guesser<Semianalytic>::guess()
 {
+   const unsigned loops = model->get_loops();
+   model->set_loops(1);
+
    guess_susy_parameters();
    guess_soft_parameters();
+
+   model->set_loops(loops);
 }
 
 /**
@@ -98,7 +103,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_low_scale_parameters()
    QedQcd leAtMt(oneset);
    const double MZ = Electroweak_constants::MZ;
    const double MW = Electroweak_constants::MW;
-   const double sinThetaW2 = 1.0 - Sqr(MW / MZ);
+   const double sinThetaW2 = 1.0355 * (1.0 - Sqr(MW / MZ));
    const double mtpole = leAtMt.displayPoleMt();
 
    mu_guess = leAtMt.displayMass(mUp);
@@ -123,6 +128,9 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_low_scale_parameters()
    const auto TanBeta = INPUTPARAMETER(TanBeta);
    const auto sInput = INPUTPARAMETER(sInput);
    const auto QSInput = INPUTPARAMETER(QSInput);
+   const auto LambdaxInput = INPUTPARAMETER(LambdaxInput);
+   const auto Lambda12Input = INPUTPARAMETER(Lambda12Input);
+   const auto KappaInput = INPUTPARAMETER(KappaInput);
 
    MODEL->set_vd(LowEnergyConstant(vev)/Sqrt(1 + Sqr(TanBeta)));
    MODEL->set_vu((TanBeta*LowEnergyConstant(vev))/Sqrt(1 + Sqr(TanBeta)));
@@ -130,12 +138,16 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_low_scale_parameters()
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
    MODEL->set_XiF(Power(LowEnergyConstant(MZ),3));
-   MODEL->set_LXiF(Power(LowEnergyConstant(MZ),3));
+   //MODEL->set_LXiF(Power(LowEnergyConstant(MZ),3));
    MODEL->set_vs(0.7071067811865475 * sInput);
    MODEL->set_vsb(0.7071067811865475 * sInput);
    MODEL->set_vphi(0.5 * sInput);
    MODEL->set_QS(QSInput);
 
+   MODEL->set_Lambdax(LambdaxInput);
+   MODEL->set_Lambda12(Lambda12Input);
+   MODEL->set_Kappa(KappaInput);
+   MODEL->set_g1p(model->get_g1() / 0.99);
 }
 
 void CNE6SSM_initial_guesser<Semianalytic>::calculate_DRbar_yukawa_couplings()
@@ -213,6 +225,9 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_high_scale_parameters()
    const double low_scale_guess = low_constraint.get_initial_scale_guess();
    const double high_scale_guess = high_constraint.get_initial_scale_guess();
 
+   const unsigned loops = model->get_loops();
+   model->set_loops(1);
+
    model->run_to(high_scale_guess, running_precision);
 
    // apply high-scale constraint
@@ -220,6 +235,8 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_high_scale_parameters()
    high_constraint.apply();
 
    model->run_to(low_scale_guess, running_precision);
+
+   model->set_loops(loops);
 }
 
 /**
@@ -241,6 +258,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
    low_constraint.set_model(model);
 
    low_constraint.set_sm_parameters(oneset);
+   low_constraint.apply_susy_constraint_only(true);
 
    high_constraint.initialize();
    low_constraint.initialize();
@@ -285,6 +303,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
               "tree level iteration has not converged!");
 #endif
       // do initial guess with no iteration
+      model->clear();
       high_constraint.initialize();
       guess_low_scale_parameters();
       guess_high_scale_parameters();
@@ -294,6 +313,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
               "non-perturbative running in tree level iteration!");
 #endif
       // do initial guess with no iteration
+      model->clear();
       high_constraint.initialize();
       guess_low_scale_parameters();
       guess_high_scale_parameters();
@@ -303,6 +323,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
               "no rho convergence in tree level iteration!");
 #endif
       // do initial guess with no iteration
+      model->clear();
       high_constraint.initialize();
       guess_low_scale_parameters();
       guess_high_scale_parameters();
@@ -312,6 +333,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
               "error encountered in tree level iteration!");
 #endif
       // do initial guess with no iteration
+      model->clear();
       high_constraint.initialize();
       guess_low_scale_parameters();
       guess_high_scale_parameters();
@@ -321,6 +343,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
               "error encountered in tree level iteration!");
 #endif
       // do initial guess with no iteration
+      model->clear();
       high_constraint.initialize();
       guess_low_scale_parameters();
       guess_high_scale_parameters();
@@ -330,6 +353,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
               "error encountered in tree level iteration!");
 #endif
       // do initial guess with no iteration
+      model->clear();
       high_constraint.initialize();
       guess_low_scale_parameters();
       guess_high_scale_parameters();
@@ -339,6 +363,7 @@ void CNE6SSM_initial_guesser<Semianalytic>::guess_susy_parameters()
               "error encountered in tree level iteration!");
 #endif
       // do initial guess with no iteration
+      model->clear();
       high_constraint.initialize();
       guess_low_scale_parameters();
       guess_high_scale_parameters();

@@ -2084,8 +2084,8 @@ void CLASSNAME::calculate_coefficients(double input_scale)
    }
 
    // solve for coefficients using least squares
-   Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,2> > dimension_one_svd(dimension_one_inputs);
-   Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,4> > dimension_two_svd(dimension_two_inputs);
+   Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,2> > dimension_one_svd(dimension_one_inputs, Eigen::ComputeFullU | Eigen::ComputeFullV);
+   Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,4> > dimension_two_svd(dimension_two_inputs, Eigen::ComputeFullU | Eigen::ComputeFullV);
 
    Eigen::Matrix<double,number_of_fit_points,1> rhs;
    Eigen::Matrix<double,2,1> dimension_one_solution;

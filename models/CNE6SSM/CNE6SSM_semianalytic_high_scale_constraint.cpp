@@ -55,27 +55,58 @@ void CNE6SSM_high_scale_constraint<Semianalytic>::apply()
    assert(model && "Error: CNE6SSM_high_scale_constraint::apply():"
           " model pointer must not be zero");
 
-   if (std::fabs(model->get_g1()) > 3.0) {
+   if (std::fabs(model->get_g1()) > 3.54491) {
 #ifdef ENABLE_VERBOSE
       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
             "coupling g1 = " << model->get_g1());
 #endif
-      model->set_g1(1.0);
+      model->set_g1(3.54491);
    }
-   if (std::fabs(model->get_g2()) > 3.0) {
+   if (std::fabs(model->get_g2()) > 3.54491) {
 #ifdef ENABLE_VERBOSE
       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
             "coupling g2 = " << model->get_g2());
 #endif
-      model->set_g2(1.0);
+      model->set_g2(3.54491);
    }
-   if (std::fabs(model->get_g3()) > 3.0) {
+   if (std::fabs(model->get_g3()) > 3.54491) {
 #ifdef ENABLE_VERBOSE
       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
             "coupling g3 = " << model->get_g3());
 #endif
-      model->set_g3(1.0);
+      model->set_g3(3.54491);
    }
+   // Yukawa couplings should probably be reset, as in softsusy
+//    if (MaxAbsValue(model->get_Yu()) > 3.0) {
+// #ifdef ENABLE_VERBOSE
+//       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
+//             "coupling Yu = " << model->get_Yu());
+// #endif
+//       for (std::size_t i = 0; i < 3; ++i) {
+//          if (model->get_Yu(i,i) > 3.0)
+//             model->set_Yu(i,i,1.0);
+//       }
+//    }
+//    if (MaxAbsValue(model->get_Yd()) > 3.0) {
+// #ifdef ENABLE_VERBOSE
+//       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
+//             "coupling Yd = " << model->get_Yd());
+// #endif
+//       for (std::size_t i = 0; i < 3; ++i) {
+//          if (model->get_Yd(i,i) > 3.0)
+//             model->set_Yd(i,i,1.0);
+//       }
+//    }
+//    if (MaxAbsValue(model->get_Ye()) > 3.0) {
+// #ifdef ENABLE_VERBOSE
+//       ERROR("CNE6SSM_high_scale_constraint: Non-perturbative gauge "
+//             "coupling Ye = " << model->get_Yu());
+// #endif
+//       for (std::size_t i = 0; i < 3; ++i) {
+//          if (model->get_Ye(i,i) > 3.0)
+//             model->set_Ye(i,i,1.0);
+//       }
+//    }
 
    update_scale();
 
@@ -127,73 +158,73 @@ void CNE6SSM_high_scale_constraint<Semianalytic>::apply()
       const auto Yu = MODELPARAMETER(Yu);
 
       if (MaxAbsValue(g1) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("g1", MaxAbsValue(g1), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("g1", MaxAbsValue(g1), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("g1");
+         model->get_problems().unflag_non_perturbative_parameter("g1");
       if (MaxAbsValue(g2) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("g2", MaxAbsValue(g2), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("g2", MaxAbsValue(g2), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("g2");
+         model->get_problems().unflag_non_perturbative_parameter("g2");
       if (MaxAbsValue(g3) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("g3", MaxAbsValue(g3), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("g3", MaxAbsValue(g3), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("g3");
+         model->get_problems().unflag_non_perturbative_parameter("g3");
       if (MaxAbsValue(g1p) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("g1p", MaxAbsValue(g1p), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("g1p", MaxAbsValue(g1p), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("g1p");
+         model->get_problems().unflag_non_perturbative_parameter("g1p");
       if (MaxAbsValue(Yd) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("Yd", MaxAbsValue(Yd), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("Yd", MaxAbsValue(Yd), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("Yd");
+         model->get_problems().unflag_non_perturbative_parameter("Yd");
       if (MaxAbsValue(hE) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("hE", MaxAbsValue(hE), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("hE", MaxAbsValue(hE), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("hE");
+         model->get_problems().unflag_non_perturbative_parameter("hE");
       if (MaxAbsValue(Ye) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("Ye", MaxAbsValue(Ye), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("Ye", MaxAbsValue(Ye), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("Ye");
+         model->get_problems().unflag_non_perturbative_parameter("Ye");
       if (MaxAbsValue(SigmaL) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("SigmaL", MaxAbsValue(SigmaL), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("SigmaL", MaxAbsValue(SigmaL), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("SigmaL");
+         model->get_problems().unflag_non_perturbative_parameter("SigmaL");
       if (MaxAbsValue(KappaPr) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("KappaPr", MaxAbsValue(KappaPr), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("KappaPr", MaxAbsValue(KappaPr), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("KappaPr");
+         model->get_problems().unflag_non_perturbative_parameter("KappaPr");
       if (MaxAbsValue(Sigmax) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("Sigmax", MaxAbsValue(Sigmax), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("Sigmax", MaxAbsValue(Sigmax), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("Sigmax");
+         model->get_problems().unflag_non_perturbative_parameter("Sigmax");
       if (MaxAbsValue(gD) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("gD", MaxAbsValue(gD), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("gD", MaxAbsValue(gD), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("gD");
+         model->get_problems().unflag_non_perturbative_parameter("gD");
       if (MaxAbsValue(Kappa) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("Kappa", MaxAbsValue(Kappa), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("Kappa", MaxAbsValue(Kappa), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("Kappa");
+         model->get_problems().unflag_non_perturbative_parameter("Kappa");
       if (MaxAbsValue(Lambda12) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("Lambda12", MaxAbsValue(Lambda12), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("Lambda12", MaxAbsValue(Lambda12), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("Lambda12");
+         model->get_problems().unflag_non_perturbative_parameter("Lambda12");
       if (MaxAbsValue(Lambdax) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("Lambdax", MaxAbsValue(Lambdax), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("Lambdax", MaxAbsValue(Lambdax), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("Lambdax");
+         model->get_problems().unflag_non_perturbative_parameter("Lambdax");
       if (MaxAbsValue(fu) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("fu", MaxAbsValue(fu), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("fu", MaxAbsValue(fu), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("fu");
+         model->get_problems().unflag_non_perturbative_parameter("fu");
       if (MaxAbsValue(fd) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("fd", MaxAbsValue(fd), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("fd", MaxAbsValue(fd), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("fd");
+         model->get_problems().unflag_non_perturbative_parameter("fd");
       if (MaxAbsValue(Yu) > 3.5449077018110318)
-         model->get_problems().flag_non_perturbative_parameter_warning("Yu", MaxAbsValue(Yu), model->get_scale(), 3.5449077018110318);
+         model->get_problems().flag_non_perturbative_parameter("Yu", MaxAbsValue(Yu), model->get_scale(), 3.5449077018110318);
       else
-         model->get_problems().unflag_non_perturbative_parameter_warning("Yu");
+         model->get_problems().unflag_non_perturbative_parameter("Yu");
 
    }
 }

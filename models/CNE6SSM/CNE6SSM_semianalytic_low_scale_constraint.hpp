@@ -36,6 +36,7 @@ public:
    const QedQcd& get_sm_parameters() const;
    void set_sm_parameters(const QedQcd&);
    void set_threshold_corrections_loop_order(unsigned); ///< threshold corrections loop order
+   void apply_susy_constraint_only(bool);
 
 private:
    double scale;
@@ -51,10 +52,9 @@ private:
    double EDRbar;
    double ThetaWDRbar;
    double new_g1, new_g2, new_g3;
-   double self_energy_w_at_mw;
    unsigned threshold_corrections_loop_order; ///< threshold corrections loop order
+   bool only_apply_susy_constraint; ///< only apply constraint for SUSY parameters
 
-   double calculate_theta_w(double);
    void calculate_threshold_corrections();
    void calculate_DRbar_gauge_couplings();
    void calculate_DRbar_yukawa_couplings();
@@ -64,7 +64,6 @@ private:
    void calculate_MNeutrino_DRbar();
    double calculate_delta_alpha_em(double) const;
    double calculate_delta_alpha_s(double) const;
-   void recalculate_mw_pole();
    void update_scale();
 };
 
