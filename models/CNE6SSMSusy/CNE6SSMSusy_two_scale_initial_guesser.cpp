@@ -107,7 +107,9 @@ void CNE6SSMSusy_initial_guesser<Two_scale>::guess_low_scale_parameters()
    QedQcd leAtMt(oneset);
    const double MZ = Electroweak_constants::MZ;
    const double MW = Electroweak_constants::MW;
-   const double sinThetaW2 = 1.0 - Sqr(MW / MZ);
+   // use approximate correction (see PDG review) to convert on-shell
+   // weak mixing angle to MSbar one at the Z pole mass
+   const double sinThetaW2 = 1.0355 * (1.0 - Sqr(MW / MZ));
    const double mtpole = leAtMt.displayPoleMt();
 
    mu_guess = leAtMt.displayMass(mUp);
@@ -128,7 +130,8 @@ void CNE6SSMSusy_initial_guesser<Two_scale>::guess_low_scale_parameters()
    model->set_g3(sqrt(4.0 * M_PI * alpha_sm(3)));
    model->set_scale(mtpole);
 
-   // apply user-defined initial guess at the low scale
+   // apply user-defined initial guess at the matching scale
+   // to the SM, i.e. at Q = m_t^pole
    const auto TanBeta = INPUTPARAMETER(TanBeta);
    const auto sInput = INPUTPARAMETER(sInput);
    const auto TanTheta = INPUTPARAMETER(TanTheta);

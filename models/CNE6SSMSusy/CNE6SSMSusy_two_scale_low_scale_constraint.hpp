@@ -67,6 +67,7 @@ private:
    double ThetaWDRbar;
    double new_g1, new_g2, new_g3;
    double self_energy_w_at_mw;
+   double g1MSbar_at_mtpole, g2MSbar_at_mtpole, g3MSbar_at_mtpole;
    unsigned threshold_corrections_loop_order; ///< threshold corrections loop order
 
    double calculate_theta_w(double);

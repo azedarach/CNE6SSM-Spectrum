@@ -18,6 +18,13 @@
 
 // File generated at Sun 19 Apr 2015 20:31:40
 
+/**
+ * TODO: determine if should use simple 1-loop gauge coupling estimate
+ *       or include SM thresholds
+ * NOTE: subtraction is done in estimate for top Yukawa in the case
+ *       without thresholds (i.e. the initial guess)
+ */
+
 #include "CNE6SSMSusy_two_scale_low_scale_constraint.hpp"
 #include "CNE6SSMSusy_two_scale_model.hpp"
 #include "wrappers.hpp"
@@ -66,6 +73,9 @@ CNE6SSMSusy_low_scale_constraint<Two_scale>::CNE6SSMSusy_low_scale_constraint()
    , new_g2(0.)
    , new_g3(0.)
    , self_energy_w_at_mw(0.)
+   , g1MSbar_at_mtpole(0.)
+   , g2MSbar_at_mtpole(0.)
+   , g3MSbar_at_mtpole(0.)
    , threshold_corrections_loop_order(1)
 {
    ckm << 1., 0., 0.,
@@ -174,6 +184,9 @@ void CNE6SSMSusy_low_scale_constraint<Two_scale>::clear()
    new_g1 = 0.;
    new_g2 = 0.;
    new_g3 = 0.;
+   g1MSbar_at_mtpole = 0.;
+   g2MSbar_at_mtpole = 0.;
+   g3MSbar_at_mtpole = 0.;
    self_energy_w_at_mw = 0.;
 }
 
@@ -182,7 +195,8 @@ void CNE6SSMSusy_low_scale_constraint<Two_scale>::initialize()
    assert(model && "CNE6SSMSusy_low_scale_constraint<Two_scale>::"
           "initialize(): model pointer is zero.");
 
-   initial_scale_guess = LowEnergyConstant(MZ);
+   // NB the low scale in this model is the top pole mass
+   initial_scale_guess = oneset.displayPoleMt();
 
    scale = initial_scale_guess;
 
@@ -197,6 +211,26 @@ void CNE6SSMSusy_low_scale_constraint<Two_scale>::initialize()
    ckm = oneset.get_complex_ckm();
    pmns = oneset.get_complex_pmns();
    self_energy_w_at_mw = 0.;
+
+   // everything should be initialized at m_t^pole, after
+   // which we use those values as a boundary condition
+   QedQcd leAtMt(oneset);
+
+   const double mz_pole = leAtMt.displayPoleMZ();
+   const double mw_pole = leAtMt.displayPoleMW();
+
+   const double sinthW2MSbar_at_mzpole = 1.0355 *
+      (1.0 - Sqr(mw_pole / mz_pole));
+
+   const DoubleVector alpha_sm(leAtMt.getGaugeMu(scale, sinthW2MSbar_at_mzpole));
+
+   g1MSbar_at_mtpole = sqrt(4.0 * M_PI * alpha_sm(1));
+   g2MSbar_at_mtpole = sqrt(4.0 * M_PI * alpha_sm(2));
+   g3MSbar_at_mtpole = sqrt(4.0 * M_PI * alpha_sm(3));
+
+   // thresholds are implemented in terms of \alpha_{e.m} and \alpha_s,
+   // therefore these must also be calculated at m_t^pole
+   oneset.toMt(); // or runto?
 }
 
 void CNE6SSMSusy_low_scale_constraint<Two_scale>::update_scale()
@@ -204,7 +238,7 @@ void CNE6SSMSusy_low_scale_constraint<Two_scale>::update_scale()
    assert(model && "CNE6SSMSusy_low_scale_constraint<Two_scale>::"
           "update_scale(): model pointer is zero.");
 
-   scale = LowEnergyConstant(MZ);
+   scale = oneset.displayPoleMt();
 
 
 }
@@ -218,7 +252,11 @@ void CNE6SSMSusy_low_scale_constraint<Two_scale>::calculate_threshold_correction
    assert(model && "CNE6SSMSusy_low_scale_constraint<Two_scale>::"
           "calculate_threshold_corrections(): model pointer is zero");
 
-   const double alpha_em = oneset.displayAlpha(ALPHA);
+   // TODO: should we be setting the gauge couplings using the 1-loop
+   // approximate numbers (as currently), or using the 1-loop
+   // running with thresholds (commented out)?
+//   const double alpha_em = oneset.displayAlpha(ALPHA);
+   const double alpha_em = (Sqr(g2MSbar_at_mtpole) / (4.0 * Pi)) * (0.6 * Sqr(g1MSbar_at_mtpole) / (0.6 * Sqr(g1MSbar_at_mtpole) + Sqr(g2MSbar_at_mtpole)));
    const double alpha_s  = oneset.displayAlpha(ALPHAS);
    const double mw_pole  = oneset.displayPoleMW();
    const double mz_pole  = oneset.displayPoleMZ();
@@ -227,7 +265,8 @@ void CNE6SSMSusy_low_scale_constraint<Two_scale>::calculate_threshold_correction
    double delta_alpha_s  = 0.;
 
    if (model->get_thresholds()) {
-      // no thresholds
+      //delta_alpha_em = calculate_delta_alpha_em(alpha_em);
+      //delta_alpha_s  = calculate_delta_alpha_s(alpha_s);
    }
 
    const double alpha_em_drbar = alpha_em / (1.0 - delta_alpha_em);
@@ -252,7 +291,14 @@ double CNE6SSMSusy_low_scale_constraint<Two_scale>::calculate_theta_w(double alp
 
    double theta_w = 0.;
 
-   THETAW = ArcSin(Sqrt(1 - Sqr(MWDRbar)/Sqr(MZDRbar)));
+   double sinthW2 = 1 - Sqr(MWDRbar) / Sqr(MZDRbar);
+
+   // if no thresholds, estimate the MSbar value at Q = m_t^pole
+   if (!model->get_thresholds()) {
+      sinthW2 = 0.6 * Sqr(g1MSbar_at_mtpole) / (0.6 * Sqr(g1MSbar_at_mtpole) + Sqr(g2MSbar_at_mtpole));
+   }
+
+   THETAW = ArcSin(Sqrt(sinthW2));
 
 
    return theta_w;
@@ -276,9 +322,16 @@ double CNE6SSMSusy_low_scale_constraint<Two_scale>::calculate_delta_alpha_em(dou
    assert(model && "CNE6SSMSusy_low_scale_constraint<Two_scale>::"
           "calculate_delta_alpha_em(): model pointer is zero");
 
-   // no thresholds
+   const double currentScale = model->get_scale();
 
-   return 0.;
+   // "by-hand" calculation of running top mass
+   const double mt = 0.7071067811865475 * model->get_Yu(2,2) * model->get_vu();
+
+   const double delta_alpha_em_SM = 0.15915494309189535*alphaEm*(
+      0.3333333333333333 - 1.7777777777777777*FiniteLog(Abs(mt/currentScale)))
+      ;
+
+   return delta_alpha_em_SM;
 
 }
 
@@ -287,9 +340,15 @@ double CNE6SSMSusy_low_scale_constraint<Two_scale>::calculate_delta_alpha_s(doub
    assert(model && "CNE6SSMSusy_low_scale_constraint<Two_scale>::"
           "calculate_delta_alpha_s(): model pointer is zero");
 
-   // no thresholds
+   const double currentScale = model->get_scale();
 
-   return 0.;
+   // "by-hand" calculation of running top mass
+   const double mt = 0.7071067811865475 * model->get_Yu(2,2) * model->get_vu();
+
+   const double delta_alpha_s_SM = -0.1061032953945969*alphaS*FiniteLog(Abs(mt
+      /currentScale));
+
+   return delta_alpha_s_SM;
 
 }
 
@@ -308,7 +367,9 @@ void CNE6SSMSusy_low_scale_constraint<Two_scale>::calculate_Yu_DRbar()
    Eigen::Matrix<double,3,3> topDRbar(Eigen::Matrix<double,3,3>::Zero());
    topDRbar(0,0)      = oneset.displayMass(mUp);
    topDRbar(1,1)      = oneset.displayMass(mCharm);
-   topDRbar(2,2)      = oneset.displayMass(mTop);
+   // note the subtraction is still in the initial iteration
+   // without thresholds; afterwards it is unnecessary
+   topDRbar(2,2)      = oneset.displayMass(mTop) - 30.;
 
    // no thresholds
 
