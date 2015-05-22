@@ -38,6 +38,7 @@ public:
    virtual bool accuracy_goal_reached();
    virtual double get_accuracy_goal() const;
    virtual unsigned int max_iterations() const;
+   virtual void restart();
    void set_max_iterations(unsigned);           ///< set maximum number of iterations
 
 protected:
@@ -139,6 +140,12 @@ unsigned int Convergence_tester_DRbar<Model<Two_scale> >::max_iterations()
    const
 {
    return max_it;
+}
+
+template <template<class Method> class Model>
+void Convergence_tester_DRbar<Model<Two_scale> >::restart()
+{
+   it_count = 0;
 }
 
 template <template<class Method> class Model>
