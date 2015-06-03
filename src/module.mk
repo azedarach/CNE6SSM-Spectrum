@@ -46,6 +46,7 @@ LIBFLEXI_HDR := \
 		$(DIR)/convergence_tester_drbar.hpp \
 		$(DIR)/coupling_monitor.hpp \
 		$(DIR)/def.h \
+		$(DIR)/derivs_root_finder.hpp \
 		$(DIR)/dilog.h \
 		$(DIR)/eigen_utils.hpp \
 		$(DIR)/error.hpp \
@@ -112,19 +113,12 @@ endif
 
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
 LIBFLEXI_SRC += \
-		$(DIR)/semianalytic_convergence_tester.cpp \
 		$(DIR)/two_scale_running_precision.cpp \
-		$(DIR)/semianalytic_solver.cpp
+		$(DIR)/semianalytic_two_scale_solver.cpp
 
 LIBFLEXI_HDR += \
-		$(DIR)/semianalytic_constraint.hpp \
-		$(DIR)/semianalytic_convergence_tester.hpp \
-		$(DIR)/semianalytic_convergence_tester_drbar.hpp \
-		$(DIR)/semianalytic_initial_guesser.hpp \
-		$(DIR)/semianalytic_matching.hpp \
-		$(DIR)/semianalytic_model.hpp \
 		$(DIR)/two_scale_running_precision.hpp \
-		$(DIR)/semianalytic_solver.hpp
+		$(DIR)/semianalytic_two_scale_solver.hpp
 endif
 
 # remove duplicates in case all algorithms are used

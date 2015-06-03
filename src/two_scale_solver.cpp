@@ -215,7 +215,7 @@ void RGFlow<Two_scale>::run_down()
       VERBOSE_MSG("< \tselecting model " << model->model->name());
       // apply all constraints:
       // If m is the last model, do not apply the highest constraint,
-      // because it was already appied when we ran up.
+      // because it was already applied when we ran up.
       const size_t c_begin = (m + 1 == (long)number_of_models ? 1 : 0);
       const size_t c_end = model->downwards_constraints.size();
       for (size_t c = c_begin; c < c_end; ++c) {
