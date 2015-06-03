@@ -31,6 +31,7 @@ LIBCNE6SSM_SRC := \
 		$(DIR)/CNE6SSM_info.cpp \
 		$(DIR)/CNE6SSM_mass_eigenstates.cpp \
 		$(DIR)/CNE6SSM_physical.cpp \
+		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_soft_parameters.cpp \
 		$(DIR)/CNE6SSM_susy_parameters.cpp \
 		$(DIR)/CNE6SSM_utilities.cpp
@@ -49,6 +50,7 @@ LIBCNE6SSM_HDR := \
 		$(DIR)/CNE6SSM_model.hpp \
 		$(DIR)/CNE6SSM_model_slha.hpp \
 		$(DIR)/CNE6SSM_physical.hpp \
+		$(DIR)/CNE6SSM_slha_io.hpp \
 		$(DIR)/CNE6SSM_soft_parameters.hpp \
 		$(DIR)/CNE6SSM_susy_parameters.hpp \
 		$(DIR)/CNE6SSM_susy_scale_constraint.hpp \
@@ -58,7 +60,6 @@ ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_scan_parameters.cpp \
 		$(DIR)/CNE6SSM_scan_utilities.cpp \
-		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_two_scale_constraint_handler.cpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.cpp \
 		$(DIR)/CNE6SSM_two_scale_high_scale_constraint.cpp \
@@ -78,7 +79,6 @@ EXECNE6SSM_SRC += \
 LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_scan_parameters.hpp \
 		$(DIR)/CNE6SSM_scan_utilities.hpp \
-		$(DIR)/CNE6SSM_slha_io.hpp \
 		$(DIR)/CNE6SSM_spectrum_generator.hpp \
 		$(DIR)/CNE6SSM_two_scale_constraint_handler.hpp \
 		$(DIR)/CNE6SSM_two_scale_convergence_tester.hpp \
@@ -93,28 +93,42 @@ endif
 
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
-		$(DIR)/CNE6SSM_semianalytic_constraint_handler.cpp \
-		$(DIR)/CNE6SSM_semianalytic_convergence_tester.cpp \
-		$(DIR)/CNE6SSM_semianalytic_high_scale_constraint.cpp \
-		$(DIR)/CNE6SSM_semianalytic_initial_guesser.cpp \
-		$(DIR)/CNE6SSM_semianalytic_input_parameters.cpp \
-		$(DIR)/CNE6SSM_semianalytic_low_scale_constraint.cpp \
-		$(DIR)/CNE6SSM_semianalytic_model.cpp \
-		$(DIR)/CNE6SSM_semianalytic_model_slha.cpp \
-		$(DIR)/CNE6SSM_semianalytic_susy_scale_constraint.cpp
+		$(DIR)/CNE6SSM_semi_two_scale_constraint_handler.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_convergence_tester.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_high_scale_constraint.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_initial_guesser.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_input_parameters.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_low_scale_constraint.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_model.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_model_slha.cpp \
+		$(DIR)/CNE6SSM_semi_two_scale_susy_scale_constraint.cpp \
+		$(DIR)/CNE6SSM_susy_two_scale_convergence_tester.cpp
 
-EXECNE6SSM_SRC +=
+EXECNE6SSM_SRC += \
+		$(DIR)/run_semianalytic_CNE6SSM.cpp
 
 LIBCNE6SSM_HDR += \
-		$(DIR)/CNE6SSM_semianalytic_constraint_handler.hpp \
-		$(DIR)/CNE6SSM_semianalytic_convergence_tester.hpp \
-		$(DIR)/CNE6SSM_semianalytic_high_scale_constraint.hpp \
-		$(DIR)/CNE6SSM_semianalytic_initial_guesser.hpp \
-		$(DIR)/CNE6SSM_semianalytic_input_parameters.hpp \
-		$(DIR)/CNE6SSM_semianalytic_low_scale_constraint.hpp \
-		$(DIR)/CNE6SSM_semianalytic_model.hpp \
-		$(DIR)/CNE6SSM_semianalytic_model_slha.hpp \
-		$(DIR)/CNE6SSM_semianalytic_susy_scale_constraint.hpp
+		$(DIR)/CNE6SSM_semi_constraint_handler.hpp \
+		$(DIR)/CNE6SSM_semi_convergence_tester.hpp \
+		$(DIR)/CNE6SSM_semi_high_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_semi_initial_guesser.hpp \
+		$(DIR)/CNE6SSM_semi_input_parameters.hpp \
+		$(DIR)/CNE6SSM_semi_low_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_semi_model.hpp \
+		$(DIR)/CNE6SSM_semi_model_slha.hpp \
+		$(DIR)/CNE6SSM_semi_susy_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_semianalytic_spectrum_generator.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_constraint_handler.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_convergence_tester.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_high_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_initial_guesser.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_input_parameters.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_low_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_model.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_model_slha.hpp \
+		$(DIR)/CNE6SSM_semi_two_scale_susy_scale_constraint.hpp \
+		$(DIR)/CNE6SSM_susy_convergence_tester.hpp \
+		$(DIR)/CNE6SSM_susy_two_scale_convergence_tester.hpp
 endif
 
 ifneq ($(MAKECMDGOALS),showbuild)
@@ -182,6 +196,9 @@ RUN_CMD_LINE_CNE6SSM_EXE := $(DIR)/run_cmd_line_CNE6SSM.x
 SCAN_CNE6SSM_OBJ := $(DIR)/scan_CNE6SSM.o
 SCAN_CNE6SSM_EXE := $(DIR)/scan_CNE6SSM.x
 
+RUN_SEMI_CNE6SSM_OBJ := $(DIR)/run_semianalytic_CNE6SSM.o
+RUN_SEMI_CNE6SSM_EXE := $(DIR)/run_semianalytic_CNE6SSM.x
+
 METACODE_STAMP_CNE6SSM := $(DIR)/00_DELETE_ME_TO_RERUN_METACODE
 
 ifeq ($(ENABLE_META),yes)
@@ -227,6 +244,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(GRIDSCAN_CNE6SSM_EXE)
 		-rm -f $(GRIDSCAN_RGE_CNE6SSM_EXE)
 		-rm -f $(RGE_COEFF_CNE6SSM_EXE)
+		-rm -f $(RUN_SEMI_CNE6SSM_EXE)
 
 distclean-$(MODNAME): clean-$(MODNAME)
 
@@ -288,7 +306,10 @@ $(RUN_CMD_LINE_CNE6SSM_EXE): $(RUN_CMD_LINE_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEX
 $(SCAN_CNE6SSM_EXE): $(SCAN_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+$(RUN_SEMI_CNE6SSM_EXE): $(RUN_SEMI_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 ALLDEP += $(LIBCNE6SSM_DEP) $(EXECNE6SSM_DEP)
 ALLSRC += $(LIBCNE6SSM_SRC) $(EXECNE6SSM_SRC)
 ALLLIB += $(LIBCNE6SSM)
-ALLEXE += $(GRIDSCAN_CNE6SSM_EXE) $(GRIDSCAN_RGE_CNE6SSM_EXE) $(RGE_COEFF_CNE6SSM_EXE) $(RUN_CNE6SSM_EXE) $(RUN_CMD_LINE_CNE6SSM_EXE) $(SCAN_CNE6SSM_EXE)
+ALLEXE += $(GRIDSCAN_CNE6SSM_EXE) $(GRIDSCAN_RGE_CNE6SSM_EXE) $(RGE_COEFF_CNE6SSM_EXE) $(RUN_CNE6SSM_EXE) $(RUN_CMD_LINE_CNE6SSM_EXE) $(SCAN_CNE6SSM_EXE) $(RUN_SEMI_CNE6SSM_EXE)

@@ -19,7 +19,7 @@
 // File generated at Sun 19 Apr 2015 20:31:38
 
 #include "CNE6SSM_slha_io.hpp"
-#include "CNE6SSM_semianalytic_input_parameters.hpp"
+#include "CNE6SSM_semi_two_scale_input_parameters.hpp"
 #include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
@@ -78,12 +78,12 @@ void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters<Two_scale>& inpu
  *
  * @param input struct of input parameters
  */
-void CNE6SSM_slha_io::set_extpar(const CNE6SSM_input_parameters<Semianalytic>& input)
+void CNE6SSM_slha_io::set_extpar(const CNE6SSM_semianalytic_input_parameters<Two_scale>& input)
 {
    std::ostringstream extpar;
 
    extpar << "Block EXTPAR\n";
-   extpar << FORMAT_ELEMENT(65, input.sInput, "ssumInput");
+   extpar << FORMAT_ELEMENT(65, input.sInput, "sInput");
    extpar << FORMAT_ELEMENT(72, input.QSInput, "QSInput");
    slha_io.set_block(extpar);
 
@@ -113,7 +113,7 @@ void CNE6SSM_slha_io::set_minpar(const CNE6SSM_input_parameters<Two_scale>& inpu
  *
  * @param input struct of input parameters
  */
-void CNE6SSM_slha_io::set_minpar(const CNE6SSM_input_parameters<Semianalytic>& input)
+void CNE6SSM_slha_io::set_minpar(const CNE6SSM_semianalytic_input_parameters<Two_scale>& input)
 {
    std::ostringstream minpar;
 
@@ -379,8 +379,6 @@ void CNE6SSM_slha_io::read_from_file(const std::string& file_name)
  */
 void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters<Two_scale>& input) const
 {
-   // part of the reason the workaround is not ideal - need
-   // to disambiguate between which overload is used...
    void (*fill_two_scale_minpar_tuple) (CNE6SSM_input_parameters<Two_scale>&,
                                         int, double) = &CNE6SSM_slha_io::fill_minpar_tuple;
    void (*fill_two_scale_extpar_tuple) (CNE6SSM_input_parameters<Two_scale>&,
@@ -415,13 +413,11 @@ void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters<Two_scale>& input) const
  *
  * @param input struct of model input parameters
  */
-void CNE6SSM_slha_io::fill(CNE6SSM_input_parameters<Semianalytic>& input) const
+void CNE6SSM_slha_io::fill(CNE6SSM_semianalytic_input_parameters<Two_scale>& input) const
 {
-   // part of the reason the workaround is not ideal - need
-   // to disambiguate between which overload is used...
-   void (*fill_semianalytic_minpar_tuple) (CNE6SSM_input_parameters<Semianalytic>&,
+   void (*fill_semianalytic_minpar_tuple) (CNE6SSM_semianalytic_input_parameters<Two_scale>&,
                                            int, double) = &CNE6SSM_slha_io::fill_minpar_tuple;
-   void (*fill_semianalytic_extpar_tuple) (CNE6SSM_input_parameters<Semianalytic>&,
+   void (*fill_semianalytic_extpar_tuple) (CNE6SSM_semianalytic_input_parameters<Two_scale>&,
                                            int, double) = &CNE6SSM_slha_io::fill_extpar_tuple;
    SLHA_io::Tuple_processor minpar_processor
       = boost::bind(fill_semianalytic_minpar_tuple, boost::ref(input), _1, _2);
@@ -476,7 +472,7 @@ void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters<Two_scale>& inp
 
 }
 
-void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_input_parameters<Semianalytic>& input,
+void CNE6SSM_slha_io::fill_minpar_tuple(CNE6SSM_semianalytic_input_parameters<Two_scale>& input,
                                                 int key, double value)
 {
    switch (key) {
@@ -499,7 +495,7 @@ void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_input_parameters<Two_scale>& inp
 
 }
 
-void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_input_parameters<Semianalytic>& input,
+void CNE6SSM_slha_io::fill_extpar_tuple(CNE6SSM_semianalytic_input_parameters<Two_scale>& input,
                                                 int key, double value)
 {
    switch (key) {
