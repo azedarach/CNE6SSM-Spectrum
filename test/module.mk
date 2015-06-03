@@ -14,9 +14,11 @@ LIBTEST_DEP := \
 LIBTEST     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 
 TEST_SRC := \
+		$(DIR)/test_derivs_root_finder.cpp \
 		$(DIR)/test_ewsb_conditions.cpp \
 		$(DIR)/test_fixed_point_iterator.cpp \
-		$(DIR)/test_grid_scanner.cpp
+		$(DIR)/test_grid_scanner.cpp \
+		$(DIR)/test_semi_ewsb_conditions.cpp
 
 ifneq ($(findstring lattice,$(ALGORITHMS)),)
 TEST_SRC +=
@@ -82,6 +84,9 @@ clean:: clean-$(MODNAME)
 
 distclean:: distclean-$(MODNAME)
 
+$(DIR)/test_derivs_root_finder.x: $(DIR)/test_derivs_root_finder.o $(LIBFLEXI) $(LIBLEGACY) $(LIBTEST) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(FLIBS)
+
 $(DIR)/test_ewsb_conditions.x: $(DIR)/test_ewsb_conditions.o $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
 
@@ -90,6 +95,9 @@ $(DIR)/test_fixed_point_iterator.x: $(DIR)/test_fixed_point_iterator.o $(LIBFLEX
 
 $(DIR)/test_grid_scanner.x: $(DIR)/test_grid_scanner.o $(LIBFLEXI) $(LIBLEGACY) $(LIBTEST) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(FLIBS)
+
+$(DIR)/test_semi_ewsb_conditions.x: $(DIR)/test_semi_ewsb_conditions.o $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_%.x: $(DIR)/test_%.o
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(BOOSTTHREADLIBS) $(GSLLIBS) $(FLIBS) $(THREADLIBS) 
