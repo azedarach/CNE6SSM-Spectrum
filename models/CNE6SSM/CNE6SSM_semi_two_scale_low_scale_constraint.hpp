@@ -64,7 +64,6 @@ private:
    void calculate_MNeutrino_DRbar();
    double calculate_delta_alpha_em(double) const;
    double calculate_delta_alpha_s(double) const;
-   void get_sm_parameters_at_mt();
    void recalculate_mw_pole();
    void update_scale();
 };

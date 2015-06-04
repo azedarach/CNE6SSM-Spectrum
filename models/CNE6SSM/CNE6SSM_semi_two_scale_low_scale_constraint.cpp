@@ -180,10 +180,9 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::initialize()
    assert(model && "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::"
           "initialize(): model pointer is zero.");
 
-   // note that the low scale in this model is the pole top mass
-   initial_scale_guess = oneset.displayPoleMt();
+   initial_scale_guess = LowEnergyConstant(MZ);
 
-   scale = oneset.displayPoleMt();
+   scale = initial_scale_guess;
 
    MWDRbar = 0.;
    MZDRbar = 0.;
@@ -196,16 +195,6 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::initialize()
    ckm = oneset.get_complex_ckm();
    pmns = oneset.get_complex_pmns();
    self_energy_w_at_mw = 0.;
-
-   // make sure that all parameters used in low energy boundary
-   // conditions are appropriate for the input scale 
-   get_sm_parameters_at_mt();
-}
-
-void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::get_sm_parameters_at_mt()
-{
-   // TODO: make sure this implementation is appropriate
-   oneset.toMt();
 }
 
 void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::update_scale()
@@ -213,7 +202,7 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::update_scale()
    assert(model && "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::"
           "update_scale(): model pointer is zero.");
 
-   scale = oneset.displayPoleMt();
+   scale = LowEnergyConstant(MZ);
 
 
 }
@@ -264,9 +253,9 @@ double CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_theta_w(d
           "calculate_theta_w(): model pointer is zero");
 
    double theta_w = 0.;
-   // TODO: make sure values used are appropriate to m_t^pole in case
-   // thresholds are not used
+
    THETAW = ArcSin(Sqrt(1 - Sqr(MWDRbar)/Sqr(MZDRbar)));
+
 
    return theta_w;
 }
