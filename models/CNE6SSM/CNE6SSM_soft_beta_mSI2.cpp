@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:26
+// File generated at Wed 3 Jun 2015 23:43:36
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -38,14 +38,14 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mSI2_one_loop(const
 
    Eigen::Matrix<double,3,3> beta_mSI2;
 
-   beta_mSI2 = oneOver16PiSqr*(2*(2*mHd2*(fd.conjugate()*fd.transpose())
+   beta_mSI2 = (oneOver16PiSqr*(2*(2*mHd2*(fd.conjugate()*fd.transpose())
       + 2*mHu2*(fu.conjugate()*fu.transpose()) + 2*(Tfd.conjugate()*(Tfd)
       .transpose()) + 2*(Tfu.conjugate()*(Tfu).transpose()) + mSI2*fd.conjugate
       ()*fd.transpose() + mSI2*fu.conjugate()*fu.transpose() + 2*(fd.conjugate(
       )*mH2I2.conjugate()*fd.transpose()) + fd.conjugate()*fd.transpose()*mSI2
       + 2*(fu.conjugate()*mH1I2.conjugate()*fu.transpose()) + fu.conjugate()*
       fu.transpose()*mSI2) + 1.5811388300841898*g1p*Tr14*UNITMATRIX(3) - 5*
-      AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(3));
+      AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(3))).real();
 
 
    return beta_mSI2;
@@ -94,11 +94,11 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mSI2_two_loop(const
 
    Eigen::Matrix<double,3,3> beta_mSI2;
 
-   beta_mSI2 = twoLoop*(-4*traceconjTfdTpTfd*(fd.conjugate()*fd.transpose
-      ()) - 12*traceconjTYdTpTYd*(fd.conjugate()*fd.transpose()) - 4*
-      traceconjTYeTpTYe*(fd.conjugate()*fd.transpose()) - 8*mHd2*tracefdAdjfd*(
-      fd.conjugate()*fd.transpose()) - 4*tracefdAdjfdconjmSI2*(fd.conjugate()*
-      fd.transpose()) - 4*tracefdmH2I2Adjfd*(fd.conjugate()*fd.transpose()) -
+   beta_mSI2 = (twoLoop*(-4*traceconjTfdTpTfd*(fd.conjugate()*
+      fd.transpose()) - 12*traceconjTYdTpTYd*(fd.conjugate()*fd.transpose()) -
+      4*traceconjTYeTpTYe*(fd.conjugate()*fd.transpose()) - 8*mHd2*tracefdAdjfd
+      *(fd.conjugate()*fd.transpose()) - 4*tracefdAdjfdconjmSI2*(fd.conjugate()
+      *fd.transpose()) - 4*tracefdmH2I2Adjfd*(fd.conjugate()*fd.transpose()) -
       12*tracemd2YdAdjYd*(fd.conjugate()*fd.transpose()) - 4*traceme2YeAdjYe*(
       fd.conjugate()*fd.transpose()) - 4*traceml2AdjYeYe*(fd.conjugate()*
       fd.transpose()) - 12*tracemq2AdjYdYd*(fd.conjugate()*fd.transpose()) - 24
@@ -247,7 +247,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mSI2_two_loop(const
       0.15*Conj(MassBp)*Sqr(g1p)*(16*(-2*MassBp*(fd.conjugate()*fd.transpose())
       + fd.conjugate()*(Tfd).transpose() - 2*MassBp*(fu.conjugate()*
       fu.transpose()) + fu.conjugate()*(Tfu).transpose()) + 5*MassBp*Sqr(g1p)*(
-      213 + Sqr(QS))*UNITMATRIX(3)));
+      213 + Sqr(QS))*UNITMATRIX(3)))).real();
 
 
    return beta_mSI2;

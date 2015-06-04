@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:39
+// File generated at Wed 3 Jun 2015 23:47:49
 
 #include "CNE6SSM_two_scale_high_scale_constraint.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -26,7 +26,7 @@
 #include "gsl_utils.hpp"
 #include "minimizer.hpp"
 #include "root_finder.hpp"
-#include "numerics.hpp"
+#include "numerics2.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -37,9 +37,10 @@ namespace flexiblesusy {
 
 #define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
+#define PHASE(p) model->get_##p()
 #define BETAPARAMETER(p) beta_functions.get_##p()
 #define BETA(p) beta_##p
-#define SM(p) Electroweak_constants::p
+#define LowEnergyConstant(p) Electroweak_constants::p
 #define STANDARDDEVIATION(p) Electroweak_constants::Error_##p
 #define Pole(p) model->get_physical().p
 #define MODEL model
@@ -116,54 +117,54 @@ void CNE6SSM_high_scale_constraint<Two_scale>::apply()
    const auto Yu = MODELPARAMETER(Yu);
    const auto Lambdax = MODELPARAMETER(Lambdax);
 
-   MODEL->set_g1p(g1);
-   MODEL->set_MuPr(MuPrInput);
-   MODEL->set_BMuPr(BMuPrInput);
-   MODEL->set_MuPhi(MuPhiInput);
-   MODEL->set_BMuPhi(BMuPhiInput);
-   MODEL->set_SigmaL(SigmaLInput);
-   MODEL->set_KappaPr(KappaPrInput);
-   MODEL->set_Sigmax(SigmaxInput);
-   MODEL->set_gD(gDInput);
-   MODEL->set_hE(hEInput);
-   MODEL->set_Kappa(KappaInput);
-   MODEL->set_Lambda12(Lambda12Input);
-   MODEL->set_fu(fuInput);
-   MODEL->set_fd(fdInput);
-   MODEL->set_TYe(Azero*Ye);
-   MODEL->set_TYd(Azero*Yd);
-   MODEL->set_TYu(Azero*Yu);
-   MODEL->set_TKappaPr(Azero*KappaPrInput);
-   MODEL->set_TSigmax(Azero*SigmaxInput);
-   MODEL->set_ThE(Azero*hEInput);
-   MODEL->set_TSigmaL(Azero*SigmaLInput);
-   MODEL->set_TgD(Azero*gDInput);
-   MODEL->set_Tfu(Azero*fuInput);
-   MODEL->set_Tfd(Azero*fdInput);
-   MODEL->set_TKappa(Azero*KappaInput);
-   MODEL->set_TLambda12(Azero*Lambda12Input);
-   MODEL->set_TLambdax(Azero*Lambdax);
-   MODEL->set_mHd2(Sqr(m0));
-   MODEL->set_mHu2(Sqr(m0));
-   MODEL->set_ms2(Sqr(m0));
-   MODEL->set_msbar2(Sqr(m0));
-   MODEL->set_mphi2(Sqr(m0));
-   MODEL->set_mHp2(Sqr(m0));
-   MODEL->set_mHpbar2(Sqr(m0));
-   MODEL->set_mH1I2(Sqr(m0)*UNITMATRIX(2));
-   MODEL->set_mH2I2(Sqr(m0)*UNITMATRIX(2));
-   MODEL->set_mSI2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_mq2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_ml2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_md2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_mu2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_me2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_mDx2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_mDxbar2(Sqr(m0)*UNITMATRIX(3));
-   MODEL->set_MassB(m12);
-   MODEL->set_MassWB(m12);
-   MODEL->set_MassG(m12);
-   MODEL->set_MassBp(m12);
+   MODEL->set_g1p(Re(g1));
+   MODEL->set_MuPr(Re(MuPrInput));
+   MODEL->set_BMuPr(Re(BMuPrInput));
+   MODEL->set_MuPhi(Re(MuPhiInput));
+   MODEL->set_BMuPhi(Re(BMuPhiInput));
+   MODEL->set_SigmaL(Re(SigmaLInput));
+   MODEL->set_KappaPr(Re(KappaPrInput));
+   MODEL->set_Sigmax(Re(SigmaxInput));
+   MODEL->set_gD((gDInput).real());
+   MODEL->set_hE((hEInput).real());
+   MODEL->set_Kappa((KappaInput).real());
+   MODEL->set_Lambda12((Lambda12Input).real());
+   MODEL->set_fu((fuInput).real());
+   MODEL->set_fd((fdInput).real());
+   MODEL->set_TYe((Azero*Ye).real());
+   MODEL->set_TYd((Azero*Yd).real());
+   MODEL->set_TYu((Azero*Yu).real());
+   MODEL->set_TKappaPr(Re(Azero*KappaPrInput));
+   MODEL->set_TSigmax(Re(Azero*SigmaxInput));
+   MODEL->set_ThE((Azero*hEInput).real());
+   MODEL->set_TSigmaL(Re(Azero*SigmaLInput));
+   MODEL->set_TgD((Azero*gDInput).real());
+   MODEL->set_Tfu((Azero*fuInput).real());
+   MODEL->set_Tfd((Azero*fdInput).real());
+   MODEL->set_TKappa((Azero*KappaInput).real());
+   MODEL->set_TLambda12((Azero*Lambda12Input).real());
+   MODEL->set_TLambdax(Re(Azero*Lambdax));
+   MODEL->set_mHd2(Re(Sqr(m0)));
+   MODEL->set_mHu2(Re(Sqr(m0)));
+   MODEL->set_ms2(Re(Sqr(m0)));
+   MODEL->set_msbar2(Re(Sqr(m0)));
+   MODEL->set_mphi2(Re(Sqr(m0)));
+   MODEL->set_mHp2(Re(Sqr(m0)));
+   MODEL->set_mHpbar2(Re(Sqr(m0)));
+   MODEL->set_mH1I2((Sqr(m0)*UNITMATRIX(2)).real());
+   MODEL->set_mH2I2((Sqr(m0)*UNITMATRIX(2)).real());
+   MODEL->set_mSI2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_mq2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_ml2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_md2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_mu2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_me2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_mDx2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_mDxbar2((Sqr(m0)*UNITMATRIX(3)).real());
+   MODEL->set_MassB(Re(m12));
+   MODEL->set_MassWB(Re(m12));
+   MODEL->set_MassG(Re(m12));
+   MODEL->set_MassBp(Re(m12));
 
    {
       const auto g1 = MODELPARAMETER(g1);
@@ -316,7 +317,7 @@ void CNE6SSM_high_scale_constraint<Two_scale>::update_scale()
    const auto beta_g1 = BETAPARAMETER(g1);
    const auto beta_g2 = BETAPARAMETER(g2);
 
-   scale = currentScale*exp((-g1 + g2)/(BETA(g1) - BETA(g2)));
+   scale = currentScale*Exp((-g1 + g2)/(BETA(g1) - BETA(g2)));
 
 
    if (errno == ERANGE) {

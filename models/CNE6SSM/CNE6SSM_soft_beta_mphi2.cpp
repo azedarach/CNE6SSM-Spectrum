@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:34
+// File generated at Wed 3 Jun 2015 23:43:43
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,10 +37,10 @@ double CNE6SSM_soft_parameters::calc_beta_mphi2_one_loop(const Soft_traces& soft
 
    double beta_mphi2;
 
-   beta_mphi2 = 2*oneOver16PiSqr*(6*mphi2*AbsSqr(KappaPr) + (mphi2 + ms2
-      + msbar2)*AbsSqr(Sigmax) + 2*mHp2*AbsSqr(SigmaL) + 2*mHpbar2*AbsSqr(
+   beta_mphi2 = Re(2*oneOver16PiSqr*(6*mphi2*AbsSqr(KappaPr) + (mphi2 +
+      ms2 + msbar2)*AbsSqr(Sigmax) + 2*mHp2*AbsSqr(SigmaL) + 2*mHpbar2*AbsSqr(
       SigmaL) + 2*mphi2*AbsSqr(SigmaL) + 2*AbsSqr(TKappaPr) + AbsSqr(TSigmax) +
-      2*AbsSqr(TSigmaL));
+      2*AbsSqr(TSigmaL)));
 
 
    return beta_mphi2;
@@ -92,8 +92,8 @@ double CNE6SSM_soft_parameters::calc_beta_mphi2_two_loop(const Soft_traces& soft
 
    double beta_mphi2;
 
-   beta_mphi2 = 0.2*twoLoop*(-480*mphi2*Sqr(Conj(KappaPr))*Sqr(KappaPr) -
-      40*(mphi2 + ms2 + msbar2)*Sqr(Conj(Sigmax))*Sqr(Sigmax) - 80*(mHp2 +
+   beta_mphi2 = Re(0.2*twoLoop*(-480*mphi2*Sqr(Conj(KappaPr))*Sqr(KappaPr
+      ) - 40*(mphi2 + ms2 + msbar2)*Sqr(Conj(Sigmax))*Sqr(Sigmax) - 80*(mHp2 +
       mHpbar2 + mphi2)*Sqr(Conj(SigmaL))*Sqr(SigmaL) - 40*Conj(KappaPr)*((4*
       mphi2 + ms2 + msbar2)*AbsSqr(Sigmax)*KappaPr + 2*(mHp2 + mHpbar2 + 4*
       mphi2)*AbsSqr(SigmaL)*KappaPr + 8*AbsSqr(TKappaPr)*KappaPr + AbsSqr(
@@ -133,7 +133,7 @@ double CNE6SSM_soft_parameters::calc_beta_mphi2_two_loop(const Soft_traces& soft
       g2) + 3*Conj(MassB)*Sqr(g1)*(2*MassB*SigmaL - TSigmaL) + 2*Conj(MassBp)*
       Sqr(g1p)*(2*MassBp*SigmaL - TSigmaL) - 15*traceconjTgDTpgD*TSigmaL - 5*
       traceconjThETphE*TSigmaL - 20*Conj(TKappaPr)*KappaPr*TSigmaL - 15*Conj(
-      MassWB)*Sqr(g2)*TSigmaL));
+      MassWB)*Sqr(g2)*TSigmaL)));
 
 
    return beta_mphi2;

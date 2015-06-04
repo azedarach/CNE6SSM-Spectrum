@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:34
+// File generated at Wed 3 Jun 2015 23:42:42
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -40,10 +40,10 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yd_one_loop(const S
 
    Eigen::Matrix<double,3,3> beta_Yd;
 
-   beta_Yd = oneOver16PiSqr*(Yd*(tracefdAdjfd + 3*traceYdAdjYd +
+   beta_Yd = (oneOver16PiSqr*(Yd*(tracefdAdjfd + 3*traceYdAdjYd +
       traceYeAdjYe + AbsSqr(Lambdax) - 0.4666666666666667*Sqr(g1) - 0.7*Sqr(g1p
       ) - 3*Sqr(g2) - 5.333333333333333*Sqr(g3)) + 3*(Yd*Yd.adjoint()*Yd) + Yd*
-      Yu.adjoint()*Yu + Yd*gD.conjugate()*gD.transpose());
+      Yu.adjoint()*Yu + Yd*gD.conjugate()*gD.transpose())).real();
 
 
    return beta_Yd;
@@ -80,8 +80,8 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yd_two_loop(const S
 
    Eigen::Matrix<double,3,3> beta_Yd;
 
-   beta_Yd = twoLoop*(Yd*(4.588888888888889*Power(g1,4) + 6.825*Power(g1p
-      ,4) + 16.5*Power(g2,4) + 14.222222222222221*Power(g3,4) - 3*
+   beta_Yd = (twoLoop*(Yd*(4.588888888888889*Power(g1,4) + 6.825*Power(
+      g1p,4) + 16.5*Power(g2,4) + 14.222222222222221*Power(g3,4) - 3*
       tracefdAdjfdfdAdjfd - 2*tracefdAdjfdfuAdjfu - 3*tracegDAdjgDTpYdconjYd -
       2*tracehEAdjhEYeAdjYe - traceLambda12AdjLambda12Tpfdconjfd - 9*
       traceYdAdjYdYdAdjYd - 3*traceYdAdjYuYuAdjYd - 3*traceYeAdjYeYeAdjYe - 0.4
@@ -105,7 +105,8 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Yd_two_loop(const S
       2*(Yd*Yu.adjoint()*Yu*Yd.adjoint()*Yd) - 2*(Yd*Yu.adjoint()*Yu*
       Yu.adjoint()*Yu) - 2*(Yd*gD.conjugate()*gD.transpose()*Yd.adjoint()*Yd) -
       2*(Yd*gD.conjugate()*gD.transpose()*gD.conjugate()*gD.transpose()) - Yd*
-      gD.conjugate()*(Kappa).transpose()*Kappa.conjugate()*gD.transpose());
+      gD.conjugate()*(Kappa).transpose()*Kappa.conjugate()*gD.transpose()))
+      .real();
 
 
    return beta_Yd;

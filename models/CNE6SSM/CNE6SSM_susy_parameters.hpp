@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:34
+// File generated at Wed 3 Jun 2015 23:42:42
 
 #ifndef CNE6SSM_susy_parameters_H
 #define CNE6SSM_susy_parameters_H
@@ -174,10 +174,6 @@ protected:
    double vs;
    double vsb;
    double vphi;
-
-   // DH:: replacing input parameters dependence with
-   // just QS, everything else is initialised in the constructor
-   // or has setter method
    double QS;
 
 private:
@@ -270,6 +266,8 @@ private:
 };
 
 std::ostream& operator<<(std::ostream&, const CNE6SSM_susy_parameters&);
+
+#undef TRACE_STRUCT_TYPE
 
 } // namespace flexiblesusy
 

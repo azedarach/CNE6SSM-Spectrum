@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:29
+// File generated at Wed 3 Jun 2015 23:43:39
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,7 +39,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mDxbar2_one_loop(co
 
    Eigen::Matrix<double,3,3> beta_mDxbar2;
 
-   beta_mDxbar2 = oneOver16PiSqr*(4*mHp2*(gD.transpose()*gD.conjugate())
+   beta_mDxbar2 = (oneOver16PiSqr*(4*mHp2*(gD.transpose()*gD.conjugate())
       + 2*ms2*((Kappa).transpose()*Kappa.conjugate()) + 4*((TgD).transpose()*
       TgD.conjugate()) + 2*((TKappa).transpose()*TKappa.conjugate()) + 2*(
       mDxbar2*gD.transpose()*gD.conjugate()) + mDxbar2*(Kappa).transpose()*
@@ -49,7 +49,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mDxbar2_one_loop(co
       0.5163977794943222*g1*Tr11*UNITMATRIX(3) - 0.9486832980505138*g1p*Tr14*
       UNITMATRIX(3) - 0.5333333333333333*AbsSqr(MassB)*Sqr(g1)*UNITMATRIX(3) -
       1.8*AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(3) - 10.666666666666666*AbsSqr(
-      MassG)*Sqr(g3)*UNITMATRIX(3));
+      MassG)*Sqr(g3)*UNITMATRIX(3))).real();
 
 
    return beta_mDxbar2;
@@ -108,7 +108,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mDxbar2_two_loop(co
 
    Eigen::Matrix<double,3,3> beta_mDxbar2;
 
-   beta_mDxbar2 = twoLoop*(-12*traceconjTgDTpTgD*(gD.transpose()*
+   beta_mDxbar2 = (twoLoop*(-12*traceconjTgDTpTgD*(gD.transpose()*
       gD.conjugate()) - 4*traceconjThETpThE*(gD.transpose()*gD.conjugate()) -
       24*mHp2*tracegDAdjgD*(gD.transpose()*gD.conjugate()) - 12*
       tracegDAdjgDconjmq2*(gD.transpose()*gD.conjugate()) - 12*
@@ -256,7 +256,8 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mDxbar2_two_loop(co
       .transpose()*Kappa.conjugate()) + 8*((TgD).transpose()*gD.conjugate()) +
       5*((TKappa).transpose()*Kappa.conjugate()) - Sqr(QS)*((TKappa).transpose(
       )*Kappa.conjugate())) + 3*(24*(MassB + 2*MassBp)*Sqr(g1) + 160*(2*MassBp
-      + MassG)*Sqr(g3) + 9*MassBp*Sqr(g1p)*(197 + Sqr(QS)))*UNITMATRIX(3)));
+      + MassG)*Sqr(g3) + 9*MassBp*Sqr(g1p)*(197 + Sqr(QS)))*UNITMATRIX(3))))
+      .real();
 
 
    return beta_mDxbar2;

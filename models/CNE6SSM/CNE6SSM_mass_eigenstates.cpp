@@ -1,22 +1,40 @@
 // ====================================================================
-// Test implementation for a class to factor out the pole masses and
-// mixings calculation.
+// This file is part of FlexibleSUSY.
+//
+// FlexibleSUSY is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation, either version 3 of the License,
+// or (at your option) any later version.
+//
+// FlexibleSUSY is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with FlexibleSUSY.  If not, see
+// <http://www.gnu.org/licenses/>.
 // ====================================================================
+
+// File generated at Wed 3 Jun 2015 23:53:01
 
 /**
  * @file CNE6SSM_mass_eigenstates.cpp
- * @brief implementation of the CNE6SSM mass eigenstates class
+ * @brief implementation of the CNE6SSM mass eigenstates
  *
- * Contains the definition of the CNE6SSM mass eigenstates class
- * methods which calculate the pole masses and mixings from the
- * DRbar Lagrangian parameters.
+ * Contains the definition of the CNE6SSM mass eigenstates class methods
+ * which calculate the pole masses and mixings from the DRbar
+ * parameters.
+ *
+ * This file was generated at Wed 3 Jun 2015 23:53:01 with FlexibleSUSY
+ * 1.1.0 (git commit: v1.1.0) and SARAH 4.5.6 .
  */
 
 #include "CNE6SSM_mass_eigenstates.hpp"
 #include "eigen_utils.hpp"
-#include "numerics.hpp"
 #include "wrappers.hpp"
 #include "linalg2.hpp"
+#include "numerics2.hpp"
 #include "logger.hpp"
 #include "error.hpp"
 #include "config.h"
@@ -184,20 +202,20 @@ int CNE6SSM_mass_eigenstates::solve_ewsb_tree_level_via_soft_higgs_masses()
 {
    int error = 0;
 
-   const double new_mHd2 = (0.0125*(28.284271247461902*vs*vu*Conj(TLambdax) -
-      20*vphi*vsb*vu*Conj(Sigmax)*Lambdax - 20*vphi*vsb*vu*Conj(Lambdax)*Sigmax -
-      6*Power(vd,3)*Sqr(g1) - 9*Power(vd,3)*Sqr(g1p) - 10*Power(vd,3)*Sqr(g2) - 40
-      *vd*AbsSqr(Lambdax)*Sqr(vs) + 3*QS*vd*Sqr(g1p)*Sqr(vs) - 3*QS*vd*Sqr(g1p)*
+   const double new_mHd2 = Re((0.0125*(28.284271247461902*vs*vu*Conj(TLambdax)
+      - 20*vphi*vsb*vu*Conj(Sigmax)*Lambdax - 20*vphi*vsb*vu*Conj(Lambdax)*Sigmax
+      - 6*Power(vd,3)*Sqr(g1) - 9*Power(vd,3)*Sqr(g1p) - 10*Power(vd,3)*Sqr(g2) -
+      40*vd*AbsSqr(Lambdax)*Sqr(vs) + 3*QS*vd*Sqr(g1p)*Sqr(vs) - 3*QS*vd*Sqr(g1p)*
       Sqr(vsb) - 40*vd*AbsSqr(Lambdax)*Sqr(vu) + 6*vd*Sqr(g1)*Sqr(vu) - 6*vd*Sqr(
       g1p)*Sqr(vu) + 10*vd*Sqr(g2)*Sqr(vu) + 28.284271247461902*vs*vu*TLambdax))
-      /vd;
-   const double new_mHu2 = (0.025*(14.142135623730951*vd*vs*Conj(TLambdax) - 10
-      *vd*vphi*vsb*Conj(Sigmax)*Lambdax - 10*vd*vphi*vsb*Conj(Lambdax)*Sigmax - 3*
-      Power(vu,3)*Sqr(g1) - 2*Power(vu,3)*Sqr(g1p) - 5*Power(vu,3)*Sqr(g2) - 20*vu
-      *AbsSqr(Lambdax)*Sqr(vd) + 3*vu*Sqr(g1)*Sqr(vd) - 3*vu*Sqr(g1p)*Sqr(vd) + 5*
-      vu*Sqr(g2)*Sqr(vd) - 20*vu*AbsSqr(Lambdax)*Sqr(vs) + QS*vu*Sqr(g1p)*Sqr(vs)
-      - QS*vu*Sqr(g1p)*Sqr(vsb) + 14.142135623730951*vd*vs*TLambdax))/vu;
-   const double new_ms2 = (0.0125*(28.284271247461902*MuPhi*vphi*vsb*Conj(
+      /vd);
+   const double new_mHu2 = Re((0.025*(14.142135623730951*vd*vs*Conj(TLambdax) -
+      10*vd*vphi*vsb*Conj(Sigmax)*Lambdax - 10*vd*vphi*vsb*Conj(Lambdax)*Sigmax -
+      3*Power(vu,3)*Sqr(g1) - 2*Power(vu,3)*Sqr(g1p) - 5*Power(vu,3)*Sqr(g2) - 20
+      *vu*AbsSqr(Lambdax)*Sqr(vd) + 3*vu*Sqr(g1)*Sqr(vd) - 3*vu*Sqr(g1p)*Sqr(vd) +
+      5*vu*Sqr(g2)*Sqr(vd) - 20*vu*AbsSqr(Lambdax)*Sqr(vs) + QS*vu*Sqr(g1p)*Sqr(
+      vs) - QS*vu*Sqr(g1p)*Sqr(vsb) + 14.142135623730951*vd*vs*TLambdax))/vu);
+   const double new_ms2 = Re((0.0125*(28.284271247461902*MuPhi*vphi*vsb*Conj(
       Sigmax) + 28.284271247461902*vd*vu*Conj(TLambdax) + 28.284271247461902*vphi*
       vsb*Conj(TSigmax) + 40*vsb*Conj(Sigmax)*XiF + 28.284271247461902*vphi*vsb*
       Conj(MuPhi)*Sigmax + 40*vsb*Conj(XiF)*Sigmax - Power(vs,3)*Sqr(g1p)*Sqr(QS)
@@ -206,8 +224,8 @@ int CNE6SSM_mass_eigenstates::solve_ewsb_tree_level_via_soft_higgs_masses()
       KappaPr)*Sigmax*Sqr(vphi) - 40*vs*AbsSqr(Sigmax)*Sqr(vsb) + vs*Sqr(g1p)*Sqr(
       QS)*Sqr(vsb) - 40*vs*AbsSqr(Lambdax)*Sqr(vu) + 2*QS*vs*Sqr(g1p)*Sqr(vu) +
       28.284271247461902*vd*vu*TLambdax + 28.284271247461902*vphi*vsb*TSigmax))/vs
-      ;
-   const double new_msbar2 = (0.0125*(28.284271247461902*MuPhi*vphi*vs*Conj(
+      );
+   const double new_msbar2 = Re((0.0125*(28.284271247461902*MuPhi*vphi*vs*Conj(
       Sigmax) + 28.284271247461902*vphi*vs*Conj(TSigmax) - 20*vd*vphi*vu*Conj(
       Sigmax)*Lambdax + 40*vs*Conj(Sigmax)*XiF + 28.284271247461902*vphi*vs*Conj(
       MuPhi)*Sigmax - 20*vd*vphi*vu*Conj(Lambdax)*Sigmax + 40*vs*Conj(XiF)*Sigmax
@@ -215,8 +233,8 @@ int CNE6SSM_mass_eigenstates::solve_ewsb_tree_level_via_soft_higgs_masses()
       Sigmax)*Sqr(vphi) + 20*vs*Conj(Sigmax)*KappaPr*Sqr(vphi) + 20*vs*Conj(
       KappaPr)*Sigmax*Sqr(vphi) - 40*vsb*AbsSqr(Sigmax)*Sqr(vs) + vsb*Sqr(g1p)*Sqr
       (QS)*Sqr(vs) - 2*QS*vsb*Sqr(g1p)*Sqr(vu) + 28.284271247461902*vphi*vs*
-      TSigmax))/vsb;
-   const double new_mphi2 = (0.25*(-4*vphi*AbsSqr(MuPhi) - 4*Power(vphi,3)*
+      TSigmax))/vsb);
+   const double new_mphi2 = Re((0.25*(-4*vphi*AbsSqr(MuPhi) - 4*Power(vphi,3)*
       AbsSqr(KappaPr) - 2*vphi*BMuPhi - 2*vphi*Conj(BMuPhi) - 2.8284271247461903*
       MuPhi*Conj(XiF) + 1.4142135623730951*MuPhi*vs*vsb*Conj(Sigmax) -
       2.8284271247461903*Conj(LXiF) + 1.4142135623730951*vs*vsb*Conj(TSigmax) - 4*
@@ -228,29 +246,29 @@ int CNE6SSM_mass_eigenstates::solve_ewsb_tree_level_via_soft_higgs_masses()
       TKappaPr)*Sqr(vphi) - 4.242640687119286*Conj(MuPhi)*KappaPr*Sqr(vphi) - 2*
       vphi*AbsSqr(Sigmax)*Sqr(vs) - 2*vphi*AbsSqr(Sigmax)*Sqr(vsb) -
       1.4142135623730951*Sqr(vphi)*TKappaPr + 1.4142135623730951*vs*vsb*TSigmax))
-      /vphi;
+      /vphi);
 
-   if (std::isfinite(new_mHd2))
+   if (IsFinite(new_mHd2))
       mHd2 = new_mHd2;
    else
       error = 1;
 
-   if (std::isfinite(new_mHu2))
+   if (IsFinite(new_mHu2))
       mHu2 = new_mHu2;
    else
       error = 1;
 
-   if (std::isfinite(new_ms2))
+   if (IsFinite(new_ms2))
       ms2 = new_ms2;
    else
       error = 1;
 
-   if (std::isfinite(new_msbar2))
+   if (IsFinite(new_msbar2))
       msbar2 = new_msbar2;
    else
       error = 1;
 
-   if (std::isfinite(new_mphi2))
+   if (IsFinite(new_mphi2))
       mphi2 = new_mphi2;
    else
       error = 1;
@@ -445,6 +463,15 @@ void CNE6SSM_mass_eigenstates::calculate_DRbar_masses()
    msbar2 = old_msbar2;
    mphi2 = old_mphi2;
 
+}
+
+/**
+ * Backward compatibility routine which finds the DRbar mass
+ * eigenstates and mixings.
+ */
+void CNE6SSM_mass_eigenstates::calculate_DRbar_parameters()
+{
+   calculate_DRbar_masses();
 }
 
 /**
@@ -746,31 +773,28 @@ Eigen::Array<double,3,1> CNE6SSM_mass_eigenstates::get_MPseudoscalarHiggs() cons
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VG() const
 {
-   const double mass_matrix_VG = 0;
+   const double mass_matrix_VG = Re(0);
 
    return mass_matrix_VG;
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MVG()
 {
-   MVG = get_mass_matrix_VG();
+   const auto mass_matrix_VG = get_mass_matrix_VG();
+   MVG = calculate_singlet_mass(mass_matrix_VG);
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_Glu() const
 {
-   const double mass_matrix_Glu = MassG;
+   const double mass_matrix_Glu = Re(MassG);
 
    return mass_matrix_Glu;
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MGlu()
 {
-   MGlu = get_mass_matrix_Glu();
-
-   if (MGlu < 0.) {
-      MGlu *= -1;
-      PhaseGlu = std::complex<double>(0., 1.);
-   }
+   const auto mass_matrix_Glu = get_mass_matrix_Glu();
+   MGlu = calculate_singlet_mass(mass_matrix_Glu, PhaseGlu);
 }
 
 Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_Fv() const
@@ -796,31 +820,34 @@ void CNE6SSM_mass_eigenstates::calculate_MFv()
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_ChaP() const
 {
-   const double mass_matrix_ChaP = MuPr - 0.7071067811865475*vphi*SigmaL;
+   const double mass_matrix_ChaP = Re(MuPr - 0.7071067811865475*vphi*
+      SigmaL);
 
    return mass_matrix_ChaP;
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MChaP()
 {
-   MChaP = get_mass_matrix_ChaP();
+   const auto mass_matrix_ChaP = get_mass_matrix_ChaP();
+   MChaP = calculate_singlet_mass(mass_matrix_ChaP);
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VP() const
 {
-   const double mass_matrix_VP = 0;
+   const double mass_matrix_VP = Re(0);
 
    return mass_matrix_VP;
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MVP()
 {
-   MVP = get_mass_matrix_VP();
+   const auto mass_matrix_VP = get_mass_matrix_VP();
+   MVP = calculate_singlet_mass(mass_matrix_VP);
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VZ() const
 {
-   const double mass_matrix_VZ = 0.25*(0.9797958971132712*g1*g1p*Cos(
+   const double mass_matrix_VZ = Re(0.25*(0.9797958971132712*g1*g1p*Cos(
       ThetaWp())*Sin(ThetaW())*Sin(ThetaWp())*Sqr(vu) + 0.31622776601683794*g1p
       *g2*Cos(ThetaW())*Sin(2*ThetaWp())*(-3*Sqr(vd) + 2*Sqr(vu)) +
       0.7745966692414834*g1*Sin(ThetaW())*(2*g2*Cos(ThetaW()) +
@@ -828,14 +855,15 @@ double CNE6SSM_mass_eigenstates::get_mass_matrix_VZ() const
       ))) + Sqr(g2)*(Sqr(vd) + Sqr(vu))*Sqr(Cos(ThetaW()))*Sqr(Cos(ThetaWp()))
       + 0.31622776601683794*g1p*(-2.32379000772445*g1*Sin(ThetaW())*Sin(2*
       ThetaWp())*Sqr(vd) + 0.31622776601683794*g1p*(9*Sqr(vd) + Sqr(QS)*(Sqr(vs
-      ) + Sqr(vsb)) + 4*Sqr(vu))*Sqr(Sin(ThetaWp()))));
+      ) + Sqr(vsb)) + 4*Sqr(vu))*Sqr(Sin(ThetaWp())))));
 
    return mass_matrix_VZ;
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MVZ()
 {
-   MVZ = get_mass_matrix_VZ();
+   const auto mass_matrix_VZ = get_mass_matrix_VZ();
+   MVZ = calculate_singlet_mass(mass_matrix_VZ);
 
    if (MVZ < 0.)
       problems.flag_tachyon(CNE6SSM_info::VZ);
@@ -845,19 +873,20 @@ void CNE6SSM_mass_eigenstates::calculate_MVZ()
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VZp() const
 {
-   const double mass_matrix_VZp = 0.25*((g2*Cos(ThetaW()) +
+   const double mass_matrix_VZp = Re(0.25*((g2*Cos(ThetaW()) +
       0.7745966692414834*g1*Sin(ThetaW()))*Sin(ThetaWp())*(0.6324555320336759*
       g1p*Cos(ThetaWp())*(3*Sqr(vd) - 2*Sqr(vu)) + (g2*Cos(ThetaW()) +
       0.7745966692414834*g1*Sin(ThetaW()))*Sin(ThetaWp())*(Sqr(vd) + Sqr(vu)))
       + 0.1*Sqr(g1p)*(9*Sqr(vd) + Sqr(QS)*(Sqr(vs) + Sqr(vsb)) + 4*Sqr(vu))*Sqr
-      (Cos(ThetaWp())));
+      (Cos(ThetaWp()))));
 
    return mass_matrix_VZp;
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MVZp()
 {
-   MVZp = get_mass_matrix_VZp();
+   const auto mass_matrix_VZp = get_mass_matrix_VZp();
+   MVZp = calculate_singlet_mass(mass_matrix_VZp);
 
    if (MVZp < 0.)
       problems.flag_tachyon(CNE6SSM_info::VZp);
@@ -1991,14 +2020,15 @@ void CNE6SSM_mass_eigenstates::calculate_MChiP()
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VWm() const
 {
-   const double mass_matrix_VWm = 0.25*Sqr(g2)*(Sqr(vd) + Sqr(vu));
+   const double mass_matrix_VWm = Re(0.25*Sqr(g2)*(Sqr(vd) + Sqr(vu)));
 
    return mass_matrix_VWm;
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MVWm()
 {
-   MVWm = get_mass_matrix_VWm();
+   const auto mass_matrix_VWm = get_mass_matrix_VWm();
+   MVWm = calculate_singlet_mass(mass_matrix_VWm);
 
    if (MVWm < 0.)
       problems.flag_tachyon(CNE6SSM_info::VWm);
@@ -2006,66 +2036,67 @@ void CNE6SSM_mass_eigenstates::calculate_MVWm()
    MVWm = AbsSqrt(MVWm);
 }
 
+
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_1() const
 {
-   double result = mHd2*vd - 0.35355339059327373*vs*vu*Conj(TLambdax) + 0.25*
-      vphi*vsb*vu*Conj(Sigmax)*Lambdax + 0.25*vphi*vsb*vu*Conj(Lambdax)*Sigmax +
+   double result = Re(mHd2*vd - 0.35355339059327373*vs*vu*Conj(TLambdax) + 0.25
+      *vphi*vsb*vu*Conj(Sigmax)*Lambdax + 0.25*vphi*vsb*vu*Conj(Lambdax)*Sigmax +
       0.075*Power(vd,3)*Sqr(g1) + 0.1125*Power(vd,3)*Sqr(g1p) + 0.125*Power(vd,3)*
       Sqr(g2) + 0.5*vd*AbsSqr(Lambdax)*Sqr(vs) - 0.0375*QS*vd*Sqr(g1p)*Sqr(vs) +
       0.0375*QS*vd*Sqr(g1p)*Sqr(vsb) + 0.5*vd*AbsSqr(Lambdax)*Sqr(vu) - 0.075*vd*
       Sqr(g1)*Sqr(vu) + 0.075*vd*Sqr(g1p)*Sqr(vu) - 0.125*vd*Sqr(g2)*Sqr(vu) -
-      0.35355339059327373*vs*vu*TLambdax;
+      0.35355339059327373*vs*vu*TLambdax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_2() const
 {
-   double result = mHu2*vu - 0.35355339059327373*vd*vs*Conj(TLambdax) + 0.25*vd
-      *vphi*vsb*Conj(Sigmax)*Lambdax + 0.25*vd*vphi*vsb*Conj(Lambdax)*Sigmax +
+   double result = Re(mHu2*vu - 0.35355339059327373*vd*vs*Conj(TLambdax) + 0.25
+      *vd*vphi*vsb*Conj(Sigmax)*Lambdax + 0.25*vd*vphi*vsb*Conj(Lambdax)*Sigmax +
       0.075*Power(vu,3)*Sqr(g1) + 0.05*Power(vu,3)*Sqr(g1p) + 0.125*Power(vu,3)*
       Sqr(g2) + 0.5*vu*AbsSqr(Lambdax)*Sqr(vd) - 0.075*vu*Sqr(g1)*Sqr(vd) + 0.075*
       vu*Sqr(g1p)*Sqr(vd) - 0.125*vu*Sqr(g2)*Sqr(vd) + 0.5*vu*AbsSqr(Lambdax)*Sqr(
       vs) - 0.025*QS*vu*Sqr(g1p)*Sqr(vs) + 0.025*QS*vu*Sqr(g1p)*Sqr(vsb) -
-      0.35355339059327373*vd*vs*TLambdax;
+      0.35355339059327373*vd*vs*TLambdax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_3() const
 {
-   double result = ms2*vs - 0.35355339059327373*MuPhi*vphi*vsb*Conj(Sigmax) -
-      0.35355339059327373*vd*vu*Conj(TLambdax) - 0.35355339059327373*vphi*vsb*Conj
-      (TSigmax) - 0.5*vsb*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vsb*Conj(
-      MuPhi)*Sigmax - 0.5*vsb*Conj(XiF)*Sigmax + 0.0125*Power(vs,3)*Sqr(g1p)*Sqr(
+   double result = Re(ms2*vs - 0.35355339059327373*MuPhi*vphi*vsb*Conj(Sigmax)
+      - 0.35355339059327373*vd*vu*Conj(TLambdax) - 0.35355339059327373*vphi*vsb*
+      Conj(TSigmax) - 0.5*vsb*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vsb*Conj
+      (MuPhi)*Sigmax - 0.5*vsb*Conj(XiF)*Sigmax + 0.0125*Power(vs,3)*Sqr(g1p)*Sqr(
       QS) + 0.5*vs*AbsSqr(Lambdax)*Sqr(vd) - 0.0375*QS*vs*Sqr(g1p)*Sqr(vd) + 0.5*
       vs*AbsSqr(Sigmax)*Sqr(vphi) - 0.25*vsb*Conj(Sigmax)*KappaPr*Sqr(vphi) - 0.25
       *vsb*Conj(KappaPr)*Sigmax*Sqr(vphi) + 0.5*vs*AbsSqr(Sigmax)*Sqr(vsb) -
       0.0125*vs*Sqr(g1p)*Sqr(QS)*Sqr(vsb) + 0.5*vs*AbsSqr(Lambdax)*Sqr(vu) - 0.025
       *QS*vs*Sqr(g1p)*Sqr(vu) - 0.35355339059327373*vd*vu*TLambdax -
-      0.35355339059327373*vphi*vsb*TSigmax;
+      0.35355339059327373*vphi*vsb*TSigmax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_4() const
 {
-   double result = msbar2*vsb - 0.35355339059327373*MuPhi*vphi*vs*Conj(Sigmax)
-      - 0.35355339059327373*vphi*vs*Conj(TSigmax) + 0.25*vd*vphi*vu*Conj(Sigmax)*
-      Lambdax - 0.5*vs*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vs*Conj(MuPhi)*
-      Sigmax + 0.25*vd*vphi*vu*Conj(Lambdax)*Sigmax - 0.5*vs*Conj(XiF)*Sigmax +
-      0.0125*Power(vsb,3)*Sqr(g1p)*Sqr(QS) + 0.0375*QS*vsb*Sqr(g1p)*Sqr(vd) + 0.5*
-      vsb*AbsSqr(Sigmax)*Sqr(vphi) - 0.25*vs*Conj(Sigmax)*KappaPr*Sqr(vphi) - 0.25
-      *vs*Conj(KappaPr)*Sigmax*Sqr(vphi) + 0.5*vsb*AbsSqr(Sigmax)*Sqr(vs) - 0.0125
-      *vsb*Sqr(g1p)*Sqr(QS)*Sqr(vs) + 0.025*QS*vsb*Sqr(g1p)*Sqr(vu) -
-      0.35355339059327373*vphi*vs*TSigmax;
+   double result = Re(msbar2*vsb - 0.35355339059327373*MuPhi*vphi*vs*Conj(
+      Sigmax) - 0.35355339059327373*vphi*vs*Conj(TSigmax) + 0.25*vd*vphi*vu*Conj(
+      Sigmax)*Lambdax - 0.5*vs*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vs*Conj
+      (MuPhi)*Sigmax + 0.25*vd*vphi*vu*Conj(Lambdax)*Sigmax - 0.5*vs*Conj(XiF)*
+      Sigmax + 0.0125*Power(vsb,3)*Sqr(g1p)*Sqr(QS) + 0.0375*QS*vsb*Sqr(g1p)*Sqr(
+      vd) + 0.5*vsb*AbsSqr(Sigmax)*Sqr(vphi) - 0.25*vs*Conj(Sigmax)*KappaPr*Sqr(
+      vphi) - 0.25*vs*Conj(KappaPr)*Sigmax*Sqr(vphi) + 0.5*vsb*AbsSqr(Sigmax)*Sqr(
+      vs) - 0.0125*vsb*Sqr(g1p)*Sqr(QS)*Sqr(vs) + 0.025*QS*vsb*Sqr(g1p)*Sqr(vu) -
+      0.35355339059327373*vphi*vs*TSigmax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_5() const
 {
-   double result = mphi2*vphi + vphi*AbsSqr(MuPhi) + Power(vphi,3)*AbsSqr(
+   double result = Re(mphi2*vphi + vphi*AbsSqr(MuPhi) + Power(vphi,3)*AbsSqr(
       KappaPr) + 0.5*vphi*BMuPhi + 0.5*vphi*Conj(BMuPhi) + 0.7071067811865475*
       MuPhi*Conj(XiF) - 0.35355339059327373*MuPhi*vs*vsb*Conj(Sigmax) +
       0.7071067811865475*Conj(LXiF) - 0.35355339059327373*vs*vsb*Conj(TSigmax) +
@@ -2077,7 +2108,7 @@ double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_5() const
       0.35355339059327373*Conj(TKappaPr)*Sqr(vphi) + 1.0606601717798212*Conj(
       MuPhi)*KappaPr*Sqr(vphi) + 0.5*vphi*AbsSqr(Sigmax)*Sqr(vs) + 0.5*vphi*AbsSqr
       (Sigmax)*Sqr(vsb) + 0.35355339059327373*Sqr(vphi)*TKappaPr -
-      0.35355339059327373*vs*vsb*TSigmax;
+      0.35355339059327373*vs*vsb*TSigmax);
 
    return result;
 }
@@ -54092,8 +54123,9 @@ void CNE6SSM_mass_eigenstates::calculate_MGlu_pole()
    const double self_energy_1  = Re(self_energy_Glu_1(p));
    const double self_energy_PL = Re(self_energy_Glu_PL(p));
    const double self_energy_PR = Re(self_energy_Glu_PR(p));
-   PHYSICAL(MGlu) = M_tree - self_energy_1 - M_tree * (self_energy_PL +
-      self_energy_PR);
+   const auto M_1loop = M_tree - self_energy_1 - M_tree * (self_energy_PL
+      + self_energy_PR);
+   PHYSICAL(MGlu) = calculate_singlet_mass(M_1loop);
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MFv_pole()
@@ -54110,8 +54142,9 @@ void CNE6SSM_mass_eigenstates::calculate_MChaP_pole()
    const double self_energy_1  = Re(self_energy_ChaP_1(p));
    const double self_energy_PL = Re(self_energy_ChaP_PL(p));
    const double self_energy_PR = Re(self_energy_ChaP_PR(p));
-   PHYSICAL(MChaP) = M_tree - self_energy_1 - M_tree * (self_energy_PL +
-      self_energy_PR);
+   const auto M_1loop = M_tree - self_energy_1 - M_tree * (self_energy_PL
+      + self_energy_PR);
+   PHYSICAL(MChaP) = calculate_singlet_mass(M_1loop);
 }
 
 void CNE6SSM_mass_eigenstates::calculate_MVP_pole()
@@ -54164,6 +54197,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSd_pole()
    const Eigen::Matrix<double,6,6> M_tree(get_mass_matrix_Sd());
 
    for (unsigned es = 0; es < 6; ++es) {
+
       const double p = Abs(MSd(es));
       for (unsigned i1 = 0; i1 < 6; ++i1) {
          for (unsigned i2 = i1; i2 < 6; ++i2) {
@@ -54204,6 +54238,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSv_pole()
    const Eigen::Matrix<double,3,3> M_tree(get_mass_matrix_Sv());
 
    for (unsigned es = 0; es < 3; ++es) {
+
       const double p = Abs(MSv(es));
       for (unsigned i1 = 0; i1 < 3; ++i1) {
          for (unsigned i2 = i1; i2 < 3; ++i2) {
@@ -54244,6 +54279,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSu_pole()
    const Eigen::Matrix<double,6,6> M_tree(get_mass_matrix_Su());
 
    for (unsigned es = 0; es < 6; ++es) {
+
       const double p = Abs(MSu(es));
       for (unsigned i1 = 0; i1 < 6; ++i1) {
          for (unsigned i2 = i1; i2 < 6; ++i2) {
@@ -54284,6 +54320,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSe_pole()
    const Eigen::Matrix<double,6,6> M_tree(get_mass_matrix_Se());
 
    for (unsigned es = 0; es < 6; ++es) {
+
       const double p = Abs(MSe(es));
       for (unsigned i1 = 0; i1 < 6; ++i1) {
          for (unsigned i2 = i1; i2 < 6; ++i2) {
@@ -54324,6 +54361,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSDX_pole()
    const Eigen::Matrix<double,6,6> M_tree(get_mass_matrix_SDX());
 
    for (unsigned es = 0; es < 6; ++es) {
+
       const double p = Abs(MSDX(es));
       for (unsigned i1 = 0; i1 < 6; ++i1) {
          for (unsigned i2 = i1; i2 < 6; ++i2) {
@@ -54374,6 +54412,7 @@ void CNE6SSM_mass_eigenstates::calculate_Mhh_pole()
          self_energy_hh_2loop(two_loop);
 
       for (unsigned es = 0; es < 5; ++es) {
+
          const double p = Abs(old_Mhh(es));
          for (unsigned i1 = 0; i1 < 5; ++i1) {
             for (unsigned i2 = i1; i2 < 5; ++i2) {
@@ -54446,6 +54485,16 @@ void CNE6SSM_mass_eigenstates::calculate_MAh_pole()
          self_energy_Ah_2loop(two_loop);
 
       for (unsigned es = 0; es < 5; ++es) {
+         // skip goldstone bosons
+         if (is_equal_rel(MAh(es), MVZ, 1e-10)) {
+            PHYSICAL(MAh(es)) = MVZ;
+            continue;
+         }
+         if (is_equal_rel(MAh(es), MVZp, 1e-10)) {
+            PHYSICAL(MAh(es)) = MVZp;
+            continue;
+         }
+
          const double p = Abs(old_MAh(es));
          for (unsigned i1 = 0; i1 < 5; ++i1) {
             for (unsigned i2 = i1; i2 < 5; ++i2) {
@@ -54481,7 +54530,7 @@ void CNE6SSM_mass_eigenstates::calculate_MAh_pole()
             problems.flag_tachyon(Ah);
 
          PHYSICAL(MAh(es)) = AbsSqrt(eigen_values(es));
-         if (es == 0)
+         if (es == 2)
             PHYSICAL(ZA) = mix_ZA;
       }
 
@@ -54513,6 +54562,12 @@ void CNE6SSM_mass_eigenstates::calculate_MHpm_pole()
       const Eigen::Matrix<double,2,2> M_tree(get_mass_matrix_Hpm());
 
       for (unsigned es = 0; es < 2; ++es) {
+         // skip goldstone bosons
+         if (is_equal_rel(MHpm(es), MVWm, 1e-10)) {
+            PHYSICAL(MHpm(es)) = MVWm;
+            continue;
+         }
+
          const double p = Abs(old_MHpm(es));
          for (unsigned i1 = 0; i1 < 2; ++i1) {
             for (unsigned i2 = i1; i2 < 2; ++i2) {
@@ -54541,7 +54596,7 @@ void CNE6SSM_mass_eigenstates::calculate_MHpm_pole()
             problems.flag_tachyon(Hpm);
 
          PHYSICAL(MHpm(es)) = AbsSqrt(eigen_values(es));
-         if (es == 0)
+         if (es == 1)
             PHYSICAL(ZP) = mix_ZP;
       }
 
@@ -54843,6 +54898,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSHI0_pole()
    const Eigen::Matrix<double,7,7> M_tree(get_mass_matrix_SHI0());
 
    for (unsigned es = 0; es < 7; ++es) {
+
       const double p = Abs(MSHI0(es));
       for (unsigned i1 = 0; i1 < 7; ++i1) {
          for (unsigned i2 = i1; i2 < 7; ++i2) {
@@ -54883,6 +54939,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSHIPM_pole()
    const Eigen::Matrix<double,4,4> M_tree(get_mass_matrix_SHIPM());
 
    for (unsigned es = 0; es < 4; ++es) {
+
       const double p = Abs(MSHIPM(es));
       for (unsigned i1 = 0; i1 < 4; ++i1) {
          for (unsigned i2 = i1; i2 < 4; ++i2) {
@@ -55006,6 +55063,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSHp0_pole()
    const Eigen::Matrix<double,2,2> M_tree(get_mass_matrix_SHp0());
 
    for (unsigned es = 0; es < 2; ++es) {
+
       const double p = Abs(MSHp0(es));
       for (unsigned i1 = 0; i1 < 2; ++i1) {
          for (unsigned i2 = i1; i2 < 2; ++i2) {
@@ -55046,6 +55104,7 @@ void CNE6SSM_mass_eigenstates::calculate_MSHpp_pole()
    const Eigen::Matrix<double,2,2> M_tree(get_mass_matrix_SHpp());
 
    for (unsigned es = 0; es < 2; ++es) {
+
       const double p = Abs(MSHpp(es));
       for (unsigned i1 = 0; i1 < 2; ++i1) {
          for (unsigned i2 = i1; i2 < 2; ++i2) {

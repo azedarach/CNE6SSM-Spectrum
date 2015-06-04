@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:13
+// File generated at Wed 3 Jun 2015 23:43:25
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -47,13 +47,13 @@ double CNE6SSM_soft_parameters::calc_beta_mHu2_one_loop(const Soft_traces& soft_
 
    double beta_mHu2;
 
-   beta_mHu2 = oneOver16PiSqr*(0.7745966692414834*g1*Tr11 -
+   beta_mHu2 = Re(oneOver16PiSqr*(0.7745966692414834*g1*Tr11 -
       0.6324555320336759*g1p*Tr14 + 2*traceconjTfuTpTfu + 6*traceconjTYuTpTYu +
       2*mHu2*tracefuAdjfu + 2*tracefuAdjfuconjmSI2 + 2*tracefumH1I2Adjfu + 6*
       tracemq2AdjYuYu + 6*tracemu2YuAdjYu + 6*mHu2*traceYuAdjYu + 2*mHd2*AbsSqr
       (Lambdax) + 2*mHu2*AbsSqr(Lambdax) + 2*ms2*AbsSqr(Lambdax) + 2*AbsSqr(
       TLambdax) - 1.2*AbsSqr(MassB)*Sqr(g1) - 0.8*AbsSqr(MassBp)*Sqr(g1p) - 6*
-      AbsSqr(MassWB)*Sqr(g2));
+      AbsSqr(MassWB)*Sqr(g2)));
 
 
    return beta_mHu2;
@@ -236,8 +236,8 @@ double CNE6SSM_soft_parameters::calc_beta_mHu2_two_loop(const Soft_traces& soft_
 
    double beta_mHu2;
 
-   beta_mHu2 = twoLoop*(6*Power(g2,4)*Tr22 - 0.9797958971132712*g1*g1p*
-      Tr2U114 - 0.9797958971132712*g1*g1p*Tr2U141 + 3.0983866769659336*g1*Tr31
+   beta_mHu2 = Re(twoLoop*(6*Power(g2,4)*Tr22 - 0.9797958971132712*g1*g1p
+      *Tr2U114 - 0.9797958971132712*g1*g1p*Tr2U141 + 3.0983866769659336*g1*Tr31
       - 2.5298221281347035*g1p*Tr34 - 6*traceAdjgDTpYuconjTYuTgD - 6*
       traceAdjYuTYuconjTgDTpgD - 4*tracefdAdjfdconjmSI2fuAdjfu - 4*mHd2*
       tracefdAdjfdfuAdjfu - 4*mHu2*tracefdAdjfdfuAdjfu - 4*
@@ -331,7 +331,7 @@ double CNE6SSM_soft_parameters::calc_beta_mHu2_two_loop(const Soft_traces& soft_
       traceconjTLambda12TpLambda12*Conj(Lambdax)*TLambdax - 6*traceconjTYdTpYd*
       Conj(Lambdax)*TLambdax - 2*traceconjTYeTpYe*Conj(Lambdax)*TLambdax - 2*
       Conj(Lambdax)*Conj(TSigmax)*Sigmax*TLambdax - 2*Conj(Sigmax)*Conj(
-      TLambdax)*Lambdax*TSigmax);
+      TLambdax)*Lambdax*TSigmax));
 
 
    return beta_mHu2;

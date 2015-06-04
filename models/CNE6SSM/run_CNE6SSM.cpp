@@ -16,9 +16,8 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:37:13
+// File generated at Wed 3 Jun 2015 23:53:01
 
-#include "CNE6SSM_semianalytic_input_parameters.hpp"
 #include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "CNE6SSM_slha_io.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
@@ -86,6 +85,8 @@ int main(int argc, const char* argv[])
       spectrum_generator_settings.get(Spectrum_generator_settings::ewsb_loop_order));
    spectrum_generator.set_beta_loop_order(
       spectrum_generator_settings.get(Spectrum_generator_settings::beta_loop_order));
+   spectrum_generator.set_beta_zero_threshold(
+      spectrum_generator_settings.get(Spectrum_generator_settings::beta_zero_threshold));
    spectrum_generator.set_threshold_corrections_loop_order(
       spectrum_generator_settings.get(Spectrum_generator_settings::threshold_corrections_loop_order));
    spectrum_generator.set_two_loop_corrections(

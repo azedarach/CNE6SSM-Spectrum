@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:34
+// File generated at Wed 3 Jun 2015 23:43:43
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,7 +37,7 @@ double CNE6SSM_soft_parameters::calc_beta_MassB_one_loop(const Soft_traces& soft
 
    double beta_MassB;
 
-   beta_MassB = 19.2*MassB*oneOver16PiSqr*Sqr(g1);
+   beta_MassB = Re(19.2*MassB*oneOver16PiSqr*Sqr(g1));
 
 
    return beta_MassB;
@@ -74,16 +74,17 @@ double CNE6SSM_soft_parameters::calc_beta_MassB_two_loop(const Soft_traces& soft
 
    double beta_MassB;
 
-   beta_MassB = 0.08*twoLoop*Sqr(g1)*(30*traceAdjfdTfd + 30*traceAdjfuTfu
-      + 70*traceAdjgDTgD + 90*traceAdjhEThE + 20*traceAdjKappaTKappa + 30*
-      traceAdjLambda12TLambda12 + 70*traceAdjYdTYd + 90*traceAdjYeTYe + 130*
-      traceAdjYuTYu - 30*MassB*tracefdAdjfd - 30*MassB*tracefuAdjfu - 70*MassB*
-      tracegDAdjgD - 90*MassB*tracehEAdjhE - 20*MassB*traceKappaAdjKappa - 30*
-      MassB*traceLambda12AdjLambda12 - 70*MassB*traceYdAdjYd - 90*MassB*
-      traceYeAdjYe - 130*MassB*traceYuAdjYu + 468*MassB*Sqr(g1) + 81*MassB*Sqr(
-      g1p) + 81*MassBp*Sqr(g1p) + 270*MassB*Sqr(g2) + 270*MassWB*Sqr(g2) + 600*
-      MassB*Sqr(g3) + 600*MassG*Sqr(g3) - 30*Conj(Lambdax)*(MassB*Lambdax -
-      TLambdax) - 30*Conj(SigmaL)*(MassB*SigmaL - TSigmaL));
+   beta_MassB = Re(0.08*twoLoop*Sqr(g1)*(30*traceAdjfdTfd + 30*
+      traceAdjfuTfu + 70*traceAdjgDTgD + 90*traceAdjhEThE + 20*
+      traceAdjKappaTKappa + 30*traceAdjLambda12TLambda12 + 70*traceAdjYdTYd +
+      90*traceAdjYeTYe + 130*traceAdjYuTYu - 30*MassB*tracefdAdjfd - 30*MassB*
+      tracefuAdjfu - 70*MassB*tracegDAdjgD - 90*MassB*tracehEAdjhE - 20*MassB*
+      traceKappaAdjKappa - 30*MassB*traceLambda12AdjLambda12 - 70*MassB*
+      traceYdAdjYd - 90*MassB*traceYeAdjYe - 130*MassB*traceYuAdjYu + 468*MassB
+      *Sqr(g1) + 81*MassB*Sqr(g1p) + 81*MassBp*Sqr(g1p) + 270*MassB*Sqr(g2) +
+      270*MassWB*Sqr(g2) + 600*MassB*Sqr(g3) + 600*MassG*Sqr(g3) - 30*Conj(
+      Lambdax)*(MassB*Lambdax - TLambdax) - 30*Conj(SigmaL)*(MassB*SigmaL -
+      TSigmaL)));
 
 
    return beta_MassB;

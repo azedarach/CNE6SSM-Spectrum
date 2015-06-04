@@ -70,6 +70,36 @@ Derived AbsSqrt(const Eigen::ArrayBase<Derived>& m)
    return m.cwiseAbs().cwiseSqrt();
 }
 
+/**
+ * Calculates the mass of a singlet from a (possibly complex)
+ * numerical value by taking the magnitude of the value.
+ *
+ * @param value numerical value
+ * @return mass
+ */
+template <typename T>
+double calculate_singlet_mass(T value)
+{
+   return std::abs(value);
+}
+
+/**
+ * Calculates the mass of a singlet from a (possibly complex)
+ * numerical value by taking the magnitude of the value.  The phase is
+ * set to exp(i theta/2), where theta is the phase angle of the
+ * complex value.
+ *
+ * @param value numerical value
+ * @param[out] phase phase
+ * @return mass
+ */
+template <typename T>
+double calculate_singlet_mass(T value, std::complex<double>& phase)
+{
+   phase = std::polar(1., 0.5 * std::arg(std::complex<double>(value)));
+   return std::abs(value);
+}
+
 inline double ArcTan(double a)
 {
    return std::atan(a);
@@ -98,6 +128,12 @@ inline double Conj(double a)
 inline std::complex<double> Conj(const std::complex<double>& a)
 {
    return std::conj(a);
+}
+
+template <typename T>
+T Exp(T z)
+{
+   return std::exp(z);
 }
 
 inline double Tan(double a)
@@ -230,6 +266,11 @@ inline double MaxAbsValue(double x)
    return Abs(x);
 }
 
+inline double MaxAbsValue(const std::complex<double>& x)
+{
+   return Abs(x);
+}
+
 template <class Derived>
 double MaxAbsValue(const Eigen::MatrixBase<Derived>& x)
 {
@@ -247,7 +288,7 @@ inline int Sign(int x)
 }
 
 template <typename Base, typename Exponent>
-double Power(Base base, Exponent exp)
+Base Power(Base base, Exponent exp)
 {
    return std::pow(base, exp);
 }
@@ -279,9 +320,9 @@ Re(const Eigen::MatrixBase<Derived>& x)
    return x.real();
 }
 
-inline double Im(double x)
+inline double Im(double)
 {
-   return x;
+   return 0.;
 }
 
 inline double Im(const std::complex<double>& x)
@@ -306,6 +347,11 @@ void Sort(Eigen::Array<double, N, 1>& v)
    std::sort(v.data(), v.data() + v.size(), CompareAbs_d());
 }
 
+inline double SignedAbsSqrt(double a)
+{
+   return Sign(a) * AbsSqrt(a);
+}
+
 inline double Sqrt(double a)
 {
    return std::sqrt(a);
@@ -316,6 +362,24 @@ T Sqr(T a)
 {
    return a * a;
 }
+
+#define DEFINE_COMMUTATIVE_OPERATOR_COMPLEX_INT(op)                     \
+   template <typename T>                                                \
+   std::complex<T> operator op(const std::complex<T>& lhs, int rhs)     \
+   {                                                                    \
+      return lhs op static_cast<T>(rhs);                                \
+   }                                                                    \
+                                                                        \
+   template <typename T>                                                \
+   std::complex<T> operator op(int lhs, const std::complex<T>& rhs)     \
+   {                                                                    \
+      return static_cast<T>(lhs) op rhs;                                \
+   }
+
+DEFINE_COMMUTATIVE_OPERATOR_COMPLEX_INT(*)
+DEFINE_COMMUTATIVE_OPERATOR_COMPLEX_INT(/)
+DEFINE_COMMUTATIVE_OPERATOR_COMPLEX_INT(+)
+DEFINE_COMMUTATIVE_OPERATOR_COMPLEX_INT(-)
 
 /**
  * Fills lower triangle of symmetric matrix from values in upper
@@ -335,10 +399,14 @@ void Symmetrize(Eigen::MatrixBase<Derived>& m)
          m(i,k) = m(k,i);
 }
 
-#define UNITMATRIX(rows) Eigen::Matrix<double,rows,rows>::Identity()
-#define ZEROMATRIX(rows,cols) Eigen::Matrix<double,rows,cols>::Zero()
-#define ZEROVECTOR(rows) Eigen::Matrix<double,rows,1>::Zero()
-#define ZEROARRAY(rows) Eigen::Array<double,rows,1>::Zero()
+#define UNITMATRIX(rows)             Eigen::Matrix<double,rows,rows>::Identity()
+#define ZEROMATRIX(rows,cols)        Eigen::Matrix<double,rows,cols>::Zero()
+#define ZEROVECTOR(rows)             Eigen::Matrix<double,rows,1>::Zero()
+#define ZEROARRAY(rows)              Eigen::Array<double,rows,1>::Zero()
+#define UNITMATRIXCOMPLEX(rows)      Eigen::Matrix<std::complex<double>,rows,rows>::Identity()
+#define ZEROMATRIXCOMPLEX(rows,cols) Eigen::Matrix<std::complex<double>,rows,cols>::Zero()
+#define ZEROVECTORCOMPLEX(rows)      Eigen::Matrix<std::complex<double>,rows,1>::Zero()
+#define ZEROARRAYCOMPLEX(rows)       Eigen::Array<std::complex<double>,rows,1>::Zero()
 
 template<class Scalar, int M>
 Eigen::Matrix<Scalar,M,M> ToMatrix(const Eigen::Array<Scalar,M,1>& a)

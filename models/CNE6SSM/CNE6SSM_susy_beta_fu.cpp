@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:40
+// File generated at Wed 3 Jun 2015 23:42:47
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,10 +39,10 @@ Eigen::Matrix<double,3,2> CNE6SSM_susy_parameters::calc_beta_fu_one_loop(const S
 
    Eigen::Matrix<double,3,2> beta_fu;
 
-   beta_fu = oneOver16PiSqr*(fu*(tracefuAdjfu + 3*traceYuAdjYu + AbsSqr(
+   beta_fu = (oneOver16PiSqr*(fu*(tracefuAdjfu + 3*traceYuAdjYu + AbsSqr(
       Lambdax) - 0.6*Sqr(g1) - 1.9*Sqr(g1p) - 3*Sqr(g2)) + 2*(fd*fd.adjoint()*
       fu) + 3*(fu*fu.adjoint()*fu) + fu*hE.adjoint()*hE + fu*(Lambda12).adjoint
-      ()*Lambda12);
+      ()*Lambda12)).real();
 
 
    return beta_fu;
@@ -78,7 +78,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_susy_parameters::calc_beta_fu_two_loop(const S
 
    Eigen::Matrix<double,3,2> beta_fu;
 
-   beta_fu = twoLoop*(0.005*fu*(1188*Power(g1,4) + 3933*Power(g1p,4) +
+   beta_fu = (twoLoop*(0.005*fu*(1188*Power(g1,4) + 3933*Power(g1p,4) +
       3300*Power(g2,4) - 400*tracefdAdjfdfuAdjfu - 600*tracefuAdjfufuAdjfu -
       200*tracefuAdjhEhEAdjfu - 200*tracefuAdjLambda12Lambda12Adjfu - 600*
       tracegDAdjgDTpYuconjYu - 600*traceYdAdjYuYuAdjYd - 1800*
@@ -107,7 +107,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_susy_parameters::calc_beta_fu_two_loop(const S
       hE.adjoint()*hE) - 2*(fu*hE.adjoint()*Ye*Ye.adjoint()*hE) - 2*(fu*(
       Lambda12).adjoint()*Lambda12*fu.adjoint()*fu) - fu*(Lambda12).adjoint()*
       Lambda12*(Lambda12).adjoint()*Lambda12 - fu*(Lambda12).adjoint()*
-      fd.transpose()*fd.conjugate()*Lambda12);
+      fd.transpose()*fd.conjugate()*Lambda12)).real();
 
 
    return beta_fu;

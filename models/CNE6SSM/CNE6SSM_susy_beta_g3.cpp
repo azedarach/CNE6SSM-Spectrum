@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:42
+// File generated at Wed 3 Jun 2015 23:42:48
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,7 +37,7 @@ double CNE6SSM_susy_parameters::calc_beta_g3_one_loop(const Susy_traces& susy_tr
 
    double beta_g3;
 
-   beta_g3 = 0;
+   beta_g3 = Re(0);
 
 
    return beta_g3;
@@ -58,9 +58,9 @@ double CNE6SSM_susy_parameters::calc_beta_g3_two_loop(const Susy_traces& susy_tr
 
    double beta_g3;
 
-   beta_g3 = Power(g3,3)*twoLoop*(-4*tracegDAdjgD - 2*traceKappaAdjKappa
-      - 4*traceYdAdjYd - 4*traceYuAdjYu + 3*Sqr(g1) + 3*Sqr(g1p) + 9*Sqr(g2) +
-      48*Sqr(g3));
+   beta_g3 = Re(Power(g3,3)*twoLoop*(-4*tracegDAdjgD - 2*
+      traceKappaAdjKappa - 4*traceYdAdjYd - 4*traceYuAdjYu + 3*Sqr(g1) + 3*Sqr(
+      g1p) + 9*Sqr(g2) + 48*Sqr(g3)));
 
 
    return beta_g3;

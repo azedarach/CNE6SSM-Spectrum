@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:36
+// File generated at Wed 3 Jun 2015 23:42:44
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,9 +39,9 @@ double CNE6SSM_susy_parameters::calc_beta_SigmaL_one_loop(const Susy_traces& sus
 
    double beta_SigmaL;
 
-   beta_SigmaL = 0.2*oneOver16PiSqr*SigmaL*(15*tracegDAdjgD + 5*
+   beta_SigmaL = Re(0.2*oneOver16PiSqr*SigmaL*(15*tracegDAdjgD + 5*
       tracehEAdjhE + 10*AbsSqr(KappaPr) + 5*AbsSqr(Sigmax) + 20*AbsSqr(SigmaL)
-      - 3*Sqr(g1) - 2*Sqr(g1p) - 15*Sqr(g2));
+      - 3*Sqr(g1) - 2*Sqr(g1p) - 15*Sqr(g2)));
 
 
    return beta_SigmaL;
@@ -75,21 +75,22 @@ double CNE6SSM_susy_parameters::calc_beta_SigmaL_two_loop(const Susy_traces& sus
 
    double beta_SigmaL;
 
-   beta_SigmaL = -0.02*twoLoop*SigmaL*(-297*Power(g1,4) - 192*Power(g1p,4
-      ) - 825*Power(g2,4) + 50*tracefuAdjhEhEAdjfu + 450*tracegDAdjgDgDAdjgD +
-      150*tracegDAdjgDTpYdconjYd + 150*tracegDAdjgDTpYuconjYu + 150*
-      tracegDAdjKappaKappaAdjgD + 150*tracehEAdjhEhEAdjhE + 100*
-      tracehEAdjhEYeAdjYe + 50*tracehEAdjLambda12Lambda12AdjhE + 450*
-      tracegDAdjgD*AbsSqr(SigmaL) + 150*tracehEAdjhE*AbsSqr(SigmaL) + 200*
-      AbsSqr(KappaPr)*(AbsSqr(Sigmax) + 3*AbsSqr(SigmaL)) + 20*tracegDAdjgD*Sqr
-      (g1) - 60*tracehEAdjhE*Sqr(g1) - 60*AbsSqr(SigmaL)*Sqr(g1) - 45*
-      tracegDAdjgD*Sqr(g1p) - 15*tracehEAdjhE*Sqr(g1p) - 40*AbsSqr(SigmaL)*Sqr(
-      g1p) - 36*Sqr(g1)*Sqr(g1p) - 300*AbsSqr(SigmaL)*Sqr(g2) - 90*Sqr(g1)*Sqr(
-      g2) - 60*Sqr(g1p)*Sqr(g2) - 800*tracegDAdjgD*Sqr(g3) - Power(g1p,4)*Sqr(
-      QS) - 5*AbsSqr(Sigmax)*(-30*traceKappaAdjKappa - 20*
-      traceLambda12AdjLambda12 - 20*AbsSqr(Lambdax) - 20*AbsSqr(SigmaL) + Sqr(
-      g1p)*Sqr(QS)) + 400*Sqr(Conj(KappaPr))*Sqr(KappaPr) + 100*Sqr(Conj(Sigmax
-      ))*Sqr(Sigmax) + 500*Sqr(Conj(SigmaL))*Sqr(SigmaL));
+   beta_SigmaL = Re(-0.02*twoLoop*SigmaL*(-297*Power(g1,4) - 192*Power(
+      g1p,4) - 825*Power(g2,4) + 50*tracefuAdjhEhEAdjfu + 450*
+      tracegDAdjgDgDAdjgD + 150*tracegDAdjgDTpYdconjYd + 150*
+      tracegDAdjgDTpYuconjYu + 150*tracegDAdjKappaKappaAdjgD + 150*
+      tracehEAdjhEhEAdjhE + 100*tracehEAdjhEYeAdjYe + 50*
+      tracehEAdjLambda12Lambda12AdjhE + 450*tracegDAdjgD*AbsSqr(SigmaL) + 150*
+      tracehEAdjhE*AbsSqr(SigmaL) + 200*AbsSqr(KappaPr)*(AbsSqr(Sigmax) + 3*
+      AbsSqr(SigmaL)) + 20*tracegDAdjgD*Sqr(g1) - 60*tracehEAdjhE*Sqr(g1) - 60*
+      AbsSqr(SigmaL)*Sqr(g1) - 45*tracegDAdjgD*Sqr(g1p) - 15*tracehEAdjhE*Sqr(
+      g1p) - 40*AbsSqr(SigmaL)*Sqr(g1p) - 36*Sqr(g1)*Sqr(g1p) - 300*AbsSqr(
+      SigmaL)*Sqr(g2) - 90*Sqr(g1)*Sqr(g2) - 60*Sqr(g1p)*Sqr(g2) - 800*
+      tracegDAdjgD*Sqr(g3) - Power(g1p,4)*Sqr(QS) - 5*AbsSqr(Sigmax)*(-30*
+      traceKappaAdjKappa - 20*traceLambda12AdjLambda12 - 20*AbsSqr(Lambdax) -
+      20*AbsSqr(SigmaL) + Sqr(g1p)*Sqr(QS)) + 400*Sqr(Conj(KappaPr))*Sqr(
+      KappaPr) + 100*Sqr(Conj(Sigmax))*Sqr(Sigmax) + 500*Sqr(Conj(SigmaL))*Sqr(
+      SigmaL)));
 
 
    return beta_SigmaL;

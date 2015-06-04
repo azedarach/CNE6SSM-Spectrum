@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:16
+// File generated at Wed 3 Jun 2015 23:43:28
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,13 +39,13 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_me2_one_loop(const 
 
    Eigen::Matrix<double,3,3> beta_me2;
 
-   beta_me2 = oneOver16PiSqr*(4*mHp2*(hE*hE.adjoint()) + 4*mHd2*(Ye*
+   beta_me2 = (oneOver16PiSqr*(4*mHp2*(hE*hE.adjoint()) + 4*mHd2*(Ye*
       Ye.adjoint()) + 4*(ThE*(ThE).adjoint()) + 4*(TYe*(TYe).adjoint()) + 4*(hE
       *mH1I2*hE.adjoint()) + 2*(hE*hE.adjoint()*me2) + 2*(me2*hE*hE.adjoint())
       + 2*(me2*Ye*Ye.adjoint()) + 4*(Ye*ml2*Ye.adjoint()) + 2*(Ye*Ye.adjoint()*
       me2) + 1.5491933384829668*g1*Tr11*UNITMATRIX(3) + 0.31622776601683794*g1p
       *Tr14*UNITMATRIX(3) - 4.8*AbsSqr(MassB)*Sqr(g1)*UNITMATRIX(3) - 0.2*
-      AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(3));
+      AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(3))).real();
 
 
    return beta_me2;
@@ -99,7 +99,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_me2_two_loop(const 
 
    Eigen::Matrix<double,3,3> beta_me2;
 
-   beta_me2 = twoLoop*(-12*traceconjTgDTpTgD*(hE*hE.adjoint()) - 4*
+   beta_me2 = (twoLoop*(-12*traceconjTgDTpTgD*(hE*hE.adjoint()) - 4*
       traceconjThETpThE*(hE*hE.adjoint()) - 24*mHp2*tracegDAdjgD*(hE*hE.adjoint
       ()) - 12*tracegDAdjgDconjmq2*(hE*hE.adjoint()) - 12*
       tracegDconjmDxbar2AdjgD*(hE*hE.adjoint()) - 8*mHp2*tracehEAdjhE*(hE*
@@ -198,7 +198,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_me2_two_loop(const 
       - (2*MassB + MassBp)*Sqr(g1p))*UNITMATRIX(3)) + 0.03*Conj(MassBp)*Sqr(
       g1p)*(80*(2*MassBp*(hE*hE.adjoint()) + 2*MassBp*(Ye*Ye.adjoint()) - ThE*
       hE.adjoint() - TYe*Ye.adjoint()) + (-8*(MassB + 2*MassBp)*Sqr(g1) +
-      MassBp*Sqr(g1p)*(189 + Sqr(QS)))*UNITMATRIX(3)));
+      MassBp*Sqr(g1p)*(189 + Sqr(QS)))*UNITMATRIX(3)))).real();
 
 
    return beta_me2;

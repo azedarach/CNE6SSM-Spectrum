@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:55
+// File generated at Wed 3 Jun 2015 23:43:11
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -41,14 +41,14 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfu_one_loop(const 
 
    Eigen::Matrix<double,3,2> beta_Tfu;
 
-   beta_Tfu = oneOver16PiSqr*(tracefuAdjfu*Tfu + 3*traceYuAdjYu*Tfu +
+   beta_Tfu = (oneOver16PiSqr*(tracefuAdjfu*Tfu + 3*traceYuAdjYu*Tfu +
       AbsSqr(Lambdax)*Tfu - 0.6*Sqr(g1)*Tfu - 1.9*Sqr(g1p)*Tfu - 3*Sqr(g2)*Tfu
       + fu*(2*traceAdjfuTfu + 6*traceAdjYuTYu + 1.2*MassB*Sqr(g1) + 3.8*MassBp*
       Sqr(g1p) + 6*MassWB*Sqr(g2) + 2*Conj(Lambdax)*TLambdax) + 2*(fd*
       fd.adjoint()*Tfu) + 4*(fu*fu.adjoint()*Tfu) + 2*(fu*hE.adjoint()*ThE) + 2
       *(fu*(Lambda12).adjoint()*TLambda12) + 4*(Tfd*fd.adjoint()*fu) + 5*(Tfu*
       fu.adjoint()*fu) + Tfu*hE.adjoint()*hE + Tfu*(Lambda12).adjoint()*
-      Lambda12);
+      Lambda12)).real();
 
 
    return beta_Tfu;
@@ -110,7 +110,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfu_two_loop(const 
 
    Eigen::Matrix<double,3,2> beta_Tfu;
 
-   beta_Tfu = twoLoop*(5.94*Power(g1,4)*Tfu + 19.665*Power(g1p,4)*Tfu +
+   beta_Tfu = (twoLoop*(5.94*Power(g1,4)*Tfu + 19.665*Power(g1p,4)*Tfu +
       16.5*Power(g2,4)*Tfu - 2*tracefdAdjfdfuAdjfu*Tfu - 3*tracefuAdjfufuAdjfu*
       Tfu - tracefuAdjhEhEAdjfu*Tfu - tracefuAdjLambda12Lambda12Adjfu*Tfu - 3*
       tracegDAdjgDTpYuconjYu*Tfu - 3*traceYdAdjYuYuAdjYd*Tfu - 9*
@@ -207,7 +207,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfu_two_loop(const 
       ) - 2*(Tfu*hE.adjoint()*hE*hE.adjoint()*hE) - 2*(Tfu*hE.adjoint()*Ye*
       Ye.adjoint()*hE) - 4*(Tfu*(Lambda12).adjoint()*Lambda12*fu.adjoint()*fu)
       - Tfu*(Lambda12).adjoint()*Lambda12*(Lambda12).adjoint()*Lambda12 - Tfu*(
-      Lambda12).adjoint()*fd.transpose()*fd.conjugate()*Lambda12);
+      Lambda12).adjoint()*fd.transpose()*fd.conjugate()*Lambda12)).real();
 
 
    return beta_Tfu;

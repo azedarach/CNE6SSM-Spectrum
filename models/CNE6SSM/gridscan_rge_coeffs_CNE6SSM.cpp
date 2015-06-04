@@ -39,7 +39,7 @@ namespace flexiblesusy {
       if (is_zero(input.SignLambdax))
          input.SignLambdax = 1;
 
-      input.ssumInput = 40000.0; // GeV
+      input.sInput = 40000.0; // GeV
       input.QSInput = 5.;
       
       input.hEInput(0,0) = 0.;
@@ -727,8 +727,8 @@ int main(int argc, const char* argv[])
              << std::left << std::setw(width) << "TanBeta" << ' '
              << std::left << std::setw(width) << "SignLambdax" << ' '
              << std::left << std::setw(width) << "Azero/GeV" << ' '
-             << std::left << std::setw(width) << "ssumInput/GeV" << ' '
-             << std::left << std::setw(width) << "QS" << ' '
+             << std::left << std::setw(width) << "sInput/GeV" << ' '
+             << std::left << std::setw(width) << "QSInput" << ' '
              << std::left << std::setw(width) << "hEInput(0,0)" << ' '
              << std::left << std::setw(width) << "hEInput(1,0)" << ' '
              << std::left << std::setw(width) << "hEInput(2,0)" << ' '
@@ -1018,7 +1018,7 @@ int main(int argc, const char* argv[])
                 << std::left << std::setw(width) << input.TanBeta << ' '
                 << std::left << std::setw(width) << input.SignLambdax << ' '
                 << std::left << std::setw(width) << input.Azero << ' '
-                << std::left << std::setw(width) << input.ssumInput << ' '
+                << std::left << std::setw(width) << input.sInput << ' '
                 << std::left << std::setw(width) << input.QSInput << ' '
                 << std::left << std::setw(width) << input.hEInput(0,0) << ' '
                 << std::left << std::setw(width) << input.hEInput(1,0) << ' '

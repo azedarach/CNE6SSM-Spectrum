@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:40
+// File generated at Wed 3 Jun 2015 23:42:59
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -41,13 +41,13 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_ThE_one_loop(const 
 
    Eigen::Matrix<double,3,2> beta_ThE;
 
-   beta_ThE = oneOver16PiSqr*(3*tracegDAdjgD*ThE + tracehEAdjhE*ThE +
+   beta_ThE = (oneOver16PiSqr*(3*tracegDAdjgD*ThE + tracehEAdjhE*ThE +
       AbsSqr(SigmaL)*ThE - 1.8*Sqr(g1)*ThE - 0.7*Sqr(g1p)*ThE - 3*Sqr(g2)*ThE +
       hE*(6*traceAdjgDTgD + 2*traceAdjhEThE + 3.6*MassB*Sqr(g1) + 1.4*MassBp*
       Sqr(g1p) + 6*MassWB*Sqr(g2) + 2*Conj(SigmaL)*TSigmaL) + 2*(hE*fu.adjoint(
       )*Tfu) + 4*(hE*hE.adjoint()*ThE) + 2*(hE*(Lambda12).adjoint()*TLambda12)
       + 2*(Ye*Ye.adjoint()*ThE) + ThE*fu.adjoint()*fu + 5*(ThE*hE.adjoint()*hE)
-      + ThE*(Lambda12).adjoint()*Lambda12 + 4*(TYe*Ye.adjoint()*hE));
+      + ThE*(Lambda12).adjoint()*Lambda12 + 4*(TYe*Ye.adjoint()*hE))).real();
 
 
    return beta_ThE;
@@ -118,7 +118,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_ThE_two_loop(const 
 
    Eigen::Matrix<double,3,2> beta_ThE;
 
-   beta_ThE = twoLoop*(18.9*Power(g1,4)*ThE + 6.825*Power(g1p,4)*ThE +
+   beta_ThE = (twoLoop*(18.9*Power(g1,4)*ThE + 6.825*Power(g1p,4)*ThE +
       16.5*Power(g2,4)*ThE - tracefuAdjhEhEAdjfu*ThE - 9*tracegDAdjgDgDAdjgD*
       ThE - 3*tracegDAdjgDTpYdconjYd*ThE - 3*tracegDAdjgDTpYuconjYu*ThE - 3*
       tracegDAdjKappaKappaAdjgD*ThE - 3*tracehEAdjhEhEAdjhE*ThE - 2*
@@ -207,7 +207,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_ThE_two_loop(const 
       hE.adjoint()*Ye*Ye.adjoint()*hE) - 4*(ThE*(Lambda12).adjoint()*Lambda12*
       hE.adjoint()*hE) - ThE*(Lambda12).adjoint()*Lambda12*(Lambda12).adjoint()
       *Lambda12 - ThE*(Lambda12).adjoint()*fd.transpose()*fd.conjugate()*
-      Lambda12 - 4*(TYe*Ye.adjoint()*Ye*Ye.adjoint()*hE));
+      Lambda12 - 4*(TYe*Ye.adjoint()*Ye*Ye.adjoint()*hE))).real();
 
 
    return beta_ThE;

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:44
+// File generated at Wed 3 Jun 2015 23:42:50
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,8 +37,8 @@ double CNE6SSM_susy_parameters::calc_beta_vphi_one_loop(const Susy_traces& susy_
 
    double beta_vphi;
 
-   beta_vphi = -(oneOver16PiSqr*vphi*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax)
-      + 2*AbsSqr(SigmaL)));
+   beta_vphi = Re(-(oneOver16PiSqr*vphi*(2*AbsSqr(KappaPr) + AbsSqr(
+      Sigmax) + 2*AbsSqr(SigmaL))));
 
 
    return beta_vphi;
@@ -60,12 +60,12 @@ double CNE6SSM_susy_parameters::calc_beta_vphi_two_loop(const Susy_traces& susy_
 
    double beta_vphi;
 
-   beta_vphi = 0.1*twoLoop*vphi*(40*AbsSqr(KappaPr)*(AbsSqr(Sigmax) + 2*
-      AbsSqr(SigmaL)) + 4*AbsSqr(SigmaL)*(15*tracegDAdjgD + 5*tracehEAdjhE + 10
-      *AbsSqr(SigmaL) - 3*Sqr(g1) - 2*Sqr(g1p) - 15*Sqr(g2)) + AbsSqr(Sigmax)*(
-      30*traceKappaAdjKappa + 20*traceLambda12AdjLambda12 + 20*AbsSqr(Lambdax)
-      - Sqr(g1p)*Sqr(QS)) + 80*Sqr(Conj(KappaPr))*Sqr(KappaPr) + 20*Sqr(Conj(
-      Sigmax))*Sqr(Sigmax));
+   beta_vphi = Re(0.1*twoLoop*vphi*(40*AbsSqr(KappaPr)*(AbsSqr(Sigmax) +
+      2*AbsSqr(SigmaL)) + 4*AbsSqr(SigmaL)*(15*tracegDAdjgD + 5*tracehEAdjhE +
+      10*AbsSqr(SigmaL) - 3*Sqr(g1) - 2*Sqr(g1p) - 15*Sqr(g2)) + AbsSqr(Sigmax)
+      *(30*traceKappaAdjKappa + 20*traceLambda12AdjLambda12 + 20*AbsSqr(Lambdax
+      ) - Sqr(g1p)*Sqr(QS)) + 80*Sqr(Conj(KappaPr))*Sqr(KappaPr) + 20*Sqr(Conj(
+      Sigmax))*Sqr(Sigmax)));
 
 
    return beta_vphi;

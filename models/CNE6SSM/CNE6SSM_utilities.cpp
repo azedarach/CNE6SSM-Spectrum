@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:38
+// File generated at Wed 3 Jun 2015 23:47:48
 
 #include "CNE6SSM_utilities.hpp"
 #include "logger.hpp"
@@ -26,6 +26,9 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+
+#define PHYSICAL(p) model.get_physical().p
+#define MODELPARAMETER(p) model.get_##p()
 
 namespace flexiblesusy {
 

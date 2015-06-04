@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:09
+// File generated at Wed 3 Jun 2015 23:43:22
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -51,14 +51,14 @@ double CNE6SSM_soft_parameters::calc_beta_mHd2_one_loop(const Soft_traces& soft_
 
    double beta_mHd2;
 
-   beta_mHd2 = oneOver16PiSqr*(-0.7745966692414834*g1*Tr11 -
+   beta_mHd2 = Re(oneOver16PiSqr*(-0.7745966692414834*g1*Tr11 -
       0.9486832980505138*g1p*Tr14 + 2*traceconjTfdTpTfd + 6*traceconjTYdTpTYd +
       2*traceconjTYeTpTYe + 2*mHd2*tracefdAdjfd + 2*tracefdAdjfdconjmSI2 + 2*
       tracefdmH2I2Adjfd + 6*tracemd2YdAdjYd + 2*traceme2YeAdjYe + 2*
       traceml2AdjYeYe + 6*tracemq2AdjYdYd + 6*mHd2*traceYdAdjYd + 2*mHd2*
       traceYeAdjYe + 2*mHd2*AbsSqr(Lambdax) + 2*mHu2*AbsSqr(Lambdax) + 2*ms2*
       AbsSqr(Lambdax) + 2*AbsSqr(TLambdax) - 1.2*AbsSqr(MassB)*Sqr(g1) - 1.8*
-      AbsSqr(MassBp)*Sqr(g1p) - 6*AbsSqr(MassWB)*Sqr(g2));
+      AbsSqr(MassBp)*Sqr(g1p) - 6*AbsSqr(MassWB)*Sqr(g2)));
 
 
    return beta_mHd2;
@@ -250,10 +250,10 @@ double CNE6SSM_soft_parameters::calc_beta_mHd2_two_loop(const Soft_traces& soft_
 
    double beta_mHd2;
 
-   beta_mHd2 = twoLoop*(6*Power(g2,4)*Tr22 + 1.4696938456699067*g1*g1p*
-      Tr2U114 + 1.4696938456699067*g1*g1p*Tr2U141 - 3.0983866769659336*g1*Tr31
-      - 3.794733192202055*g1p*Tr34 - 2*traceAdjfdTfdconjTLambda12TpLambda12 - 6
-      *traceAdjgDTpYdconjTYdTgD - 2*traceAdjLambda12TpfdconjTfdTLambda12 - 6*
+   beta_mHd2 = Re(twoLoop*(6*Power(g2,4)*Tr22 + 1.4696938456699067*g1*g1p
+      *Tr2U114 + 1.4696938456699067*g1*g1p*Tr2U141 - 3.0983866769659336*g1*Tr31
+      - 3.794733192202055*g1p*Tr34 - 2*traceAdjfdTfdconjTLambda12TpLambda12 -
+      6*traceAdjgDTpYdconjTYdTgD - 2*traceAdjLambda12TpfdconjTfdTLambda12 - 6*
       traceAdjYdTYdconjTgDTpgD - 12*tracefdAdjfdconjmSI2fdAdjfd - 4*
       tracefdAdjfdconjmSI2fuAdjfu - 12*mHd2*tracefdAdjfdfdAdjfd - 6*
       tracefdAdjfdfdmH2I2Adjfd - 4*mHd2*tracefdAdjfdfuAdjfu - 4*mHu2*
@@ -349,7 +349,7 @@ double CNE6SSM_soft_parameters::calc_beta_mHd2_two_loop(const Soft_traces& soft_
       - 6*traceconjTKappaTpKappa*Conj(Lambdax)*TLambdax - 4*
       traceconjTLambda12TpLambda12*Conj(Lambdax)*TLambdax - 6*traceconjTYuTpYu*
       Conj(Lambdax)*TLambdax - 2*Conj(Lambdax)*Conj(TSigmax)*Sigmax*TLambdax -
-      2*Conj(Sigmax)*Conj(TLambdax)*Lambdax*TSigmax);
+      2*Conj(Sigmax)*Conj(TLambdax)*Lambdax*TSigmax));
 
 
    return beta_mHd2;

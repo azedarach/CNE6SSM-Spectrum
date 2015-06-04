@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:36
+// File generated at Wed 3 Jun 2015 23:42:44
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,8 +37,8 @@ double CNE6SSM_susy_parameters::calc_beta_KappaPr_one_loop(const Susy_traces& su
 
    double beta_KappaPr;
 
-   beta_KappaPr = 3*oneOver16PiSqr*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax) +
-      2*AbsSqr(SigmaL))*KappaPr;
+   beta_KappaPr = Re(3*oneOver16PiSqr*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax)
+      + 2*AbsSqr(SigmaL))*KappaPr);
 
 
    return beta_KappaPr;
@@ -60,12 +60,12 @@ double CNE6SSM_susy_parameters::calc_beta_KappaPr_two_loop(const Susy_traces& su
 
    double beta_KappaPr;
 
-   beta_KappaPr = -0.3*twoLoop*KappaPr*(40*AbsSqr(KappaPr)*(AbsSqr(Sigmax
-      ) + 2*AbsSqr(SigmaL)) + 4*AbsSqr(SigmaL)*(15*tracegDAdjgD + 5*
+   beta_KappaPr = Re(-0.3*twoLoop*KappaPr*(40*AbsSqr(KappaPr)*(AbsSqr(
+      Sigmax) + 2*AbsSqr(SigmaL)) + 4*AbsSqr(SigmaL)*(15*tracegDAdjgD + 5*
       tracehEAdjhE + 10*AbsSqr(SigmaL) - 3*Sqr(g1) - 2*Sqr(g1p) - 15*Sqr(g2)) +
       AbsSqr(Sigmax)*(30*traceKappaAdjKappa + 20*traceLambda12AdjLambda12 + 20
       *AbsSqr(Lambdax) - Sqr(g1p)*Sqr(QS)) + 80*Sqr(Conj(KappaPr))*Sqr(KappaPr)
-      + 20*Sqr(Conj(Sigmax))*Sqr(Sigmax));
+      + 20*Sqr(Conj(Sigmax))*Sqr(Sigmax)));
 
 
    return beta_KappaPr;

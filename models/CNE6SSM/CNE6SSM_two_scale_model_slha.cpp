@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:41
+// File generated at Wed 3 Jun 2015 23:47:51
 
 /**
  * @file CNE6SSM_two_scale_model_slha.cpp
@@ -72,29 +72,13 @@ void CLASSNAME::calculate_spectrum()
 void CLASSNAME::convert_to_slha()
 {
    physical_slha = get_physical();
-
-   convert_to_slha(physical_slha);
+   physical_slha.convert_to_slha();
 
    convert_yukawa_couplings_to_slha();
    calculate_ckm_matrix();
    calculate_pmns_matrix();
    convert_trilinear_couplings_to_slha();
    convert_soft_squared_masses_to_slha();
-}
-
-/**
- * Convert masses and mixing matrices to SLHA convention: Fermion
- * mixing matrices are always real and fermion masses are allowed to
- * be negative.
- *
- * @param physical struct of physical parameters to convert
- */
-void CLASSNAME::convert_to_slha(CNE6SSM_physical& physical)
-{
-   SLHA_io::convert_symmetric_fermion_mixings_to_slha(LOCALPHYSICAL(MChi), LOCALPHYSICAL(ZN));
-   SLHA_io::convert_symmetric_fermion_mixings_to_slha(LOCALPHYSICAL(MChiI), LOCALPHYSICAL(ZNI));
-   SLHA_io::convert_symmetric_fermion_mixings_to_slha(LOCALPHYSICAL(MChiP), LOCALPHYSICAL(ZNp));
-
 }
 
 void CLASSNAME::calculate_ckm_matrix()
@@ -133,7 +117,7 @@ void CLASSNAME::convert_trilinear_couplings_to_slha()
 }
 
 /**
- * Convert soft squared masses to SLHA convention
+ * Convert soft squared couplings to SLHA convention
  */
 void CLASSNAME::convert_soft_squared_masses_to_slha()
 {

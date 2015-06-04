@@ -16,15 +16,50 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Wed 3 Jun 2015 23:47:49
+#ifndef NUMERICS_HPP
+#define NUMERICS_HPP
 
-#ifndef CNE6SSM_HIGH_SCALE_CONSTRAINT_H
-#define CNE6SSM_HIGH_SCALE_CONSTRAINT_H
+#include <cmath>
+#include <limits>
 
 namespace flexiblesusy {
 
-template <class T>
-class CNE6SSM_high_scale_constraint;
+template <typename T>
+bool is_zero(T a, T prec = std::numeric_limits<T>::epsilon())
+{
+   return std::fabs(a) < prec;
+}
+
+template <typename T>
+bool is_equal(T a, T b, T prec = std::numeric_limits<T>::epsilon())
+{
+   return is_zero(a - b, prec);
+}
+
+template <typename T>
+bool is_equal_rel(T a, T b, T prec = std::numeric_limits<T>::epsilon())
+{
+   if (is_equal(a, b, std::numeric_limits<T>::epsilon()))
+      return true;
+
+   if (std::fabs(a) < std::numeric_limits<T>::epsilon())
+      return is_equal(a, b, prec);
+
+   return std::fabs((a - b)/a) < prec;
+}
+
+bool is_finite(const double*, std::size_t length);
+
+template <std::size_t N>
+bool is_finite(const double v[N])
+{
+   bool is_finite = true;
+
+   for (std::size_t i = 0; i < N; i++)
+      is_finite = is_finite && std::isfinite(v[i]);
+
+   return is_finite;
+}
 
 } // namespace flexiblesusy
 

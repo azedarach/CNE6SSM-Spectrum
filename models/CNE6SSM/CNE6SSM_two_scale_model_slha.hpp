@@ -21,7 +21,7 @@
  * @brief contains wrapper class for model class in SLHA convention
  */
 
-// File generated at Sun 19 Apr 2015 20:31:41
+// File generated at Wed 3 Jun 2015 23:47:51
 
 #ifndef CNE6SSM_TWO_SCALE_SLHA_H
 #define CNE6SSM_TWO_SCALE_SLHA_H
@@ -49,7 +49,6 @@ public:
 
    virtual void clear();
    void convert_to_slha(); ///< converts pole masses and couplings to SLHA convention
-   static void convert_to_slha(CNE6SSM_physical&); ///< converts pole masses to SLHA convention
    const Eigen::Matrix<std::complex<double>,3,3>& get_ckm_matrix() const { return ckm; }
    const Eigen::Matrix<std::complex<double>,3,3>& get_pmns_matrix() const { return pmns; }
    const CNE6SSM_physical& get_physical_slha() const; ///< returns pole masses to SLHA convention

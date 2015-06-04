@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:38
+// File generated at Wed 3 Jun 2015 23:42:46
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -40,11 +40,11 @@ Eigen::Matrix<double,2,2> CNE6SSM_susy_parameters::calc_beta_Lambda12_one_loop(c
 
    Eigen::Matrix<double,2,2> beta_Lambda12;
 
-   beta_Lambda12 = oneOver16PiSqr*(Lambda12*(3*traceKappaAdjKappa + 2*
+   beta_Lambda12 = (oneOver16PiSqr*(Lambda12*(3*traceKappaAdjKappa + 2*
       traceLambda12AdjLambda12 + 2*AbsSqr(Lambdax) + AbsSqr(Sigmax) - 0.6*Sqr(
       g1) - 0.65*Sqr(g1p) - 3*Sqr(g2) - 0.05*Sqr(g1p)*Sqr(QS)) + Lambda12*
       fu.adjoint()*fu + Lambda12*hE.adjoint()*hE + 2*(Lambda12*(Lambda12)
-      .adjoint()*Lambda12) + fd.transpose()*fd.conjugate()*Lambda12);
+      .adjoint()*Lambda12) + fd.transpose()*fd.conjugate()*Lambda12)).real();
 
 
    return beta_Lambda12;
@@ -83,7 +83,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_susy_parameters::calc_beta_Lambda12_two_loop(c
 
    Eigen::Matrix<double,2,2> beta_Lambda12;
 
-   beta_Lambda12 = twoLoop*(0.0025*Lambda12*(2376*Power(g1,4) + 2541*
+   beta_Lambda12 = (twoLoop*(0.0025*Lambda12*(2376*Power(g1,4) + 2541*
       Power(g1p,4) + 6600*Power(g2,4) + 2*Power(g1p,4)*Power(QS,4) - 800*
       tracefuAdjLambda12Lambda12Adjfu - 2400*tracegDAdjKappaKappaAdjgD - 800*
       tracehEAdjLambda12Lambda12AdjhE - 2400*traceKappaAdjKappaKappaAdjKappa -
@@ -120,7 +120,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_susy_parameters::calc_beta_Lambda12_two_loop(c
       Lambda12*(Lambda12).adjoint()*fd.transpose()*fd.conjugate()*Lambda12 - 2*
       (fd.transpose()*fd.conjugate()*fd.transpose()*fd.conjugate()*Lambda12) -
       2*(fd.transpose()*fu.conjugate()*fu.transpose()*fd.conjugate()*Lambda12))
-      ;
+      ).real();
 
 
    return beta_Lambda12;

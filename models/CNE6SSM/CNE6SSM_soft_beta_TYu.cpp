@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:59
+// File generated at Wed 3 Jun 2015 23:43:14
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -41,14 +41,14 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYu_one_loop(const 
 
    Eigen::Matrix<double,3,3> beta_TYu;
 
-   beta_TYu = oneOver16PiSqr*(tracefuAdjfu*TYu + 3*traceYuAdjYu*TYu +
+   beta_TYu = (oneOver16PiSqr*(tracefuAdjfu*TYu + 3*traceYuAdjYu*TYu +
       AbsSqr(Lambdax)*TYu - 0.8666666666666667*Sqr(g1)*TYu - 0.3*Sqr(g1p)*TYu -
       3*Sqr(g2)*TYu - 5.333333333333333*Sqr(g3)*TYu + Yu*(2*traceAdjfuTfu + 6*
       traceAdjYuTYu + 1.7333333333333334*MassB*Sqr(g1) + 0.6*MassBp*Sqr(g1p) +
       6*MassWB*Sqr(g2) + 10.666666666666666*MassG*Sqr(g3) + 2*Conj(Lambdax)*
       TLambdax) + 2*(Yu*Yd.adjoint()*TYd) + 4*(Yu*Yu.adjoint()*TYu) + 2*(Yu*
       gD.conjugate()*(TgD).transpose()) + TYu*Yd.adjoint()*Yd + 5*(TYu*
-      Yu.adjoint()*Yu) + TYu*gD.conjugate()*gD.transpose());
+      Yu.adjoint()*Yu) + TYu*gD.conjugate()*gD.transpose())).real();
 
 
    return beta_TYu;
@@ -110,7 +110,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYu_two_loop(const 
 
    Eigen::Matrix<double,3,3> beta_TYu;
 
-   beta_TYu = twoLoop*(8.695555555555556*Power(g1,4)*TYu + 2.865*Power(
+   beta_TYu = (twoLoop*(8.695555555555556*Power(g1,4)*TYu + 2.865*Power(
       g1p,4)*TYu + 16.5*Power(g2,4)*TYu + 14.222222222222221*Power(g3,4)*TYu -
       2*tracefdAdjfdfuAdjfu*TYu - 3*tracefuAdjfufuAdjfu*TYu -
       tracefuAdjhEhEAdjfu*TYu - tracefuAdjLambda12Lambda12Adjfu*TYu - 3*
@@ -192,7 +192,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYu_two_loop(const 
       Yu.adjoint()*Yu) - 6*(TYu*Yu.adjoint()*Yu*Yu.adjoint()*Yu) - 4*(TYu*
       gD.conjugate()*gD.transpose()*Yu.adjoint()*Yu) - 2*(TYu*gD.conjugate()*
       gD.transpose()*gD.conjugate()*gD.transpose()) - TYu*gD.conjugate()*(Kappa
-      ).transpose()*Kappa.conjugate()*gD.transpose());
+      ).transpose()*Kappa.conjugate()*gD.transpose())).real();
 
 
    return beta_TYu;

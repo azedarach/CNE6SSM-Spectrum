@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:33
+// File generated at Wed 3 Jun 2015 23:43:42
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,10 +39,10 @@ double CNE6SSM_soft_parameters::calc_beta_mHpbar2_one_loop(const Soft_traces& so
 
    double beta_mHpbar2;
 
-   beta_mHpbar2 = oneOver16PiSqr*(0.7745966692414834*g1*Tr11 -
+   beta_mHpbar2 = Re(oneOver16PiSqr*(0.7745966692414834*g1*Tr11 -
       0.6324555320336759*g1p*Tr14 + 2*mHp2*AbsSqr(SigmaL) + 2*mHpbar2*AbsSqr(
       SigmaL) + 2*mphi2*AbsSqr(SigmaL) + 2*AbsSqr(TSigmaL) - 1.2*AbsSqr(MassB)*
-      Sqr(g1) - 0.8*AbsSqr(MassBp)*Sqr(g1p) - 6*AbsSqr(MassWB)*Sqr(g2));
+      Sqr(g1) - 0.8*AbsSqr(MassBp)*Sqr(g1p) - 6*AbsSqr(MassWB)*Sqr(g2)));
 
 
    return beta_mHpbar2;
@@ -79,9 +79,9 @@ double CNE6SSM_soft_parameters::calc_beta_mHpbar2_two_loop(const Soft_traces& so
 
    double beta_mHpbar2;
 
-   beta_mHpbar2 = twoLoop*(6*Power(g2,4)*Tr22 - 0.9797958971132712*g1*g1p
-      *Tr2U114 - 0.9797958971132712*g1*g1p*Tr2U141 + 3.0983866769659336*g1*Tr31
-      - 2.5298221281347035*g1p*Tr34 + 87*Power(g2,4)*AbsSqr(MassWB) - 6*
+   beta_mHpbar2 = Re(twoLoop*(6*Power(g2,4)*Tr22 - 0.9797958971132712*g1*
+      g1p*Tr2U114 - 0.9797958971132712*g1*g1p*Tr2U141 + 3.0983866769659336*g1*
+      Tr31 - 2.5298221281347035*g1p*Tr34 + 87*Power(g2,4)*AbsSqr(MassWB) - 6*
       traceconjTgDTpTgD*AbsSqr(SigmaL) - 2*traceconjThETpThE*AbsSqr(SigmaL) -
       12*mHp2*tracegDAdjgD*AbsSqr(SigmaL) - 6*mHpbar2*tracegDAdjgD*AbsSqr(
       SigmaL) - 6*mphi2*tracegDAdjgD*AbsSqr(SigmaL) - 6*tracegDAdjgDconjmq2*
@@ -109,7 +109,7 @@ double CNE6SSM_soft_parameters::calc_beta_mHpbar2_two_loop(const Soft_traces& so
       - 2*Conj(Sigmax)*Conj(TSigmaL)*SigmaL*TSigmax - 6*traceconjTgDTpgD*Conj(
       SigmaL)*TSigmaL - 2*traceconjThETphE*Conj(SigmaL)*TSigmaL - 4*Conj(SigmaL
       )*Conj(TKappaPr)*KappaPr*TSigmaL - 2*Conj(SigmaL)*Conj(TSigmax)*Sigmax*
-      TSigmaL);
+      TSigmaL));
 
 
    return beta_mHpbar2;

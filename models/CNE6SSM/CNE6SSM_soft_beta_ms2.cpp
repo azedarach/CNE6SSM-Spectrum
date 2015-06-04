@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:20
+// File generated at Wed 3 Jun 2015 23:43:31
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -53,14 +53,14 @@ double CNE6SSM_soft_parameters::calc_beta_ms2_one_loop(const Soft_traces& soft_t
 
    double beta_ms2;
 
-   beta_ms2 = oneOver16PiSqr*(0.31622776601683794*g1p*QS*Tr14 + 6*
+   beta_ms2 = Re(oneOver16PiSqr*(0.31622776601683794*g1p*QS*Tr14 + 6*
       traceconjTKappaTpTKappa + 4*traceconjTLambda12TpTLambda12 + 6*ms2*
       traceKappaAdjKappa + 6*traceKappaAdjKappaconjmDx2 + 6*
       traceKappaconjmDxbar2AdjKappa + 4*ms2*traceLambda12AdjLambda12 + 4*
       traceLambda12AdjLambda12conjmH2I2 + 4*tracemH1I2AdjLambda12Lambda12 + 4*(
       mHd2 + mHu2 + ms2)*AbsSqr(Lambdax) + 2*mphi2*AbsSqr(Sigmax) + 2*ms2*
       AbsSqr(Sigmax) + 2*msbar2*AbsSqr(Sigmax) + 4*AbsSqr(TLambdax) + 2*AbsSqr(
-      TSigmax) - 0.2*AbsSqr(MassBp)*Sqr(g1p)*Sqr(QS));
+      TSigmax) - 0.2*AbsSqr(MassBp)*Sqr(g1p)*Sqr(QS)));
 
 
    return beta_ms2;
@@ -229,7 +229,7 @@ double CNE6SSM_soft_parameters::calc_beta_ms2_two_loop(const Soft_traces& soft_t
 
    double beta_ms2;
 
-   beta_ms2 = twoLoop*(1.2649110640673518*g1p*QS*Tr34 - 4*
+   beta_ms2 = Re(twoLoop*(1.2649110640673518*g1p*QS*Tr34 - 4*
       traceAdjfdTfdconjTLambda12TpLambda12 - 4*
       traceAdjLambda12TpfdconjTfdTLambda12 - 4*
       tracefdconjLambda12TpLambda12AdjfdconjmSI2 - 4*
@@ -357,7 +357,7 @@ double CNE6SSM_soft_parameters::calc_beta_ms2_two_loop(const Soft_traces& soft_t
       TLambdax - 12*traceconjTYdTpYd*TLambdax - 4*traceconjTYeTpYe*TLambdax -
       12*traceconjTYuTpYu*TLambdax) - 4*Conj(Sigmax)*Conj(TKappaPr)*KappaPr*
       TSigmax - 4*Conj(Sigmax)*Conj(TSigmaL)*SigmaL*TSigmax - 4*Conj(SigmaL)*
-      Conj(TSigmax)*Sigmax*TSigmaL);
+      Conj(TSigmax)*Sigmax*TSigmaL));
 
 
    return beta_ms2;

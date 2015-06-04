@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:35
+// File generated at Wed 3 Jun 2015 23:43:44
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,7 +37,7 @@ double CNE6SSM_soft_parameters::calc_beta_MassBp_one_loop(const Soft_traces& sof
 
    double beta_MassBp;
 
-   beta_MassBp = 0.1*MassBp*oneOver16PiSqr*Sqr(g1p)*(188 + Sqr(QS));
+   beta_MassBp = Re(0.1*MassBp*oneOver16PiSqr*Sqr(g1p)*(188 + Sqr(QS)));
 
 
    return beta_MassBp;
@@ -74,7 +74,7 @@ double CNE6SSM_soft_parameters::calc_beta_MassBp_two_loop(const Soft_traces& sof
 
    double beta_MassBp;
 
-   beta_MassBp = 0.02*twoLoop*Sqr(g1p)*(380*traceAdjfdTfd + 380*
+   beta_MassBp = Re(0.02*twoLoop*Sqr(g1p)*(380*traceAdjfdTfd + 380*
       traceAdjfuTfu + 420*traceAdjgDTgD + 140*traceAdjhEThE + 195*
       traceAdjKappaTKappa + 130*traceAdjLambda12TLambda12 + 420*traceAdjYdTYd +
       140*traceAdjYeTYe + 180*traceAdjYuTYu - 380*MassBp*tracefdAdjfd - 380*
@@ -88,7 +88,7 @@ double CNE6SSM_soft_parameters::calc_beta_MassBp_two_loop(const Soft_traces& sof
       Sqr(QS) - 15*MassBp*traceKappaAdjKappa*Sqr(QS) - 10*MassBp*
       traceLambda12AdjLambda12*Sqr(QS) - 10*Conj(Lambdax)*(13 + Sqr(QS))*(
       MassBp*Lambdax - TLambdax) - 10*Conj(Sigmax)*Sqr(QS)*(MassBp*Sigmax -
-      TSigmax) + 80*Conj(SigmaL)*TSigmaL);
+      TSigmax) + 80*Conj(SigmaL)*TSigmaL));
 
 
    return beta_MassBp;

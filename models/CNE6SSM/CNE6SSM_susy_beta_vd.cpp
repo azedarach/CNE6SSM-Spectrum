@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:43
+// File generated at Wed 3 Jun 2015 23:42:49
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -40,9 +40,9 @@ double CNE6SSM_susy_parameters::calc_beta_vd_one_loop(const Susy_traces& susy_tr
 
    double beta_vd;
 
-   beta_vd = 0.05*oneOver16PiSqr*vd*(-20*tracefdAdjfd - 60*traceYdAdjYd -
-      20*traceYeAdjYe - 20*AbsSqr(Lambdax) + 6*Sqr(g1) + 9*Sqr(g1p) + 30*Sqr(
-      g2));
+   beta_vd = Re(0.05*oneOver16PiSqr*vd*(-20*tracefdAdjfd - 60*
+      traceYdAdjYd - 20*traceYeAdjYe - 20*AbsSqr(Lambdax) + 6*Sqr(g1) + 9*Sqr(
+      g1p) + 30*Sqr(g2)));
 
 
    return beta_vd;
@@ -77,9 +77,9 @@ double CNE6SSM_susy_parameters::calc_beta_vd_two_loop(const Susy_traces& susy_tr
 
    double beta_vd;
 
-   beta_vd = -0.00125*twoLoop*vd*(1188*Power(g1,4) + 1773*Power(g1p,4) +
-      2900*Power(g2,4) - 2400*tracefdAdjfdfdAdjfd - 1600*tracefdAdjfdfuAdjfu -
-      2400*tracegDAdjgDTpYdconjYd - 1600*tracehEAdjhEYeAdjYe - 800*
+   beta_vd = Re(-0.00125*twoLoop*vd*(1188*Power(g1,4) + 1773*Power(g1p,4)
+      + 2900*Power(g2,4) - 2400*tracefdAdjfdfdAdjfd - 1600*tracefdAdjfdfuAdjfu
+      - 2400*tracegDAdjgDTpYdconjYd - 1600*tracehEAdjhEYeAdjYe - 800*
       traceLambda12AdjLambda12Tpfdconjfd - 7200*traceYdAdjYdYdAdjYd - 2400*
       traceYdAdjYuYuAdjYd - 2400*traceYeAdjYeYeAdjYe + 400*traceYdAdjYd*Sqr(g1)
       + 1200*traceYeAdjYe*Sqr(g1) + 600*traceYdAdjYd*Sqr(g1p) + 200*
@@ -89,7 +89,7 @@ double CNE6SSM_susy_parameters::calc_beta_vd_two_loop(const Susy_traces& susy_tr
       traceYdAdjYd*Sqr(g3) + 9*Power(g1p,4)*Sqr(QS) + 40*AbsSqr(Lambdax)*(-20*
       tracefuAdjfu - 60*traceKappaAdjKappa - 40*traceLambda12AdjLambda12 - 60*
       traceYuAdjYu - 20*AbsSqr(Sigmax) + 6*Sqr(g1) + 4*Sqr(g1p) + 30*Sqr(g2) +
-      Sqr(g1p)*Sqr(QS)) - 2400*Sqr(Conj(Lambdax))*Sqr(Lambdax));
+      Sqr(g1p)*Sqr(QS)) - 2400*Sqr(Conj(Lambdax))*Sqr(Lambdax)));
 
 
    return beta_vd;

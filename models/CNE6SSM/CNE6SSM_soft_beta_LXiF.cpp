@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:01
+// File generated at Wed 3 Jun 2015 23:43:17
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,12 +37,12 @@ double CNE6SSM_soft_parameters::calc_beta_LXiF_one_loop(const Soft_traces& soft_
 
    double beta_LXiF;
 
-   beta_LXiF = oneOver16PiSqr*(2*MuPhi*BMuPhi*Conj(KappaPr) - 4*MuPhi*
+   beta_LXiF = Re(oneOver16PiSqr*(2*MuPhi*BMuPhi*Conj(KappaPr) - 4*MuPhi*
       BMuPr*Conj(SigmaL) + 4*mphi2*Conj(MuPhi)*KappaPr - 4*mHp2*Conj(MuPr)*
       SigmaL - 4*mHpbar2*Conj(MuPr)*SigmaL + 2*AbsSqr(KappaPr)*LXiF + AbsSqr(
       Sigmax)*LXiF + 2*AbsSqr(SigmaL)*LXiF + 2*Conj(BMuPhi)*TKappaPr + 4*Conj(
       KappaPr)*XiF*TKappaPr + 2*Conj(Sigmax)*XiF*TSigmax - 4*Conj(BMuPr)*
-      TSigmaL + 4*Conj(SigmaL)*XiF*TSigmaL);
+      TSigmaL + 4*Conj(SigmaL)*XiF*TSigmaL));
 
 
    return beta_LXiF;
@@ -78,9 +78,9 @@ double CNE6SSM_soft_parameters::calc_beta_LXiF_two_loop(const Soft_traces& soft_
 
    double beta_LXiF;
 
-   beta_LXiF = twoLoop*(-4*MuPhi*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax) + 2*
-      AbsSqr(SigmaL))*BMuPhi*Conj(KappaPr) + 12*MuPhi*tracegDAdjgD*BMuPr*Conj(
-      SigmaL) + 4*MuPhi*tracehEAdjhE*BMuPr*Conj(SigmaL) + 12*MuPhi*
+   beta_LXiF = Re(twoLoop*(-4*MuPhi*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax) +
+      2*AbsSqr(SigmaL))*BMuPhi*Conj(KappaPr) + 12*MuPhi*tracegDAdjgD*BMuPr*
+      Conj(SigmaL) + 4*MuPhi*tracehEAdjhE*BMuPr*Conj(SigmaL) + 12*MuPhi*
       traceAdjgDTgD*Conj(SigmaL)*MuPr + 4*MuPhi*traceAdjhEThE*Conj(SigmaL)*MuPr
       - 6*traceAdjKappaTKappa*AbsSqr(Sigmax)*XiF - 4*traceAdjLambda12TLambda12
       *AbsSqr(Sigmax)*XiF - 12*traceAdjgDTgD*AbsSqr(SigmaL)*XiF - 4*
@@ -142,7 +142,7 @@ double CNE6SSM_soft_parameters::calc_beta_LXiF_two_loop(const Soft_traces& soft_
       *Sqr(g2)*TSigmaL + 12*MassWB*Conj(MuPr)*Sqr(g2)*TSigmaL + 12*Conj(SigmaL)
       *XiF*Sqr(g2)*TSigmaL - 8*Conj(KappaPr)*Conj(SigmaL)*Sqr(MuPhi)*TSigmaL +
       8*MuPhi*MuPr*Sqr(Conj(SigmaL))*TSigmaL - 16*XiF*SigmaL*Sqr(Conj(SigmaL))*
-      TSigmaL);
+      TSigmaL));
 
 
    return beta_LXiF;

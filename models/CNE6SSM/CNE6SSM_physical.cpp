@@ -16,11 +16,14 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:37:13
+// File generated at Wed 3 Jun 2015 23:53:01
 
 #include "CNE6SSM_physical.hpp"
+#include "slha_io.hpp"
 
 #include <iostream>
+
+#define LOCALPHYSICAL(p) p
 
 namespace flexiblesusy {
 
@@ -120,6 +123,32 @@ void CNE6SSM_physical::clear()
    MChiP = Eigen::Matrix<double,2,1>::Zero();
    ZNp = Eigen::Matrix<std::complex<double>,2,2>::Zero();
    MVWm = 0.;
+
+}
+
+/**
+ * Convert masses and mixing matrices to Haber-Kane convention:
+ * Fermion masses are always positive and mixing matrices are allowed
+ * to be complex.
+ */
+void CNE6SSM_physical::convert_to_hk()
+{
+   SLHA_io::convert_symmetric_fermion_mixings_to_hk(LOCALPHYSICAL(MChi), LOCALPHYSICAL(ZN));
+   SLHA_io::convert_symmetric_fermion_mixings_to_hk(LOCALPHYSICAL(MChiI), LOCALPHYSICAL(ZNI));
+   SLHA_io::convert_symmetric_fermion_mixings_to_hk(LOCALPHYSICAL(MChiP), LOCALPHYSICAL(ZNp));
+
+}
+
+/**
+ * Convert masses and mixing matrices to SLHA convention: Fermion
+ * mixing matrices are always real and fermion masses are allowed to
+ * be negative.
+ */
+void CNE6SSM_physical::convert_to_slha()
+{
+   SLHA_io::convert_symmetric_fermion_mixings_to_slha(LOCALPHYSICAL(MChi), LOCALPHYSICAL(ZN));
+   SLHA_io::convert_symmetric_fermion_mixings_to_slha(LOCALPHYSICAL(MChiI), LOCALPHYSICAL(ZNI));
+   SLHA_io::convert_symmetric_fermion_mixings_to_slha(LOCALPHYSICAL(MChiP), LOCALPHYSICAL(ZNp));
 
 }
 

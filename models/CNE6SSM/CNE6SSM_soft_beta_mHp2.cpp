@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:32
+// File generated at Wed 3 Jun 2015 23:43:41
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -48,13 +48,13 @@ double CNE6SSM_soft_parameters::calc_beta_mHp2_one_loop(const Soft_traces& soft_
 
    double beta_mHp2;
 
-   beta_mHp2 = oneOver16PiSqr*(-0.7745966692414834*g1*Tr11 +
+   beta_mHp2 = Re(oneOver16PiSqr*(-0.7745966692414834*g1*Tr11 +
       0.6324555320336759*g1p*Tr14 + 6*traceconjTgDTpTgD + 2*traceconjThETpThE +
       6*mHp2*tracegDAdjgD + 6*tracegDAdjgDconjmq2 + 6*tracegDconjmDxbar2AdjgD
       + 2*mHp2*tracehEAdjhE + 2*tracehEAdjhEme2 + 2*tracehEmH1I2AdjhE + 2*mHp2*
       AbsSqr(SigmaL) + 2*mHpbar2*AbsSqr(SigmaL) + 2*mphi2*AbsSqr(SigmaL) + 2*
       AbsSqr(TSigmaL) - 1.2*AbsSqr(MassB)*Sqr(g1) - 0.8*AbsSqr(MassBp)*Sqr(g1p)
-      - 6*AbsSqr(MassWB)*Sqr(g2));
+      - 6*AbsSqr(MassWB)*Sqr(g2)));
 
 
    return beta_mHp2;
@@ -221,8 +221,8 @@ double CNE6SSM_soft_parameters::calc_beta_mHp2_two_loop(const Soft_traces& soft_
 
    double beta_mHp2;
 
-   beta_mHp2 = twoLoop*(6*Power(g2,4)*Tr22 - 0.9797958971132712*g1*g1p*
-      Tr2U114 - 0.9797958971132712*g1*g1p*Tr2U141 - 3.0983866769659336*g1*Tr31
+   beta_mHp2 = Re(twoLoop*(6*Power(g2,4)*Tr22 - 0.9797958971132712*g1*g1p
+      *Tr2U114 - 0.9797958971132712*g1*g1p*Tr2U141 - 3.0983866769659336*g1*Tr31
       + 2.5298221281347035*g1p*Tr34 - 6*traceAdjgDTpYdconjTYdTgD - 6*
       traceAdjgDTpYuconjTYuTgD - 6*traceAdjYdTYdconjTgDTpgD - 6*
       traceAdjYuTYuconjTgDTpgD - 2*mHp2*tracefuAdjhEhEAdjfu - 2*mHu2*
@@ -295,7 +295,7 @@ double CNE6SSM_soft_parameters::calc_beta_mHp2_two_loop(const Soft_traces& soft_
       SigmaL) - 12*mphi2*Sqr(Conj(SigmaL))*Sqr(SigmaL) - 4*Conj(KappaPr)*Conj(
       TSigmaL)*SigmaL*TKappaPr - 2*Conj(Sigmax)*Conj(TSigmaL)*SigmaL*TSigmax -
       4*Conj(SigmaL)*Conj(TKappaPr)*KappaPr*TSigmaL - 2*Conj(SigmaL)*Conj(
-      TSigmax)*Sigmax*TSigmaL);
+      TSigmax)*Sigmax*TSigmaL));
 
 
    return beta_mHp2;

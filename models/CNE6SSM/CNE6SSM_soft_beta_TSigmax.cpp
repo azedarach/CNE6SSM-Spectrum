@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:45
+// File generated at Wed 3 Jun 2015 23:43:03
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -43,13 +43,13 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmax_one_loop(const Soft_traces& so
 
    double beta_TSigmax;
 
-   beta_TSigmax = oneOver16PiSqr*(6*traceAdjKappaTKappa*Sigmax + 4*
+   beta_TSigmax = Re(oneOver16PiSqr*(6*traceAdjKappaTKappa*Sigmax + 4*
       traceAdjLambda12TLambda12*Sigmax + 0.2*MassBp*Sigmax*Sqr(g1p)*Sqr(QS) + 3
       *traceKappaAdjKappa*TSigmax + 2*traceLambda12AdjLambda12*TSigmax + 9*
       AbsSqr(Sigmax)*TSigmax + 2*AbsSqr(SigmaL)*TSigmax - 0.1*Sqr(g1p)*Sqr(QS)*
       TSigmax + 2*Conj(KappaPr)*(2*Sigmax*TKappaPr + KappaPr*TSigmax) + 2*Conj(
       Lambdax)*(2*Sigmax*TLambdax + Lambdax*TSigmax) + 4*Conj(SigmaL)*Sigmax*
-      TSigmaL);
+      TSigmaL));
 
 
    return beta_TSigmax;
@@ -118,8 +118,8 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmax_two_loop(const Soft_traces& so
 
    double beta_TSigmax;
 
-   beta_TSigmax = twoLoop*(-0.04*Power(g1p,4)*MassBp*Power(QS,4)*Sigmax -
-      4*traceAdjfdTfdconjLambda12TpLambda12*Sigmax - 4*
+   beta_TSigmax = Re(twoLoop*(-0.04*Power(g1p,4)*MassBp*Power(QS,4)*
+      Sigmax - 4*traceAdjfdTfdconjLambda12TpLambda12*Sigmax - 4*
       traceAdjLambda12TpfdconjfdTLambda12*Sigmax - 4*
       tracefuAdjLambda12TLambda12Adjfu*Sigmax - 12*tracegDAdjKappaTKappaAdjgD*
       Sigmax - 4*tracehEAdjLambda12TLambda12AdjhE*Sigmax - 12*
@@ -177,7 +177,7 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmax_two_loop(const Soft_traces& so
       traceLambda12AdjLambda12 - 40*AbsSqr(SigmaL) + Sqr(g1p)*Sqr(QS))*TSigmax
       + 80*Conj(KappaPr)*(2*Sigmax*TKappaPr + 3*KappaPr*TSigmax) + 2*Sigmax*(60
       *traceAdjKappaTKappa + 40*traceAdjLambda12TLambda12 + MassBp*Sqr(g1p)*Sqr
-      (QS) + 40*Conj(SigmaL)*TSigmaL)));
+      (QS) + 40*Conj(SigmaL)*TSigmaL))));
 
 
    return beta_TSigmax;

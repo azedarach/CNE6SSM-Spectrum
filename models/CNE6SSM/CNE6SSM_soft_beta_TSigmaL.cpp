@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:43
+// File generated at Wed 3 Jun 2015 23:43:02
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -41,12 +41,12 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmaL_one_loop(const Soft_traces& so
 
    double beta_TSigmaL;
 
-   beta_TSigmaL = oneOver16PiSqr*(6*traceAdjgDTgD*SigmaL + 2*
+   beta_TSigmaL = Re(oneOver16PiSqr*(6*traceAdjgDTgD*SigmaL + 2*
       traceAdjhEThE*SigmaL + 1.2*MassB*SigmaL*Sqr(g1) + 0.8*MassBp*SigmaL*Sqr(
       g1p) + 6*MassWB*SigmaL*Sqr(g2) + 3*tracegDAdjgD*TSigmaL + tracehEAdjhE*
       TSigmaL + 12*AbsSqr(SigmaL)*TSigmaL - 0.6*Sqr(g1)*TSigmaL - 0.4*Sqr(g1p)*
       TSigmaL - 3*Sqr(g2)*TSigmaL + 2*Conj(KappaPr)*(2*SigmaL*TKappaPr +
-      KappaPr*TSigmaL) + Conj(Sigmax)*(2*SigmaL*TSigmax + Sigmax*TSigmaL));
+      KappaPr*TSigmaL) + Conj(Sigmax)*(2*SigmaL*TSigmax + Sigmax*TSigmaL)));
 
 
    return beta_TSigmaL;
@@ -107,8 +107,8 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmaL_two_loop(const Soft_traces& so
 
    double beta_TSigmaL;
 
-   beta_TSigmaL = twoLoop*(-23.76*Power(g1,4)*MassB*SigmaL - 15.36*Power(
-      g1p,4)*MassBp*SigmaL - 66*Power(g2,4)*MassWB*SigmaL - 6*
+   beta_TSigmaL = Re(twoLoop*(-23.76*Power(g1,4)*MassB*SigmaL - 15.36*
+      Power(g1p,4)*MassBp*SigmaL - 66*Power(g2,4)*MassWB*SigmaL - 6*
       traceAdjgDTpYdconjYdTgD*SigmaL - 6*traceAdjgDTpYuconjYuTgD*SigmaL - 6*
       traceAdjYdTYdconjgDTpgD*SigmaL - 6*traceAdjYuTYuconjgDTpgD*SigmaL - 2*
       tracefuAdjhEThEAdjfu*SigmaL - 36*tracegDAdjgDTgDAdjgD*SigmaL - 6*
@@ -150,7 +150,7 @@ double CNE6SSM_soft_parameters::calc_beta_TSigmaL_two_loop(const Soft_traces& so
       SigmaL)*Sigmax*TSigmaL - Sigmax*Sqr(g1p)*Sqr(QS)*TSigmaL + 40*Conj(
       KappaPr)*(2*Sigmax*SigmaL*TKappaPr + 2*KappaPr*SigmaL*TSigmax + KappaPr*
       Sigmax*TSigmaL) + 20*Conj(Lambdax)*(2*Sigmax*SigmaL*TLambdax + 2*Lambdax*
-      SigmaL*TSigmax + Lambdax*Sigmax*TSigmaL)));
+      SigmaL*TSigmax + Lambdax*Sigmax*TSigmaL))));
 
 
    return beta_TSigmaL;

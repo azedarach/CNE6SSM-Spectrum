@@ -103,7 +103,8 @@ void RGFlow<Two_scale>::solve()
  */
 void RGFlow<Two_scale>::check_setup() const
 {
-   for (size_t m = 0, num_models = models.size(); m < num_models; ++m) {
+   const size_t number_of_models = models.size();
+   for (size_t m = 0; m < number_of_models; ++m) {
       const TModel* model = models[m];
       if (!model->model) {
          std::stringstream message;
@@ -210,13 +211,13 @@ void RGFlow<Two_scale>::run_down()
    assert(models.size() > 0 && "model size must not be zero");
    VERBOSE_MSG("< running tower down ...");
    const size_t number_of_models = models.size();
-   for (long m = number_of_models - 1; m >= 0; --m) {
+   for (size_t m = number_of_models; m-- > 0;) {
       TModel* model = models[m];
       VERBOSE_MSG("< \tselecting model " << model->model->name());
       // apply all constraints:
       // If m is the last model, do not apply the highest constraint,
       // because it was already applied when we ran up.
-      const size_t c_begin = (m + 1 == (long)number_of_models ? 1 : 0);
+      const size_t c_begin = (m + 1 == number_of_models ? 1 : 0);
       const size_t c_end = model->downwards_constraints.size();
       for (size_t c = c_begin; c < c_end; ++c) {
          Constraint<Two_scale>* constraint = model->downwards_constraints[c];

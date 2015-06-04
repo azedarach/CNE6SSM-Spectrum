@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:37
+// File generated at Wed 3 Jun 2015 23:42:44
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -40,10 +40,10 @@ double CNE6SSM_susy_parameters::calc_beta_Sigmax_one_loop(const Susy_traces& sus
 
    double beta_Sigmax;
 
-   beta_Sigmax = oneOver16PiSqr*(3*traceKappaAdjKappa*Sigmax + 2*
+   beta_Sigmax = Re(oneOver16PiSqr*(3*traceKappaAdjKappa*Sigmax + 2*
       traceLambda12AdjLambda12*Sigmax + 2*AbsSqr(KappaPr)*Sigmax + 2*AbsSqr(
       Lambdax)*Sigmax + 2*AbsSqr(SigmaL)*Sigmax - 0.1*Sigmax*Sqr(g1p)*Sqr(QS) +
-      3*Conj(Sigmax)*Sqr(Sigmax));
+      3*Conj(Sigmax)*Sqr(Sigmax)));
 
 
    return beta_Sigmax;
@@ -82,9 +82,9 @@ double CNE6SSM_susy_parameters::calc_beta_Sigmax_two_loop(const Susy_traces& sus
 
    double beta_Sigmax;
 
-   beta_Sigmax = -0.01*twoLoop*Sigmax*(-(Power(g1p,4)*Power(QS,4)) + 200*
-      tracefuAdjLambda12Lambda12Adjfu + 600*tracegDAdjKappaKappaAdjgD + 200*
-      tracehEAdjLambda12Lambda12AdjhE + 600*traceKappaAdjKappaKappaAdjKappa +
+   beta_Sigmax = Re(-0.01*twoLoop*Sigmax*(-(Power(g1p,4)*Power(QS,4)) +
+      200*tracefuAdjLambda12Lambda12Adjfu + 600*tracegDAdjKappaKappaAdjgD + 200
+      *tracehEAdjLambda12Lambda12AdjhE + 600*traceKappaAdjKappaKappaAdjKappa +
       400*traceLambda12AdjLambda12Lambda12AdjLambda12 + 200*
       traceLambda12AdjLambda12Tpfdconjfd + 600*traceKappaAdjKappa*AbsSqr(Sigmax
       ) + 400*traceLambda12AdjLambda12*AbsSqr(Sigmax) + 600*tracegDAdjgD*AbsSqr
@@ -101,7 +101,7 @@ double CNE6SSM_susy_parameters::calc_beta_Sigmax_two_loop(const Susy_traces& sus
       traceYuAdjYu - 40*AbsSqr(Sigmax) + 12*Sqr(g1) + 13*Sqr(g1p) + 60*Sqr(g2)
       - Sqr(g1p)*Sqr(QS)) + 800*Sqr(Conj(KappaPr))*Sqr(KappaPr) + 400*Sqr(Conj(
       Lambdax))*Sqr(Lambdax) + 600*Sqr(Conj(Sigmax))*Sqr(Sigmax) + 400*Sqr(Conj
-      (SigmaL))*Sqr(SigmaL));
+      (SigmaL))*Sqr(SigmaL)));
 
 
    return beta_Sigmax;

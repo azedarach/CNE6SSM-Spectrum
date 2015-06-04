@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:47
+// File generated at Wed 3 Jun 2015 23:43:05
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -41,7 +41,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TgD_one_loop(const 
 
    Eigen::Matrix<double,3,3> beta_TgD;
 
-   beta_TgD = oneOver16PiSqr*(3*tracegDAdjgD*TgD + tracehEAdjhE*TgD +
+   beta_TgD = (oneOver16PiSqr*(3*tracegDAdjgD*TgD + tracehEAdjhE*TgD +
       AbsSqr(SigmaL)*TgD - 0.4666666666666667*Sqr(g1)*TgD - 0.7*Sqr(g1p)*TgD -
       3*Sqr(g2)*TgD - 5.333333333333333*Sqr(g3)*TgD + gD*(6*traceAdjgDTgD + 2*
       traceAdjhEThE + 0.9333333333333333*MassB*Sqr(g1) + 1.4*MassBp*Sqr(g1p) +
@@ -50,7 +50,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TgD_one_loop(const 
       (TgD*gD.adjoint()*gD) + TgD*(Kappa).adjoint()*Kappa + Yd.transpose()*
       Yd.conjugate()*TgD + Yu.transpose()*Yu.conjugate()*TgD + 2*((TYd)
       .transpose()*Yd.conjugate()*gD) + 2*((TYu).transpose()*Yu.conjugate()*gD)
-      );
+      )).real();
 
 
    return beta_TgD;
@@ -121,7 +121,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TgD_two_loop(const 
 
    Eigen::Matrix<double,3,3> beta_TgD;
 
-   beta_TgD = twoLoop*(4.588888888888889*Power(g1,4)*TgD + 6.825*Power(
+   beta_TgD = (twoLoop*(4.588888888888889*Power(g1,4)*TgD + 6.825*Power(
       g1p,4)*TgD + 16.5*Power(g2,4)*TgD + 14.222222222222221*Power(g3,4)*TgD -
       tracefuAdjhEhEAdjfu*TgD - 9*tracegDAdjgDgDAdjgD*TgD - 3*
       tracegDAdjgDTpYdconjYd*TgD - 3*tracegDAdjgDTpYuconjYu*TgD - 3*
@@ -221,7 +221,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TgD_two_loop(const 
       Yu.conjugate()*TgD) - 4*(Yu.transpose()*Yu.conjugate()*(TYu).transpose()*
       Yu.conjugate()*gD) - 4*((TYd).transpose()*Yd.conjugate()*Yd.transpose()*
       Yd.conjugate()*gD) - 4*((TYu).transpose()*Yu.conjugate()*Yu.transpose()*
-      Yu.conjugate()*gD));
+      Yu.conjugate()*gD))).real();
 
 
    return beta_TgD;

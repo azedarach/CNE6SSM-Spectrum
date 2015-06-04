@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:27
+// File generated at Wed 3 Jun 2015 23:43:37
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,14 +39,14 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mDx2_one_loop(const
 
    Eigen::Matrix<double,3,3> beta_mDx2;
 
-   beta_mDx2 = oneOver16PiSqr*(2*ms2*(Kappa.conjugate()*(Kappa).transpose
-      ()) + 2*(TKappa.conjugate()*(TKappa).transpose()) + mDx2*Kappa.conjugate(
-      )*(Kappa).transpose() + 2*(Kappa.conjugate()*mDxbar2*(Kappa).transpose())
-      + Kappa.conjugate()*(Kappa).transpose()*mDx2 - 0.5163977794943222*g1*
-      Tr11*UNITMATRIX(3) - 0.6324555320336759*g1p*Tr14*UNITMATRIX(3) -
-      0.5333333333333333*AbsSqr(MassB)*Sqr(g1)*UNITMATRIX(3) - 0.8*AbsSqr(
-      MassBp)*Sqr(g1p)*UNITMATRIX(3) - 10.666666666666666*AbsSqr(MassG)*Sqr(g3)
-      *UNITMATRIX(3));
+   beta_mDx2 = (oneOver16PiSqr*(2*ms2*(Kappa.conjugate()*(Kappa)
+      .transpose()) + 2*(TKappa.conjugate()*(TKappa).transpose()) + mDx2*
+      Kappa.conjugate()*(Kappa).transpose() + 2*(Kappa.conjugate()*mDxbar2*(
+      Kappa).transpose()) + Kappa.conjugate()*(Kappa).transpose()*mDx2 -
+      0.5163977794943222*g1*Tr11*UNITMATRIX(3) - 0.6324555320336759*g1p*Tr14*
+      UNITMATRIX(3) - 0.5333333333333333*AbsSqr(MassB)*Sqr(g1)*UNITMATRIX(3) -
+      0.8*AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(3) - 10.666666666666666*AbsSqr(
+      MassG)*Sqr(g3)*UNITMATRIX(3))).real();
 
 
    return beta_mDx2;
@@ -92,7 +92,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mDx2_two_loop(const
 
    Eigen::Matrix<double,3,3> beta_mDx2;
 
-   beta_mDx2 = twoLoop*(-6*traceconjTKappaTpTKappa*(Kappa.conjugate()*(
+   beta_mDx2 = (twoLoop*(-6*traceconjTKappaTpTKappa*(Kappa.conjugate()*(
       Kappa).transpose()) - 4*traceconjTLambda12TpTLambda12*(Kappa.conjugate()*
       (Kappa).transpose()) - 12*ms2*traceKappaAdjKappa*(Kappa.conjugate()*(
       Kappa).transpose()) - 6*traceKappaAdjKappaconjmDx2*(Kappa.conjugate()*(
@@ -183,7 +183,8 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_mDx2_two_loop(const
       UNITMATRIX(3) + 0.006666666666666667*Conj(MassBp)*Sqr(g1p)*(15*(5 + Sqr(
       QS))*(2*MassBp*(Kappa.conjugate()*(Kappa).transpose()) - Kappa.conjugate(
       )*(TKappa).transpose()) + (-32*(MassB + 2*MassBp)*Sqr(g1) + 320*(2*MassBp
-      + MassG)*Sqr(g3) + 18*MassBp*Sqr(g1p)*(192 + Sqr(QS)))*UNITMATRIX(3)));
+      + MassG)*Sqr(g3) + 18*MassBp*Sqr(g1p)*(192 + Sqr(QS)))*UNITMATRIX(3))))
+      .real();
 
 
    return beta_mDx2;

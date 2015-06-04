@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:40
+// File generated at Wed 3 Jun 2015 23:47:50
 
 #include "CNE6SSM_two_scale_low_scale_constraint.hpp"
 #include "CNE6SSM_two_scale_model.hpp"
@@ -36,9 +36,10 @@ namespace flexiblesusy {
 
 #define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
+#define PHASE(p) model->get_##p()
 #define BETAPARAMETER(p) beta_functions.get_##p()
 #define BETA(p) beta_##p
-#define SM(p) Electroweak_constants::p
+#define LowEnergyConstant(p) Electroweak_constants::p
 #define STANDARDDEVIATION(p) Electroweak_constants::Error_##p
 #define Pole(p) model->get_physical().p
 #define MODEL model
@@ -104,18 +105,19 @@ void CNE6SSM_low_scale_constraint<Two_scale>::apply()
    calculate_DRbar_gauge_couplings();
 
    const auto TanBeta = INPUTPARAMETER(TanBeta);
+   const auto QSInput = INPUTPARAMETER(QSInput);
    const auto g1 = MODELPARAMETER(g1);
    const auto g2 = MODELPARAMETER(g2);
-   const auto QSInput = INPUTPARAMETER(QSInput);
 
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
-   MODEL->set_vd((2*MZDRbar)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(TanBeta)
-      )));
-   MODEL->set_vu((2*MZDRbar*TanBeta)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(
-      TanBeta))));
+   MODEL->set_vd(Re((2*MZDRbar)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(
+      TanBeta)))));
+   MODEL->set_vu(Re((2*MZDRbar*TanBeta)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 +
+      Sqr(TanBeta)))));
    MODEL->set_QS(QSInput);
+
 
    model->set_g1(new_g1);
    model->set_g2(new_g2);
@@ -181,7 +183,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::initialize()
    assert(model && "CNE6SSM_low_scale_constraint<Two_scale>::"
           "initialize(): model pointer is zero.");
 
-   initial_scale_guess = SM(MZ);
+   initial_scale_guess = LowEnergyConstant(MZ);
 
    scale = initial_scale_guess;
 
@@ -203,7 +205,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::update_scale()
    assert(model && "CNE6SSM_low_scale_constraint<Two_scale>::"
           "update_scale(): model pointer is zero.");
 
-   scale = SM(MZ);
+   scale = LowEnergyConstant(MZ);
 
 
 }
@@ -255,104 +257,7 @@ double CNE6SSM_low_scale_constraint<Two_scale>::calculate_theta_w(double alpha_e
 
    double theta_w = 0.;
 
-   using namespace weinberg_angle;
-
-   const auto ZE = MODELPARAMETER(ZE);
-   const auto ZV = MODELPARAMETER(ZV);
-   const auto MSe = MODELPARAMETER(MSe);
-   const auto MSv = MODELPARAMETER(MSv);
-
-   const double scale         = MODEL->get_scale();
-   const double mw_pole       = oneset.displayPoleMW();
-   const double mz_pole       = oneset.displayPoleMZ();
-   const double mt_pole       = oneset.displayPoleMt();
-   const double mt_drbar      = MODEL->get_MFu(2);
-   const double mb_drbar      = MODEL->get_MFd(2);
-   const double mh_drbar      = MODEL->get_Mhh(0);
-   const double gY            = MODEL->get_g1() * 0.7745966692414834;
-   const double g2            = MODEL->get_g2();
-   const double g3            = MODEL->get_g3();
-   const double ymu           = MODEL->get_Ye(1,1);
-   const double hmix_12       = MODEL->get_ZH(0,1);
-   const double tanBeta       = MODEL->get_vu() / MODEL->get_vd();
-   const double mselL         = AbsSqr(ZE(0,0))*MSe(0) + AbsSqr(ZE(1,0))*MSe(1)
-      + AbsSqr(ZE(2,0))*MSe(2) + AbsSqr(ZE(3,0))*MSe(3) + AbsSqr(ZE(4,0))*MSe(4)
-      + AbsSqr(ZE(5,0))*MSe(5);
-   const double msmuL         = AbsSqr(ZE(0,1))*MSe(0) + AbsSqr(ZE(1,1))*MSe(1)
-      + AbsSqr(ZE(2,1))*MSe(2) + AbsSqr(ZE(3,1))*MSe(3) + AbsSqr(ZE(4,1))*MSe(4)
-      + AbsSqr(ZE(5,1))*MSe(5);
-   const double msnue         = AbsSqr(ZV(0,0))*MSv(0) + AbsSqr(ZV(1,0))*MSv(1)
-      + AbsSqr(ZV(2,0))*MSv(2);
-   const double msnumu        = AbsSqr(ZV(0,1))*MSv(0) + AbsSqr(ZV(1,1))*MSv(1)
-      + AbsSqr(ZV(2,1))*MSv(2);
-   const double pizztMZ       = Re(MODEL->self_energy_VZ(mz_pole));
-   const double piwwt0        = Re(MODEL->self_energy_VWm(0.));
-   self_energy_w_at_mw        = Re(MODEL->self_energy_VWm(mw_pole));
-
-   Weinberg_angle::Self_energy_data se_data;
-   se_data.scale    = scale;
-   se_data.mt_pole  = mt_pole;
-   se_data.mt_drbar = mt_drbar;
-   se_data.mb_drbar = mb_drbar;
-   se_data.gY       = gY;
-   se_data.g2       = g2;
-
-   double pizztMZ_corrected = pizztMZ;
-   double piwwtMW_corrected = self_energy_w_at_mw;
-   double piwwt0_corrected  = piwwt0;
-
-   if (model->get_thresholds() > 1) {
-      pizztMZ_corrected =
-         Weinberg_angle::replace_mtop_in_self_energy_z(pizztMZ, mz_pole,
-            se_data);
-      piwwtMW_corrected =
-         Weinberg_angle::replace_mtop_in_self_energy_w(
-            self_energy_w_at_mw, mw_pole, se_data);
-      piwwt0_corrected =
-         Weinberg_angle::replace_mtop_in_self_energy_w(piwwt0, 0.,
-            se_data);
-   }
-
-   Weinberg_angle::Data data;
-   data.scale               = scale;
-   data.alpha_em_drbar      = ALPHA_EM_DRBAR;
-   data.fermi_contant       = oneset.displayFermiConstant();
-   data.self_energy_z_at_mz = pizztMZ_corrected;
-   data.self_energy_w_at_mw = piwwtMW_corrected;
-   data.self_energy_w_at_0  = piwwt0_corrected;
-   data.mw_pole             = mw_pole;
-   data.mz_pole             = mz_pole;
-   data.mt_pole             = mt_pole;
-   data.mh_drbar            = mh_drbar;
-   data.hmix_12             = hmix_12;
-   data.msel_drbar          = mselL;
-   data.msmul_drbar         = msmuL;
-   data.msve_drbar          = msnue;
-   data.msvm_drbar          = msnumu;
-   data.mn_drbar            = MODEL->get_MChi();
-   data.mc_drbar            = MODEL->get_MCha();
-   data.zn                  = MODEL->get_ZN();
-   data.um                  = MODEL->get_UM();
-   data.up                  = MODEL->get_UP();
-   data.gY                  = gY;
-   data.g2                  = g2;
-   data.g3                  = g3;
-   data.tan_beta            = tanBeta;
-   data.ymu                 = ymu;
-
-   Weinberg_angle weinberg;
-   weinberg.enable_susy_contributions();
-   weinberg.set_number_of_loops(MODEL->get_thresholds());
-   weinberg.set_data(data);
-
-   const int error = weinberg.calculate();
-
-   THETAW = ArcSin(weinberg.get_sin_theta());
-
-   if (error)
-      MODEL->get_problems().flag_no_rho_convergence();
-   else
-      MODEL->get_problems().unflag_no_rho_convergence();
+   THETAW = ArcSin(Sqrt(1 - Sqr(MWDRbar)/Sqr(MZDRbar)));
 
 
    return theta_w;
@@ -488,7 +393,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::calculate_Yu_DRbar()
    assert(model && "CNE6SSM_low_scale_constraint<Two_scale>::"
           "calculate_Yu_DRbar(): model pointer is zero");
 
-   Eigen::Matrix<double,3,3> topDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> topDRbar(ZEROMATRIXCOMPLEX(3,3));
    topDRbar(0,0)      = oneset.displayMass(mUp);
    topDRbar(1,1)      = oneset.displayMass(mCharm);
    topDRbar(2,2)      = oneset.displayMass(mTop);
@@ -497,7 +402,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::calculate_Yu_DRbar()
       topDRbar(2,2) = model->calculate_MFu_DRbar(oneset.displayPoleMt(), 2);
 
    const auto vu = MODELPARAMETER(vu);
-   MODEL->set_Yu(Diag((1.4142135623730951*topDRbar)/vu));
+   MODEL->set_Yu((Diag((1.4142135623730951*topDRbar)/vu)).real());
 
 }
 
@@ -506,7 +411,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::calculate_Yd_DRbar()
    assert(model && "CNE6SSM_low_scale_constraint<Two_scale>::"
           "calculate_Yd_DRbar(): model pointer is zero");
 
-   Eigen::Matrix<double,3,3> bottomDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> bottomDRbar(ZEROMATRIXCOMPLEX(3,3));
    bottomDRbar(0,0)   = oneset.displayMass(mDown);
    bottomDRbar(1,1)   = oneset.displayMass(mStrange);
    bottomDRbar(2,2)   = oneset.displayMass(mBottom);
@@ -515,7 +420,7 @@ void CNE6SSM_low_scale_constraint<Two_scale>::calculate_Yd_DRbar()
       bottomDRbar(2,2) = model->calculate_MFd_DRbar(oneset.displayMass(mBottom), 2);
 
    const auto vd = MODELPARAMETER(vd);
-   MODEL->set_Yd(Diag((1.4142135623730951*bottomDRbar)/vd));
+   MODEL->set_Yd((Diag((1.4142135623730951*bottomDRbar)/vd)).real());
 
 }
 
@@ -524,16 +429,19 @@ void CNE6SSM_low_scale_constraint<Two_scale>::calculate_Ye_DRbar()
    assert(model && "CNE6SSM_low_scale_constraint<Two_scale>::"
           "calculate_Ye_DRbar(): model pointer is zero");
 
-   Eigen::Matrix<double,3,3> electronDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> electronDRbar(ZEROMATRIXCOMPLEX(3,3));
    electronDRbar(0,0) = oneset.displayMass(mElectron);
    electronDRbar(1,1) = oneset.displayMass(mMuon);
    electronDRbar(2,2) = oneset.displayMass(mTau);
 
-   if (model->get_thresholds())
+   if (model->get_thresholds()) {
+      electronDRbar(0,0) = model->calculate_MFe_DRbar(oneset.displayMass(mElectron), 0);
+      electronDRbar(1,1) = model->calculate_MFe_DRbar(oneset.displayMass(mMuon), 1);
       electronDRbar(2,2) = model->calculate_MFe_DRbar(oneset.displayMass(mTau), 2);
+   }
 
    const auto vd = MODELPARAMETER(vd);
-   MODEL->set_Ye(Diag((1.4142135623730951*electronDRbar)/vd));
+   MODEL->set_Ye((Diag((1.4142135623730951*electronDRbar)/vd)).real());
 
 }
 
@@ -559,17 +467,6 @@ void CNE6SSM_low_scale_constraint<Two_scale>::recalculate_mw_pole()
    if (!model->get_thresholds())
       return;
 
-   MODEL->calculate_MVWm();
-
-   const double mw_drbar    = MODEL->get_MVWm();
-   const double mw_pole_sqr = Sqr(mw_drbar) - self_energy_w_at_mw;
-
-   if (mw_pole_sqr < 0.)
-      MODEL->get_problems().flag_tachyon(CNE6SSM_info::VWm);
-
-   const double mw_pole = AbsSqrt(mw_pole_sqr);
-
-   oneset.setPoleMW(mw_pole);
 
 }
 

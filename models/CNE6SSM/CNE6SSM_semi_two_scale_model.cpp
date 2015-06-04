@@ -14,7 +14,7 @@
  */
 
 #include "CNE6SSM_semi_two_scale_model.hpp"
-#include "numerics.hpp"
+#include "numerics2.hpp"
 #include "wrappers.hpp"
 #include "logger.hpp"
 #include "error.hpp"
@@ -330,9 +330,8 @@ void CLASSNAME::ewsb_equations(double tadpole[number_of_ewsb_equations]) const
  */
 int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* f)
 {
-   if (contains_nan(x, number_of_tadpole_equations)) {
-      for (std::size_t i = 0; i < number_of_tadpole_equations; ++i)
-         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+   if (!is_finite(x)) {
+      gsl_vector_set_all(f, std::numeric_limits<double>::max());
       return GSL_EDOM;
    }
 
@@ -369,12 +368,7 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    for (std::size_t i = 0; i < number_of_tadpole_equations; ++i)
       gsl_vector_set(f, i, tadpole[i]);
 
-   bool is_finite = true;
-
-   for (std::size_t i = 0; i < number_of_tadpole_equations; ++i)
-      is_finite = is_finite && std::isfinite(tadpole[i]);
-
-   return (is_finite ? GSL_SUCCESS : GSL_EDOM);
+   return is_finite<number_of_tadpole_equations>(tadpole) ? GSL_SUCCESS : GSL_EDOM;
 }
 
 /**
@@ -389,9 +383,8 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
  */
 int CLASSNAME::ewsb_equations(const gsl_vector* x, void* params, gsl_vector* f)
 {
-   if (contains_nan(x, number_of_ewsb_equations)) {
-      for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
-         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+   if (!is_finite(x)) {
+      gsl_vector_set_all(f, std::numeric_limits<double>::max());
       return GSL_EDOM;
    }
 
@@ -426,12 +419,7 @@ int CLASSNAME::ewsb_equations(const gsl_vector* x, void* params, gsl_vector* f)
    for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
       gsl_vector_set(f, i, tadpole[i]);
 
-   bool is_finite = true;
-
-   for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
-      is_finite = is_finite && std::isfinite(tadpole[i]);
-
-   return (is_finite ? GSL_SUCCESS : GSL_EDOM);
+   return is_finite<number_of_ewsb_equations>(tadpole) ? GSL_SUCCESS : GSL_EDOM;
 }
 
 void CLASSNAME::tree_level_ewsb_eqs(double ewsb_eqs[number_of_tree_level_ewsb_eqs])
@@ -481,9 +469,8 @@ void CLASSNAME::tree_level_jacobian(double m0, double x, double phi, double deri
 
 int CLASSNAME::tree_level_ewsb_eqs(const gsl_vector* x, void* params, gsl_vector* f)
 {
-   if (contains_nan(x, number_of_tree_level_ewsb_eqs)) {
-      for (std::size_t i = 0; i < number_of_tree_level_ewsb_eqs; ++i)
-         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+   if (!is_finite(x)) {
+      gsl_vector_set_all(f, std::numeric_limits<double>::max());
       return GSL_EDOM;
    }
 
@@ -513,22 +500,13 @@ int CLASSNAME::tree_level_ewsb_eqs(const gsl_vector* x, void* params, gsl_vector
    for (std::size_t i = 0; i < number_of_tree_level_ewsb_eqs; ++i)
       gsl_vector_set(f, i, ewsb_eqs[i]);
 
-   bool is_finite = true;
-
-   for (std::size_t i = 0; i < number_of_tree_level_ewsb_eqs; ++i)
-      is_finite = is_finite && std::isfinite(ewsb_eqs[i]);
-
-   return (is_finite ? GSL_SUCCESS : GSL_EDOM);
+   return is_finite<number_of_tree_level_ewsb_eqs>(ewsb_eqs) ? GSL_SUCCESS : GSL_EDOM;
 }
 
 int CLASSNAME::tree_level_jacobian(const gsl_vector* x, void* params, gsl_matrix* J)
 {
-   if (contains_nan(x, number_of_tree_level_ewsb_eqs)) {
-      for (std::size_t i = 0; i < number_of_tree_level_ewsb_eqs; ++i) {
-         for (std::size_t k = 0; k < number_of_tree_level_ewsb_eqs; ++k) {
-            gsl_matrix_set(J, i, k, std::numeric_limits<double>::max());
-         }
-      }
+   if (!is_finite(x)) {
+      gsl_matrix_set_all(J, std::numeric_limits<double>::max());
       return GSL_EDOM;
    }
 
@@ -563,12 +541,7 @@ int CLASSNAME::tree_level_jacobian(const gsl_vector* x, void* params, gsl_matrix
       }
    }
 
-   bool is_finite = true;
-
-   for (std::size_t i = 0; i < number_of_jacobian_elements; ++i)
-      is_finite = is_finite && std::isfinite(jacobian_elems[i]);
-
-   return (is_finite ? GSL_SUCCESS : GSL_EDOM);
+   return is_finite<number_of_jacobian_elements>(jacobian_elems) ? GSL_SUCCESS : GSL_EDOM;
 }
 
 int CLASSNAME::tree_level_combined(const gsl_vector* x, void* params, gsl_vector* f, gsl_matrix* J)
@@ -1162,9 +1135,8 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_tadpole_equations])
  */
 int CLASSNAME::ewsb_step(const gsl_vector* x, void* params, gsl_vector* f)
 {
-   if (contains_nan(x, number_of_tadpole_equations)) {
-      for (std::size_t i = 0; i < number_of_tadpole_equations; ++i)
-         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+   if (!is_finite(x)) {
+      gsl_vector_set_all(f, std::numeric_limits<double>::max());
       return GSL_EDOM;
    }
 

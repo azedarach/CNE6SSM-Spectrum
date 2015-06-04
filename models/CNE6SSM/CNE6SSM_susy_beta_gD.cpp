@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:37
+// File generated at Wed 3 Jun 2015 23:42:45
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,11 +39,11 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_gD_one_loop(const S
 
    Eigen::Matrix<double,3,3> beta_gD;
 
-   beta_gD = oneOver16PiSqr*(gD*(3*tracegDAdjgD + tracehEAdjhE + AbsSqr(
+   beta_gD = (oneOver16PiSqr*(gD*(3*tracegDAdjgD + tracehEAdjhE + AbsSqr(
       SigmaL) - 0.4666666666666667*Sqr(g1) - 0.7*Sqr(g1p) - 3*Sqr(g2) -
       5.333333333333333*Sqr(g3)) + 3*(gD*gD.adjoint()*gD) + gD*(Kappa).adjoint(
       )*Kappa + Yd.transpose()*Yd.conjugate()*gD + Yu.transpose()*Yu.conjugate(
-      )*gD);
+      )*gD)).real();
 
 
    return beta_gD;
@@ -82,8 +82,8 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_gD_two_loop(const S
 
    Eigen::Matrix<double,3,3> beta_gD;
 
-   beta_gD = twoLoop*(gD*(4.588888888888889*Power(g1,4) + 6.825*Power(g1p
-      ,4) + 16.5*Power(g2,4) + 14.222222222222221*Power(g3,4) -
+   beta_gD = (twoLoop*(gD*(4.588888888888889*Power(g1,4) + 6.825*Power(
+      g1p,4) + 16.5*Power(g2,4) + 14.222222222222221*Power(g3,4) -
       tracefuAdjhEhEAdjfu - 9*tracegDAdjgDgDAdjgD - 3*tracegDAdjgDTpYdconjYd -
       3*tracegDAdjgDTpYuconjYu - 3*tracegDAdjKappaKappaAdjgD - 3*
       tracehEAdjhEhEAdjhE - 2*tracehEAdjhEYeAdjYe -
@@ -113,7 +113,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_gD_two_loop(const S
       - gD*(Kappa).adjoint()*Kappa*gD.adjoint()*gD - gD*(Kappa).adjoint()*
       Kappa*(Kappa).adjoint()*Kappa - 2*(Yd.transpose()*Yd.conjugate()*
       Yd.transpose()*Yd.conjugate()*gD) - 2*(Yu.transpose()*Yu.conjugate()*
-      Yu.transpose()*Yu.conjugate()*gD));
+      Yu.transpose()*Yu.conjugate()*gD))).real();
 
 
    return beta_gD;

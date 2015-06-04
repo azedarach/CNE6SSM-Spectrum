@@ -34,8 +34,8 @@ public:
    virtual void restart() = 0;
 
 protected:
-   bool is_equal(double, double) const;
-   bool is_zero(double) const;
+   static bool is_equal(double, double);
+   static bool is_zero(double);
 };
 
 }

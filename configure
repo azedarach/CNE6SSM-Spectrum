@@ -6,8 +6,8 @@
 
 PROGRAM_NAME=FlexibleSUSY
 FLEXIBLESUSY_MAJOR=1
-FLEXIBLESUSY_MINOR=0
-FLEXIBLESUSY_PATCH=4
+FLEXIBLESUSY_MINOR=1
+FLEXIBLESUSY_PATCH=0
 FLEXIBLESUSY_EXTRA=""
 FLEXIBLESUSY_VERSION="${FLEXIBLESUSY_MAJOR}.${FLEXIBLESUSY_MINOR}.${FLEXIBLESUSY_PATCH}${FLEXIBLESUSY_EXTRA}"
 GIT_COMMIT="`git describe --tags 2> /dev/null || echo unknown`"
@@ -1053,7 +1053,7 @@ check_multiarch() {
                 result "$debmultiarch"
             fi
         else
-            result "`basename $0`: dpkg-architecture MUST be installed"
+            result "`basename $0`: dpkg-architecture or dpkg-dev MUST be installed"
             exit 1
         fi
     fi
@@ -2054,6 +2054,7 @@ enable_defines() {
         logmsg "   ${DEFINE_ENABLE_LOOPTOOLS}"
     fi
 
+################################################################
     if test "x$enable_multinest" = "xyes" ; then
 	DEFINE_ENABLE_MULTINEST="#define ENABLE_MULTINEST 1"
 	message "Enabling usage of MultiNest"
@@ -2062,7 +2063,8 @@ enable_defines() {
 	logmsg "Disabling usage of MultiNest"
     fi
     logmsg "   ${DEFINE_ENABLE_MULTINEST}"
-    
+################################################################
+
     if test "x$enable_silent" = "xyes" ; then
         DEFINE_ENABLE_SILENT="#define ENABLE_SILENT 1"
         CPPFLAGS="$CPPFLAGS"

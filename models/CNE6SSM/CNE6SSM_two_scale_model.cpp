@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:37:13
+// File generated at Wed 3 Jun 2015 23:53:01
 
 /**
  * @file CNE6SSM_two_scale_model.cpp
@@ -26,12 +26,12 @@
  * which solve EWSB and calculate pole masses and mixings from DRbar
  * parameters.
  *
- * This file was generated at Sun 19 Apr 2015 20:37:13 with FlexibleSUSY
- * 1.0.4 (git commit: v1.0.3-cpc6-749-g227a308) and SARAH 4.5.3 .
+ * This file was generated at Wed 3 Jun 2015 23:53:01 with FlexibleSUSY
+ * 1.1.0 (git commit: v1.1.0) and SARAH 4.5.6 .
  */
 
 #include "CNE6SSM_two_scale_model.hpp"
-#include "numerics.hpp"
+#include "numerics2.hpp"
 #include "wrappers.hpp"
 #include "logger.hpp"
 #include "error.hpp"
@@ -53,7 +53,6 @@ using namespace CNE6SSM_info;
 
 #define CLASSNAME CNE6SSM<Two_scale>
 
-#define PHYSICAL(parameter) physical.parameter
 #define INPUT(parameter) model->get_input().parameter
 #define LOCALINPUT(parameter) input.parameter
 
@@ -157,9 +156,8 @@ void CLASSNAME::tadpole_equations(double tadpole[number_of_ewsb_equations]) cons
  */
 int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* f)
 {
-   if (contains_nan(x, number_of_ewsb_equations)) {
-      for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
-         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+   if (!is_finite(x)) {
+      gsl_vector_set_all(f, std::numeric_limits<double>::max());
       return GSL_EDOM;
    }
 
@@ -168,7 +166,7 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    CNE6SSM* model = ewsb_args->model;
    const unsigned ewsb_loop_order = ewsb_args->ewsb_loop_order;
 
-   const double s = model->get_input().ssumInput;
+   const double s = model->get_input().sInput;
 
    // N.B. for this version ALambdax is held constant
    double temp = 0.;
@@ -203,12 +201,7 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
       gsl_vector_set(f, i, tadpole[i]);
 
-   bool is_finite = true;
-
-   for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
-      is_finite = is_finite && std::isfinite(tadpole[i]);
-
-   return (is_finite ? GSL_SUCCESS : GSL_EDOM);
+   return is_finite<number_of_ewsb_equations>(tadpole) ? GSL_SUCCESS : GSL_EDOM;
 }
 
 /**
@@ -284,7 +277,7 @@ int CLASSNAME::solve_ewsb_iteratively_with(
 {
    const int status = solver->solve(x_init);
 
-   const double s = LOCALINPUT(ssumInput);
+   const double s = LOCALINPUT(sInput);
 
    // N.B. for this version ALambdax is held constant
    double temp = 0.;
@@ -368,7 +361,7 @@ int CLASSNAME::solve_ewsb()
 void CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
 {
 
-   const auto s = LOCALINPUT(ssumInput);
+   const auto s = LOCALINPUT(sInput);
    const auto sgnLambdax = Sign(LOCALINPUT(SignLambdax));
 
    x_init[0] = AbsSqrt((ms2 + 0.0125*Sqr(g1p)*Sqr(QS)*Sqr(s)) 
@@ -483,7 +476,7 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
    double XiF_new;
    double LXiF_new;
 
-   const double s = LOCALINPUT(ssumInput);
+   const double s = LOCALINPUT(sInput);
    const double SignLambdax = Sign(LOCALINPUT(SignLambdax));
 
    // update TanTheta
@@ -612,10 +605,10 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
    vphi = vphi_old;
    XiF = XiF_old;
 
-   const bool is_finite = std::isfinite(TanTheta_new) && std::isfinite(Lambdax_new) 
-      && std::isfinite(vphi_new) && std::isfinite(XiF_new) && std::isfinite(LXiF_new);
+   const bool isfinite = IsFinite(TanTheta_new) && IsFinite(Lambdax_new) 
+      && IsFinite(vphi_new) && IsFinite(XiF_new) && IsFinite(LXiF_new);
 
-   if (is_finite) {
+   if (isfinite) {
       error = GSL_SUCCESS;
       ewsb_parameters[0] = TanTheta_new;
       ewsb_parameters[1] = Lambdax_new;
@@ -641,9 +634,8 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
  */
 int CLASSNAME::ewsb_step(const gsl_vector* x, void* params, gsl_vector* f)
 {
-   if (contains_nan(x, number_of_ewsb_equations)) {
-      for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
-         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+   if (!is_finite(x)) {
+      gsl_vector_set_all(f, std::numeric_limits<double>::max());
       return GSL_EDOM;
    }
 
@@ -652,7 +644,7 @@ int CLASSNAME::ewsb_step(const gsl_vector* x, void* params, gsl_vector* f)
    CNE6SSM* model = ewsb_args->model;
    const unsigned ewsb_loop_order = ewsb_args->ewsb_loop_order;
 
-   const double s = INPUT(ssumInput);
+   const double s = INPUT(sInput);
 
    // N.B. for this version ALambdax is held constant
    double temp = 0.;
@@ -703,10 +695,6 @@ void CLASSNAME::print(std::ostream& ostr) const
    CNE6SSM_mass_eigenstates::print(ostr);
 }
 
-/**
- * calculates spectrum for model once the DRbar parameters at
- * at low energies are known
- */
 void CLASSNAME::calculate_spectrum()
 {
    calculate_DRbar_masses();
@@ -2108,6 +2096,8 @@ double CLASSNAME::get_parameter(unsigned parameter) const
       return vsb; 
    case CNE6SSM_info::vphi:
       return vphi; 
+   case CNE6SSM_info::QS:
+      return QS;
    case CNE6SSM_info::TYd00:
       return TYd(0,0); 
    case CNE6SSM_info::TYd01:
@@ -2699,6 +2689,9 @@ void CLASSNAME::set_parameter(unsigned parameter, double x)
       break;
    case CNE6SSM_info::vphi:
       vphi = x;
+      break;
+   case CNE6SSM_info::QS:
+      QS = x;
       break;
    case CNE6SSM_info::TYd00:
       TYd(0,0) = x;

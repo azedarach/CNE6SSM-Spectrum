@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:35
+// File generated at Wed 3 Jun 2015 23:43:43
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,7 +37,7 @@ double CNE6SSM_soft_parameters::calc_beta_MassG_one_loop(const Soft_traces& soft
 
    double beta_MassG;
 
-   beta_MassG = 0;
+   beta_MassG = Re(0);
 
 
    return beta_MassG;
@@ -62,12 +62,12 @@ double CNE6SSM_soft_parameters::calc_beta_MassG_two_loop(const Soft_traces& soft
 
    double beta_MassG;
 
-   beta_MassG = 2*twoLoop*Sqr(g3)*(4*traceAdjgDTgD + 2*
+   beta_MassG = Re(2*twoLoop*Sqr(g3)*(4*traceAdjgDTgD + 2*
       traceAdjKappaTKappa + 4*traceAdjYdTYd + 4*traceAdjYuTYu - 4*MassG*
       tracegDAdjgD - 2*MassG*traceKappaAdjKappa - 4*MassG*traceYdAdjYd - 4*
       MassG*traceYuAdjYu + 3*MassB*Sqr(g1) + 3*MassG*Sqr(g1) + 3*MassBp*Sqr(g1p
       ) + 3*MassG*Sqr(g1p) + 9*MassG*Sqr(g2) + 9*MassWB*Sqr(g2) + 96*MassG*Sqr(
-      g3));
+      g3)));
 
 
    return beta_MassG;

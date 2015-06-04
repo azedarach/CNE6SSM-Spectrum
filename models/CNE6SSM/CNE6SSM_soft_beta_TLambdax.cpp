@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:53
+// File generated at Wed 3 Jun 2015 23:43:10
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -53,14 +53,14 @@ double CNE6SSM_soft_parameters::calc_beta_TLambdax_one_loop(const Soft_traces& s
 
    double beta_TLambdax;
 
-   beta_TLambdax = oneOver16PiSqr*((tracefdAdjfd + tracefuAdjfu + 3*
+   beta_TLambdax = Re(oneOver16PiSqr*((tracefdAdjfd + tracefuAdjfu + 3*
       traceKappaAdjKappa + 2*traceLambda12AdjLambda12 + 3*traceYdAdjYd +
       traceYeAdjYe + 3*traceYuAdjYu + 12*AbsSqr(Lambdax) + AbsSqr(Sigmax) - 0.6
       *Sqr(g1) - 0.65*Sqr(g1p) - 3*Sqr(g2) - 0.05*Sqr(g1p)*Sqr(QS))*TLambdax +
       0.1*Lambdax*(20*traceAdjfdTfd + 20*traceAdjfuTfu + 60*traceAdjKappaTKappa
       + 40*traceAdjLambda12TLambda12 + 60*traceAdjYdTYd + 20*traceAdjYeTYe +
       60*traceAdjYuTYu + 12*MassB*Sqr(g1) + 13*MassBp*Sqr(g1p) + 60*MassWB*Sqr(
-      g2) + MassBp*Sqr(g1p)*Sqr(QS) + 20*Conj(Sigmax)*TSigmax));
+      g2) + MassBp*Sqr(g1p)*Sqr(QS) + 20*Conj(Sigmax)*TSigmax)));
 
 
    return beta_TLambdax;
@@ -159,7 +159,7 @@ double CNE6SSM_soft_parameters::calc_beta_TLambdax_two_loop(const Soft_traces& s
 
    double beta_TLambdax;
 
-   beta_TLambdax = twoLoop*(-23.76*Power(g1,4)*MassB*Lambdax - 25.41*
+   beta_TLambdax = Re(twoLoop*(-23.76*Power(g1,4)*MassB*Lambdax - 25.41*
       Power(g1p,4)*MassBp*Lambdax - 66*Power(g2,4)*MassWB*Lambdax - 0.02*Power(
       g1p,4)*MassBp*Power(QS,4)*Lambdax - 6*traceAdjfdTfdconjLambda12TpLambda12
       *Lambdax - 6*traceAdjgDTpYdconjYdTgD*Lambdax - 6*traceAdjgDTpYuconjYuTgD*
@@ -241,7 +241,7 @@ double CNE6SSM_soft_parameters::calc_beta_TLambdax_two_loop(const Soft_traces& s
       traceAdjfuTfu + 60*traceAdjKappaTKappa + 40*traceAdjLambda12TLambda12 +
       90*traceAdjYdTYd + 30*traceAdjYeTYe + 90*traceAdjYuTYu + 12*MassB*Sqr(g1)
       + 13*MassBp*Sqr(g1p) + 60*MassWB*Sqr(g2) + 20*Conj(Sigmax)*TSigmax)) - 4
-      *AbsSqr(Sigmax)*Conj(SigmaL)*Lambdax*TSigmaL);
+      *AbsSqr(Sigmax)*Conj(SigmaL)*Lambdax*TSigmaL));
 
 
    return beta_TLambdax;

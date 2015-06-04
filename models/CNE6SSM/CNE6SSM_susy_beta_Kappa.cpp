@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:38
+// File generated at Wed 3 Jun 2015 23:42:45
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -40,11 +40,11 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Kappa_one_loop(cons
 
    Eigen::Matrix<double,3,3> beta_Kappa;
 
-   beta_Kappa = oneOver16PiSqr*(Kappa*(3*traceKappaAdjKappa + 2*
+   beta_Kappa = (oneOver16PiSqr*(Kappa*(3*traceKappaAdjKappa + 2*
       traceLambda12AdjLambda12 + 2*AbsSqr(Lambdax) + AbsSqr(Sigmax) -
       0.26666666666666666*Sqr(g1) - 0.65*Sqr(g1p) - 5.333333333333333*Sqr(g3) -
       0.05*Sqr(g1p)*Sqr(QS)) + 2*(Kappa*gD.adjoint()*gD + Kappa*(Kappa)
-      .adjoint()*Kappa));
+      .adjoint()*Kappa))).real();
 
 
    return beta_Kappa;
@@ -83,7 +83,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Kappa_two_loop(cons
 
    Eigen::Matrix<double,3,3> beta_Kappa;
 
-   beta_Kappa = twoLoop*(Kappa*(2.5955555555555554*Power(g1,4) + 6.3525*
+   beta_Kappa = (twoLoop*(Kappa*(2.5955555555555554*Power(g1,4) + 6.3525*
       Power(g1p,4) + 14.222222222222221*Power(g3,4) + 0.005*Power(g1p,4)*Power(
       QS,4) - 2*tracefuAdjLambda12Lambda12Adjfu - 6*tracegDAdjKappaKappaAdjgD -
       2*tracehEAdjLambda12Lambda12AdjhE - 6*traceKappaAdjKappaKappaAdjKappa -
@@ -108,7 +108,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_susy_parameters::calc_beta_Kappa_two_loop(cons
       ) - 2*(Kappa*gD.adjoint()*gD*(Kappa).adjoint()*Kappa) - 2*(Kappa*
       gD.adjoint()*Yd.transpose()*Yd.conjugate()*gD) - 2*(Kappa*gD.adjoint()*
       Yu.transpose()*Yu.conjugate()*gD) - 2*(Kappa*(Kappa).adjoint()*Kappa*(
-      Kappa).adjoint()*Kappa));
+      Kappa).adjoint()*Kappa))).real();
 
 
    return beta_Kappa;

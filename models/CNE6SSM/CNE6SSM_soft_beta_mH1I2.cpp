@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:22
+// File generated at Wed 3 Jun 2015 23:43:33
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,7 +39,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_mH1I2_one_loop(cons
 
    Eigen::Matrix<double,2,2> beta_mH1I2;
 
-   beta_mH1I2 = oneOver16PiSqr*(2*mHu2*(fu.adjoint()*fu) + 2*mHp2*(
+   beta_mH1I2 = (oneOver16PiSqr*(2*mHu2*(fu.adjoint()*fu) + 2*mHp2*(
       hE.adjoint()*hE) + 2*ms2*((Lambda12).adjoint()*Lambda12) + 2*((Tfu)
       .adjoint()*Tfu) + 2*((ThE).adjoint()*ThE) + 2*((TLambda12).adjoint()*
       TLambda12) + mH1I2*fu.adjoint()*fu + mH1I2*hE.adjoint()*hE + mH1I2*(
@@ -49,7 +49,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_mH1I2_one_loop(cons
       )*Lambda12*mH1I2 - 0.7745966692414834*g1*Tr11*UNITMATRIX(2) -
       0.9486832980505138*g1p*Tr14*UNITMATRIX(2) - 1.2*AbsSqr(MassB)*Sqr(g1)*
       UNITMATRIX(2) - 1.8*AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(2) - 6*AbsSqr(
-      MassWB)*Sqr(g2)*UNITMATRIX(2));
+      MassWB)*Sqr(g2)*UNITMATRIX(2))).real();
 
 
    return beta_mH1I2;
@@ -120,7 +120,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_mH1I2_two_loop(cons
 
    Eigen::Matrix<double,2,2> beta_mH1I2;
 
-   beta_mH1I2 = twoLoop*(-2*traceconjTfuTpTfu*(fu.adjoint()*fu) - 6*
+   beta_mH1I2 = (twoLoop*(-2*traceconjTfuTpTfu*(fu.adjoint()*fu) - 6*
       traceconjTYuTpTYu*(fu.adjoint()*fu) - 4*mHu2*tracefuAdjfu*(fu.adjoint()*
       fu) - 2*tracefuAdjfuconjmSI2*(fu.adjoint()*fu) - 2*tracefumH1I2Adjfu*(
       fu.adjoint()*fu) - 6*tracemq2AdjYuYu*(fu.adjoint()*fu) - 6*
@@ -276,7 +276,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_mH1I2_two_loop(cons
       MassBp*Sqr(QS)*((Lambda12).adjoint()*Lambda12) + 5*((Lambda12).adjoint()*
       TLambda12) - Sqr(QS)*((Lambda12).adjoint()*TLambda12)) - 9*(2*(MassB + 2*
       MassBp)*Sqr(g1) - 3*(10*(2*MassBp + MassWB)*Sqr(g2) + MassBp*Sqr(g1p)*(
-      197 + Sqr(QS))))*UNITMATRIX(2)));
+      197 + Sqr(QS))))*UNITMATRIX(2)))).real();
 
 
    return beta_mH1I2;

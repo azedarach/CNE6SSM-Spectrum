@@ -16,29 +16,25 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:37:13
+// File generated at Wed 3 Jun 2015 23:53:01
 
 #ifndef CNE6SSM_SPECTRUM_GENERATOR_H
 #define CNE6SSM_SPECTRUM_GENERATOR_H
 
 #include "CNE6SSM_two_scale_model.hpp"
+#include "CNE6SSM_two_scale_constraint_handler.hpp"
 #include "CNE6SSM_two_scale_convergence_tester.hpp"
 #include "CNE6SSM_two_scale_initial_guesser.hpp"
-#include "CNE6SSM_two_scale_constraint_handler.hpp"
-
-#include "CNE6SSM_semianalytic_model.hpp"
-#include "CNE6SSM_semianalytic_convergence_tester.hpp"
-#include "CNE6SSM_semianalytic_initial_guesser.hpp"
-#include "CNE6SSM_semianalytic_constraint_handler.hpp"
-
 #include "CNE6SSM_utilities.hpp"
 
 #include "coupling_monitor.hpp"
 #include "error.hpp"
 #include "two_loop_corrections.hpp"
-#include "numerics.hpp"
+#include "numerics2.hpp"
 #include "two_scale_running_precision.hpp"
 #include "two_scale_solver.hpp"
+
+#include <limits>
 
 namespace flexiblesusy {
 
@@ -53,6 +49,8 @@ public:
       , low_scale(0.)
       , parameter_output_scale(0.)
       , precision_goal(1.0e-4)
+      , reached_precision(std::numeric_limits<double>::infinity())
+      , beta_zero_threshold(1.0e-11)
       , max_iterations(0)
       , beta_loop_order(2)
       , threshold_corrections_loop_order(2)
@@ -69,11 +67,13 @@ public:
       return model.get_problems();
    }
    int get_exit_code() const { return get_problems().have_problem(); }
+   double get_reached_precision() const { return reached_precision; }
    void set_parameter_output_scale(double s) { parameter_output_scale = s; }
    void set_precision_goal(double precision_goal_) { precision_goal = precision_goal_; }
    void set_pole_mass_loop_order(unsigned l) { model.set_pole_mass_loop_order(l); }
    void set_ewsb_loop_order(unsigned l) { model.set_ewsb_loop_order(l); }
    void set_beta_loop_order(unsigned l) { beta_loop_order = l; }
+   void set_beta_zero_threshold(double t) { beta_zero_threshold = t; }
    void set_max_iterations(unsigned n) { max_iterations = n; }
    void set_calculate_sm_masses(bool flag) { calculate_sm_masses = flag; }
    void set_force_output(bool flag) { force_output = flag; }
@@ -91,6 +91,8 @@ private:
    double high_scale, susy_scale, low_scale;
    double parameter_output_scale; ///< output scale for running parameters
    double precision_goal; ///< precision goal
+   double reached_precision; ///< the precision that was reached
+   double beta_zero_threshold; ///< beta function zero threshold
    unsigned max_iterations; ///< maximum number of iterations
    unsigned beta_loop_order; ///< beta-function loop order
    unsigned threshold_corrections_loop_order; ///< threshold corrections loop order
@@ -119,6 +121,7 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    model.do_force_output(force_output);
    model.set_loops(beta_loop_order);
    model.set_thresholds(threshold_corrections_loop_order);
+   model.set_zero_threshold(beta_zero_threshold);
 
    constraint_handler.initialize_constraints(&model, oneset);
 
@@ -137,12 +140,14 @@ void CNE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    constraint_handler.add_constraints_to_solver(&model, solver);
 
    high_scale = susy_scale = low_scale = 0.;
+   reached_precision = std::numeric_limits<double>::infinity();
 
    try {
       solver.solve();
       high_scale = constraint_handler.get_highest_scale();
       susy_scale = constraint_handler.get_susy_scale();
-      low_scale = constraint_handler.get_lowest_scale();
+      low_scale  = constraint_handler.get_lowest_scale();
+      reached_precision = convergence_tester.get_current_accuracy();
 
       model.run_to(susy_scale);
       model.solve_ewsb();

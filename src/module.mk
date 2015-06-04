@@ -20,6 +20,7 @@ LIBFLEXI_SRC := \
 		$(DIR)/mssm_twoloophiggs.f \
 		$(DIR)/nmssm2loop.f \
 		$(DIR)/numerics.cpp \
+		$(DIR)/numerics2.cpp \
 		$(DIR)/scan_command_line_options.cpp \
 		$(DIR)/spectrum_generator_settings.cpp \
 		$(DIR)/pmns.cpp \
@@ -71,12 +72,13 @@ LIBFLEXI_HDR := \
 		$(DIR)/nmssm2loop.h \
 		$(DIR)/nmssm_twoloophiggs.h \
 		$(DIR)/numerics.h \
-		$(DIR)/numerics.hpp \
+		$(DIR)/numerics2.hpp \
 		$(DIR)/pmns.hpp \
 		$(DIR)/problems.hpp \
 		$(DIR)/pv.hpp \
 		$(DIR)/rge.h \
 		$(DIR)/rg_flow.hpp \
+		$(DIR)/rg_flow_semianalytic.hpp \
 		$(DIR)/rk.hpp \
 		$(DIR)/root_finder.hpp \
 		$(DIR)/scan.hpp \
@@ -113,12 +115,23 @@ endif
 
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
 LIBFLEXI_SRC += \
+		$(DIR)/semianalytic_two_scale_solver.cpp \
+		$(DIR)/two_scale_composite_convergence_tester.cpp \
+		$(DIR)/two_scale_convergence_tester.cpp \
 		$(DIR)/two_scale_running_precision.cpp \
-		$(DIR)/semianalytic_two_scale_solver.cpp
+		$(DIR)/two_scale_solver.cpp
 
 LIBFLEXI_HDR += \
+		$(DIR)/semianalytic_two_scale_solver.hpp \
+		$(DIR)/two_scale_composite_convergence_tester.hpp \
+		$(DIR)/two_scale_constraint.hpp \
+		$(DIR)/two_scale_convergence_tester.hpp \
+		$(DIR)/two_scale_convergence_tester_drbar.hpp \
+		$(DIR)/two_scale_initial_guesser.hpp \
+		$(DIR)/two_scale_matching.hpp \
+		$(DIR)/two_scale_model.hpp \
 		$(DIR)/two_scale_running_precision.hpp \
-		$(DIR)/semianalytic_two_scale_solver.hpp
+		$(DIR)/two_scale_solver.hpp
 endif
 
 # remove duplicates in case all algorithms are used

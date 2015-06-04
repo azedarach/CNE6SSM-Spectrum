@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:38
+// File generated at Wed 3 Jun 2015 23:47:48
 
 #include "CNE6SSM_info.hpp"
 
@@ -149,7 +149,7 @@ namespace CNE6SSM_info {
       "m_{\\phi}^2", "M_1", "M_2", "M_3", "M_1'"};
 
    const char* input_names[NUMBER_OF_INPUTS] = {"m0", "m12", "TanBeta", "SignLambdax", 
-      "Azero", "ssumInput", "QS", "hEInput(0,0)", "hEInput(0,1)", "hEInput(1,0)", "hEInput(1,1)", 
+      "Azero", "sInput", "QSInput", "hEInput(0,0)", "hEInput(0,1)", "hEInput(1,0)", "hEInput(1,1)", 
       "hEInput(2,0)", "hEInput(2,1)", "SigmaLInput", "KappaPrInput", "SigmaxInput", 
       "gDInput(0,0)", "gDInput(0,1)", "gDInput(0,2)", "gDInput(1,0)", "gDInput(1,1)", 
       "gDInput(1,2)", "gDInput(2,0)", "gDInput(2,1)", "gDInput(2,2)", "KappaInput(0,0)",

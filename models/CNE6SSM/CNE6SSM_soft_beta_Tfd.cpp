@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:57
+// File generated at Wed 3 Jun 2015 23:43:13
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -43,14 +43,14 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfd_one_loop(const 
 
    Eigen::Matrix<double,3,2> beta_Tfd;
 
-   beta_Tfd = oneOver16PiSqr*(tracefdAdjfd*Tfd + 3*traceYdAdjYd*Tfd +
+   beta_Tfd = (oneOver16PiSqr*(tracefdAdjfd*Tfd + 3*traceYdAdjYd*Tfd +
       traceYeAdjYe*Tfd + AbsSqr(Lambdax)*Tfd - 0.6*Sqr(g1)*Tfd - 1.9*Sqr(g1p)*
       Tfd - 3*Sqr(g2)*Tfd + fd*(2*traceAdjfdTfd + 6*traceAdjYdTYd + 2*
       traceAdjYeTYe + 1.2*MassB*Sqr(g1) + 3.8*MassBp*Sqr(g1p) + 6*MassWB*Sqr(g2
       ) + 2*Conj(Lambdax)*TLambdax) + 4*(fd*fd.adjoint()*Tfd) + 2*(fd*
       Lambda12.conjugate()*(TLambda12).transpose()) + 2*(fu*fu.adjoint()*Tfd) +
       5*(Tfd*fd.adjoint()*fd) + Tfd*Lambda12.conjugate()*(Lambda12).transpose(
-      ) + 4*(Tfu*fu.adjoint()*fd));
+      ) + 4*(Tfu*fu.adjoint()*fd))).real();
 
 
    return beta_Tfd;
@@ -110,7 +110,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfd_two_loop(const 
 
    Eigen::Matrix<double,3,2> beta_Tfd;
 
-   beta_Tfd = twoLoop*(5.94*Power(g1,4)*Tfd + 19.665*Power(g1p,4)*Tfd +
+   beta_Tfd = (twoLoop*(5.94*Power(g1,4)*Tfd + 19.665*Power(g1p,4)*Tfd +
       16.5*Power(g2,4)*Tfd - 3*tracefdAdjfdfdAdjfd*Tfd - 2*tracefdAdjfdfuAdjfu*
       Tfd - 3*tracegDAdjgDTpYdconjYd*Tfd - 2*tracehEAdjhEYeAdjYe*Tfd -
       traceLambda12AdjLambda12Tpfdconjfd*Tfd - 9*traceYdAdjYdYdAdjYd*Tfd - 3*
@@ -207,7 +207,7 @@ Eigen::Matrix<double,3,2> CNE6SSM_soft_parameters::calc_beta_Tfd_two_loop(const 
       )*fd.adjoint()*fd) - Tfd*Lambda12.conjugate()*(Lambda12).transpose()*
       Lambda12.conjugate()*(Lambda12).transpose() - 4*(Tfu*fu.adjoint()*fu*
       fu.adjoint()*fd) - 4*(Tfu*hE.adjoint()*hE*fu.adjoint()*fd) - 4*(Tfu*(
-      Lambda12).adjoint()*Lambda12*fu.adjoint()*fd));
+      Lambda12).adjoint()*Lambda12*fu.adjoint()*fd))).real();
 
 
    return beta_Tfd;

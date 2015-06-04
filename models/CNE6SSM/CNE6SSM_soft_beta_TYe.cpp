@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:42
+// File generated at Wed 3 Jun 2015 23:43:01
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -43,12 +43,13 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYe_one_loop(const 
 
    Eigen::Matrix<double,3,3> beta_TYe;
 
-   beta_TYe = oneOver16PiSqr*(tracefdAdjfd*TYe + 3*traceYdAdjYd*TYe +
+   beta_TYe = (oneOver16PiSqr*(tracefdAdjfd*TYe + 3*traceYdAdjYd*TYe +
       traceYeAdjYe*TYe + AbsSqr(Lambdax)*TYe - 1.8*Sqr(g1)*TYe - 0.7*Sqr(g1p)*
       TYe - 3*Sqr(g2)*TYe + Ye*(2*traceAdjfdTfd + 6*traceAdjYdTYd + 2*
       traceAdjYeTYe + 3.6*MassB*Sqr(g1) + 1.4*MassBp*Sqr(g1p) + 6*MassWB*Sqr(g2
       ) + 2*Conj(Lambdax)*TLambdax) + 2*(hE*hE.adjoint()*TYe) + 4*(Ye*
-      Ye.adjoint()*TYe) + 4*(ThE*hE.adjoint()*Ye) + 5*(TYe*Ye.adjoint()*Ye));
+      Ye.adjoint()*TYe) + 4*(ThE*hE.adjoint()*Ye) + 5*(TYe*Ye.adjoint()*Ye)))
+      .real();
 
 
    return beta_TYe;
@@ -112,7 +113,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYe_two_loop(const 
 
    Eigen::Matrix<double,3,3> beta_TYe;
 
-   beta_TYe = twoLoop*(18.9*Power(g1,4)*TYe + 6.825*Power(g1p,4)*TYe +
+   beta_TYe = (twoLoop*(18.9*Power(g1,4)*TYe + 6.825*Power(g1p,4)*TYe +
       16.5*Power(g2,4)*TYe - 3*tracefdAdjfdfdAdjfd*TYe - 2*tracefdAdjfdfuAdjfu*
       TYe - 3*tracegDAdjgDTpYdconjYd*TYe - 2*tracehEAdjhEYeAdjYe*TYe -
       traceLambda12AdjLambda12Tpfdconjfd*TYe - 9*traceYdAdjYdYdAdjYd*TYe - 3*
@@ -176,7 +177,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TYe_two_loop(const 
       Ye) - 4*(ThE*fu.adjoint()*fu*hE.adjoint()*Ye) - 4*(ThE*hE.adjoint()*hE*
       hE.adjoint()*Ye) - 4*(ThE*(Lambda12).adjoint()*Lambda12*hE.adjoint()*Ye)
       - 2*(TYe*Ye.adjoint()*hE*hE.adjoint()*Ye) - 6*(TYe*Ye.adjoint()*Ye*
-      Ye.adjoint()*Ye));
+      Ye.adjoint()*Ye))).real();
 
 
    return beta_TYe;

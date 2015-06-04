@@ -16,10 +16,11 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:34
+// File generated at Wed 3 Jun 2015 23:42:42
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
+#include "functors.hpp"
 
 #include <iostream>
 
@@ -69,7 +70,7 @@ CNE6SSM_susy_parameters::CNE6SSM_susy_parameters(
 
 Eigen::ArrayXd CNE6SSM_susy_parameters::beta() const
 {
-   return calc_beta().get();
+   return calc_beta().get().unaryExpr(Chop<double>(get_zero_threshold()));
 }
 
 CNE6SSM_susy_parameters CNE6SSM_susy_parameters::calc_beta() const
@@ -175,12 +176,12 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SqSq() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = oneOver16PiSqr*(Yd.adjoint()*Yd + Yu.adjoint()*Yu +
+   anomDim = (oneOver16PiSqr*(Yd.adjoint()*Yd + Yu.adjoint()*Yu +
       gD.conjugate()*gD.transpose() - 0.016666666666666666*(2*Sqr(g1) + 3*Sqr(
-      g1p) + 90*Sqr(g2) + 160*Sqr(g3))*UNITMATRIX(3));
+      g1p) + 90*Sqr(g2) + 160*Sqr(g3))*UNITMATRIX(3))).real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(0.2*(-5*AbsSqr(SigmaL)*(gD.conjugate()*
+      anomDim += (twoLoop*(0.2*(-5*AbsSqr(SigmaL)*(gD.conjugate()*
          gD.transpose()) + 2*Sqr(g1)*(gD.conjugate()*gD.transpose()) + 3*Sqr(
          g1p)*(gD.conjugate()*gD.transpose()) - 10*(Yd.adjoint()*Yd*Yd.adjoint(
          )*Yd) - 10*(Yu.adjoint()*Yu*Yu.adjoint()*Yu) - 10*(gD.conjugate()*
@@ -195,7 +196,7 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SqSq() const
          0.0002777777777777778*(1156*Power(g1,4) + 60*Sqr(g1p)*(9*Sqr(g2) + 16*
          Sqr(g3)) + Sqr(g1)*(-132*Sqr(g1p) + 360*Sqr(g2) + 640*Sqr(g3)) + 100*(
          297*Power(g2,4) + 256*Power(g3,4) + 288*Sqr(g2)*Sqr(g3)) + 9*Power(g1p
-         ,4)*(189 + Sqr(QS)))*UNITMATRIX(3));
+         ,4)*(189 + Sqr(QS)))*UNITMATRIX(3))).real();
    }
 
    return anomDim;
@@ -205,16 +206,17 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SlSl() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = oneOver16PiSqr*(Ye.adjoint()*Ye - 0.1*(3*Sqr(g1) + 2*Sqr(g1p
-      ) + 15*Sqr(g2))*UNITMATRIX(3));
+   anomDim = (oneOver16PiSqr*(Ye.adjoint()*Ye - 0.1*(3*Sqr(g1) + 2*Sqr(
+      g1p) + 15*Sqr(g2))*UNITMATRIX(3))).real();
 
    if (get_loops() > 1) {
-      anomDim += 0.01*twoLoop*(10*(-20*(Ye.adjoint()*hE*hE.adjoint()*
+      anomDim += (0.01*twoLoop*(10*(-20*(Ye.adjoint()*hE*hE.adjoint()*
          Ye + Ye.adjoint()*Ye*Ye.adjoint()*Ye) + Ye.adjoint()*Ye*(-10*AbsSqr(
          Lambdax) + 12*Sqr(g1) + 3*Sqr(g1p) - 10*(fd*fd.adjoint()).trace() - 30
          *(Yd*Yd.adjoint()).trace() - 10*(Ye*Ye.adjoint()).trace())) + (297*
          Power(g1,4) + 825*Power(g2,4) + 60*Sqr(g1p)*Sqr(g2) + 18*Sqr(g1)*(2*
-         Sqr(g1p) + 5*Sqr(g2)) + Power(g1p,4)*(192 + Sqr(QS)))*UNITMATRIX(3));
+         Sqr(g1p) + 5*Sqr(g2)) + Power(g1p,4)*(192 + Sqr(QS)))*UNITMATRIX(3)))
+         .real();
    }
 
    return anomDim;
@@ -224,12 +226,12 @@ double CLASSNAME::get_SHdSHd() const
 {
    double anomDim = 0;
 
-   anomDim = oneOver16PiSqr*(AbsSqr(Lambdax) - 0.3*Sqr(g1) - 0.45*Sqr(g1p
-      ) - 1.5*Sqr(g2) + (fd*fd.adjoint()).trace() + 3*(Yd*Yd.adjoint()).trace()
-      + (Ye*Ye.adjoint()).trace());
+   anomDim = Re(oneOver16PiSqr*(AbsSqr(Lambdax) - 0.3*Sqr(g1) - 0.45*Sqr(
+      g1p) - 1.5*Sqr(g2) + (fd*fd.adjoint()).trace() + 3*(Yd*Yd.adjoint())
+      .trace() + (Ye*Ye.adjoint()).trace()));
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(2.97*Power(g1,4) + 4.4325*Power(g1p,4) +
+      anomDim += Re(twoLoop*(2.97*Power(g1,4) + 4.4325*Power(g1p,4) +
          8.25*Power(g2,4) - 0.09*Sqr(g1)*Sqr(g1p) + 0.9*Sqr(g1)*Sqr(g2) + 1.35*
          Sqr(g1p)*Sqr(g2) + 0.0225*Power(g1p,4)*Sqr(QS) - 3*Sqr(Conj(Lambdax))*
          Sqr(Lambdax) + Sqr(g1p)*(fd*fd.adjoint()).trace() - 0.4*Sqr(g1)*(Yd*
@@ -245,7 +247,7 @@ double CLASSNAME::get_SHdSHd() const
          - 9*(Yd*Yd.adjoint()*Yd*Yd.adjoint()).trace() - 3*(Yd*Yu.adjoint()*Yu*
          Yd.adjoint()).trace() - 3*(Ye*Ye.adjoint()*Ye*Ye.adjoint()).trace() -
          (Lambda12*(Lambda12).adjoint()*fd.transpose()*fd.conjugate()).trace())
-         ;
+         );
    }
 
    return anomDim;
@@ -255,17 +257,17 @@ double CLASSNAME::get_SHuSHu() const
 {
    double anomDim = 0;
 
-   anomDim = oneOver16PiSqr*(AbsSqr(Lambdax) - 0.3*Sqr(g1) - 0.2*Sqr(g1p)
-      - 1.5*Sqr(g2) + (fu*fu.adjoint()).trace() + 3*(Yu*Yu.adjoint()).trace())
-      ;
+   anomDim = Re(oneOver16PiSqr*(AbsSqr(Lambdax) - 0.3*Sqr(g1) - 0.2*Sqr(
+      g1p) - 1.5*Sqr(g2) + (fu*fu.adjoint()).trace() + 3*(Yu*Yu.adjoint())
+      .trace()));
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(2.97*Power(g1,4) + 1.92*Power(g1p,4) + 8.25*
-         Power(g2,4) + 0.36*Sqr(g1)*Sqr(g1p) + 0.9*Sqr(g1)*Sqr(g2) + 0.6*Sqr(
-         g1p)*Sqr(g2) + 0.01*Power(g1p,4)*Sqr(QS) - 3*Sqr(Conj(Lambdax))*Sqr(
-         Lambdax) + 1.5*Sqr(g1p)*(fu*fu.adjoint()).trace() + 0.8*Sqr(g1)*(Yu*
-         Yu.adjoint()).trace() - 0.3*Sqr(g1p)*(Yu*Yu.adjoint()).trace() + 16*
-         Sqr(g3)*(Yu*Yu.adjoint()).trace() + 0.05*AbsSqr(Lambdax)*(-20*AbsSqr(
+      anomDim += Re(twoLoop*(2.97*Power(g1,4) + 1.92*Power(g1p,4) +
+         8.25*Power(g2,4) + 0.36*Sqr(g1)*Sqr(g1p) + 0.9*Sqr(g1)*Sqr(g2) + 0.6*
+         Sqr(g1p)*Sqr(g2) + 0.01*Power(g1p,4)*Sqr(QS) - 3*Sqr(Conj(Lambdax))*
+         Sqr(Lambdax) + 1.5*Sqr(g1p)*(fu*fu.adjoint()).trace() + 0.8*Sqr(g1)*(
+         Yu*Yu.adjoint()).trace() - 0.3*Sqr(g1p)*(Yu*Yu.adjoint()).trace() + 16
+         *Sqr(g3)*(Yu*Yu.adjoint()).trace() + 0.05*AbsSqr(Lambdax)*(-20*AbsSqr(
          Sigmax) + 5*Sqr(g1p) + Sqr(g1p)*Sqr(QS) - 20*(fd*fd.adjoint()).trace()
          - 60*(Yd*Yd.adjoint()).trace() - 20*(Ye*Ye.adjoint()).trace() - 60*(
          Kappa*(Kappa).adjoint()).trace() - 40*(Lambda12*(Lambda12).adjoint())
@@ -274,7 +276,7 @@ double CLASSNAME::get_SHuSHu() const
          ()).trace() - (fu*(Lambda12).adjoint()*Lambda12*fu.adjoint()).trace()
          - 3*(gD*gD.adjoint()*Yu.transpose()*Yu.conjugate()).trace() - 3*(Yd*
          Yu.adjoint()*Yu*Yd.adjoint()).trace() - 9*(Yu*Yu.adjoint()*Yu*
-         Yu.adjoint()).trace());
+         Yu.adjoint()).trace()));
    }
 
    return anomDim;
@@ -284,11 +286,12 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SdRSdR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = 0.06666666666666667*oneOver16PiSqr*(30*(Yd.conjugate()*
-      Yd.transpose()) - (2*Sqr(g1) + 3*Sqr(g1p) + 40*Sqr(g3))*UNITMATRIX(3));
+   anomDim = (0.06666666666666667*oneOver16PiSqr*(30*(Yd.conjugate()*
+      Yd.transpose()) - (2*Sqr(g1) + 3*Sqr(g1p) + 40*Sqr(g3))*UNITMATRIX(3)))
+      .real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-2*(Yd.conjugate()*gD*gD.adjoint()*
+      anomDim += (twoLoop*(-2*(Yd.conjugate()*gD*gD.adjoint()*
          Yd.transpose() + Yd.conjugate()*Yd.transpose()*Yd.conjugate()*
          Yd.transpose() + Yd.conjugate()*Yu.transpose()*Yu.conjugate()*
          Yd.transpose()) + Yd.conjugate()*Yd.transpose()*(-2*AbsSqr(Lambdax) +
@@ -296,7 +299,7 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SdRSdR() const
          6*(Yd*Yd.adjoint()).trace() - 2*(Ye*Ye.adjoint()).trace()) +
          0.0011111111111111111*(1168*Power(g1,4) + 6400*Power(g3,4) + 960*Sqr(
          g1p)*Sqr(g3) + Sqr(g1)*(-96*Sqr(g1p) + 640*Sqr(g3)) + 9*Power(g1p,4)*(
-         192 + Sqr(QS)))*UNITMATRIX(3));
+         192 + Sqr(QS)))*UNITMATRIX(3))).real();
    }
 
    return anomDim;
@@ -306,19 +309,19 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SuRSuR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = oneOver16PiSqr*(2*(Yu.conjugate()*Yu.transpose()) -
+   anomDim = (oneOver16PiSqr*(2*(Yu.conjugate()*Yu.transpose()) -
       0.016666666666666666*(32*Sqr(g1) + 3*Sqr(g1p) + 160*Sqr(g3))*UNITMATRIX(3
-      ));
+      ))).real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-0.4*(5*(Yu.conjugate()*gD*gD.adjoint()*
+      anomDim += (twoLoop*(-0.4*(5*(Yu.conjugate()*gD*gD.adjoint()*
          Yu.transpose() + Yu.conjugate()*Yd.transpose()*Yd.conjugate()*
          Yu.transpose() + Yu.conjugate()*Yu.transpose()*Yu.conjugate()*
          Yu.transpose()) + Yu.conjugate()*Yu.transpose()*(5*AbsSqr(Lambdax) +
          Sqr(g1) - Sqr(g1p) - 15*Sqr(g2) + 5*(fu*fu.adjoint()).trace() + 15*(Yu
          *Yu.adjoint()).trace())) + 0.0002777777777777778*(19456*Power(g1,4) +
          25600*Power(g3,4) + 960*Sqr(g1p)*Sqr(g3) + 256*Sqr(g1)*(3*Sqr(g1p) +
-         40*Sqr(g3)) + 9*Power(g1p,4)*(189 + Sqr(QS)))*UNITMATRIX(3));
+         40*Sqr(g3)) + 9*Power(g1p,4)*(189 + Sqr(QS)))*UNITMATRIX(3))).real();
    }
 
    return anomDim;
@@ -328,12 +331,12 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SeRSeR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = oneOver16PiSqr*(2*(hE.conjugate()*hE.transpose() +
+   anomDim = (oneOver16PiSqr*(2*(hE.conjugate()*hE.transpose() +
       Ye.conjugate()*Ye.transpose()) - 0.05*(24*Sqr(g1) + Sqr(g1p))*UNITMATRIX(
-      3));
+      3))).real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-0.4*(5*(hE.conjugate()*fu.transpose()*
+      anomDim += (twoLoop*(-0.4*(5*(hE.conjugate()*fu.transpose()*
          fu.conjugate()*hE.transpose() + hE.conjugate()*hE.transpose()*
          hE.conjugate()*hE.transpose() + hE.conjugate()*(Lambda12).transpose()*
          Lambda12.conjugate()*hE.transpose() + Ye.conjugate()*Ye.transpose()*
@@ -343,7 +346,7 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SeRSeR() const
          Ye.transpose()*(5*AbsSqr(Lambdax) + 3*Sqr(g1) - 3*Sqr(g1p) - 15*Sqr(g2
          ) + 5*(fd*fd.adjoint()).trace() + 15*(Yd*Yd.adjoint()).trace() + 5*(Ye
          *Ye.adjoint()).trace())) + 0.0025*(5184*Power(g1,4) - 48*Sqr(g1)*Sqr(
-         g1p) + Power(g1p,4)*(189 + Sqr(QS)))*UNITMATRIX(3));
+         g1p) + Power(g1p,4)*(189 + Sqr(QS)))*UNITMATRIX(3))).real();
    }
 
    return anomDim;
@@ -353,14 +356,14 @@ double CLASSNAME::get_SsRSsR() const
 {
    double anomDim = 0;
 
-   anomDim = oneOver16PiSqr*(2*AbsSqr(Lambdax) + AbsSqr(Sigmax) - 0.05*
-      Sqr(g1p)*Sqr(QS) + 3*(Kappa*(Kappa).adjoint()).trace() + 2*(Lambda12*(
-      Lambda12).adjoint()).trace());
+   anomDim = Re(oneOver16PiSqr*(2*AbsSqr(Lambdax) + AbsSqr(Sigmax) - 0.05
+      *Sqr(g1p)*Sqr(QS) + 3*(Kappa*(Kappa).adjoint()).trace() + 2*(Lambda12*(
+      Lambda12).adjoint()).trace()));
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(0.005*Power(g1p,4)*Power(QS,4) - 2*AbsSqr(
-         KappaPr)*AbsSqr(Sigmax) - 2*AbsSqr(Sigmax)*AbsSqr(SigmaL) + 0.47*Power
-         (g1p,4)*Sqr(QS) - 4*Sqr(Conj(Lambdax))*Sqr(Lambdax) - 2*Sqr(Conj(
+      anomDim += Re(twoLoop*(0.005*Power(g1p,4)*Power(QS,4) - 2*AbsSqr
+         (KappaPr)*AbsSqr(Sigmax) - 2*AbsSqr(Sigmax)*AbsSqr(SigmaL) + 0.47*
+         Power(g1p,4)*Sqr(QS) - 4*Sqr(Conj(Lambdax))*Sqr(Lambdax) - 2*Sqr(Conj(
          Sigmax))*Sqr(Sigmax) + 0.1*AbsSqr(Lambdax)*(12*Sqr(g1) + 13*Sqr(g1p) +
          60*Sqr(g2) - Sqr(g1p)*Sqr(QS) - 20*(fd*fd.adjoint()).trace() - 20*(fu
          *fu.adjoint()).trace() - 60*(Yd*Yd.adjoint()).trace() - 20*(Ye*
@@ -376,7 +379,7 @@ double CLASSNAME::get_SsRSsR() const
          ).adjoint()*Lambda12*hE.adjoint()).trace() - 6*(Kappa*(Kappa).adjoint(
          )*Kappa*(Kappa).adjoint()).trace() - 4*(Lambda12*(Lambda12).adjoint()*
          Lambda12*(Lambda12).adjoint()).trace() - 2*(Lambda12*(Lambda12)
-         .adjoint()*fd.transpose()*fd.conjugate()).trace());
+         .adjoint()*fd.transpose()*fd.conjugate()).trace()));
    }
 
    return anomDim;
@@ -386,14 +389,14 @@ double CLASSNAME::get_SsbarRSsbarR() const
 {
    double anomDim = 0;
 
-   anomDim = oneOver16PiSqr*(AbsSqr(Sigmax) - 0.05*Sqr(g1p)*Sqr(QS));
+   anomDim = Re(oneOver16PiSqr*(AbsSqr(Sigmax) - 0.05*Sqr(g1p)*Sqr(QS)));
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(0.005*Power(g1p,4)*Power(QS,4) - 2*AbsSqr(
-         KappaPr)*AbsSqr(Sigmax) - 2*AbsSqr(Lambdax)*AbsSqr(Sigmax) - 2*AbsSqr(
-         Sigmax)*AbsSqr(SigmaL) + 0.47*Power(g1p,4)*Sqr(QS) - 2*Sqr(Conj(Sigmax
-         ))*Sqr(Sigmax) - 3*AbsSqr(Sigmax)*(Kappa*(Kappa).adjoint()).trace() -
-         2*AbsSqr(Sigmax)*(Lambda12*(Lambda12).adjoint()).trace());
+      anomDim += Re(twoLoop*(0.005*Power(g1p,4)*Power(QS,4) - 2*AbsSqr
+         (KappaPr)*AbsSqr(Sigmax) - 2*AbsSqr(Lambdax)*AbsSqr(Sigmax) - 2*AbsSqr
+         (Sigmax)*AbsSqr(SigmaL) + 0.47*Power(g1p,4)*Sqr(QS) - 2*Sqr(Conj(
+         Sigmax))*Sqr(Sigmax) - 3*AbsSqr(Sigmax)*(Kappa*(Kappa).adjoint())
+         .trace() - 2*AbsSqr(Sigmax)*(Lambda12*(Lambda12).adjoint()).trace()));
    }
 
    return anomDim;
@@ -403,12 +406,12 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH1ISH1I() const
 {
    Eigen::Matrix<double,2,2> anomDim;
 
-   anomDim = oneOver16PiSqr*(fu.adjoint()*fu + hE.adjoint()*hE + (
+   anomDim = (oneOver16PiSqr*(fu.adjoint()*fu + hE.adjoint()*hE + (
       Lambda12).adjoint()*Lambda12 - 0.15*(2*Sqr(g1) + 3*Sqr(g1p) + 10*Sqr(g2))
-      *UNITMATRIX(2));
+      *UNITMATRIX(2))).real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-(AbsSqr(SigmaL)*(hE.adjoint()*hE)) + 1.2*
+      anomDim += (twoLoop*(-(AbsSqr(SigmaL)*(hE.adjoint()*hE)) + 1.2*
          Sqr(g1)*(hE.adjoint()*hE) - 0.2*Sqr(g1p)*(hE.adjoint()*hE) - 2*AbsSqr(
          Lambdax)*((Lambda12).adjoint()*Lambda12) - AbsSqr(Sigmax)*((Lambda12)
          .adjoint()*Lambda12) - 0.25*Sqr(g1p)*((Lambda12).adjoint()*Lambda12) +
@@ -424,7 +427,7 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH1ISH1I() const
          Lambda12).adjoint()*Lambda12)*(Lambda12*(Lambda12).adjoint()).trace()
          + 0.0075*(396*Power(g1,4) + 1100*Power(g2,4) - 12*Sqr(g1)*(Sqr(g1p) -
          10*Sqr(g2)) + 180*Sqr(g1p)*Sqr(g2) + 3*Power(g1p,4)*(197 + Sqr(QS)))*
-         UNITMATRIX(2));
+         UNITMATRIX(2))).real();
    }
 
    return anomDim;
@@ -434,12 +437,12 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH2ISH2I() const
 {
    Eigen::Matrix<double,2,2> anomDim;
 
-   anomDim = oneOver16PiSqr*(fd.adjoint()*fd + Lambda12.conjugate()*(
+   anomDim = (oneOver16PiSqr*(fd.adjoint()*fd + Lambda12.conjugate()*(
       Lambda12).transpose() - 0.1*(3*Sqr(g1) + 2*Sqr(g1p) + 15*Sqr(g2))*
-      UNITMATRIX(2));
+      UNITMATRIX(2))).real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-2*AbsSqr(Lambdax)*(Lambda12.conjugate()*(
+      anomDim += (twoLoop*(-2*AbsSqr(Lambdax)*(Lambda12.conjugate()*(
          Lambda12).transpose()) - AbsSqr(Sigmax)*(Lambda12.conjugate()*(
          Lambda12).transpose()) + 0.25*Sqr(g1p)*(Lambda12.conjugate()*(Lambda12
          ).transpose()) + 0.05*Sqr(g1p)*Sqr(QS)*(Lambda12.conjugate()*(Lambda12
@@ -455,7 +458,7 @@ Eigen::Matrix<double,2,2> CLASSNAME::get_SH2ISH2I() const
          Lambda12).transpose())*(Lambda12*(Lambda12).adjoint()).trace() + 0.01*
          (297*Power(g1,4) + 825*Power(g2,4) + 60*Sqr(g1p)*Sqr(g2) + 18*Sqr(g1)*
          (2*Sqr(g1p) + 5*Sqr(g2)) + Power(g1p,4)*(192 + Sqr(QS)))*UNITMATRIX(2)
-         );
+         )).real();
    }
 
    return anomDim;
@@ -465,11 +468,11 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SSIRSSIR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = oneOver16PiSqr*(2*(fd.conjugate()*fd.transpose() +
-      fu.conjugate()*fu.transpose()) - 1.25*Sqr(g1p)*UNITMATRIX(3));
+   anomDim = (oneOver16PiSqr*(2*(fd.conjugate()*fd.transpose() +
+      fu.conjugate()*fu.transpose()) - 1.25*Sqr(g1p)*UNITMATRIX(3))).real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(0.4*(-5*(fd.conjugate()*Lambda12*(Lambda12)
+      anomDim += (twoLoop*(0.4*(-5*(fd.conjugate()*Lambda12*(Lambda12)
          .adjoint()*fd.transpose() + fd.conjugate()*fd.transpose()*fd.conjugate
          ()*fd.transpose() + fu.conjugate()*fu.transpose()*fu.conjugate()*
          fu.transpose() + fu.conjugate()*hE.transpose()*hE.conjugate()*
@@ -480,7 +483,7 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SSIRSSIR() const
          Ye.adjoint()).trace()) + fu.conjugate()*fu.transpose()*(-5*AbsSqr(
          Lambdax) - 5*(fu*fu.adjoint()).trace() + 3*(Sqr(g1) - Sqr(g1p) + 5*Sqr
          (g2) - 5*(Yu*Yu.adjoint()).trace()))) + 0.0625*Power(g1p,4)*(213 + Sqr
-         (QS))*UNITMATRIX(3));
+         (QS))*UNITMATRIX(3))).real();
    }
 
    return anomDim;
@@ -490,11 +493,12 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxLSDxL() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = oneOver16PiSqr*(Kappa.conjugate()*(Kappa).transpose() -
-      0.06666666666666667*(2*Sqr(g1) + 3*Sqr(g1p) + 40*Sqr(g3))*UNITMATRIX(3));
+   anomDim = (oneOver16PiSqr*(Kappa.conjugate()*(Kappa).transpose() -
+      0.06666666666666667*(2*Sqr(g1) + 3*Sqr(g1p) + 40*Sqr(g3))*UNITMATRIX(3)))
+      .real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-2*(Kappa.conjugate()*gD.transpose()*
+      anomDim += (twoLoop*(-2*(Kappa.conjugate()*gD.transpose()*
          gD.conjugate()*(Kappa).transpose()) - Kappa.conjugate()*(Kappa)
          .transpose()*Kappa.conjugate()*(Kappa).transpose() + Kappa.conjugate()
          *(Kappa).transpose()*(-2*AbsSqr(Lambdax) - AbsSqr(Sigmax) + 0.25*Sqr(
@@ -502,7 +506,7 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxLSDxL() const
          *(Lambda12*(Lambda12).adjoint()).trace()) + 0.0011111111111111111*(
          1168*Power(g1,4) + 6400*Power(g3,4) + 960*Sqr(g1p)*Sqr(g3) + Sqr(g1)*(
          -96*Sqr(g1p) + 640*Sqr(g3)) + 9*Power(g1p,4)*(192 + Sqr(QS)))*
-         UNITMATRIX(3));
+         UNITMATRIX(3))).real();
    }
 
    return anomDim;
@@ -512,13 +516,13 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxbarRSDxbarR() const
 {
    Eigen::Matrix<double,3,3> anomDim;
 
-   anomDim = oneOver16PiSqr*(2*(gD.adjoint()*gD) + (Kappa).adjoint()*
+   anomDim = (oneOver16PiSqr*(2*(gD.adjoint()*gD) + (Kappa).adjoint()*
       Kappa - 0.016666666666666666*(8*Sqr(g1) + 27*Sqr(g1p) + 160*Sqr(g3))*
-      UNITMATRIX(3));
+      UNITMATRIX(3))).real();
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-2*AbsSqr(Lambdax)*((Kappa).adjoint()*Kappa)
-         - AbsSqr(Sigmax)*((Kappa).adjoint()*Kappa) - 0.25*Sqr(g1p)*((Kappa)
+      anomDim += (twoLoop*(-2*AbsSqr(Lambdax)*((Kappa).adjoint()*Kappa
+         ) - AbsSqr(Sigmax)*((Kappa).adjoint()*Kappa) - 0.25*Sqr(g1p)*((Kappa)
          .adjoint()*Kappa) + 0.05*Sqr(g1p)*Sqr(QS)*((Kappa).adjoint()*Kappa) -
          2*(gD.adjoint()*gD*gD.adjoint()*gD) - 2*(gD.adjoint()*Yd.transpose()*
          Yd.conjugate()*gD) - 2*(gD.adjoint()*Yu.transpose()*Yu.conjugate()*gD)
@@ -529,7 +533,7 @@ Eigen::Matrix<double,3,3> CLASSNAME::get_SDxbarRSDxbarR() const
          .adjoint()*Kappa)*(Lambda12*(Lambda12).adjoint()).trace() +
          0.0002777777777777778*(4672*Power(g1,4) + 25600*Power(g3,4) + 8640*Sqr
          (g1p)*Sqr(g3) + 16*Sqr(g1)*(81*Sqr(g1p) + 160*Sqr(g3)) + 81*Power(g1p,
-         4)*(197 + Sqr(QS)))*UNITMATRIX(3));
+         4)*(197 + Sqr(QS)))*UNITMATRIX(3))).real();
    }
 
    return anomDim;
@@ -539,24 +543,25 @@ double CLASSNAME::get_SHpSHp() const
 {
    double anomDim = 0;
 
-   anomDim = oneOver16PiSqr*(AbsSqr(SigmaL) - 0.3*Sqr(g1) - 0.2*Sqr(g1p)
-      - 1.5*Sqr(g2) + 3*(gD*gD.adjoint()).trace() + (hE*hE.adjoint()).trace());
+   anomDim = Re(oneOver16PiSqr*(AbsSqr(SigmaL) - 0.3*Sqr(g1) - 0.2*Sqr(
+      g1p) - 1.5*Sqr(g2) + 3*(gD*gD.adjoint()).trace() + (hE*hE.adjoint())
+      .trace()));
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(2.97*Power(g1,4) + 1.92*Power(g1p,4) + 8.25*
-         Power(g2,4) - 2*AbsSqr(KappaPr)*AbsSqr(SigmaL) - AbsSqr(Sigmax)*AbsSqr
-         (SigmaL) + 0.36*Sqr(g1)*Sqr(g1p) + 0.9*Sqr(g1)*Sqr(g2) + 0.6*Sqr(g1p)*
-         Sqr(g2) + 0.01*Power(g1p,4)*Sqr(QS) - 3*Sqr(Conj(SigmaL))*Sqr(SigmaL)
-         - 0.4*Sqr(g1)*(gD*gD.adjoint()).trace() + 0.9*Sqr(g1p)*(gD*gD.adjoint(
-         )).trace() + 16*Sqr(g3)*(gD*gD.adjoint()).trace() + 1.2*Sqr(g1)*(hE*
-         hE.adjoint()).trace() + 0.3*Sqr(g1p)*(hE*hE.adjoint()).trace() - (fu*
-         hE.adjoint()*hE*fu.adjoint()).trace() - 9*(gD*gD.adjoint()*gD*
+      anomDim += Re(twoLoop*(2.97*Power(g1,4) + 1.92*Power(g1p,4) +
+         8.25*Power(g2,4) - 2*AbsSqr(KappaPr)*AbsSqr(SigmaL) - AbsSqr(Sigmax)*
+         AbsSqr(SigmaL) + 0.36*Sqr(g1)*Sqr(g1p) + 0.9*Sqr(g1)*Sqr(g2) + 0.6*Sqr
+         (g1p)*Sqr(g2) + 0.01*Power(g1p,4)*Sqr(QS) - 3*Sqr(Conj(SigmaL))*Sqr(
+         SigmaL) - 0.4*Sqr(g1)*(gD*gD.adjoint()).trace() + 0.9*Sqr(g1p)*(gD*
+         gD.adjoint()).trace() + 16*Sqr(g3)*(gD*gD.adjoint()).trace() + 1.2*Sqr
+         (g1)*(hE*hE.adjoint()).trace() + 0.3*Sqr(g1p)*(hE*hE.adjoint()).trace(
+         ) - (fu*hE.adjoint()*hE*fu.adjoint()).trace() - 9*(gD*gD.adjoint()*gD*
          gD.adjoint()).trace() - 3*(gD*gD.adjoint()*Yd.transpose()*Yd.conjugate
          ()).trace() - 3*(gD*gD.adjoint()*Yu.transpose()*Yu.conjugate()).trace(
          ) - 3*(gD*(Kappa).adjoint()*Kappa*gD.adjoint()).trace() - 3*(hE*
          hE.adjoint()*hE*hE.adjoint()).trace() - 2*(hE*hE.adjoint()*Ye*
          Ye.adjoint()).trace() - (hE*(Lambda12).adjoint()*Lambda12*hE.adjoint()
-         ).trace());
+         ).trace()));
    }
 
    return anomDim;
@@ -566,16 +571,16 @@ double CLASSNAME::get_SHpbarSHpbar() const
 {
    double anomDim = 0;
 
-   anomDim = oneOver16PiSqr*(AbsSqr(SigmaL) + 0.1*(-3*Sqr(g1) - 2*Sqr(g1p
-      ) - 15*Sqr(g2)));
+   anomDim = Re(oneOver16PiSqr*(AbsSqr(SigmaL) + 0.1*(-3*Sqr(g1) - 2*Sqr(
+      g1p) - 15*Sqr(g2))));
 
    if (get_loops() > 1) {
-      anomDim += 0.01*twoLoop*(297*Power(g1,4) + 192*Power(g1p,4) +
+      anomDim += Re(0.01*twoLoop*(297*Power(g1,4) + 192*Power(g1p,4) +
          825*Power(g2,4) - 200*AbsSqr(KappaPr)*AbsSqr(SigmaL) - 100*AbsSqr(
          Sigmax)*AbsSqr(SigmaL) + 36*Sqr(g1)*Sqr(g1p) + 90*Sqr(g1)*Sqr(g2) + 60
          *Sqr(g1p)*Sqr(g2) + Power(g1p,4)*Sqr(QS) - 300*Sqr(Conj(SigmaL))*Sqr(
          SigmaL) - 300*AbsSqr(SigmaL)*(gD*gD.adjoint()).trace() - 100*AbsSqr(
-         SigmaL)*(hE*hE.adjoint()).trace());
+         SigmaL)*(hE*hE.adjoint()).trace()));
    }
 
    return anomDim;
@@ -585,17 +590,17 @@ double CLASSNAME::get_SphiRSphiR() const
 {
    double anomDim = 0;
 
-   anomDim = oneOver16PiSqr*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax) + 2*
-      AbsSqr(SigmaL));
+   anomDim = Re(oneOver16PiSqr*(2*AbsSqr(KappaPr) + AbsSqr(Sigmax) + 2*
+      AbsSqr(SigmaL)));
 
    if (get_loops() > 1) {
-      anomDim += twoLoop*(-4*AbsSqr(KappaPr)*(AbsSqr(Sigmax) + 2*
+      anomDim += Re(twoLoop*(-4*AbsSqr(KappaPr)*(AbsSqr(Sigmax) + 2*
          AbsSqr(SigmaL)) - 8*Sqr(Conj(KappaPr))*Sqr(KappaPr) - 2*Sqr(Conj(
          Sigmax))*Sqr(Sigmax) + 0.4*AbsSqr(SigmaL)*(-10*AbsSqr(SigmaL) + 3*Sqr(
          g1) + 2*Sqr(g1p) + 15*Sqr(g2) - 15*(gD*gD.adjoint()).trace() - 5*(hE*
          hE.adjoint()).trace()) + Conj(Sigmax)*(-2*AbsSqr(Lambdax)*Sigmax + 0.1
          *Sigmax*Sqr(g1p)*Sqr(QS) - 3*Sigmax*(Kappa*(Kappa).adjoint()).trace()
-         - 2*Sigmax*(Lambda12*(Lambda12).adjoint()).trace()));
+         - 2*Sigmax*(Lambda12*(Lambda12).adjoint()).trace())));
    }
 
    return anomDim;
@@ -820,54 +825,54 @@ void CNE6SSM_susy_parameters::set(const Eigen::ArrayXd& pars)
 
 void CNE6SSM_susy_parameters::calc_susy_traces(Susy_traces& susy_traces) const
 {
-   TRACE_STRUCT.tracefdAdjfd = (fd*fd.adjoint()).trace();
-   TRACE_STRUCT.traceYdAdjYd = (Yd*Yd.adjoint()).trace();
-   TRACE_STRUCT.traceYeAdjYe = (Ye*Ye.adjoint()).trace();
-   TRACE_STRUCT.tracefuAdjfu = (fu*fu.adjoint()).trace();
-   TRACE_STRUCT.traceYuAdjYu = (Yu*Yu.adjoint()).trace();
-   TRACE_STRUCT.traceKappaAdjKappa = (Kappa*(Kappa).adjoint()).trace();
-   TRACE_STRUCT.traceLambda12AdjLambda12 = (Lambda12*(Lambda12).adjoint())
-      .trace();
-   TRACE_STRUCT.tracefdAdjfdfdAdjfd = (fd*fd.adjoint()*fd*fd.adjoint()).trace()
-      ;
-   TRACE_STRUCT.tracefdAdjfdfuAdjfu = (fd*fd.adjoint()*fu*fu.adjoint()).trace()
-      ;
-   TRACE_STRUCT.tracegDAdjgDTpYdconjYd = (gD*gD.adjoint()*Yd.transpose()*
-      Yd.conjugate()).trace();
-   TRACE_STRUCT.tracehEAdjhEYeAdjYe = (hE*hE.adjoint()*Ye*Ye.adjoint()).trace()
-      ;
-   TRACE_STRUCT.traceYdAdjYdYdAdjYd = (Yd*Yd.adjoint()*Yd*Yd.adjoint()).trace()
-      ;
-   TRACE_STRUCT.traceYdAdjYuYuAdjYd = (Yd*Yu.adjoint()*Yu*Yd.adjoint()).trace()
-      ;
-   TRACE_STRUCT.traceYeAdjYeYeAdjYe = (Ye*Ye.adjoint()*Ye*Ye.adjoint()).trace()
-      ;
-   TRACE_STRUCT.traceLambda12AdjLambda12Tpfdconjfd = (Lambda12*(Lambda12)
-      .adjoint()*fd.transpose()*fd.conjugate()).trace();
-   TRACE_STRUCT.tracegDAdjgD = (gD*gD.adjoint()).trace();
-   TRACE_STRUCT.tracehEAdjhE = (hE*hE.adjoint()).trace();
-   TRACE_STRUCT.tracefuAdjhEhEAdjfu = (fu*hE.adjoint()*hE*fu.adjoint()).trace()
-      ;
-   TRACE_STRUCT.tracegDAdjgDgDAdjgD = (gD*gD.adjoint()*gD*gD.adjoint()).trace()
-      ;
-   TRACE_STRUCT.tracegDAdjgDTpYuconjYu = (gD*gD.adjoint()*Yu.transpose()*
-      Yu.conjugate()).trace();
-   TRACE_STRUCT.tracegDAdjKappaKappaAdjgD = (gD*(Kappa).adjoint()*Kappa*
-      gD.adjoint()).trace();
-   TRACE_STRUCT.tracehEAdjhEhEAdjhE = (hE*hE.adjoint()*hE*hE.adjoint()).trace()
-      ;
-   TRACE_STRUCT.tracehEAdjLambda12Lambda12AdjhE = (hE*(Lambda12).adjoint()*
-      Lambda12*hE.adjoint()).trace();
-   TRACE_STRUCT.tracefuAdjLambda12Lambda12Adjfu = (fu*(Lambda12).adjoint()*
-      Lambda12*fu.adjoint()).trace();
-   TRACE_STRUCT.traceKappaAdjKappaKappaAdjKappa = (Kappa*(Kappa).adjoint()*
-      Kappa*(Kappa).adjoint()).trace();
-   TRACE_STRUCT.traceLambda12AdjLambda12Lambda12AdjLambda12 = (Lambda12*(
-      Lambda12).adjoint()*Lambda12*(Lambda12).adjoint()).trace();
-   TRACE_STRUCT.tracefuAdjfufuAdjfu = (fu*fu.adjoint()*fu*fu.adjoint()).trace()
-      ;
-   TRACE_STRUCT.traceYuAdjYuYuAdjYu = (Yu*Yu.adjoint()*Yu*Yu.adjoint()).trace()
-      ;
+   TRACE_STRUCT.tracefdAdjfd = Re((fd*fd.adjoint()).trace());
+   TRACE_STRUCT.traceYdAdjYd = Re((Yd*Yd.adjoint()).trace());
+   TRACE_STRUCT.traceYeAdjYe = Re((Ye*Ye.adjoint()).trace());
+   TRACE_STRUCT.tracefuAdjfu = Re((fu*fu.adjoint()).trace());
+   TRACE_STRUCT.traceYuAdjYu = Re((Yu*Yu.adjoint()).trace());
+   TRACE_STRUCT.traceKappaAdjKappa = Re((Kappa*(Kappa).adjoint()).trace());
+   TRACE_STRUCT.traceLambda12AdjLambda12 = Re((Lambda12*(Lambda12).adjoint())
+      .trace());
+   TRACE_STRUCT.tracefdAdjfdfdAdjfd = Re((fd*fd.adjoint()*fd*fd.adjoint())
+      .trace());
+   TRACE_STRUCT.tracefdAdjfdfuAdjfu = Re((fd*fd.adjoint()*fu*fu.adjoint())
+      .trace());
+   TRACE_STRUCT.tracegDAdjgDTpYdconjYd = Re((gD*gD.adjoint()*Yd.transpose()*
+      Yd.conjugate()).trace());
+   TRACE_STRUCT.tracehEAdjhEYeAdjYe = Re((hE*hE.adjoint()*Ye*Ye.adjoint())
+      .trace());
+   TRACE_STRUCT.traceYdAdjYdYdAdjYd = Re((Yd*Yd.adjoint()*Yd*Yd.adjoint())
+      .trace());
+   TRACE_STRUCT.traceYdAdjYuYuAdjYd = Re((Yd*Yu.adjoint()*Yu*Yd.adjoint())
+      .trace());
+   TRACE_STRUCT.traceYeAdjYeYeAdjYe = Re((Ye*Ye.adjoint()*Ye*Ye.adjoint())
+      .trace());
+   TRACE_STRUCT.traceLambda12AdjLambda12Tpfdconjfd = Re((Lambda12*(Lambda12)
+      .adjoint()*fd.transpose()*fd.conjugate()).trace());
+   TRACE_STRUCT.tracegDAdjgD = Re((gD*gD.adjoint()).trace());
+   TRACE_STRUCT.tracehEAdjhE = Re((hE*hE.adjoint()).trace());
+   TRACE_STRUCT.tracefuAdjhEhEAdjfu = Re((fu*hE.adjoint()*hE*fu.adjoint())
+      .trace());
+   TRACE_STRUCT.tracegDAdjgDgDAdjgD = Re((gD*gD.adjoint()*gD*gD.adjoint())
+      .trace());
+   TRACE_STRUCT.tracegDAdjgDTpYuconjYu = Re((gD*gD.adjoint()*Yu.transpose()*
+      Yu.conjugate()).trace());
+   TRACE_STRUCT.tracegDAdjKappaKappaAdjgD = Re((gD*(Kappa).adjoint()*Kappa*
+      gD.adjoint()).trace());
+   TRACE_STRUCT.tracehEAdjhEhEAdjhE = Re((hE*hE.adjoint()*hE*hE.adjoint())
+      .trace());
+   TRACE_STRUCT.tracehEAdjLambda12Lambda12AdjhE = Re((hE*(Lambda12).adjoint()*
+      Lambda12*hE.adjoint()).trace());
+   TRACE_STRUCT.tracefuAdjLambda12Lambda12Adjfu = Re((fu*(Lambda12).adjoint()*
+      Lambda12*fu.adjoint()).trace());
+   TRACE_STRUCT.traceKappaAdjKappaKappaAdjKappa = Re((Kappa*(Kappa).adjoint()*
+      Kappa*(Kappa).adjoint()).trace());
+   TRACE_STRUCT.traceLambda12AdjLambda12Lambda12AdjLambda12 = Re((Lambda12*(
+      Lambda12).adjoint()*Lambda12*(Lambda12).adjoint()).trace());
+   TRACE_STRUCT.tracefuAdjfufuAdjfu = Re((fu*fu.adjoint()*fu*fu.adjoint())
+      .trace());
+   TRACE_STRUCT.traceYuAdjYuYuAdjYu = Re((Yu*Yu.adjoint()*Yu*Yu.adjoint())
+      .trace());
 
 }
 

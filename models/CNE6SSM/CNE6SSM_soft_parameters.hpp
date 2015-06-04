@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:36
+// File generated at Wed 3 Jun 2015 23:42:56
 
 #ifndef CNE6SSM_soft_parameters_H
 #define CNE6SSM_soft_parameters_H
@@ -544,5 +544,7 @@ private:
 std::ostream& operator<<(std::ostream&, const CNE6SSM_soft_parameters&);
 
 } // namespace flexiblesusy
+
+#undef TRACE_STRUCT_TYPE
 
 #endif

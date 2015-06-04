@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:20
+// File generated at Wed 3 Jun 2015 23:43:31
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -38,9 +38,9 @@ double CNE6SSM_soft_parameters::calc_beta_msbar2_one_loop(const Soft_traces& sof
 
    double beta_msbar2;
 
-   beta_msbar2 = oneOver16PiSqr*(-0.31622776601683794*g1p*QS*Tr14 + 2*(
-      mphi2 + ms2 + msbar2)*AbsSqr(Sigmax) + 2*AbsSqr(TSigmax) - 0.2*AbsSqr(
-      MassBp)*Sqr(g1p)*Sqr(QS));
+   beta_msbar2 = Re(oneOver16PiSqr*(-0.31622776601683794*g1p*QS*Tr14 + 2*
+      (mphi2 + ms2 + msbar2)*AbsSqr(Sigmax) + 2*AbsSqr(TSigmax) - 0.2*AbsSqr(
+      MassBp)*Sqr(g1p)*Sqr(QS)));
 
 
    return beta_msbar2;
@@ -81,7 +81,7 @@ double CNE6SSM_soft_parameters::calc_beta_msbar2_two_loop(const Soft_traces& sof
 
    double beta_msbar2;
 
-   beta_msbar2 = twoLoop*(-1.2649110640673518*g1p*QS*Tr34 - 6*
+   beta_msbar2 = Re(twoLoop*(-1.2649110640673518*g1p*QS*Tr34 - 6*
       traceconjTKappaTpTKappa*AbsSqr(Sigmax) - 4*traceconjTLambda12TpTLambda12*
       AbsSqr(Sigmax) - 6*mphi2*traceKappaAdjKappa*AbsSqr(Sigmax) - 12*ms2*
       traceKappaAdjKappa*AbsSqr(Sigmax) - 6*msbar2*traceKappaAdjKappa*AbsSqr(
@@ -111,7 +111,7 @@ double CNE6SSM_soft_parameters::calc_beta_msbar2_two_loop(const Soft_traces& sof
       Lambdax*TSigmax - 4*Conj(Sigmax)*Conj(TSigmaL)*SigmaL*TSigmax - 4*Conj(
       KappaPr)*((4*mphi2 + ms2 + msbar2)*AbsSqr(Sigmax)*KappaPr + Conj(TSigmax)
       *(Sigmax*TKappaPr + KappaPr*TSigmax)) - 4*Conj(SigmaL)*Conj(TSigmax)*
-      Sigmax*TSigmaL);
+      Sigmax*TSigmaL));
 
 
    return beta_msbar2;

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:37:13
+// File generated at Wed 3 Jun 2015 23:53:01
 
 /**
  * @file CNE6SSM_two_scale_model.hpp
@@ -24,8 +24,8 @@
  *        value problem using the two_scale solver by solving EWSB
  *        and determine the pole masses and mixings
  *
- * This file was generated at Sun 19 Apr 2015 20:37:13 with FlexibleSUSY
- * 1.0.4 (git commit: v1.0.3-cpc6-749-g227a308) and SARAH 4.5.3 .
+ * This file was generated at Wed 3 Jun 2015 23:53:01 with FlexibleSUSY
+ * 1.1.0 (git commit: v1.1.0) and SARAH 4.5.6 .
  */
 
 #ifndef CNE6SSM_TWO_SCALE_H
@@ -36,7 +36,6 @@
 #include "CNE6SSM_info.hpp"
 #include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "two_scale_model.hpp"
-#include "config.h"
 
 #include <iosfwd>
 #include <string>

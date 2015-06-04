@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:44
+// File generated at Wed 3 Jun 2015 23:42:49
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -40,9 +40,9 @@ double CNE6SSM_susy_parameters::calc_beta_vs_one_loop(const Susy_traces& susy_tr
 
    double beta_vs;
 
-   beta_vs = oneOver16PiSqr*(-3*traceKappaAdjKappa*vs - 2*
+   beta_vs = Re(oneOver16PiSqr*(-3*traceKappaAdjKappa*vs - 2*
       traceLambda12AdjLambda12*vs - 2*vs*AbsSqr(Lambdax) - vs*AbsSqr(Sigmax) +
-      0.05*vs*Sqr(g1p)*Sqr(QS));
+      0.05*vs*Sqr(g1p)*Sqr(QS)));
 
 
    return beta_vs;
@@ -79,7 +79,7 @@ double CNE6SSM_susy_parameters::calc_beta_vs_two_loop(const Susy_traces& susy_tr
 
    double beta_vs;
 
-   beta_vs = -0.0025*twoLoop*vs*(Power(g1p,4)*Power(QS,4) - 800*
+   beta_vs = Re(-0.0025*twoLoop*vs*(Power(g1p,4)*Power(QS,4) - 800*
       tracefuAdjLambda12Lambda12Adjfu - 2400*tracegDAdjKappaKappaAdjgD - 800*
       tracehEAdjLambda12Lambda12AdjhE - 2400*traceKappaAdjKappaKappaAdjKappa -
       1600*traceLambda12AdjLambda12Lambda12AdjLambda12 - 800*
@@ -91,7 +91,7 @@ double CNE6SSM_susy_parameters::calc_beta_vs_two_loop(const Susy_traces& susy_tr
       g1p) + 60*Sqr(g2)) + 6400*traceKappaAdjKappa*Sqr(g3) + 94*Power(g1p,4)*
       Sqr(QS) + 20*AbsSqr(Sigmax)*(-40*AbsSqr(KappaPr) - 40*AbsSqr(SigmaL) +
       Sqr(g1p)*Sqr(QS)) - 1600*Sqr(Conj(Lambdax))*Sqr(Lambdax) - 800*Sqr(Conj(
-      Sigmax))*Sqr(Sigmax));
+      Sigmax))*Sqr(Sigmax)));
 
 
    return beta_vs;

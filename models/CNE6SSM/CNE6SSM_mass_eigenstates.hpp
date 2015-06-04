@@ -1,21 +1,38 @@
 // ====================================================================
-// Test implementation for a class to factor out the pole masses and
-// mixings calculation.
+// This file is part of FlexibleSUSY.
+//
+// FlexibleSUSY is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation, either version 3 of the License,
+// or (at your option) any later version.
+//
+// FlexibleSUSY is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with FlexibleSUSY.  If not, see
+// <http://www.gnu.org/licenses/>.
 // ====================================================================
+
+// File generated at Wed 3 Jun 2015 23:53:01
 
 /**
  * @file CNE6SSM_mass_eigenstates.hpp
  * @brief contains class for model with routines needed for
- *        determining the pole masses and mixings from the
- *        Lagrangian parameters
+ *        determining the pole masses and mixings
+ *
+ * This file was generated at Wed 3 Jun 2015 23:53:01 with FlexibleSUSY
+ * 1.1.0 (git commit: v1.1.0) and SARAH 4.5.6 .
  */
 
 #ifndef CNE6SSM_MASS_EIGENSTATES_H
 #define CNE6SSM_MASS_EIGENSTATES_H
 
-#include "CNE6SSM_info.hpp"
 #include "CNE6SSM_soft_parameters.hpp"
 #include "CNE6SSM_physical.hpp"
+#include "CNE6SSM_info.hpp"
 #include "two_loop_corrections.hpp"
 #include "problems.hpp"
 #include "config.h"
@@ -24,20 +41,26 @@
 #include <mutex>
 #endif
 
+#include <iosfwd>
+
 #include <Eigen/Core>
 
 namespace flexiblesusy {
 
 /**
  * @class CNE6SSM_mass_eigenstates
- * @brief model class with routines for determining mass and mixings
+ * @brief model class with routines for determing masses and mixings
  */
 class CNE6SSM_mass_eigenstates : public CNE6SSM_soft_parameters {
 public:
    explicit CNE6SSM_mass_eigenstates();
    virtual ~CNE6SSM_mass_eigenstates();
 
+   /// number of EWSB equations
+   static const std::size_t number_of_tadpole_equations = 5;
+
    void calculate_DRbar_masses();
+   void calculate_DRbar_parameters();
    void calculate_pole_masses();
    virtual void clear();
    void clear_DRbar_parameters();
@@ -113,6 +136,7 @@ public:
    double get_MChiP(int i) const { return MChiP(i); }
    double get_MVWm() const { return MVWm; }
 
+   
    Eigen::Array<double,1,1> get_MChargedHiggs() const;
 
    Eigen::Array<double,3,1> get_MPseudoscalarHiggs() const;
@@ -172,8 +196,8 @@ public:
    const Eigen::Matrix<std::complex<double>,2,2>& get_ZNp() const { return ZNp; }
    const std::complex<double>& get_ZNp(int i, int k) const { return ZNp(i,k); }
 
-   void set_PhaseGlu(const std::complex<double>& PhaseGlu_) { PhaseGlu = PhaseGlu_; }
-   const std::complex<double>& get_PhaseGlu() const { return PhaseGlu; }
+   void set_PhaseGlu(std::complex<double> PhaseGlu_) { PhaseGlu = PhaseGlu_; }
+   std::complex<double> get_PhaseGlu() const { return PhaseGlu; }
 
    double get_mass_matrix_VG() const;
    void calculate_MVG();
@@ -234,9 +258,6 @@ public:
    double get_mass_matrix_VWm() const;
    void calculate_MVWm();
 
-   // functions implementing EWSB equations allowing to check
-   // whether current set of parameters satisfies EWSB at a 
-   // given loop order?
    double get_ewsb_eq_hh_1() const;
    double get_ewsb_eq_hh_2() const;
    double get_ewsb_eq_hh_3() const;
@@ -1313,6 +1334,7 @@ protected:
    void copy_DRbar_masses_to_pole_masses();
 
 private:
+
 #ifdef ENABLE_THREADS
    struct Thread {
       typedef void(CNE6SSM_mass_eigenstates::*Memfun_t)();
@@ -1329,9 +1351,7 @@ private:
          }
       }
    };
-#endif
 
-#ifdef ENABLE_THREADS
    std::exception_ptr thread_exception;
    static std::mutex mtx_fortran; /// locks fortran functions
 #endif

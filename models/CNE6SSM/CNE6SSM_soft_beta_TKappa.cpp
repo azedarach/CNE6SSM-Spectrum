@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:48
+// File generated at Wed 3 Jun 2015 23:43:06
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -43,7 +43,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TKappa_one_loop(con
 
    Eigen::Matrix<double,3,3> beta_TKappa;
 
-   beta_TKappa = oneOver16PiSqr*(3*traceKappaAdjKappa*TKappa + 2*
+   beta_TKappa = (oneOver16PiSqr*(3*traceKappaAdjKappa*TKappa + 2*
       traceLambda12AdjLambda12*TKappa + 2*AbsSqr(Lambdax)*TKappa + AbsSqr(
       Sigmax)*TKappa - 0.26666666666666666*Sqr(g1)*TKappa - 0.65*Sqr(g1p)*
       TKappa - 5.333333333333333*Sqr(g3)*TKappa - 0.05*Sqr(g1p)*Sqr(QS)*TKappa
@@ -52,7 +52,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TKappa_one_loop(con
       10.666666666666666*MassG*Sqr(g3) + 0.1*MassBp*Sqr(g1p)*Sqr(QS) + 4*Conj(
       Lambdax)*TLambdax + 2*Conj(Sigmax)*TSigmax) + 4*(Kappa*gD.adjoint()*TgD)
       + 3*(Kappa*(Kappa).adjoint()*TKappa) + 2*(TKappa*gD.adjoint()*gD) + 3*(
-      TKappa*(Kappa).adjoint()*Kappa));
+      TKappa*(Kappa).adjoint()*Kappa))).real();
 
 
    return beta_TKappa;
@@ -121,11 +121,12 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TKappa_two_loop(con
 
    Eigen::Matrix<double,3,3> beta_TKappa;
 
-   beta_TKappa = twoLoop*(2.5955555555555554*Power(g1,4)*TKappa + 6.3525*
-      Power(g1p,4)*TKappa + 14.222222222222221*Power(g3,4)*TKappa + 0.005*Power
-      (g1p,4)*Power(QS,4)*TKappa - 2*tracefuAdjLambda12Lambda12Adjfu*TKappa - 6
-      *tracegDAdjKappaKappaAdjgD*TKappa - 2*tracehEAdjLambda12Lambda12AdjhE*
-      TKappa - 6*traceKappaAdjKappaKappaAdjKappa*TKappa - 4*
+   beta_TKappa = (twoLoop*(2.5955555555555554*Power(g1,4)*TKappa + 6.3525
+      *Power(g1p,4)*TKappa + 14.222222222222221*Power(g3,4)*TKappa + 0.005*
+      Power(g1p,4)*Power(QS,4)*TKappa - 2*tracefuAdjLambda12Lambda12Adjfu*
+      TKappa - 6*tracegDAdjKappaKappaAdjgD*TKappa - 2*
+      tracehEAdjLambda12Lambda12AdjhE*TKappa - 6*
+      traceKappaAdjKappaKappaAdjKappa*TKappa - 4*
       traceLambda12AdjLambda12Lambda12AdjLambda12*TKappa - 2*
       traceLambda12AdjLambda12Tpfdconjfd*TKappa - 2*tracefdAdjfd*AbsSqr(Lambdax
       )*TKappa - 2*tracefuAdjfu*AbsSqr(Lambdax)*TKappa - 6*traceYdAdjYd*AbsSqr(
@@ -208,7 +209,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_TKappa_two_loop(con
       gD.adjoint()*gD*(Kappa).adjoint()*Kappa) - 2*(TKappa*gD.adjoint()*
       Yd.transpose()*Yd.conjugate()*gD) - 2*(TKappa*gD.adjoint()*Yu.transpose()
       *Yu.conjugate()*gD) - 3*(TKappa*(Kappa).adjoint()*Kappa*(Kappa).adjoint()
-      *Kappa));
+      *Kappa))).real();
 
 
    return beta_TKappa;

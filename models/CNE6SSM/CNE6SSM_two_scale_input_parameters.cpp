@@ -16,7 +16,7 @@ std::ostream& operator<<(std::ostream& ostr, const CNE6SSM_input_parameters<Two_
    ostr << "TanBeta = " << INPUT(TanBeta) << ", ";
    ostr << "SignLambdax = " << INPUT(SignLambdax) << ", ";
    ostr << "Azero = " << INPUT(Azero) << ", ";
-   ostr << "ssumInput = " << INPUT(ssumInput) << ", ";
+   ostr << "sInput = " << INPUT(sInput) << ", ";
    ostr << "QS = " << INPUT(QSInput) << ", ";
    ostr << "hEInput = " << INPUT(hEInput) << ", ";
    ostr << "SigmaLInput = " << INPUT(SigmaLInput) << ", ";

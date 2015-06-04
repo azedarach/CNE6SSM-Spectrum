@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:44
+// File generated at Wed 3 Jun 2015 23:42:49
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,8 +37,8 @@ double CNE6SSM_susy_parameters::calc_beta_vsb_one_loop(const Susy_traces& susy_t
 
    double beta_vsb;
 
-   beta_vsb = oneOver16PiSqr*(-(vsb*AbsSqr(Sigmax)) + 0.05*vsb*Sqr(g1p)*
-      Sqr(QS));
+   beta_vsb = Re(oneOver16PiSqr*(-(vsb*AbsSqr(Sigmax)) + 0.05*vsb*Sqr(g1p
+      )*Sqr(QS)));
 
 
    return beta_vsb;
@@ -58,10 +58,10 @@ double CNE6SSM_susy_parameters::calc_beta_vsb_two_loop(const Susy_traces& susy_t
 
    double beta_vsb;
 
-   beta_vsb = -0.0025*twoLoop*vsb*(Power(g1p,4)*Sqr(QS)*(94 + Sqr(QS)) +
-      20*AbsSqr(Sigmax)*(-60*traceKappaAdjKappa - 40*traceLambda12AdjLambda12 -
-      40*AbsSqr(KappaPr) - 40*AbsSqr(Lambdax) - 40*AbsSqr(SigmaL) + Sqr(g1p)*
-      Sqr(QS)) - 800*Sqr(Conj(Sigmax))*Sqr(Sigmax));
+   beta_vsb = Re(-0.0025*twoLoop*vsb*(Power(g1p,4)*Sqr(QS)*(94 + Sqr(QS))
+      + 20*AbsSqr(Sigmax)*(-60*traceKappaAdjKappa - 40*
+      traceLambda12AdjLambda12 - 40*AbsSqr(KappaPr) - 40*AbsSqr(Lambdax) - 40*
+      AbsSqr(SigmaL) + Sqr(g1p)*Sqr(QS)) - 800*Sqr(Conj(Sigmax))*Sqr(Sigmax)));
 
 
    return beta_vsb;

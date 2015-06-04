@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:35
+// File generated at Wed 3 Jun 2015 23:43:43
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,7 +37,7 @@ double CNE6SSM_soft_parameters::calc_beta_MassWB_one_loop(const Soft_traces& sof
 
    double beta_MassWB;
 
-   beta_MassWB = 8*MassWB*oneOver16PiSqr*Sqr(g2);
+   beta_MassWB = Re(8*MassWB*oneOver16PiSqr*Sqr(g2));
 
 
    return beta_MassWB;
@@ -72,16 +72,16 @@ double CNE6SSM_soft_parameters::calc_beta_MassWB_two_loop(const Soft_traces& sof
 
    double beta_MassWB;
 
-   beta_MassWB = 0.4*twoLoop*Sqr(g2)*(10*traceAdjfdTfd + 10*traceAdjfuTfu
-      + 30*traceAdjgDTgD + 10*traceAdjhEThE + 10*traceAdjLambda12TLambda12 +
-      30*traceAdjYdTYd + 10*traceAdjYeTYe + 30*traceAdjYuTYu - 10*MassWB*
-      tracefdAdjfd - 10*MassWB*tracefuAdjfu - 30*MassWB*tracegDAdjgD - 10*
-      MassWB*tracehEAdjhE - 10*MassWB*traceLambda12AdjLambda12 - 30*MassWB*
-      traceYdAdjYd - 10*MassWB*traceYeAdjYe - 30*MassWB*traceYuAdjYu + 18*MassB
-      *Sqr(g1) + 18*MassWB*Sqr(g1) + 17*MassBp*Sqr(g1p) + 17*MassWB*Sqr(g1p) +
-      460*MassWB*Sqr(g2) + 120*MassG*Sqr(g3) + 120*MassWB*Sqr(g3) - 10*Conj(
-      Lambdax)*(MassWB*Lambdax - TLambdax) - 10*Conj(SigmaL)*(MassWB*SigmaL -
-      TSigmaL));
+   beta_MassWB = Re(0.4*twoLoop*Sqr(g2)*(10*traceAdjfdTfd + 10*
+      traceAdjfuTfu + 30*traceAdjgDTgD + 10*traceAdjhEThE + 10*
+      traceAdjLambda12TLambda12 + 30*traceAdjYdTYd + 10*traceAdjYeTYe + 30*
+      traceAdjYuTYu - 10*MassWB*tracefdAdjfd - 10*MassWB*tracefuAdjfu - 30*
+      MassWB*tracegDAdjgD - 10*MassWB*tracehEAdjhE - 10*MassWB*
+      traceLambda12AdjLambda12 - 30*MassWB*traceYdAdjYd - 10*MassWB*
+      traceYeAdjYe - 30*MassWB*traceYuAdjYu + 18*MassB*Sqr(g1) + 18*MassWB*Sqr(
+      g1) + 17*MassBp*Sqr(g1p) + 17*MassWB*Sqr(g1p) + 460*MassWB*Sqr(g2) + 120*
+      MassG*Sqr(g3) + 120*MassWB*Sqr(g3) - 10*Conj(Lambdax)*(MassWB*Lambdax -
+      TLambdax) - 10*Conj(SigmaL)*(MassWB*SigmaL - TSigmaL)));
 
 
    return beta_MassWB;

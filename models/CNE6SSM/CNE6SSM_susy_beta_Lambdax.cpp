@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:39
+// File generated at Wed 3 Jun 2015 23:42:46
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -45,11 +45,11 @@ double CNE6SSM_susy_parameters::calc_beta_Lambdax_one_loop(const Susy_traces& su
 
    double beta_Lambdax;
 
-   beta_Lambdax = 0.05*oneOver16PiSqr*Lambdax*(20*tracefdAdjfd + 20*
+   beta_Lambdax = Re(0.05*oneOver16PiSqr*Lambdax*(20*tracefdAdjfd + 20*
       tracefuAdjfu + 60*traceKappaAdjKappa + 40*traceLambda12AdjLambda12 + 60*
       traceYdAdjYd + 20*traceYeAdjYe + 60*traceYuAdjYu + 80*AbsSqr(Lambdax) +
       20*AbsSqr(Sigmax) - 12*Sqr(g1) - 13*Sqr(g1p) - 60*Sqr(g2) - Sqr(g1p)*Sqr(
-      QS));
+      QS)));
 
 
    return beta_Lambdax;
@@ -99,8 +99,8 @@ double CNE6SSM_susy_parameters::calc_beta_Lambdax_two_loop(const Susy_traces& su
 
    double beta_Lambdax;
 
-   beta_Lambdax = -0.0025*twoLoop*Lambdax*(-2376*Power(g1,4) - 2541*Power
-      (g1p,4) - 6600*Power(g2,4) - 2*Power(g1p,4)*Power(QS,4) + 1200*
+   beta_Lambdax = Re(-0.0025*twoLoop*Lambdax*(-2376*Power(g1,4) - 2541*
+      Power(g1p,4) - 6600*Power(g2,4) - 2*Power(g1p,4)*Power(QS,4) + 1200*
       tracefdAdjfdfdAdjfd + 1600*tracefdAdjfdfuAdjfu + 1200*tracefuAdjfufuAdjfu
       + 400*tracefuAdjhEhEAdjfu + 1200*tracefuAdjLambda12Lambda12Adjfu + 1200*
       tracegDAdjgDTpYdconjYd + 1200*tracegDAdjgDTpYuconjYu + 2400*
@@ -123,7 +123,7 @@ double CNE6SSM_susy_parameters::calc_beta_Lambdax_two_loop(const Susy_traces& su
       - 6400*traceKappaAdjKappa*Sqr(g3) - 6400*traceYdAdjYd*Sqr(g3) - 6400*
       traceYuAdjYu*Sqr(g3) - 201*Power(g1p,4)*Sqr(QS) + 60*traceKappaAdjKappa*
       Sqr(g1p)*Sqr(QS) + 40*traceLambda12AdjLambda12*Sqr(g1p)*Sqr(QS) + 4000*
-      Sqr(Conj(Lambdax))*Sqr(Lambdax) + 800*Sqr(Conj(Sigmax))*Sqr(Sigmax));
+      Sqr(Conj(Lambdax))*Sqr(Lambdax) + 800*Sqr(Conj(Sigmax))*Sqr(Sigmax)));
 
 
    return beta_Lambdax;

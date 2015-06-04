@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:13
+// File generated at Wed 3 Jun 2015 23:43:26
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -39,12 +39,12 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_md2_one_loop(const 
 
    Eigen::Matrix<double,3,3> beta_md2;
 
-   beta_md2 = oneOver16PiSqr*(4*mHd2*(Yd*Yd.adjoint()) + 4*(TYd*(TYd)
+   beta_md2 = (oneOver16PiSqr*(4*mHd2*(Yd*Yd.adjoint()) + 4*(TYd*(TYd)
       .adjoint()) + 2*(md2*Yd*Yd.adjoint()) + 4*(Yd*mq2*Yd.adjoint()) + 2*(Yd*
       Yd.adjoint()*md2) + 0.5163977794943222*g1*Tr11*UNITMATRIX(3) +
       0.6324555320336759*g1p*Tr14*UNITMATRIX(3) - 0.5333333333333333*AbsSqr(
       MassB)*Sqr(g1)*UNITMATRIX(3) - 0.8*AbsSqr(MassBp)*Sqr(g1p)*UNITMATRIX(3)
-      - 10.666666666666666*AbsSqr(MassG)*Sqr(g3)*UNITMATRIX(3));
+      - 10.666666666666666*AbsSqr(MassG)*Sqr(g3)*UNITMATRIX(3))).real();
 
 
    return beta_md2;
@@ -86,7 +86,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_md2_two_loop(const 
 
    Eigen::Matrix<double,3,3> beta_md2;
 
-   beta_md2 = twoLoop*(-4*traceconjTfdTpTfd*(Yd*Yd.adjoint()) - 12*
+   beta_md2 = (twoLoop*(-4*traceconjTfdTpTfd*(Yd*Yd.adjoint()) - 12*
       traceconjTYdTpTYd*(Yd*Yd.adjoint()) - 4*traceconjTYeTpTYe*(Yd*Yd.adjoint(
       )) - 8*mHd2*tracefdAdjfd*(Yd*Yd.adjoint()) - 4*tracefdAdjfdconjmSI2*(Yd*
       Yd.adjoint()) - 4*tracefdmH2I2Adjfd*(Yd*Yd.adjoint()) - 12*
@@ -156,7 +156,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_soft_parameters::calc_beta_md2_two_loop(const 
       g3))*UNITMATRIX(3)) + 0.013333333333333334*Conj(MassBp)*Sqr(g1p)*(90*(2*
       MassBp*(Yd*Yd.adjoint()) - TYd*Yd.adjoint()) + (-16*(MassB + 2*MassBp)*
       Sqr(g1) + 160*(2*MassBp + MassG)*Sqr(g3) + 9*MassBp*Sqr(g1p)*(192 + Sqr(
-      QS)))*UNITMATRIX(3)));
+      QS)))*UNITMATRIX(3)))).real();
 
 
    return beta_md2;

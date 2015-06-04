@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:31:00
+// File generated at Wed 3 Jun 2015 23:43:15
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,9 +37,10 @@ double CNE6SSM_soft_parameters::calc_beta_BMuPhi_one_loop(const Soft_traces& sof
 
    double beta_BMuPhi;
 
-   beta_BMuPhi = oneOver16PiSqr*(2*(4*AbsSqr(KappaPr) + AbsSqr(Sigmax) +
-      2*AbsSqr(SigmaL))*BMuPhi - 8*BMuPr*Conj(SigmaL)*KappaPr + 4*MuPhi*(2*Conj
-      (KappaPr)*TKappaPr + Conj(Sigmax)*TSigmax + 2*Conj(SigmaL)*TSigmaL));
+   beta_BMuPhi = Re(oneOver16PiSqr*(2*(4*AbsSqr(KappaPr) + AbsSqr(Sigmax)
+      + 2*AbsSqr(SigmaL))*BMuPhi - 8*BMuPr*Conj(SigmaL)*KappaPr + 4*MuPhi*(2*
+      Conj(KappaPr)*TKappaPr + Conj(Sigmax)*TSigmax + 2*Conj(SigmaL)*TSigmaL)))
+      ;
 
 
    return beta_BMuPhi;
@@ -66,14 +67,14 @@ double CNE6SSM_soft_parameters::calc_beta_BMuPhi_two_loop(const Soft_traces& sof
 
    double beta_BMuPhi;
 
-   beta_BMuPhi = twoLoop*(-0.2*BMuPhi*(80*AbsSqr(KappaPr)*(AbsSqr(Sigmax)
-      + 2*AbsSqr(SigmaL)) + 4*AbsSqr(SigmaL)*(15*tracegDAdjgD + 5*tracehEAdjhE
-      + 10*AbsSqr(SigmaL) - 3*Sqr(g1) - 2*Sqr(g1p) - 15*Sqr(g2)) + AbsSqr(
-      Sigmax)*(30*traceKappaAdjKappa + 20*traceLambda12AdjLambda12 + 20*AbsSqr(
-      Lambdax) - Sqr(g1p)*Sqr(QS)) + 160*Sqr(Conj(KappaPr))*Sqr(KappaPr) + 20*
-      Sqr(Conj(Sigmax))*Sqr(Sigmax)) - 0.4*(40*MuPhi*Sigmax*Sqr(Conj(Sigmax))*
-      TSigmax + MuPhi*Conj(Sigmax)*(30*traceAdjKappaTKappa*Sigmax + 20*
-      traceAdjLambda12TLambda12*Sigmax + MassBp*Sigmax*Sqr(g1p)*Sqr(QS) + 30*
+   beta_BMuPhi = Re(twoLoop*(-0.2*BMuPhi*(80*AbsSqr(KappaPr)*(AbsSqr(
+      Sigmax) + 2*AbsSqr(SigmaL)) + 4*AbsSqr(SigmaL)*(15*tracegDAdjgD + 5*
+      tracehEAdjhE + 10*AbsSqr(SigmaL) - 3*Sqr(g1) - 2*Sqr(g1p) - 15*Sqr(g2)) +
+      AbsSqr(Sigmax)*(30*traceKappaAdjKappa + 20*traceLambda12AdjLambda12 + 20
+      *AbsSqr(Lambdax) - Sqr(g1p)*Sqr(QS)) + 160*Sqr(Conj(KappaPr))*Sqr(KappaPr
+      ) + 20*Sqr(Conj(Sigmax))*Sqr(Sigmax)) - 0.4*(40*MuPhi*Sigmax*Sqr(Conj(
+      Sigmax))*TSigmax + MuPhi*Conj(Sigmax)*(30*traceAdjKappaTKappa*Sigmax + 20
+      *traceAdjLambda12TLambda12*Sigmax + MassBp*Sigmax*Sqr(g1p)*Sqr(QS) + 30*
       traceKappaAdjKappa*TSigmax + 20*traceLambda12AdjLambda12*TSigmax - Sqr(
       g1p)*Sqr(QS)*TSigmax + 20*Conj(KappaPr)*(2*Sigmax*TKappaPr + 3*KappaPr*
       TSigmax) + 20*Conj(Lambdax)*(Sigmax*TLambdax + Lambdax*TSigmax)) - 4*(-50
@@ -87,7 +88,7 @@ double CNE6SSM_soft_parameters::calc_beta_BMuPhi_two_loop(const Soft_traces& sof
       KappaPr*MuPr*Sqr(g2) - 15*MassWB*MuPhi*SigmaL*Sqr(g2) - 15*MuPhi*
       tracegDAdjgD*TSigmaL - 5*MuPhi*tracehEAdjhE*TSigmaL + 3*MuPhi*Sqr(g1)*
       TSigmaL + 2*MuPhi*Sqr(g1p)*TSigmaL + 15*MuPhi*Sqr(g2)*TSigmaL - 10*MuPhi*
-      Conj(KappaPr)*(2*SigmaL*TKappaPr + 3*KappaPr*TSigmaL)))));
+      Conj(KappaPr)*(2*SigmaL*TKappaPr + 3*KappaPr*TSigmaL))))));
 
 
    return beta_BMuPhi;

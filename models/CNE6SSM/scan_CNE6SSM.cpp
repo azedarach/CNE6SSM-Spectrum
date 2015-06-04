@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:37:13
+// File generated at Wed 3 Jun 2015 23:53:01
 
 #include "CNE6SSM_two_scale_input_parameters.hpp"
 #include "CNE6SSM_spectrum_generator.hpp"
@@ -42,8 +42,15 @@ void print_usage()
       "  --TanBeta=<value>\n"
       "  --SignLambdax=<value>\n"
       "  --Azero=<value>\n"
-      "  --ssumInput=<value>\n"
+      "  --sInput=<value>\n"
       "  --QSInput=<value>\n"
+      "  --SigmaLInput=<value>\n"
+      "  --KappaPrInput=<value>\n"
+      "  --SigmaxInput=<value>\n"
+      "  --MuPrInput=<value>\n"
+      "  --MuPhiInput=<value>\n"
+      "  --BMuPrInput=<value>\n"
+      "  --BMuPhiInput=<value>\n"
 
       "  --help,-h                         print this help message"
              << std::endl;
@@ -70,10 +77,31 @@ void set_command_line_parameters(int argc, char* argv[],
       if(Command_line_options::get_parameter_value(option, "--Azero=", input.Azero))
          continue;
 
-      if(Command_line_options::get_parameter_value(option, "--ssumInput=", input.ssumInput))
+      if(Command_line_options::get_parameter_value(option, "--sInput=", input.sInput))
          continue;
 
       if(Command_line_options::get_parameter_value(option, "--QSInput=", input.QSInput))
+         continue;
+
+      if(Command_line_options::get_parameter_value(option, "--SigmaLInput=", input.SigmaLInput))
+         continue;
+
+      if(Command_line_options::get_parameter_value(option, "--KappaPrInput=", input.KappaPrInput))
+         continue;
+
+      if(Command_line_options::get_parameter_value(option, "--SigmaxInput=", input.SigmaxInput))
+         continue;
+
+      if(Command_line_options::get_parameter_value(option, "--MuPrInput=", input.MuPrInput))
+         continue;
+
+      if(Command_line_options::get_parameter_value(option, "--MuPhiInput=", input.MuPhiInput))
+         continue;
+
+      if(Command_line_options::get_parameter_value(option, "--BMuPrInput=", input.BMuPrInput))
+         continue;
+
+      if(Command_line_options::get_parameter_value(option, "--BMuPhiInput=", input.BMuPhiInput))
          continue;
 
       
@@ -96,7 +124,7 @@ int main(int argc, char* argv[])
    using namespace softsusy;
    typedef Two_scale algorithm_type;
 
-   CNE6SSM_input_parameters<Two_scale> input;
+   CNE6SSM_input_parameters<algorithm_type> input;
    set_command_line_parameters(argc, argv, input);
 
    QedQcd oneset;

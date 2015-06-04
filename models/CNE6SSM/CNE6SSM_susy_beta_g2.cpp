@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:24:42
+// File generated at Wed 3 Jun 2015 23:42:48
 
 #include "CNE6SSM_susy_parameters.hpp"
 #include "wrappers.hpp"
@@ -37,7 +37,7 @@ double CNE6SSM_susy_parameters::calc_beta_g2_one_loop(const Susy_traces& susy_tr
 
    double beta_g2;
 
-   beta_g2 = 4*Power(g2,3)*oneOver16PiSqr;
+   beta_g2 = Re(4*Power(g2,3)*oneOver16PiSqr);
 
 
    return beta_g2;
@@ -63,11 +63,11 @@ double CNE6SSM_susy_parameters::calc_beta_g2_two_loop(const Susy_traces& susy_tr
 
    double beta_g2;
 
-   beta_g2 = 0.2*Power(g2,3)*twoLoop*(-10*tracefdAdjfd - 10*tracefuAdjfu
-      - 30*tracegDAdjgD - 10*tracehEAdjhE - 10*traceLambda12AdjLambda12 - 30*
-      traceYdAdjYd - 10*traceYeAdjYe - 30*traceYuAdjYu - 10*AbsSqr(Lambdax) -
-      10*AbsSqr(SigmaL) + 18*Sqr(g1) + 17*Sqr(g1p) + 230*Sqr(g2) + 120*Sqr(g3))
-      ;
+   beta_g2 = Re(0.2*Power(g2,3)*twoLoop*(-10*tracefdAdjfd - 10*
+      tracefuAdjfu - 30*tracegDAdjgD - 10*tracehEAdjhE - 10*
+      traceLambda12AdjLambda12 - 30*traceYdAdjYd - 10*traceYeAdjYe - 30*
+      traceYuAdjYu - 10*AbsSqr(Lambdax) - 10*AbsSqr(SigmaL) + 18*Sqr(g1) + 17*
+      Sqr(g1p) + 230*Sqr(g2) + 120*Sqr(g3)));
 
 
    return beta_g2;

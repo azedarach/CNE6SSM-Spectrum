@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 // ====================================================================
 
-// File generated at Sun 19 Apr 2015 20:30:51
+// File generated at Wed 3 Jun 2015 23:43:08
 
 #include "CNE6SSM_soft_parameters.hpp"
 #include "wrappers.hpp"
@@ -43,7 +43,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_TLambda12_one_loop(
 
    Eigen::Matrix<double,2,2> beta_TLambda12;
 
-   beta_TLambda12 = oneOver16PiSqr*(3*traceKappaAdjKappa*TLambda12 + 2*
+   beta_TLambda12 = (oneOver16PiSqr*(3*traceKappaAdjKappa*TLambda12 + 2*
       traceLambda12AdjLambda12*TLambda12 + 2*AbsSqr(Lambdax)*TLambda12 + AbsSqr
       (Sigmax)*TLambda12 - 0.6*Sqr(g1)*TLambda12 - 0.65*Sqr(g1p)*TLambda12 - 3*
       Sqr(g2)*TLambda12 - 0.05*Sqr(g1p)*Sqr(QS)*TLambda12 + Lambda12*(6*
@@ -53,7 +53,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_TLambda12_one_loop(
       ()*Tfu) + 2*(Lambda12*hE.adjoint()*ThE) + 3*(Lambda12*(Lambda12).adjoint(
       )*TLambda12) + TLambda12*fu.adjoint()*fu + TLambda12*hE.adjoint()*hE + 3*
       (TLambda12*(Lambda12).adjoint()*Lambda12) + fd.transpose()*fd.conjugate()
-      *TLambda12 + 2*((Tfd).transpose()*fd.conjugate()*Lambda12));
+      *TLambda12 + 2*((Tfd).transpose()*fd.conjugate()*Lambda12))).real();
 
 
    return beta_TLambda12;
@@ -122,7 +122,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_TLambda12_two_loop(
 
    Eigen::Matrix<double,2,2> beta_TLambda12;
 
-   beta_TLambda12 = twoLoop*(5.94*Power(g1,4)*TLambda12 + 6.3525*Power(
+   beta_TLambda12 = (twoLoop*(5.94*Power(g1,4)*TLambda12 + 6.3525*Power(
       g1p,4)*TLambda12 + 16.5*Power(g2,4)*TLambda12 + 0.005*Power(g1p,4)*Power(
       QS,4)*TLambda12 - 2*tracefuAdjLambda12Lambda12Adjfu*TLambda12 - 6*
       tracegDAdjKappaKappaAdjgD*TLambda12 - 2*tracehEAdjLambda12Lambda12AdjhE*
@@ -244,7 +244,7 @@ Eigen::Matrix<double,2,2> CNE6SSM_soft_parameters::calc_beta_TLambda12_two_loop(
       )*TLambda12) - 4*(fd.transpose()*fu.conjugate()*(Tfu).transpose()*
       fd.conjugate()*Lambda12) - 4*((Tfd).transpose()*fd.conjugate()*
       fd.transpose()*fd.conjugate()*Lambda12) - 4*((Tfd).transpose()*
-      fu.conjugate()*fu.transpose()*fd.conjugate()*Lambda12));
+      fu.conjugate()*fu.transpose()*fd.conjugate()*Lambda12))).real();
 
 
    return beta_TLambda12;
