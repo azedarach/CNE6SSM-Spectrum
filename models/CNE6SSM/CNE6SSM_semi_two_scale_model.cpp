@@ -39,7 +39,6 @@ using namespace CNE6SSM_info;
 
 #define CLASSNAME CNE6SSM_semianalytic<Two_scale>
 
-#define PHYSICAL(parameter) physical.parameter
 #define INPUT(parameter) model->get_input().parameter
 #define LOCALINPUT(parameter) input.parameter
 
