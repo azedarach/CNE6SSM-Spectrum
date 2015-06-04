@@ -68,6 +68,7 @@ public:
    int solve_ewsb_tree_level();
    int solve_ewsb_one_loop();
    int solve_ewsb();            ///< solve EWSB at ewsb_loop_order level
+   double get_ewsb_output_parameter(unsigned) const;
 
    // interface functions
    virtual void calculate_spectrum();
@@ -104,6 +105,8 @@ private:
    double precision;              ///< RG running precision
    double ewsb_iteration_precision;
    static const std::size_t number_of_ewsb_equations = 5;
+
+   Eigen::Array<double,number_of_tadpole_equations,1> ewsb_solution;
 
    int solve_ewsb_iteratively();
    int solve_ewsb_iteratively(unsigned);

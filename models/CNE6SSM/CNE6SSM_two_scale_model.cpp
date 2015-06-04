@@ -64,6 +64,7 @@ CLASSNAME::CNE6SSM(const CNE6SSM_input_parameters<Two_scale>& input_)
    , ewsb_loop_order(2)
    , precision(1.0e-3)
    , ewsb_iteration_precision(1.0e-5)
+   , ewsb_solution(Eigen::Array<double,number_of_tadpole_equations,1>::Zero())
 {
 }
 
@@ -101,6 +102,11 @@ double CLASSNAME::get_ewsb_iteration_precision() const
 double CLASSNAME::get_ewsb_loop_order() const
 {
    return ewsb_loop_order;
+}
+
+double CLASSNAME::get_ewsb_output_parameter(unsigned i) const
+{
+   return ewsb_solution(i);
 }
 
 const CNE6SSM_input_parameters<Two_scale>& CLASSNAME::get_input() const
@@ -289,6 +295,12 @@ int CLASSNAME::solve_ewsb_iteratively_with(
       temp = TLambdax / Lambdax;
    }
    const double ALambdax = temp;
+
+   ewsb_solution(0) = solver->get_solution(0);
+   ewsb_solution(1) = solver->get_solution(1);
+   ewsb_solution(2) = solver->get_solution(2);
+   ewsb_solution(3) = solver->get_solution(3);
+   ewsb_solution(4) = solver->get_solution(4);
 
    vs = s * Cos(ArcTan(solver->get_solution(0)));
    vsb = s * Sin(ArcTan(solver->get_solution(0)));
