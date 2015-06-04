@@ -199,11 +199,6 @@ void CNE6SSM_semianalytic_high_scale_constraint<Two_scale>::apply()
          model->get_problems().unflag_non_perturbative_parameter("Yu");
 
    }
-
-   // note
-   model->print(std::cout);
-   std::cout << "Current scale = " << model->get_scale() << "\n";
-   std::cout << "Next scale = " << get_scale() << "\n";
 }
 
 double CNE6SSM_semianalytic_high_scale_constraint<Two_scale>::get_scale() const

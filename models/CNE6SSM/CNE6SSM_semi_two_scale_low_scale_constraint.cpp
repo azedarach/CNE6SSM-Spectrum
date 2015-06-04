@@ -101,24 +101,9 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::apply()
       TanBeta))));
    MODEL->set_QS(QSInput);
 
-   // note
-   std::cout << "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::apply():\n";
-   model->print(std::cout);
-   std::cout << "Before thresholds, "
-             << "g1 = " << model->get_g1() << ", "
-             << "g2 = " << model->get_g2() << ", "
-             << "g3 = " << model->get_g3() << ", "
-             << "g1p = " << model->get_g1p() << "\n";
-
    model->set_g1(new_g1);
    model->set_g2(new_g2);
    model->set_g3(new_g3);
-
-   std::cout << "After thresholds, "
-             << "g1 = " << model->get_g1() << ", "
-             << "g2 = " << model->get_g2() << ", "
-             << "g3 = " << model->get_g3() << ", "
-             << "g1p = " << model->get_g1p() << "\n";
 
    recalculate_mw_pole();
 }
