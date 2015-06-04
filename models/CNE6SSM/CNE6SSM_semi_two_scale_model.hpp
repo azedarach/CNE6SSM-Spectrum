@@ -56,6 +56,7 @@ public:
    int solve_ewsb_tree_level();
    int solve_ewsb_one_loop();
    int solve_ewsb();            ///< solve EWSB at ewsb_loop_order level
+   double get_ewsb_output_parameter(unsigned) const;
 
    /// calculates the values of the modified tree level EWSB conditions
    double get_tree_level_ewsb_eq_hh_1() const;

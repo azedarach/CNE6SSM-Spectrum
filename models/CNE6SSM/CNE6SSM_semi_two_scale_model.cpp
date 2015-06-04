@@ -166,6 +166,11 @@ double CLASSNAME::get_ewsb_loop_order() const
    return ewsb_loop_order;
 }
 
+double CLASSNAME::get_ewsb_output_parameter(unsigned i) const
+{
+   return ewsb_solution(i);
+}
+
 const CNE6SSM_semianalytic_input_parameters<Two_scale>& CLASSNAME::get_input() const
 {
    return input;
