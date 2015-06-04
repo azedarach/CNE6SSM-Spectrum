@@ -27,7 +27,6 @@
 namespace flexiblesusy {
 
 #define CLASSNAME CNE6SSM_susy_parameters
-#define INPUT(parameter) input.parameter
 #define TRACE_STRUCT susy_traces
 
 CNE6SSM_susy_parameters::CNE6SSM_susy_parameters()

@@ -23,7 +23,6 @@
 
 namespace flexiblesusy {
 
-#define INPUT(parameter) input.parameter
 #define TRACE_STRUCT susy_traces
 
 /**
