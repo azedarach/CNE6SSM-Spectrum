@@ -20,6 +20,7 @@ namespace flexiblesusy {
 
 #define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
+#define PHASE(p) model->get_##p()
 #define LowEnergyConstant(p) Electroweak_constants::p
 #define MODEL model
 
@@ -114,16 +115,16 @@ void CNE6SSM_semianalytic_initial_guesser<Two_scale>::guess_susy_parameters()
    const auto sInput = INPUTPARAMETER(sInput);
    const auto QSInput = INPUTPARAMETER(QSInput);
 
-   MODEL->set_vd(LowEnergyConstant(vev)/Sqrt(1 + Sqr(TanBeta)));
-   MODEL->set_vu((TanBeta*LowEnergyConstant(vev))/Sqrt(1 + Sqr(TanBeta)));
+   MODEL->set_vd(Re(LowEnergyConstant(vev)/Sqrt(1 + Sqr(TanBeta))));
+   MODEL->set_vu(Re((TanBeta*LowEnergyConstant(vev))/Sqrt(1 + Sqr(TanBeta))));
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
-   MODEL->set_XiF(Power(LowEnergyConstant(MZ), 3));
-   MODEL->set_LXiF(Power(LowEnergyConstant(MZ), 3));
-   MODEL->set_vs(0.7071067811865475 * sInput);
-   MODEL->set_vsb(0.7071067811865475 * 0.98 * sInput);
-   MODEL->set_vphi(0.5 * sInput);
+   MODEL->set_XiF(Re(Power(LowEnergyConstant(MZ), 3)));
+   MODEL->set_LXiF(Re(Power(LowEnergyConstant(MZ), 3)));
+   MODEL->set_vs(Re(0.7071067811865475 * sInput));
+   MODEL->set_vsb(Re(0.7071067811865475 * 0.98 * sInput));
+   MODEL->set_vphi(Re(0.5 * sInput));
    MODEL->set_QS(QSInput);
 
    guess_high_scale_parameters();
@@ -162,7 +163,7 @@ void CNE6SSM_semianalytic_initial_guesser<Two_scale>::guess_low_scale_parameters
    MODEL->set_vd(LowEnergyConstant(vev)/Sqrt(1 + Sqr(TanBeta)));
    MODEL->set_vu((TanBeta*LowEnergyConstant(vev))/Sqrt(1 + Sqr(TanBeta)));
 
-   Eigen::Matrix<double,3,3> topDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> topDRbar(ZEROMATRIXCOMPLEX(3,3));
    topDRbar(0,0)      = oneset.displayMass(mUp);
    topDRbar(1,1)      = oneset.displayMass(mCharm);
    // note the subtraction is still in the initial iteration
@@ -170,29 +171,29 @@ void CNE6SSM_semianalytic_initial_guesser<Two_scale>::guess_low_scale_parameters
    topDRbar(2,2)      = oneset.displayMass(mTop) - 30.;
 
    const auto vu = MODELPARAMETER(vu);
-   MODEL->set_Yu(Diag((1.4142135623730951*topDRbar)/vu));
+   MODEL->set_Yu((Diag((1.4142135623730951*topDRbar)/vu)).real());
 
-   Eigen::Matrix<double,3,3> bottomDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> bottomDRbar(ZEROMATRIXCOMPLEX(3,3));
    bottomDRbar(0,0)   = oneset.displayMass(mDown);
    bottomDRbar(1,1)   = oneset.displayMass(mStrange);
    bottomDRbar(2,2)   = oneset.displayMass(mBottom);
 
    const auto vd = MODELPARAMETER(vd);
-   MODEL->set_Yd(Diag((1.4142135623730951*bottomDRbar)/vd));
+   MODEL->set_Yd((Diag((1.4142135623730951*bottomDRbar)/vd)).real());
 
-   Eigen::Matrix<double,3,3> electronDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> electronDRbar(ZEROMATRIXCOMPLEX(3,3));
    electronDRbar(0,0) = oneset.displayMass(mElectron);
    electronDRbar(1,1) = oneset.displayMass(mMuon);
    electronDRbar(2,2) = oneset.displayMass(mTau);
 
-   MODEL->set_Ye(Diag((1.4142135623730951*electronDRbar)/vd));
+   MODEL->set_Ye((Diag((1.4142135623730951*electronDRbar)/vd)).real());
 
    MODEL->set_QS(QSInput);
-   MODEL->set_XiF(Power(LowEnergyConstant(MZ), 3));
-   MODEL->set_LXiF(Power(LowEnergyConstant(MZ), 3));
-   MODEL->set_vs(0.7071067811865475 * sInput);
-   MODEL->set_vsb(0.7071067811865475 * 0.98 * sInput);
-   MODEL->set_vphi(0.5 * sInput);
+   MODEL->set_XiF(Re(Power(LowEnergyConstant(MZ), 3)));
+   MODEL->set_LXiF(Re(Power(LowEnergyConstant(MZ), 3)));
+   MODEL->set_vs(Re(0.7071067811865475 * sInput));
+   MODEL->set_vsb(Re(0.7071067811865475 * 0.98 * sInput));
+   MODEL->set_vphi(Re(0.5 * sInput));
 
    model->set_g1(g1);
    model->set_g2(g2);
@@ -224,14 +225,14 @@ void CNE6SSM_semianalytic_initial_guesser<Two_scale>::calculate_DRbar_yukawa_cou
  */
 void CNE6SSM_semianalytic_initial_guesser<Two_scale>::calculate_Yu_DRbar()
 {
-   Eigen::Matrix<double,3,3> topDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> topDRbar(ZEROMATRIXCOMPLEX(3,3));
    topDRbar(0,0) = mu_guess;
    topDRbar(1,1) = mc_guess;
    // note subtraction is performed in guess_susy_parameters
    topDRbar(2,2) = mt_guess;
 
    const auto vu = MODELPARAMETER(vu);
-   MODEL->set_Yu(Diag((1.4142135623730951*topDRbar)/vu));
+   MODEL->set_Yu((Diag((1.4142135623730951*topDRbar)/vu)).real());
 
 }
 
@@ -242,13 +243,13 @@ void CNE6SSM_semianalytic_initial_guesser<Two_scale>::calculate_Yu_DRbar()
  */
 void CNE6SSM_semianalytic_initial_guesser<Two_scale>::calculate_Yd_DRbar()
 {
-   Eigen::Matrix<double,3,3> bottomDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> bottomDRbar(ZEROMATRIXCOMPLEX(3,3));
    bottomDRbar(0,0) = md_guess;
    bottomDRbar(1,1) = ms_guess;
    bottomDRbar(2,2) = mb_guess;
 
    const auto vd = MODELPARAMETER(vd);
-   MODEL->set_Yd(Diag((1.4142135623730951*bottomDRbar)/vd));
+   MODEL->set_Yd((Diag((1.4142135623730951*bottomDRbar)/vd)).real());
 
 }
 
@@ -259,13 +260,13 @@ void CNE6SSM_semianalytic_initial_guesser<Two_scale>::calculate_Yd_DRbar()
  */
 void CNE6SSM_semianalytic_initial_guesser<Two_scale>::calculate_Ye_DRbar()
 {
-   Eigen::Matrix<double,3,3> electronDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> electronDRbar(ZEROMATRIXCOMPLEX(3,3));
    electronDRbar(0,0) = me_guess;
    electronDRbar(1,1) = mm_guess;
    electronDRbar(2,2) = mtau_guess;
 
    const auto vd = MODELPARAMETER(vd);
-   MODEL->set_Ye(Diag((1.4142135623730951*electronDRbar)/vd));
+   MODEL->set_Ye((Diag((1.4142135623730951*electronDRbar)/vd)).real());
 
 }
 
