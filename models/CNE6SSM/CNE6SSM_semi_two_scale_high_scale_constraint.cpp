@@ -22,6 +22,7 @@ namespace flexiblesusy {
 
 #define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
+#define PHASE(p) model->get_##p()
 #define BETAPARAMETER(p) beta_functions.get_##p()
 #define BETA(p) beta_##p
 #define LowEnergyConstant(p) Electroweak_constants::p
@@ -94,21 +95,21 @@ void CNE6SSM_semianalytic_high_scale_constraint<Two_scale>::apply()
    const auto fdInput = INPUTPARAMETER(fdInput);
    const auto g1 = MODELPARAMETER(g1);
 
-   MODEL->set_g1p(g1);
-   MODEL->set_MuPr(MuPrInput);
-   MODEL->set_MuPhi(MuPhiInput);
-   MODEL->set_BMuPr(BMuPrInput);
-   MODEL->set_BMuPhi(BMuPhiInput);
-   MODEL->set_SigmaL(SigmaLInput);
-   MODEL->set_KappaPr(KappaPrInput);
-   MODEL->set_Sigmax(SigmaxInput);
-   MODEL->set_gD(gDInput);
-   MODEL->set_hE(hEInput);
-   MODEL->set_Kappa(KappaInput);
-   MODEL->set_Lambda12(Lambda12Input);
-   MODEL->set_Lambdax(LambdaxInput);
-   MODEL->set_fu(fuInput);
-   MODEL->set_fd(fdInput);
+   MODEL->set_g1p(Re(g1));
+   MODEL->set_MuPr(Re(MuPrInput));
+   MODEL->set_MuPhi(Re(MuPhiInput));
+   MODEL->set_BMuPr(Re(BMuPrInput));
+   MODEL->set_BMuPhi(Re(BMuPhiInput));
+   MODEL->set_SigmaL(Re(SigmaLInput));
+   MODEL->set_KappaPr(Re(KappaPrInput));
+   MODEL->set_Sigmax(Re(SigmaxInput));
+   MODEL->set_gD((gDInput).real());
+   MODEL->set_hE((hEInput).real());
+   MODEL->set_Kappa((KappaInput).real());
+   MODEL->set_Lambda12((Lambda12Input).real());
+   MODEL->set_Lambdax(Re(LambdaxInput));
+   MODEL->set_fu((fuInput).real());
+   MODEL->set_fd((fdInput).real());
 
    {
       const auto g1 = MODELPARAMETER(g1);
@@ -267,7 +268,7 @@ void CNE6SSM_semianalytic_high_scale_constraint<Two_scale>::update_scale()
    const auto beta_g1 = BETAPARAMETER(g1);
    const auto beta_g2 = BETAPARAMETER(g2);
 
-   scale = currentScale*exp((-g1 + g2)/(BETA(g1) - BETA(g2)));
+   scale = currentScale*Exp((-g1 + g2)/(BETA(g1) - BETA(g2)));
 
 
    if (errno == ERANGE) {
