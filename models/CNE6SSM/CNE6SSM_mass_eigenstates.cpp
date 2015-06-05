@@ -55336,9 +55336,10 @@ double CNE6SSM_mass_eigenstates::v() const
 
 double CNE6SSM_mass_eigenstates::ThetaWp() const
 {
+   // note: check this!
    return 0.5*ArcTan((2*g1p*Sqrt(6*Sqr(g1) + 10*Sqr(g2))*(3*Sqr(vd) - 2*
       Sqr(vu)))/(6*Sqr(g1)*(Sqr(vd) + Sqr(vu)) + 10*Sqr(g2)*(Sqr(vd) + Sqr(vu))
-      - Sqr(g1p)*(9*Sqr(vd) + 25*Sqr(vs) + 4*Sqr(vu))));
+                 - Sqr(g1p)*(9*Sqr(vd) + 25*Sqr(vs) + 4*Sqr(vu))));
 }
 
 

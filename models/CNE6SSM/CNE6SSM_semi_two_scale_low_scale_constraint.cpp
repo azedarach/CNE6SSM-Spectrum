@@ -21,6 +21,7 @@ namespace flexiblesusy {
 
 #define INPUTPARAMETER(p) model->get_input().p
 #define MODELPARAMETER(p) model->get_##p()
+#define PHASE(p) model->get_##p()
 #define BETAPARAMETER(p) beta_functions.get_##p()
 #define BETA(p) beta_##p
 #define LowEnergyConstant(p) Electroweak_constants::p
@@ -88,17 +89,17 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::apply()
    calculate_DRbar_gauge_couplings();
 
    const auto TanBeta = INPUTPARAMETER(TanBeta);
+   const auto QSInput = INPUTPARAMETER(QSInput);
    const auto g1 = MODELPARAMETER(g1);
    const auto g2 = MODELPARAMETER(g2);
-   const auto QSInput = INPUTPARAMETER(QSInput);
 
    calculate_Yu_DRbar();
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
-   MODEL->set_vd((2*MZDRbar)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(TanBeta)
-      )));
-   MODEL->set_vu((2*MZDRbar*TanBeta)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(
-      TanBeta))));
+   MODEL->set_vd(Re((2*MZDRbar)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 + Sqr(
+      TanBeta)))));
+   MODEL->set_vu(Re((2*MZDRbar*TanBeta)/(Sqrt(0.6*Sqr(g1) + Sqr(g2))*Sqrt(1 +
+      Sqr(TanBeta)))));
    MODEL->set_QS(QSInput);
 
    model->set_g1(new_g1);
@@ -260,7 +261,7 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_DRbar_gauge
 
 double CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_delta_alpha_em(double alphaEm) const
 {
-   assert(model && "CNE6SSM_low_scale_constraint<Two_scale>::"
+   assert(model && "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::"
           "calculate_delta_alpha_em(): model pointer is zero");
 
    const double currentScale = model->get_scale();
@@ -322,7 +323,7 @@ double CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_delta_alp
 
 double CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_delta_alpha_s(double alphaS) const
 {
-   assert(model && "CNE6SSM_low_scale_constraint<Two_scale>::"
+   assert(model && "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::"
           "calculate_delta_alpha_s(): model pointer is zero");
 
    const double currentScale = model->get_scale();
@@ -375,7 +376,7 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_Yu_DRbar()
    assert(model && "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::"
           "calculate_Yu_DRbar(): model pointer is zero");
 
-   Eigen::Matrix<double,3,3> topDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> topDRbar(ZEROMATRIXCOMPLEX(3,3));
    topDRbar(0,0)      = oneset.displayMass(mUp);
    topDRbar(1,1)      = oneset.displayMass(mCharm);
    topDRbar(2,2)      = oneset.displayMass(mTop);
@@ -384,7 +385,7 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_Yu_DRbar()
       topDRbar(2,2) = model->calculate_MFu_DRbar(oneset.displayPoleMt(), 2);
 
    const auto vu = MODELPARAMETER(vu);
-   MODEL->set_Yu(Diag((1.4142135623730951*topDRbar)/vu));
+   MODEL->set_Yu((Diag((1.4142135623730951*topDRbar)/vu)).real());
 
 }
 
@@ -393,7 +394,7 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_Yd_DRbar()
    assert(model && "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::"
           "calculate_Yd_DRbar(): model pointer is zero");
 
-   Eigen::Matrix<double,3,3> bottomDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> bottomDRbar(ZEROMATRIXCOMPLEX(3,3));
    bottomDRbar(0,0)   = oneset.displayMass(mDown);
    bottomDRbar(1,1)   = oneset.displayMass(mStrange);
    bottomDRbar(2,2)   = oneset.displayMass(mBottom);
@@ -402,7 +403,7 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_Yd_DRbar()
       bottomDRbar(2,2) = model->calculate_MFd_DRbar(oneset.displayMass(mBottom), 2);
 
    const auto vd = MODELPARAMETER(vd);
-   MODEL->set_Yd(Diag((1.4142135623730951*bottomDRbar)/vd));
+   MODEL->set_Yd((Diag((1.4142135623730951*bottomDRbar)/vd)).real());
 
 }
 
@@ -411,16 +412,19 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::calculate_Ye_DRbar()
    assert(model && "CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::"
           "calculate_Ye_DRbar(): model pointer is zero");
 
-   Eigen::Matrix<double,3,3> electronDRbar(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<std::complex<double>,3,3> electronDRbar(ZEROMATRIXCOMPLEX(3,3));
    electronDRbar(0,0) = oneset.displayMass(mElectron);
    electronDRbar(1,1) = oneset.displayMass(mMuon);
    electronDRbar(2,2) = oneset.displayMass(mTau);
 
-   if (model->get_thresholds())
+   if (model->get_thresholds()) {
+      electronDRbar(0,0) = model->calculate_MFe_DRbar(oneset.displayMass(mElectron), 0);
+      electronDRbar(1,1) = model->calculate_MFe_DRbar(oneset.displayMass(mMuon), 1);
       electronDRbar(2,2) = model->calculate_MFe_DRbar(oneset.displayMass(mTau), 2);
+   }
 
    const auto vd = MODELPARAMETER(vd);
-   MODEL->set_Ye(Diag((1.4142135623730951*electronDRbar)/vd));
+   MODEL->set_Ye((Diag((1.4142135623730951*electronDRbar)/vd)).real());
 
 }
 

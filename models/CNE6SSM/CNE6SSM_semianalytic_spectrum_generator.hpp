@@ -134,6 +134,7 @@ void CNE6SSM_semianalytic_spectrum_generator<T>::run(const QedQcd& oneset,
       low_scale = constraint_handler.get_lowest_scale();
 
       model.run_to(susy_scale);
+      model.calculate_coefficients(high_scale);
       model.solve_ewsb();
       model.calculate_spectrum();
 
