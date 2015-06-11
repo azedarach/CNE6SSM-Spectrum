@@ -18,7 +18,8 @@ TEST_SRC := \
 		$(DIR)/test_ewsb_conditions.cpp \
 		$(DIR)/test_fixed_point_iterator.cpp \
 		$(DIR)/test_grid_scanner.cpp \
-		$(DIR)/test_semi_ewsb_conditions.cpp
+		$(DIR)/test_semi_ewsb_conditions.cpp \
+		$(DIR)/test_rotated_mass_matrix_hh.cpp
 
 ifneq ($(findstring lattice,$(ALGORITHMS)),)
 TEST_SRC +=
@@ -97,6 +98,9 @@ $(DIR)/test_grid_scanner.x: $(DIR)/test_grid_scanner.o $(LIBFLEXI) $(LIBLEGACY) 
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(FLIBS)
 
 $(DIR)/test_semi_ewsb_conditions.x: $(DIR)/test_semi_ewsb_conditions.o $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_rotated_mass_matrix_hh.x: $(DIR)/test_rotated_mass_matrix_hh.o $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_%.x: $(DIR)/test_%.o

@@ -1288,6 +1288,90 @@ Eigen::Matrix<double,5,5> CNE6SSM_mass_eigenstates::get_mass_matrix_hh() const
    return mass_matrix_hh;
 }
 
+// rotated CP-even Higgs mass matrix in the basis of arXiv:1410:6288 [hep-ph]
+Eigen::Matrix<double,5,5> CNE6SSM_mass_eigenstates::get_rotated_mass_matrix_hh() const
+{
+   const double v = Sqrt(Sqr(vd) + Sqr(vu));
+   const double s = Sqrt(Sqr(vs) + Sqr(vsb));
+   const double TanBeta = vu / vd;
+   const double CosBeta = Cos(ArcTan(TanBeta));
+   const double SinBeta = Sin(ArcTan(TanBeta));
+   const double CosTwoBeta = Sqr(CosBeta) - Sqr(SinBeta);
+   const double SinTwoBeta = 2.0 * SinBeta * CosBeta;
+   const double TanTheta = vsb / vs;
+   const double CosTheta = Cos(ArcTan(TanTheta));
+   const double SinTheta = Sin(ArcTan(TanTheta));
+   const double CosTwoTheta = Sqr(CosTheta) - Sqr(SinTheta);
+   const double SinTwoTheta = 2.0 * SinTheta * CosTheta;
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+
+   Eigen::Matrix<double,5,5> mass_matrix_hh;
+
+   mass_matrix_hh(0,0) = 0.025 * Sqr(g1p) * Sqr(QS) * Sqr(s) - 0.5 *
+      Sqr(Sigmax) * Sqr(s) * Sqr(SinTwoTheta)
+      + Sqrt(2.0) * TSigmax * vphi * SinTwoTheta + SinTwoTheta *
+      (KappaPr * Sigmax * Sqr(vphi) + Sqrt(2.0) * Sigmax * MuPhi
+      * vphi + 2.0 * Sigmax * XiF) + 0.5 * TLambdax * Sqr(v) * CosTheta
+      * SinTwoBeta / (Sqrt(2.0) * s) - 0.25 * Lambdax * Sigmax * vphi
+      * Sqr(v) * SinTheta * SinTwoBeta / s;
+   mass_matrix_hh(0,1) = 0.5 * Sqr(Sigmax) * Sqr(s) * SinTwoTheta *
+      CosTwoTheta - Sqrt(2.0) * TSigmax * vphi * CosTwoTheta
+      - CosTwoTheta * (KappaPr * Sigmax * Sqr(vphi) + Sqrt(2.0) *
+      Sigmax * MuPhi * vphi + 2.0 * Sigmax * XiF) + 0.5 * TLambdax
+      * Sqr(v) * SinTheta * SinTwoBeta / (Sqrt(2.0) * s) + 0.25 *
+      Lambdax * Sigmax * vphi * Sqr(v) * CosTheta * SinTwoBeta / s;
+   mass_matrix_hh(0,2) = Sqr(Sigmax) * vphi * s * CosTwoTheta
+      - 0.25 * Lambdax * Sigmax * Sqr(v) * SinTheta * SinTwoBeta;
+   mass_matrix_hh(0,3) = 0.0125 * Sqr(g1p) * QS * s * v * SinTwoBeta
+      - TLambdax * v * CosTheta * CosTwoBeta / Sqrt(2.0) - 0.5 * Lambdax
+      * Sigmax * vphi * v * SinTheta * CosTwoBeta;
+   mass_matrix_hh(0,4) = 0.025 * Sqr(g1p) * QS * (-3.0 * Sqr(CosBeta)
+      - 2.0 * Sqr(SinBeta)) * s * v - TLambdax * v * CosTheta * SinTwoBeta
+      / Sqrt(2.0) + Sqr(Lambdax) * v * s * Sqr(CosTheta) - 0.5 * Lambdax
+      * Sigmax * vphi * v * SinTheta * SinTwoBeta;
+   mass_matrix_hh(1,1) = 0.5 * Sqr(Sigmax) * Sqr(s) * Sqr(SinTwoTheta)
+      + Sqrt(2.0) * TSigmax * vphi * Sqr(CosTwoTheta) / SinTwoTheta
+      + Sqr(CosTwoTheta) * (KappaPr * Sigmax * Sqr(vphi) + Sqrt(2.0) *
+      Sigmax * MuPhi * vphi + 2.0 * Sigmax * XiF) / SinTwoTheta + 0.5 *
+      TLambdax * Sqr(v) * Sqr(SinTheta) * SinTwoBeta / (Sqrt(2.0) *
+      s * CosTheta) - 0.25 * Lambdax * Sigmax * vphi * Sqr(v) *
+      Sqr(CosTheta) * SinTwoBeta / (s * SinTheta);
+   mass_matrix_hh(1,2) = - TSigmax * s / Sqrt(2.0) + Sqr(Sigmax) * vphi
+      * s * SinTwoTheta - Sigmax * s * (KappaPr * vphi + MuPhi / Sqrt(2.0))
+      + 0.25 * Lambdax * Sigmax * Sqr(v) * CosTheta * SinTwoBeta;
+   mass_matrix_hh(1,3) = CosTwoBeta * (0.5 * Lambdax * Sigmax * vphi * v
+      * CosTheta - TLambdax * v * SinTheta / Sqrt(2.0));
+   mass_matrix_hh(1,4) = 0.5 * Sqr(Lambdax) * s * v * SinTwoTheta +
+      SinTwoBeta * (0.5 * Lambdax * Sigmax * vphi * v * CosTheta -
+      TLambdax * v * SinTheta / Sqrt(2.0));
+   mass_matrix_hh(2,2) = 0.5 * TSigmax * Sqr(s) * SinTwoTheta /
+      (Sqrt(2.0) * vphi) - Sqrt(2.0) * LXiF / vphi + TKappaPr * vphi
+      / Sqrt(2.0) + MuPhi * (0.5 * Sigmax * Sqr(s) * SinTwoTheta /
+      (Sqrt(2.0) * vphi) + 3.0 * KappaPr * vphi / Sqrt(2.0) -
+      Sqrt(2.0) * XiF / vphi) + 2.0 * Sqr(KappaPr) * Sqr(vphi)
+      - 0.25 * Lambdax * Sigmax * s * Sqr(v) * SinTheta * SinTwoBeta /
+      vphi;
+   mass_matrix_hh(2,3) = 0.5 * Lambdax * Sigmax * s * v * SinTheta *
+      CosTwoBeta;
+   mass_matrix_hh(2,4) = 0.5 * Lambdax * Sigmax * s * v * SinTheta *
+      SinTwoBeta;
+   mass_matrix_hh(3,3) = Sqrt(2.0) * s * (TLambdax * CosTheta -
+      Lambdax * Sigmax * vphi * SinTheta / Sqrt(2.0)) / SinTwoBeta
+      + Sqr(v) * Sqr(SinTwoBeta) * (0.25 * Sqr(gbar) - 0.5 *
+      Sqr(Lambdax)) + 0.00625 * Sqr(g1p) * Sqr(v) * Sqr(SinTwoBeta);
+   mass_matrix_hh(3,4) = Sqr(v) * SinTwoBeta * CosTwoBeta *
+      (0.5 * Sqr(Lambdax) - 0.25 * Sqr(gbar)) + 0.0125 * Sqr(g1p)
+      * Sqr(v) * (-3.0 * Sqr(CosBeta) - 2.0 * Sqr(SinBeta)) *
+      SinTwoBeta;
+   mass_matrix_hh(4,4) = 0.5 * Sqr(Lambdax) * Sqr(v) * Sqr(SinTwoBeta)
+      + 0.25 * Sqr(gbar) * Sqr(v) * Sqr(CosTwoBeta) + 0.025 * Sqr(g1p)
+      * Sqr(v) * Sqr(-3.0 * Sqr(CosBeta) - 2.0 * Sqr(SinBeta));
+
+   Symmetrize(mass_matrix_hh);
+
+   return mass_matrix_hh;
+}
+
 void CNE6SSM_mass_eigenstates::calculate_Mhh()
 {
    const auto mass_matrix_hh(get_mass_matrix_hh());

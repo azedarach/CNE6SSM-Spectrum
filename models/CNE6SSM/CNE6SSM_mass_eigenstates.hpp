@@ -224,6 +224,7 @@ public:
    Eigen::Matrix<double,6,6> get_mass_matrix_SDX() const;
    void calculate_MSDX();
    Eigen::Matrix<double,5,5> get_mass_matrix_hh() const;
+   Eigen::Matrix<double,5,5> get_rotated_mass_matrix_hh() const;
    void calculate_Mhh();
    Eigen::Matrix<double,5,5> get_mass_matrix_Ah() const;
    void calculate_MAh();
