@@ -259,7 +259,7 @@ private:
    static const std::size_t number_of_fit_points = 4;
 
    // solution for ewsb_loop_order > 1
-   static const std::size_t number_of_ewsb_equations = 4;
+   static const std::size_t number_of_ewsb_equations = 5;
 
    Eigen::Array<double,number_of_tadpole_equations,1> ewsb_solution;
 
