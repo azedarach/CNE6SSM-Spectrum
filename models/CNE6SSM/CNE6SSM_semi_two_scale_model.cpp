@@ -229,15 +229,18 @@ double CLASSNAME::get_tree_level_ewsb_eq_hh_3() const
 
 double CLASSNAME::get_tree_level_ewsb_eq_hh_4() const
 {
-   double result = msbar2*vsb - 0.35355339059327373*MuPhi*vphi*vs*Conj(Sigmax)
-      - 0.35355339059327373*vphi*vs*Conj(TSigmax) + 0.25*vd*vphi*vu*Conj(Sigmax)*
-      Lambdax - 0.5*vs*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vs*Conj(MuPhi)*
-      Sigmax + 0.25*vd*vphi*vu*Conj(Lambdax)*Sigmax - 0.5*vs*Conj(XiF)*Sigmax +
-      0.0125*Power(vsb,3)*Sqr(g1p)*Sqr(QS) + 0.0375*QS*vsb*Sqr(g1p)*Sqr(vd) + 0.5*
-      vsb*AbsSqr(Sigmax)*Sqr(vphi) - 0.25*vs*Conj(Sigmax)*KappaPr*Sqr(vphi) - 0.25
-      *vs*Conj(KappaPr)*Sigmax*Sqr(vphi) + 0.5*vsb*AbsSqr(Sigmax)*Sqr(vs) - 0.0125
-      *vsb*Sqr(g1p)*Sqr(QS)*Sqr(vs) + 0.025*QS*vsb*Sqr(g1p)*Sqr(vu) -
-      0.35355339059327373*vphi*vs*TSigmax;
+   const double oneOTanTheta = vs / vsb;
+
+   // valid provided vsb != 0
+   double result = msbar2 - 0.35355339059327373 * MuPhi * vphi * oneOTanTheta * Conj(Sigmax)
+      - 0.35355339059327373 * vphi * oneOTanTheta * Conj(TSigmax) + 0.25 * vd * vphi *vu *Conj(Sigmax) *
+      Lambdax / vsb - 0.5 * oneOTanTheta * Conj(Sigmax) * XiF - 0.35355339059327373 * vphi
+      * oneOTanTheta * Conj(MuPhi) * Sigmax + 0.25 * vd * vphi * vu * Conj(Lambdax) * Sigmax / vsb 
+      - 0.5 * oneOTanTheta * Conj(XiF) * Sigmax + 0.0125 * Power(vsb,2) * Sqr(g1p) * Sqr(QS)
+      + 0.0375 * QS * Sqr(g1p) * Sqr(vd) + 0.5 * AbsSqr(Sigmax) * Sqr(vphi) - 0.25 * oneOTanTheta
+      * Conj(Sigmax) * KappaPr * Sqr(vphi) - 0.25 * oneOTanTheta * Conj(KappaPr) * Sigmax * Sqr(vphi)
+      + 0.5 * AbsSqr(Sigmax) * Sqr(vs) - 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(vs) + 0.025 * QS *Sqr(g1p)
+      * Sqr(vu) - 0.35355339059327373 * vphi * oneOTanTheta * TSigmax;
 
    return result;
 }
@@ -311,7 +314,7 @@ void CLASSNAME::ewsb_equations(double tadpole[number_of_ewsb_equations]) const
       tadpole[1] -= Sqrt(1.0 + Sqr(TanTheta)) * (TanTheta * Re(tadpole_hh(3)) -
                                                  Re(tadpole_hh(2))) / sInput;
       tadpole[2] -= Re(tadpole_hh(0)) / vd;
-      tadpole[3] -= Re(tadpole_hh(3));
+      tadpole[3] -= Re(tadpole_hh(3)) / vsb;
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
@@ -570,6 +573,7 @@ int CLASSNAME::solve_ewsb_iteratively()
    EWSB_args params = {this, ewsb_loop_order};
 
    EWSB_solver* solvers[] = {
+//      new Fixed_point_iterator<number_of_ewsb_equations, fixed_point_iterator::Convergence_tester_absolute>(CLASSNAME::ewsb_step, &params, number_of_ewsb_iterations, ewsb_iteration_precision),
       new Root_finder<number_of_ewsb_equations>(CLASSNAME::ewsb_equations, &params, number_of_ewsb_iterations, ewsb_iteration_precision, gsl_multiroot_fsolver_hybrid),
       new Root_finder<number_of_ewsb_equations>(CLASSNAME::ewsb_equations, &params, number_of_ewsb_iterations, ewsb_iteration_precision, gsl_multiroot_fsolver_hybrids),
       new Root_finder<number_of_ewsb_equations>(CLASSNAME::ewsb_equations, &params, number_of_ewsb_iterations, ewsb_iteration_precision, gsl_multiroot_fsolver_broyden),
@@ -682,9 +686,9 @@ int CLASSNAME::solve_ewsb_iteratively_with(
 
    LXiF *= -0.7071067811865475;
 
-   const bool is_finite = IsFinite(LXiF);
+   const bool isfinite = IsFinite(LXiF);
 
-   if (!is_finite) {
+   if (!isfinite) {
       error = EWSB_solver::FAIL;
    }
 
@@ -759,7 +763,7 @@ int CLASSNAME::solve_tree_level_ewsb_iteratively_with(
 
 int CLASSNAME::check_ewsb_solution(double precision)
 {
-   double tadpole[number_of_ewsb_equations];
+   double tadpole[number_of_tadpole_equations];
 
    if (ewsb_loop_order > 0) {
       calculate_DRbar_masses();
@@ -769,10 +773,10 @@ int CLASSNAME::check_ewsb_solution(double precision)
 
    double residual = Abs(tadpole[0]);
 
-   for (std::size_t i = 1; i < number_of_ewsb_equations; ++i) {
+   for (std::size_t i = 1; i < number_of_tadpole_equations; ++i) {
       residual += Abs(tadpole[i]);
    } 
-   
+
    return (residual < precision ? EWSB_solver::SUCCESS : EWSB_solver::FAIL);
 }
 
@@ -921,7 +925,7 @@ void CLASSNAME::tree_level_ewsb_initial_guess(double x_init[number_of_tree_level
       0.125 * Sqr(g2) * (Sqr(vd) * Sqr(oneOTanBeta) - Sqr(vu)) + 0.075 * Sqr(g1) *
       (Sqr(vd) * Sqr(oneOTanBeta) - Sqr(vu)) + 0.0125 * Sqr(g1p) *
       (9.0 * Sqr(vd) * Sqr(oneOTanBeta) - 4.0 * Sqr(vu)) // note added lines below
-      + 0.0125 * Sqr(g1p) * LOCALINPUT(QSInput) * Sqr(s) * Sqr(Sigmax) *
+      + 0.0125 * Sqr(g1p) * QS * Sqr(s) * Sqr(Sigmax) *
       (-3.0 * Sqr(oneOTanBeta) + 2.0);
 
    x_init[0] /= (mHu2_m02_coeff - mHd2_m02_coeff * Sqr(oneOTanBeta));
@@ -980,7 +984,7 @@ void CLASSNAME::tree_level_ewsb_initial_guess(double x_init[number_of_tree_level
  * @return GSL_SUCCESS if new EWSB output parameters are finite,
  * GSL_EDOM otherwise.
  */
-int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_tadpole_equations])
+int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
 {
 
    // save initial parameters
@@ -992,70 +996,84 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_tadpole_equations])
    const double s = LOCALINPUT(sInput);
    const double m12 = LOCALINPUT(m12);
    const double Azero = LOCALINPUT(Azero);
+   const double TanBeta = vu / vd;
+   const double oneOTanBeta2 = 1.0 / Sqr(TanBeta);
 
    // update m0
-   double m0 = (mHd2_m122_coeff * Sqr(vd) - mHu2_m122_coeff * Sqr(vu)) * Sqr(m12)
-      + (mHd2_Azerom12_coeff * Sqr(vd) - mHu2_Azerom12_coeff * Sqr(vu)) * m12 * Azero
-      + (mHd2_Azero2_coeff * Sqr(vd) - mHu2_Azero2_coeff * Sqr(vu)) * Sqr(Azero)
-      + 0.5 * Sqr(Lambdax) * Sqr(vs) * (Sqr(vd) - Sqr(vu)) +
-      0.125 * Sqr(g2) * (Power(vd, 4) - Power(vu, 4)) + 0.075 * Sqr(g1) *
-      (Power(vd, 4) - Power(vu, 4)) + 0.0125 * Sqr(g1p) *
-      (9.0 * Power(vd, 4) - 4.0 * Power(vu, 4)) + 0.0125 * Sqr(g1p) * QS *
-      (-3.0 * Sqr(vd) + 2.0 * Sqr(vu)) * (Sqr(vs) - Sqr(vsb));
+   double m0 = (mHd2_m122_coeff * oneOTanBeta2 - mHu2_m122_coeff) * Sqr(m12)
+      + (mHd2_Azerom12_coeff * oneOTanBeta2 - mHu2_Azerom12_coeff) * Azero * m12
+      + (mHd2_Azero2_coeff * oneOTanBeta2 - mHu2_Azero2_coeff) * Sqr(Azero)
+      + 0.5 * Sqr(Lambdax) * Sqr(vs) * (oneOTanBeta2 - 1.0) + 0.125 *
+      (Sqr(g2) + 0.6 * Sqr(g1)) * (Sqr(vd) * oneOTanBeta2 - Sqr(vu)) + 0.0125
+      * Sqr(g1p) * (-3.0 * oneOTanBeta2 + 2.0) * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu)
+      + QS * Sqr(vs) - QS * Sqr(vsb));
 
    if (ewsb_loop_order > 0) {
-      m0 -= (vd * Re(tadpole_hh(0)) - vu * Re(tadpole_hh(1)));
+      m0 -= (vd * Re(tadpole_hh(0)) - vu * Re(tadpole_hh(1))) / Sqr(vu);
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
-         m0 -= (vd * two_loop_tadpole[0] - vu * two_loop_tadpole[1]);
+         m0 -= (vd * two_loop_tadpole[0] - vu * two_loop_tadpole[1]) / Sqr(vu);
       }
    }
 
-   m0 = AbsSqrt(m0 / (mHu2_m02_coeff * Sqr(vu) - mHd2_m02_coeff * Sqr(vd)));
+   m0 /= (mHu2_m02_coeff - mHd2_m02_coeff * oneOTanBeta2);
+
+#ifdef ENABLE_VERBOSE
+   if (m0 < 0.) {
+      WARNING("\tSqr(m0) < 0 in fixed point iteration!");
+   }
+#endif
+
+   m0 = AbsSqrt(m0);
 
    set_soft_parameters_at_current_scale(m0, m12, Azero);
 
    // update TanTheta
-   double delta = 0.5 * AbsSqr(Lambdax) * Sqr(vs) * (Sqr(vd) + Sqr(vu))
-      + 0.5 * AbsSqr(Sigmax) * Sqr(vs) * Sqr(vphi) - 0.5 * AbsSqr(Sigmax) * Sqr(vsb) * Sqr(vphi)
-      - 0.35355339059327373 * vd * vu * vs * TLambdax - 0.35355339059327373 * vd * vu * vs * Conj(TLambdax) 
-      - 0.25 * vphi * vsb * vd * vu * Lambdax * Conj(Sigmax) - 0.25 * vphi * vsb * vd * vu * Sigmax * Conj(Lambdax)
-      - 0.0375 * QS * Sqr(g1p) * Sqr(s) * Sqr(vd) - 0.025 * QS * Sqr(g1p) * Sqr(s) * Sqr(vu);
+   double TanTheta = ms2 - 0.7071067811865475 * vd * vu * TLambdax * Sqrt(1.0 + Sqr(vsb / vs))
+      / s + 0.5 * Sqr(Lambdax) * (Sqr(vd) + Sqr(vu)) + 0.5 * Sqr(Sigmax) * Sqr(vphi)
+      - 0.5 * Lambdax * Sigmax * vphi * vd * vu * (vsb / vs) * Sqrt(1.0 + Sqr(vsb / vs)) / s
+      + 0.0125 * Sqr(g1p) * QS * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu) + QS * Sqr(s));
 
    if (ewsb_loop_order > 0) {
-      delta -= (vs * Re(tadpole_hh(2)) - vsb * Re(tadpole_hh(3)));
+      TanTheta -= Sqrt(1.0 + Sqr(vsb / vs)) * (-(vsb / vs) * Re(tadpole_hh(2)) + Re(tadpole_hh(3))) / s;
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
-         delta -= vs * two_loop_tadpole[2];
+         TanTheta -= Sqrt(1.0 + Sqr(vsb / vs)) * two_loop_tadpole[2] / s;
       }
    }
 
-   const double TanTheta = AbsSqrt((ms2 + 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(s) + delta / (Sqr(vs)))
-                                   / (msbar2 + 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(s)));
+   TanTheta /= (msbar2 + 0.5 * Sqr(Sigmax) * Sqr(vphi) - 0.0125 * Sqr(g1p) * QS
+                * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu) - QS * Sqr(s)));
+
+#ifdef ENABLE_VERBOSE
+   if (TanTheta < 0.) {
+      WARNING("\tSqr(TanTheta) < 0 in fixed point iteration!");
+   }
+#endif
+
+   TanTheta = AbsSqrt(TanTheta);
 
    vs = s * Cos(ArcTan(TanTheta));
    vsb = s * Sin(ArcTan(TanTheta));
 
    // update vphi
-   double rhs_vphi = mHd2 * vd - 0.35355339059327373 * vs * vu * TLambdax
-      - 0.35355339059327373 * vs * vu * Conj(TLambdax) + 0.5 * AbsSqr(Lambdax) * vd *
-      (Sqr(vu) + Sqr(vs)) + 0.125 * Sqr(g2) * Power(vd,3) + 0.075 * Sqr(g1) * Power(vd,3)
-      - 0.125 * Sqr(g2) * vd * Sqr(vu) - 0.075 * Sqr(g1) * vd * Sqr(vu) + 0.1125 * Sqr(g1p) *
-      Power(vd,3) + 0.075 * Sqr(g1p) * vd * Sqr(vu) - 0.0375 * Sqr(g1p) * QS * vd *
-      (Sqr(vs) - Sqr(vsb));
+   double rhs_vphi = mHd2 - 0.7071067811865475 * vs * TLambdax * TanBeta + 0.5 *
+      Sqr(Lambdax) * (Sqr(vu) + Sqr(vs)) + 0.125 * (Sqr(g2) + 0.6 * Sqr(g1)) *
+      (Sqr(vu) - Sqr(vd)) - 0.0375 * Sqr(g1p) * (-3.0 * Sqr(vd) - 2.0 * Sqr(vu)
+      + QS * Sqr(vs) - QS * Sqr(vsb));
 
    if (ewsb_loop_order > 0) {
-      rhs_vphi -= Re(tadpole_hh(0));
+      rhs_vphi -= Re(tadpole_hh(0)) / vd;
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
-         rhs_vphi -= two_loop_tadpole[0];
+         rhs_vphi -= two_loop_tadpole[0] / vd;
       }
    }
 
-   rhs_vphi *= (-4. / (vsb * vu * Lambdax * Conj(Sigmax) + vsb * vu * Sigmax * Conj(Lambdax)));
+   rhs_vphi *= (-2. / ( Lambdax * Sigmax * vsb * TanBeta));
 
    vphi = rhs_vphi;
 
@@ -1080,43 +1098,16 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_tadpole_equations])
 
    XiF = rhs_XiF;
 
-   // update LXiF
-   double rhs_LXiF = mphi2 * vphi + vphi * AbsSqr(MuPhi) + Power(vphi,3) * AbsSqr(
-      KappaPr) + 0.5 * vphi * BMuPhi + 0.5 * vphi * Conj(BMuPhi) + 0.7071067811865475 *
-      MuPhi * Conj(XiF) - 0.35355339059327373 * MuPhi * vs * vsb * Conj(Sigmax) 
-      - 0.35355339059327373 * vs * vsb * Conj(TSigmax) +
-      vphi * Conj(XiF) * KappaPr - 0.5 * vphi * vs * vsb * Conj(Sigmax) * KappaPr + 0.25 * vd * vsb *
-      vu * Conj(Sigmax) * Lambdax + 0.7071067811865475 * Conj(MuPhi) * XiF + vphi * Conj(
-      KappaPr) * XiF - 0.35355339059327373 * vs * vsb * Conj(MuPhi) * Sigmax - 0.5 * vphi * vs *
-      vsb * Conj(KappaPr) * Sigmax + 0.25 * vd * vsb * vu * Conj(Lambdax) * Sigmax
-      + 1.0606601717798212 * MuPhi * Conj(KappaPr) * Sqr(vphi) +
-      0.35355339059327373 * Conj(TKappaPr) * Sqr(vphi) + 1.0606601717798212 * Conj(
-      MuPhi) * KappaPr * Sqr(vphi) + 0.5 * vphi * AbsSqr(Sigmax) * Sqr(vs) + 0.5 * vphi * AbsSqr
-      (Sigmax) * Sqr(vsb) + 0.35355339059327373 * Sqr(vphi) * TKappaPr -
-      0.35355339059327373 * vs * vsb * TSigmax;
+   const bool isfinite = IsFinite(m0) && IsFinite(TanTheta)
+      && IsFinite(vphi) && IsFinite(XiF);
 
-   if (ewsb_loop_order > 0) {
-      rhs_LXiF -= Re(tadpole_hh(4));
-      if (ewsb_loop_order > 1) {
-
-      }
-   }
-
-   rhs_LXiF *= -0.7071067811865475;
-
-   LXiF = rhs_LXiF;
-
-   const bool is_finite = std::isfinite(m0) && std::isfinite(TanTheta)
-      && std::isfinite(vphi) && std::isfinite(XiF) && std::isfinite(LXiF);
-
-   if (is_finite) {
+   if (isfinite) {
       error = GSL_SUCCESS;
 
       ewsb_parameters[0] = m0;
-      ewsb_parameters[1] = TanTheta;
+      ewsb_parameters[1] = s * TanTheta;
       ewsb_parameters[2] = vphi;
       ewsb_parameters[3] = XiF;
-      ewsb_parameters[4] = LXiF;
 
    } else {
       error = GSL_EDOM;
@@ -1154,28 +1145,25 @@ int CLASSNAME::ewsb_step(const gsl_vector* x, void* params, gsl_vector* f)
    const double Azero = INPUT(Azero);
 
    const double m0 = gsl_vector_get(x, 0);
-   const double TanTheta = gsl_vector_get(x, 1);
+   const double TanTheta = gsl_vector_get(x, 1) / s;
    const double vphi = gsl_vector_get(x, 2);
    const double XiF = gsl_vector_get(x, 3);
-   const double LXiF = gsl_vector_get(x, 4);
 
    model->set_soft_parameters_at_current_scale(m0, m12, Azero);
    model->set_vs(s * Cos(ArcTan(TanTheta)));
    model->set_vsb(s * Sin(ArcTan(TanTheta)));
    model->set_vphi(vphi);
    model->set_XiF(XiF);
-   model->set_LXiF(LXiF);
-
 
    if (ewsb_loop_order > 0)
       model->calculate_DRbar_masses();
 
-   double ewsb_parameters[number_of_tadpole_equations] =
-      { m0, TanTheta, vphi, XiF, LXiF};
+   double ewsb_parameters[number_of_ewsb_equations] =
+      { m0, s * TanTheta, vphi, XiF};
 
    const int status = model->ewsb_step(ewsb_parameters);
 
-   for (std::size_t i = 0; i < number_of_tadpole_equations; ++i)
+   for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
       gsl_vector_set(f, i, ewsb_parameters[i]);
 
    return status;

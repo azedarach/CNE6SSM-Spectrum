@@ -105,7 +105,8 @@ LIBCNE6SSM_SRC += \
 		$(DIR)/CNE6SSM_susy_two_scale_convergence_tester.cpp
 
 EXECNE6SSM_SRC += \
-		$(DIR)/run_semianalytic_CNE6SSM.cpp
+		$(DIR)/run_semianalytic_CNE6SSM.cpp \
+		$(DIR)/gridscan_semianalytic_CNE6SSM.cpp
 
 LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_semi_constraint_handler.hpp \
@@ -199,6 +200,9 @@ SCAN_CNE6SSM_EXE := $(DIR)/scan_CNE6SSM.x
 RUN_SEMI_CNE6SSM_OBJ := $(DIR)/run_semianalytic_CNE6SSM.o
 RUN_SEMI_CNE6SSM_EXE := $(DIR)/run_semianalytic_CNE6SSM.x
 
+GRIDSCAN_SEMI_CNE6SSM_OBJ := $(DIR)/gridscan_semianalytic_CNE6SSM.o
+GRIDSCAN_SEMI_CNE6SSM_EXE := $(DIR)/gridscan_semianalytic_CNE6SSM.x
+
 METACODE_STAMP_CNE6SSM := $(DIR)/00_DELETE_ME_TO_RERUN_METACODE
 
 ifeq ($(ENABLE_META),yes)
@@ -245,6 +249,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(GRIDSCAN_RGE_CNE6SSM_EXE)
 		-rm -f $(RGE_COEFF_CNE6SSM_EXE)
 		-rm -f $(RUN_SEMI_CNE6SSM_EXE)
+		-rm -f $(GRIDSCAN_SEMI_CNE6SSM_EXE)
 
 distclean-$(MODNAME): clean-$(MODNAME)
 
@@ -309,6 +314,9 @@ $(SCAN_CNE6SSM_EXE): $(SCAN_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) 
 $(RUN_SEMI_CNE6SSM_EXE): $(RUN_SEMI_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+$(GRIDSCAN_SEMI_CNE6SSM_EXE): $(GRIDSCAN_SEMI_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 ALLDEP += $(LIBCNE6SSM_DEP) $(EXECNE6SSM_DEP)
 ALLSRC += $(LIBCNE6SSM_SRC) $(EXECNE6SSM_SRC)
 ALLLIB += $(LIBCNE6SSM)
@@ -316,5 +324,5 @@ ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 ALLEXE += $(GRIDSCAN_CNE6SSM_EXE) $(GRIDSCAN_RGE_CNE6SSM_EXE) $(RGE_COEFF_CNE6SSM_EXE) $(RUN_CNE6SSM_EXE) $(RUN_CMD_LINE_CNE6SSM_EXE) $(SCAN_CNE6SSM_EXE)
 endif
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
-ALLEXE += $(RUN_SEMI_CNE6SSM_EXE)
+ALLEXE += $(RUN_SEMI_CNE6SSM_EXE) $(GRIDSCAN_SEMI_CNE6SSM_EXE)
 endif
