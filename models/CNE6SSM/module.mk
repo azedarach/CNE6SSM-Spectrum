@@ -34,7 +34,8 @@ LIBCNE6SSM_SRC := \
 		$(DIR)/CNE6SSM_slha_io.cpp \
 		$(DIR)/CNE6SSM_soft_parameters.cpp \
 		$(DIR)/CNE6SSM_susy_parameters.cpp \
-		$(DIR)/CNE6SSM_utilities.cpp
+		$(DIR)/CNE6SSM_utilities.cpp \
+		$(DIR)/scan_parser.cpp
 
 EXECNE6SSM_SRC :=
 
@@ -54,7 +55,8 @@ LIBCNE6SSM_HDR := \
 		$(DIR)/CNE6SSM_soft_parameters.hpp \
 		$(DIR)/CNE6SSM_susy_parameters.hpp \
 		$(DIR)/CNE6SSM_susy_scale_constraint.hpp \
-		$(DIR)/CNE6SSM_utilities.hpp
+		$(DIR)/CNE6SSM_utilities.hpp \
+		$(DIR)/scan_parser.hpp
 
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 LIBCNE6SSM_SRC += \
@@ -106,7 +108,8 @@ LIBCNE6SSM_SRC += \
 
 EXECNE6SSM_SRC += \
 		$(DIR)/run_semianalytic_CNE6SSM.cpp \
-		$(DIR)/gridscan_semianalytic_CNE6SSM.cpp
+		$(DIR)/gridscan_semianalytic_CNE6SSM.cpp \
+		$(DIR)/scan_semianalytic_CNE6SSM.cpp
 
 LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_semi_constraint_handler.hpp \
@@ -203,6 +206,9 @@ RUN_SEMI_CNE6SSM_EXE := $(DIR)/run_semianalytic_CNE6SSM.x
 GRIDSCAN_SEMI_CNE6SSM_OBJ := $(DIR)/gridscan_semianalytic_CNE6SSM.o
 GRIDSCAN_SEMI_CNE6SSM_EXE := $(DIR)/gridscan_semianalytic_CNE6SSM.x
 
+SCAN_SEMI_CNE6SSM_OBJ := $(DIR)/scan_semianalytic_CNE6SSM.o
+SCAN_SEMI_CNE6SSM_EXE := $(DIR)/scan_semianalytic_CNE6SSM.x
+
 METACODE_STAMP_CNE6SSM := $(DIR)/00_DELETE_ME_TO_RERUN_METACODE
 
 ifeq ($(ENABLE_META),yes)
@@ -250,6 +256,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(RGE_COEFF_CNE6SSM_EXE)
 		-rm -f $(RUN_SEMI_CNE6SSM_EXE)
 		-rm -f $(GRIDSCAN_SEMI_CNE6SSM_EXE)
+		-rm -f $(SCAN_SEMI_CNE6SSM_EXE)
 
 distclean-$(MODNAME): clean-$(MODNAME)
 
@@ -317,6 +324,9 @@ $(RUN_SEMI_CNE6SSM_EXE): $(RUN_SEMI_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIB
 $(GRIDSCAN_SEMI_CNE6SSM_EXE): $(GRIDSCAN_SEMI_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+$(SCAN_SEMI_CNE6SSM_EXE): $(SCAN_SEMI_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 ALLDEP += $(LIBCNE6SSM_DEP) $(EXECNE6SSM_DEP)
 ALLSRC += $(LIBCNE6SSM_SRC) $(EXECNE6SSM_SRC)
 ALLLIB += $(LIBCNE6SSM)
@@ -324,5 +334,5 @@ ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 ALLEXE += $(GRIDSCAN_CNE6SSM_EXE) $(GRIDSCAN_RGE_CNE6SSM_EXE) $(RGE_COEFF_CNE6SSM_EXE) $(RUN_CNE6SSM_EXE) $(RUN_CMD_LINE_CNE6SSM_EXE) $(SCAN_CNE6SSM_EXE)
 endif
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
-ALLEXE += $(RUN_SEMI_CNE6SSM_EXE) $(GRIDSCAN_SEMI_CNE6SSM_EXE)
+ALLEXE += $(RUN_SEMI_CNE6SSM_EXE) $(GRIDSCAN_SEMI_CNE6SSM_EXE) $(SCAN_SEMI_CNE6SSM_EXE)
 endif
