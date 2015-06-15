@@ -181,7 +181,7 @@ void Scan_parser::set_fixed_parameter_property(const std::string& desc, const st
    if (prop == value_suffix) {
       double val = 0.;
       try {
-         val = boost::lexical_cast<double>(val);
+         val = boost::lexical_cast<double>(value);
       } catch (const boost::bad_lexical_cast& error) {
          WARNING("Ignoring invalid lower bound '" + value + "' for field '" + desc + "'");
          val = 0.;
