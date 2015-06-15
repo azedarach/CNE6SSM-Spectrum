@@ -282,6 +282,7 @@ CNE6SSM_semianalytic_pole_mass_writer::CNE6SSM_semianalytic_pole_mass_writer()
    , pole_masses_inputs()
    , pole_masses_problems(CNE6SSM_info::particle_names)
    , pole_masses_scale(0.0)
+   , m0(0.0)
    , width(18)
 {
 }
@@ -340,6 +341,9 @@ void CNE6SSM_semianalytic_pole_mass_writer::write_pole_masses_comment_line(std::
    filestr << "# ";
 
    write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   // additional write-out for m0
+   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
 
    for (std::size_t p = 0; p < pole_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -403,6 +407,8 @@ void CNE6SSM_semianalytic_pole_mass_writer::write_pole_masses_line(std::ostream 
       return;
 
    write_CNE6SSM_inputs(pole_masses_inputs, filestr, width);
+
+   filestr << std::left << std::setw(width) << m0 << ' ';
 
    for (std::size_t p = 0; p < pole_masses.size(); ++p) {
       if (!filestr.good()) {

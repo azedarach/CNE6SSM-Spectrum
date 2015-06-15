@@ -114,6 +114,7 @@ private:
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> pole_masses_problems;
 
    double pole_masses_scale;
+   double m0;
    unsigned width;
 };
 
@@ -363,6 +364,7 @@ void CNE6SSM_semianalytic_pole_mass_writer::extract_pole_masses(const CNE6SSM_se
    pole_masses_scale = model.get_scale();
    pole_masses_inputs = model.get_input();
    pole_masses_problems = model.get_problems();
+   m0 = model.get_ewsb_output_parameter(0);
 
    pole_masses.push_back(TPoleMass("MGlu", to_valarray(PHYSICAL(MGlu))));
    pole_masses.push_back(TPoleMass("MChaP", to_valarray(PHYSICAL(MChaP))));
