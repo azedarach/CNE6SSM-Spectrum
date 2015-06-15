@@ -50,6 +50,8 @@ struct CNE6SSM_semianalytic_input_parameters<Two_scale> {
       {}
 };
 
+std::ostream& operator<<(std::ostream&, const CNE6SSM_semianalytic_input_parameters<Two_scale>&);
+
 } // namespace flexiblesusy
 
 #endif
