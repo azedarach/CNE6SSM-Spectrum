@@ -1288,7 +1288,7 @@ Eigen::Matrix<double,5,5> CNE6SSM_mass_eigenstates::get_mass_matrix_hh() const
    return mass_matrix_hh;
 }
 
-// rotated CP-even Higgs mass matrix in the basis of arXiv:1410:6288 [hep-ph]
+// rotated CP-even Higgs mass matrix in the basis of arXiv:1410.6288 [hep-ph]
 Eigen::Matrix<double,5,5> CNE6SSM_mass_eigenstates::get_rotated_mass_matrix_hh() const
 {
    const double v = Sqrt(Sqr(vd) + Sqr(vu));
