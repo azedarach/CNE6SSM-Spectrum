@@ -97,7 +97,7 @@ void Scan_parser::parse_scan_inputs_file(const std::string& input_file)
 
       // break up into individual fields
       std::vector<std::string> fields;
-      boost::split(fields, line, boost::is_any_of(",;"));
+      boost::split(fields, line, boost::is_any_of(";"));
 
       for (std::size_t i = 0; i < fields.size(); ++i) {
          // remove whitespace
