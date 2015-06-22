@@ -52,6 +52,8 @@ public:
    int get_exit_code() const { return get_problems().have_problem(); }
    void set_parameter_output_scale(double s) { parameter_output_scale = s; }
    void set_precision_goal(double precision_goal_) { precision_goal = precision_goal_; }
+   // DH: note temporary method for setting EWSB iteration precision
+   void set_ewsb_iteration_precision(double p) { model.set_ewsb_iteration_precision(p); }
    void set_pole_mass_loop_order(unsigned l) { model.set_pole_mass_loop_order(l); }
    void set_ewsb_loop_order(unsigned l) { model.set_ewsb_loop_order(l); }
    void set_beta_loop_order(unsigned l) { beta_loop_order = l; }
