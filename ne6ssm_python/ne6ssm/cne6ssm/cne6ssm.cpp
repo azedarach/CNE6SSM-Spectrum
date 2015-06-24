@@ -181,29 +181,47 @@ const char* convert_to_parameter_latex_name(const char* name)
    return "";
 }
 
-static list get_all_input_names()
+static list get_all_two_scale_input_names()
 {
    list t;
-   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS; ++i) {
-      t.append(flexiblesusy::CNE6SSM_info::input_names[i]);
+   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::two_scale::NUMBER_OF_INPUTS; ++i) {
+      t.append(flexiblesusy::CNE6SSM_info::two_scale::input_names[i]);
    }
    return t;
 }
 
-static list get_all_input_latex_names()
+static list get_all_two_scale_input_latex_names()
 {
    list t;
-   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS; ++i) {
-      t.append(flexiblesusy::CNE6SSM_info::input_latex_names[i]);
+   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::two_scale::NUMBER_OF_INPUTS; ++i) {
+      t.append(flexiblesusy::CNE6SSM_info::two_scale::input_latex_names[i]);
    }
    return t;
 }
 
-bool is_input_name(const char* name)
+static list get_all_semianalytic_input_names()
+{
+   list t;
+   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::semianalytic::NUMBER_OF_INPUTS; ++i) {
+      t.append(flexiblesusy::CNE6SSM_info::semianalytic::input_names[i]);
+   }
+   return t;
+}
+
+static list get_all_semianalytic_input_latex_names()
+{
+   list t;
+   for (std::size_t i = 0; i < flexiblesusy::CNE6SSM_info::semianalytic::NUMBER_OF_INPUTS; ++i) {
+      t.append(flexiblesusy::CNE6SSM_info::semianalytic::input_latex_names[i]);
+   }
+   return t;
+}
+
+bool is_two_scale_input_name(const char* name)
 {
    std::size_t loc = 0;
-   while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS) {
-      if (!strcmp(name, flexiblesusy::CNE6SSM_info::input_names[loc]))
+   while (loc < flexiblesusy::CNE6SSM_info::two_scale::NUMBER_OF_INPUTS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::two_scale::input_names[loc]))
          return true;
       ++loc;
    }
@@ -211,14 +229,80 @@ bool is_input_name(const char* name)
    return false;
 }
 
-const char* convert_to_input_latex_name(const char* name)
+bool is_semianalytic_input_name(const char* name)
+{
+   std::size_t loc = 0;
+   while (loc < flexiblesusy::CNE6SSM_info::semianalytic::NUMBER_OF_INPUTS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::semianalytic::input_names[loc]))
+         return true;
+      ++loc;
+   }
+
+   return false;
+}
+
+const char* convert_to_two_scale_input_latex_name(const char* name)
 {
    std::size_t index = 0;
-   while (index < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS) {
-      if (!strcmp(name, flexiblesusy::CNE6SSM_info::input_names[index])) {
-         return flexiblesusy::CNE6SSM_info::input_latex_names[index];
+   while (index < flexiblesusy::CNE6SSM_info::two_scale::NUMBER_OF_INPUTS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::two_scale::input_names[index])) {
+         return flexiblesusy::CNE6SSM_info::two_scale::input_latex_names[index];
       }
       ++index;
+   }
+   return "";
+}
+
+const char* convert_to_semianalytic_input_latex_name(const char* name)
+{
+   std::size_t index = 0;
+   while (index < flexiblesusy::CNE6SSM_info::semianalytic::NUMBER_OF_INPUTS) {
+      if (!strcmp(name, flexiblesusy::CNE6SSM_info::semianalytic::input_names[index])) {
+         return flexiblesusy::CNE6SSM_info::semianalytic::input_latex_names[index];
+      }
+      ++index;
+   }
+   return "";
+}
+
+static list get_all_input_names(const char* algorithm)
+{
+   list t;
+   if (!strcmp(algorithm, "two_scale")) {
+      t = get_all_two_scale_input_names();
+   } else if (!strcmp(algorithm, "semianalytic")) {
+      t = get_all_semianalytic_input_names();
+   }
+   return t;
+}
+
+static list get_all_input_latex_names(const char* algorithm)
+{
+   list t;
+   if (!strcmp(algorithm, "two_scale")) {
+      t = get_all_two_scale_input_latex_names();
+   } else if (!strcmp(algorithm, "semianalytic")) {
+      t = get_all_semianalytic_input_latex_names();
+   }
+   return t;
+}
+
+bool is_input_name(const char* algorithm, const char* name)
+{
+   if (!strcmp(algorithm, "two_scale")) {
+      return is_two_scale_input_name(name);
+   } else if (!strcmp(algorithm, "semianalytic")) {
+      return is_semianalytic_input_name(name);
+   }
+   return false;
+}
+
+const char* convert_to_input_latex_name(const char* algorithm, const char* name)
+{
+   if (!strcmp(algorithm, "two_scale")) {
+      return convert_to_two_scale_input_latex_name(name);
+   } else if (!strcmp(algorithm, "semianalytic")) {
+      return convert_to_semianalytic_input_latex_name(name);
    }
    return "";
 }
@@ -355,8 +439,10 @@ const char* convert_to_latex_name(const char* name)
       return convert_to_particle_latex_name(name);
    } else if (is_parameter_name(name)) {
       return convert_to_parameter_latex_name(name);
-   } else if (is_input_name(name)) {
-      return convert_to_input_latex_name(name);
+   } else if (is_two_scale_input_name(name)) {
+      return convert_to_two_scale_input_latex_name(name);
+   } else if (is_semianalytic_input_name(name)) {
+      return convert_to_semianalytic_input_latex_name(name);
    } else if (is_mixing_name(name)) {
       return convert_to_mixing_latex_name(name);
    }
@@ -368,8 +454,8 @@ const char* convert_to_latex_name(const char* name)
 // or -1 if not a valid parameter
 int get_mass_dimension(const char* name)
 {
-   if (!(is_parameter_name(name) || is_input_name(name) 
-         || is_mixing_name(name))) {
+   if (!(is_parameter_name(name) || is_two_scale_input_name(name)
+         || is_semianalytic_input_name(name) || is_mixing_name(name))) {
       return -1;
    } else if (is_mixing_name(name)) {
       return 0;
@@ -381,14 +467,22 @@ int get_mass_dimension(const char* name)
          ++loc;
       }
       return flexiblesusy::CNE6SSM_info::parameter_mass_dimensions[loc];
-   } else {
+   } else if (is_two_scale_input_name(name)) {
       std::size_t loc = 0;
-      while (loc < flexiblesusy::CNE6SSM_info::NUMBER_OF_INPUTS) {
-         if (!strcmp(name, flexiblesusy::CNE6SSM_info::input_names[loc]))
+      while (loc < flexiblesusy::CNE6SSM_info::two_scale::NUMBER_OF_INPUTS) {
+         if (!strcmp(name, flexiblesusy::CNE6SSM_info::two_scale::input_names[loc]))
             break;
          ++loc;
       }
-      return flexiblesusy::CNE6SSM_info::input_mass_dimensions[loc];
+      return flexiblesusy::CNE6SSM_info::two_scale::input_mass_dimensions[loc];
+   } else {
+      std::size_t loc = 0;
+      while (loc < flexiblesusy::CNE6SSM_info::semianalytic::NUMBER_OF_INPUTS) {
+         if (!strcmp(name, flexiblesusy::CNE6SSM_info::semianalytic::input_names[loc]))
+            break;
+         ++loc;
+      }
+      return flexiblesusy::CNE6SSM_info::semianalytic::input_mass_dimensions[loc];
    }
 }
 
