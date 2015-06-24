@@ -2550,6 +2550,7 @@ void CLASSNAME::calculate_coefficients(double input_scale)
    }
 
    // solve for coefficients using least squares
+   // for implementation in FS, use FS SVD routines if possible
    Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,2> > dimension_one_svd(dimension_one_inputs, Eigen::ComputeFullU | Eigen::ComputeFullV);
    Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,4> > dimension_two_svd(dimension_two_inputs, Eigen::ComputeFullU | Eigen::ComputeFullV);
 
@@ -2987,7 +2988,7 @@ void CLASSNAME::set_soft_parameters_at_current_scale(double m0, double m12, doub
    mH1I2 = mH1I2_m02_coeff * Sqr(m0) + mH1I2_m122_coeff * Sqr(m12)
       + mH1I2_Azerom12_coeff * Azero * m12 + mH1I2_Azero2_coeff * Sqr(Azero);
    mH2I2 = mH2I2_m02_coeff * Sqr(m0) + mH2I2_m122_coeff * Sqr(m12)
-      + mH2I2_Azerom12_coeff * Azero * m12 + mH2I2_Azero2_coeff * Sqr(Azero);;
+      + mH2I2_Azerom12_coeff * Azero * m12 + mH2I2_Azero2_coeff * Sqr(Azero);
    mSI2 = mSI2_m02_coeff * Sqr(m0) + mSI2_m122_coeff * Sqr(m12)
       + mSI2_Azerom12_coeff * Azero * m12 + mSI2_Azero2_coeff * Sqr(Azero);
    mDx2 = mDx2_m02_coeff * Sqr(m0) + mDx2_m122_coeff * Sqr(m12)
