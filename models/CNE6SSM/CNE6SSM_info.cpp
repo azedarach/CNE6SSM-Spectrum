@@ -229,7 +229,7 @@ namespace CNE6SSM_info {
          "\\kappa_{31}(M_\\mathrm{GUT}})", "\\kappa_{32}(M_\\mathrm{GUT}})",
          "\\kappa_{33}(M_\\mathrm{GUT}})", "\\lambda_{11}(M_\\mathrm{GUT}})",
          "\\lambda_{12}(M_\\mathrm{GUT}})", "\\lambda_{21}(M_\\mathrm{GUT}})",
-         "\\lambda_{22}(M_\\mathrm{GUT}})", "\\lambda (M_\\mathrm{GUT}})"
+         "\\lambda_{22}(M_\\mathrm{GUT}})", "\\lambda (M_\\mathrm{GUT}})",
          "\\tilde{f}_{11}(M_\\mathrm{GUT}})", "\\tilde{f}_{12}(M_\\mathrm{GUT}})",
          "\\tilde{f}_{21}(M_\\mathrm{GUT}})", "\\tilde{f}_{22}(M_\\mathrm{GUT}})", 
          "\\tilde{f}_{31}(M_\\mathrm{GUT}})", "\\tilde{f}_{32}(M_\\mathrm{GUT}})",
