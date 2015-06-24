@@ -148,33 +148,97 @@ namespace CNE6SSM_info {
       "m_{\\bar{D},32}^2", "m_{\\bar{D},33}^2", "m_{L_4}^2", "m_{\\bar{L_4}}^2", 
       "m_{\\phi}^2", "M_1", "M_2", "M_3", "M_1'"};
 
-   const char* input_names[NUMBER_OF_INPUTS] = {"m0", "m12", "TanBeta", "SignLambdax", 
-      "Azero", "sInput", "QSInput", "hEInput(0,0)", "hEInput(0,1)", "hEInput(1,0)", "hEInput(1,1)", 
-      "hEInput(2,0)", "hEInput(2,1)", "SigmaLInput", "KappaPrInput", "SigmaxInput", 
-      "gDInput(0,0)", "gDInput(0,1)", "gDInput(0,2)", "gDInput(1,0)", "gDInput(1,1)", 
-      "gDInput(1,2)", "gDInput(2,0)", "gDInput(2,1)", "gDInput(2,2)", "KappaInput(0,0)",
-      "KappaInput(0,1)", "KappaInput(0,2)", "KappaInput(1,0)", "KappaInput(1,1)", 
-      "KappaInput(1,2)", "KappaInput(2,0)", "KappaInput(2,1)", "KappaInput(2,2)", 
-      "Lambda12Input(0,0)", "Lambda12Input(0,1)", "Lambda12Input(1,0)", "Lambda12Input(1,1)",
-      "fuInput(0,0)", "fuInput(0,1)", "fuInput(1,0)", "fuInput(1,1)", "fuInput(2,0)",
-      "fuInput(2,1)", "fdInput(0,0)", "fdInput(0,1)", "fdInput(1,0)", "fdInput(1,1)",
-      "fdInput(2,0)", "fdInput(2,1)", "MuPrInput", "MuPhiInput", "BMuPrInput", "BMuPhiInput"};
+   namespace two_scale {
 
-   const int input_mass_dimensions[NUMBER_OF_INPUTS] = {1, 1, 0, 0, 
-      1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2};
+      const char* input_names[NUMBER_OF_INPUTS] = {"m0", "m12", "TanBeta",
+         "SignLambdax", "Azero", "sInput", "QSInput", "hEInput(0,0)", "hEInput(0,1)",
+         "hEInput(1,0)", "hEInput(1,1)", "hEInput(2,0)", "hEInput(2,1)", "SigmaLInput",
+         "KappaPrInput", "SigmaxInput", "gDInput(0,0)", "gDInput(0,1)", "gDInput(0,2)",
+         "gDInput(1,0)", "gDInput(1,1)", "gDInput(1,2)", "gDInput(2,0)", "gDInput(2,1)",
+         "gDInput(2,2)", "KappaInput(0,0)", "KappaInput(0,1)", "KappaInput(0,2)",
+         "KappaInput(1,0)", "KappaInput(1,1)", "KappaInput(1,2)", "KappaInput(2,0)",
+         "KappaInput(2,1)", "KappaInput(2,2)", "Lambda12Input(0,0)", "Lambda12Input(0,1)",
+         "Lambda12Input(1,0)", "Lambda12Input(1,1)", "fuInput(0,0)", "fuInput(0,1)",
+         "fuInput(1,0)", "fuInput(1,1)", "fuInput(2,0)", "fuInput(2,1)", "fdInput(0,0)",
+         "fdInput(0,1)", "fdInput(1,0)", "fdInput(1,1)", "fdInput(2,0)", "fdInput(2,1)",
+         "MuPrInput", "MuPhiInput", "BMuPrInput", "BMuPhiInput"};
+      
+      const int input_mass_dimensions[NUMBER_OF_INPUTS] = {1, 1, 0, 0, 
+         1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2};
+      
+      const char* input_latex_names[NUMBER_OF_INPUTS] = {"m_0", "m_{1/2}",
+         "\\tan\\beta (M_Z)", "\\textrm{sgn}(\\lambda)", "A_0", "s (M_{\\mathrm{SUSY}})",
+         "\\tilde{Q}_S", "h_{11}^E(M_{\\mathrm{GUT}})", "h_{12}^E(M_{\\mathrm{GUT}})",
+         "h_{21}^E(M_{\\mathrm{GUT}})", "h_{22}^E(M_{\\mathrm{GUT}})",
+         "h_{31}^E(M_{\\mathrm{GUT}})", "h_{32}^E(M_{\\mathrm{GUT}})",
+         "\\sigma_L(M_{\\mathrm{GUT}})", "\\kappa(M_{\\mathrm{GUT}})",
+         "\\sigma(M_{\\mathrm{GUT}})", "g_{11}^D(M_{\\mathrm{GUT}})",
+         "g_{12}^D(M_{\\mathrm{GUT}})", "g_{13}^D(M_{\\mathrm{GUT}})",
+         "g_{21}^D(M_{\\mathrm{GUT}})", "g_{22}^D(M_{\\mathrm{GUT}})",
+         "g_{23}^D(M_{\\mathrm{GUT}})", "g_{31}^D(M_{\\mathrm{GUT}})",
+         "g_{32}^D(M_{\\mathrm{GUT}})", "g_{33}^D(M_{\\mathrm{GUT}})",
+         "\\kappa_{11}(M_{\\mathrm{GUT}})", "\\kappa_{12}(M_{\\mathrm{GUT}})",
+         "\\kappa_{13}(M_{\\mathrm{GUT}})", "\\kappa_{21}(M_{\\mathrm{GUT}})",
+         "\\kappa_{22}(M_{\\mathrm{GUT}})", "\\kappa_{23}(M_{\\mathrm{GUT}})",
+         "\\kappa_{31}(M_{\\mathrm{GUT}})", "\\kappa_{32}(M_{\\mathrm{GUT}})",
+         "\\kappa_{33}(M_{\\mathrm{GUT}})", "\\lambda_{11}(M_{\\mathrm{GUT}})",
+         "\\lambda_{12}(M_{\\mathrm{GUT}})", "\\lambda_{21}(M_{\\mathrm{GUT}})",
+         "\\lambda_{22}(M_{\\mathrm{GUT}})", "\\tilde{f}_{11}(M_{\\mathrm{GUT}})",
+         "\\tilde{f}_{12}(M_{\\mathrm{GUT}})", "\\tilde{f}_{21}(M_{\\mathrm{GUT}})",
+         "\\tilde{f}_{22}(M_{\\mathrm{GUT}})", "\\tilde{f}_{31}(M_{\\mathrm{GUT}})",
+         "\\tilde{f}_{32}(M_{\\mathrm{GUT}})", "f_{11}(M_{\\mathrm{GUT}})",
+         "f_{12}(M_{\\mathrm{GUT}})", "f_{21}(M_{\\mathrm{GUT}})",
+         "f_{22}(M_{\\mathrm{GUT}})", "f_{31}(M_{\\mathrm{GUT}})",
+         "f_{32}(M_{\\mathrm{GUT}})", "\\mu_L(M_{\\mathrm{GUT}})",
+         "\\mu(M_{\\mathrm{GUT}})", "B_{\\mu_L}(M_{\\mathrm{GUT}})",
+         "B_\\mu(M_{\\mathrm{GUT}})"};
 
-   const char* input_latex_names[NUMBER_OF_INPUTS] = {"m_0", "m_{1/2}", "\\tan\\beta", 
-      "\\textrm{sgn}(\\lambda)", "A_0", "s", "\\tilde{Q}_S", "h_{11}^E", "h_{12}^E",
-      "h_{21}^E", "h_{22}^E", "h_{31}^E", "h_{32}^E", "\\sigma_L", "\\kappa", "\\sigma",
-      "g_{11}^D", "g_{12}^D", "g_{13}^D", "g_{21}^D", "g_{22}^D", "g_{23}^D", "g_{31}^D",
-      "g_{32}^D", "g_{33}^D", "\\kappa_{11}", "\\kappa_{12}", "\\kappa_{13}", 
-      "\\kappa_{21}", "\\kappa_{22}", "\\kappa_{23}", "\\kappa_{31}", "\\kappa_{32}",
-      "\\kappa_{33}", "\\lambda_{11}", "\\lambda_{12}", "\\lambda_{21}", "\\lambda_{22}",
-      "\\tilde{f}_{11}", "\\tilde{f}_{12}", "\\tilde{f}_{21}", "\\tilde{f}_{22}", 
-      "\\tilde{f}_{31}", "\\tilde{f}_{32}", "f_{11}", "f_{12}", "f_{21}", "f_{22}", 
-      "f_{31}", "f_{32}", "\\mu_L", "\\mu", "B_{\\mu_L}", "B_\\mu"};
+   } // namespace two_scale
+
+   namespace semianalytic {
+
+      const char* input_names[NUMBER_OF_INPUTS] = {"m12", "Azero",
+         "TanBeta", "sInput", "QSInput", "hEInput(0,0)", "hEInput(0,1)", "hEInput(1,0)",
+         "hEInput(1,1)", "hEInput(2,0)", "hEInput(2,1)", "SigmaLInput", "KappaPrInput",
+         "SigmaxInput", "gDInput(0,0)", "gDInput(0,1)", "gDInput(0,2)", "gDInput(1,0)",
+         "gDInput(1,1)", "gDInput(1,2)", "gDInput(2,0)", "gDInput(2,1)", "gDInput(2,2)",
+         "KappaInput(0,0)", "KappaInput(0,1)", "KappaInput(0,2)", "KappaInput(1,0)",
+         "KappaInput(1,1)", "KappaInput(1,2)", "KappaInput(2,0)", "KappaInput(2,1)",
+         "KappaInput(2,2)", "Lambda12Input(0,0)", "Lambda12Input(0,1)", "Lambda12Input(1,0)",
+         "Lambda12Input(1,1)", "LambdaxInput", "fuInput(0,0)", "fuInput(0,1)", "fuInput(1,0)",
+         "fuInput(1,1)", "fuInput(2,0)", "fuInput(2,1)", "fdInput(0,0)", "fdInput(0,1)",
+         "fdInput(1,0)", "fdInput(1,1)", "fdInput(2,0)", "fdInput(2,1)", "MuPrInput",
+         "MuPhiInput", "BMuPrInput", "BMuPhiInput"};
+
+      const int input_mass_dimensions[NUMBER_OF_INPUTS] = {1, 1,
+         0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2};
+      
+      const char* input_latex_names[NUMBER_OF_INPUTS] = {"m_{1/2}",
+         "A_0", "\\tan\\beta (M_Z)", "s(M_{\\mathrm{SUSY}})", "\\tilde{Q}_S",
+         "h_{11}^E(M_\\mathrm{GUT}})", "h_{12}^E(M_\\mathrm{GUT}})", "h_{21}^E(M_\\mathrm{GUT}})",
+         "h_{22}^E(M_\\mathrm{GUT}})", "h_{31}^E(M_\\mathrm{GUT}})", "h_{32}^E(M_\\mathrm{GUT}})",
+         "\\sigma_L(M_\\mathrm{GUT}})", "\\kappa(M_\\mathrm{GUT}})", "\\sigma(M_\\mathrm{GUT}})",
+         "g_{11}^D(M_\\mathrm{GUT}})", "g_{12}^D(M_\\mathrm{GUT}})", "g_{13}^D(M_\\mathrm{GUT}})",
+         "g_{21}^D(M_\\mathrm{GUT}})", "g_{22}^D(M_\\mathrm{GUT}})", "g_{23}^D(M_\\mathrm{GUT}})",
+         "g_{31}^D(M_\\mathrm{GUT}})", "g_{32}^D(M_\\mathrm{GUT}})", "g_{33}^D(M_\\mathrm{GUT}})",
+         "\\kappa_{11}(M_\\mathrm{GUT}})", "\\kappa_{12}(M_\\mathrm{GUT}})",
+         "\\kappa_{13}(M_\\mathrm{GUT}})", "\\kappa_{21}(M_\\mathrm{GUT}})",
+         "\\kappa_{22}(M_\\mathrm{GUT}})", "\\kappa_{23}(M_\\mathrm{GUT}})",
+         "\\kappa_{31}(M_\\mathrm{GUT}})", "\\kappa_{32}(M_\\mathrm{GUT}})",
+         "\\kappa_{33}(M_\\mathrm{GUT}})", "\\lambda_{11}(M_\\mathrm{GUT}})",
+         "\\lambda_{12}(M_\\mathrm{GUT}})", "\\lambda_{21}(M_\\mathrm{GUT}})",
+         "\\lambda_{22}(M_\\mathrm{GUT}})", "\\lambda (M_\\mathrm{GUT}})"
+         "\\tilde{f}_{11}(M_\\mathrm{GUT}})", "\\tilde{f}_{12}(M_\\mathrm{GUT}})",
+         "\\tilde{f}_{21}(M_\\mathrm{GUT}})", "\\tilde{f}_{22}(M_\\mathrm{GUT}})", 
+         "\\tilde{f}_{31}(M_\\mathrm{GUT}})", "\\tilde{f}_{32}(M_\\mathrm{GUT}})",
+         "f_{11}(M_\\mathrm{GUT}})", "f_{12}(M_\\mathrm{GUT}})", "f_{21}(M_\\mathrm{GUT}})",
+         "f_{22}(M_\\mathrm{GUT}})", "f_{31}(M_\\mathrm{GUT}})", "f_{32}(M_\\mathrm{GUT}})",
+         "\\mu_L(M_\\mathrm{GUT}})", "\\mu(M_\\mathrm{GUT}})", "B_{\\mu_L}(M_\\mathrm{GUT}})",
+         "B_\\mu(M_\\mathrm{GUT}})"};
+
+   } // namespace semianalytic
 
    const unsigned mixing_dimensions[NUMBER_OF_MIXINGS] = {6, 3, 6, 6
       , 6, 5, 5, 2, 8, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 7, 4, 
