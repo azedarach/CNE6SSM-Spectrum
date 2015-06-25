@@ -1109,7 +1109,7 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
 
    rhs_LXiF *= -0.7071067811865475;
 
-   LXiF= rhs_LXiF;
+   LXiF = rhs_LXiF;
 
    const bool isfinite = IsFinite(m0) && IsFinite(TanTheta)
       && IsFinite(vphi) && IsFinite(XiF) && IsFinite(LXiF);
