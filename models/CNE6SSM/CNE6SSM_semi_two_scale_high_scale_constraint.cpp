@@ -81,8 +81,6 @@ void CNE6SSM_semianalytic_high_scale_constraint<Two_scale>::apply()
 
    const auto MuPrInput = INPUTPARAMETER(MuPrInput);
    const auto MuPhiInput = INPUTPARAMETER(MuPhiInput);
-   const auto BMuPrInput = INPUTPARAMETER(BMuPrInput);
-   const auto BMuPhiInput = INPUTPARAMETER(BMuPhiInput);
    const auto SigmaLInput = INPUTPARAMETER(SigmaLInput);
    const auto KappaPrInput = INPUTPARAMETER(KappaPrInput);
    const auto SigmaxInput = INPUTPARAMETER(SigmaxInput);
@@ -98,8 +96,6 @@ void CNE6SSM_semianalytic_high_scale_constraint<Two_scale>::apply()
    MODEL->set_g1p(Re(g1));
    MODEL->set_MuPr(Re(MuPrInput));
    MODEL->set_MuPhi(Re(MuPhiInput));
-   MODEL->set_BMuPr(Re(BMuPrInput));
-   MODEL->set_BMuPhi(Re(BMuPhiInput));
    MODEL->set_SigmaL(Re(SigmaLInput));
    MODEL->set_KappaPr(Re(KappaPrInput));
    MODEL->set_Sigmax(Re(SigmaxInput));

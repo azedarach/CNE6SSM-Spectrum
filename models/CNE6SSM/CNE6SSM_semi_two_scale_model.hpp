@@ -125,6 +125,14 @@ public:
    const Eigen::Matrix<double,3,3>& get_m12_coeff_TYu() const { return TYu_m12_coeff; }
    double get_m12_coeff_TYu(int i, int k) const { return TYu_m12_coeff(i,k); }
    const Eigen::Matrix<double,3,3>& get_m02_coeff_mq2() const { return mq2_m02_coeff; }
+   double get_Azero_coeff_BMuPhi() const { return BMuPhi_Azero_coeff; }
+   double get_m12_coeff_BMuPhi() const { return BMuPhi_m12_coeff; }
+   double get_BMuPhi_coeff_BMuPhi() const { return BMuPhi_BMuPhi_coeff; }
+   double get_BMuPr_coeff_BMuPhi() const { return BMuPhi_BMuPr_coeff; }
+   double get_Azero_coeff_BMuPr() const { return BMuPr_Azero_coeff; }
+   double get_m12_coeff_BMuPr() const { return BMuPr_m12_coeff; }
+   double get_BMuPhi_coeff_BMuPr() const { return BMuPr_BMuPhi_coeff; }
+   double get_BMuPr_coeff_BMuPr() const { return BMuPr_BMuPr_coeff; }
    double get_m02_coeff_mq2(int i, int k) const { return mq2_m02_coeff(i,k); }
    const Eigen::Matrix<double,3,3>& get_m122_coeff_mq2() const { return mq2_m122_coeff; }
    double get_m122_coeff_mq2(int i, int k) const { return mq2_m122_coeff(i,k); }
@@ -289,8 +297,8 @@ private:
    static int tree_level_jacobian(const gsl_vector*, void*, gsl_matrix*);
    static int tree_level_combined(const gsl_vector*, void*, gsl_vector*, gsl_matrix*);
 
-   void set_soft_parameters_at_input_scale(double,double,double);
-   void set_soft_parameters_at_current_scale(double,double,double);
+   void set_soft_parameters_at_input_scale(double,double,double,double,double);
+   void set_soft_parameters_at_current_scale(double,double,double,double,double);
 
    Eigen::Matrix<double,3,3> TYd_Azero_coeff;
    Eigen::Matrix<double,3,3> TYd_m12_coeff;
@@ -318,6 +326,14 @@ private:
    Eigen::Matrix<double,3,2> Tfd_m12_coeff;
    Eigen::Matrix<double,3,3> TYu_Azero_coeff;
    Eigen::Matrix<double,3,3> TYu_m12_coeff;
+   double BMuPr_BMuPr_coeff;
+   double BMuPr_BMuPhi_coeff;
+   double BMuPr_Azero_coeff;
+   double BMuPr_m12_coeff;
+   double BMuPhi_BMuPr_coeff;
+   double BMuPhi_BMuPhi_coeff;
+   double BMuPhi_Azero_coeff;
+   double BMuPhi_m12_coeff;
    Eigen::Matrix<double,3,3> mq2_m02_coeff;
    Eigen::Matrix<double,3,3> mq2_m122_coeff;
    Eigen::Matrix<double,3,3> mq2_Azerom12_coeff;

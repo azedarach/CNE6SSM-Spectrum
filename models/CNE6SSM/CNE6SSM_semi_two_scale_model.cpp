@@ -73,6 +73,10 @@ CLASSNAME::CNE6SSM_semianalytic(const CNE6SSM_semianalytic_input_parameters<Two_
    , Tfd_m12_coeff(Eigen::Matrix<double,3,2>::Zero())
    , TYu_Azero_coeff(Eigen::Matrix<double,3,3>::Zero())
    , TYu_m12_coeff(Eigen::Matrix<double,3,3>::Zero())
+   , BMuPr_BMuPr_coeff(0), BMuPr_BMuPhi_coeff(0)
+   , BMuPr_Azero_coeff(0), BMuPr_m12_coeff(0)
+   , BMuPhi_BMuPr_coeff(0), BMuPhi_BMuPhi_coeff(0)
+   , BMuPhi_Azero_coeff(0), BMuPhi_m12_coeff(0)
    , mq2_m02_coeff(Eigen::Matrix<double,3,3>::Zero())
    , mq2_m122_coeff(Eigen::Matrix<double,3,3>::Zero())
    , mq2_Azerom12_coeff(Eigen::Matrix<double,3,3>::Zero())
@@ -357,6 +361,8 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    const double s = model->get_input().sInput;
    const double m12 = model->get_input().m12;
    const double Azero = model->get_input().Azero;
+   const double BMuPr0 = model->get_input().BMuPrInput;
+   const double BMuPhi0 = model->get_input().BMuPhiInput;
 
    const double m0 = gsl_vector_get(x, 0);
    const double TanTheta = gsl_vector_get(x, 1);
@@ -364,7 +370,7 @@ int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* 
    const double XiF = gsl_vector_get(x, 3);
    const double LXiF = gsl_vector_get(x, 4);
 
-   model->set_soft_parameters_at_current_scale(m0, m12, Azero);
+   model->set_soft_parameters_at_current_scale(m0, m12, Azero, BMuPr0, BMuPhi0);
    model->set_vs(s * Cos(ArcTan(TanTheta)));
    model->set_vsb(s * Sin(ArcTan(TanTheta)));
    model->set_vphi(vphi);
@@ -410,6 +416,8 @@ int CLASSNAME::ewsb_equations(const gsl_vector* x, void* params, gsl_vector* f)
    const double s = model->get_input().sInput;
    const double m12 = model->get_input().m12;
    const double Azero = model->get_input().Azero;
+   const double BMuPr0 = model->get_input().BMuPrInput;
+   const double BMuPhi0 = model->get_input().BMuPhiInput;
 
    const double m0 = gsl_vector_get(x, 0);
    const double TanTheta = gsl_vector_get(x, 1) / s;
@@ -417,7 +425,7 @@ int CLASSNAME::ewsb_equations(const gsl_vector* x, void* params, gsl_vector* f)
    const double XiF = gsl_vector_get(x, 3);
    const double LXiF = gsl_vector_get(x, 4);
 
-   model->set_soft_parameters_at_current_scale(m0, m12, Azero);
+   model->set_soft_parameters_at_current_scale(m0, m12, Azero, BMuPr0, BMuPhi0);
    model->set_vs(s * Cos(ArcTan(TanTheta)));
    model->set_vsb(s * Sin(ArcTan(TanTheta)));
    model->set_vphi(vphi);
@@ -498,12 +506,14 @@ int CLASSNAME::tree_level_ewsb_eqs(const gsl_vector* x, void* params, gsl_vector
    const double s = model->get_input().sInput;
    const double m12 = model->get_input().m12;
    const double Azero = model->get_input().Azero;
+   const double BMuPr0 = model->get_input().BMuPrInput;
+   const double BMuPhi0 = model->get_input().BMuPhiInput;
 
    const double m0 = gsl_vector_get(x, 0);
    const double TanTheta = gsl_vector_get(x, 1) / s;
    const double vphi = gsl_vector_get(x, 2);
 
-   model->set_soft_parameters_at_current_scale(m0, m12, Azero);
+   model->set_soft_parameters_at_current_scale(m0, m12, Azero, BMuPr0, BMuPhi0);
    model->set_vs(s * Cos(ArcTan(TanTheta)));
    model->set_vsb(s * Sin(ArcTan(TanTheta)));
    model->set_vphi(vphi);
@@ -534,13 +544,15 @@ int CLASSNAME::tree_level_jacobian(const gsl_vector* x, void* params, gsl_matrix
    const double s = model->get_input().sInput;
    const double m12 = model->get_input().m12;
    const double Azero = model->get_input().Azero;
+   const double BMuPr0 = model->get_input().BMuPrInput;
+   const double BMuPhi0 = model->get_input().BMuPhiInput;
 
    const double m0 = gsl_vector_get(x, 0);
    const double sTimesTanTheta = gsl_vector_get(x, 1);
    const double TanTheta = sTimesTanTheta / s;
    const double vphi = gsl_vector_get(x, 2);
 
-   model->set_soft_parameters_at_current_scale(m0, m12, Azero);
+   model->set_soft_parameters_at_current_scale(m0, m12, Azero, BMuPr0, BMuPhi0);
    model->set_vs(s * Cos(ArcTan(TanTheta)));
    model->set_vsb(s * Sin(ArcTan(TanTheta)));
    model->set_vphi(vphi);
@@ -657,6 +669,8 @@ int CLASSNAME::solve_ewsb_iteratively_with(
    const double s = LOCALINPUT(sInput);
    const double m12 = LOCALINPUT(m12);
    const double Azero = LOCALINPUT(Azero);
+   const double BMuPr0 = LOCALINPUT(BMuPrInput);
+   const double BMuPhi0 = LOCALINPUT(BMuPhiInput);
 
    ewsb_solution(0) = solver->get_solution(0);
    ewsb_solution(1) = solver->get_solution(1) / s;
@@ -668,7 +682,8 @@ int CLASSNAME::solve_ewsb_iteratively_with(
    if (ewsb_solution(0) < 0.)
       error = EWSB_solver::FAIL;
 
-   set_soft_parameters_at_current_scale(ewsb_solution(0), m12, Azero);
+   set_soft_parameters_at_current_scale(ewsb_solution(0), m12, Azero,
+                                        BMuPr0, BMuPhi0);
 
    vs = s * Cos(ArcTan(ewsb_solution(1)));
    vsb = s * Sin(ArcTan(ewsb_solution(1)));
@@ -697,12 +712,15 @@ int CLASSNAME::solve_tree_level_ewsb_iteratively_with(
    const double s = LOCALINPUT(sInput);
    const double m12 = LOCALINPUT(m12);
    const double Azero = LOCALINPUT(Azero);
+   const double BMuPr0 = LOCALINPUT(BMuPrInput);
+   const double BMuPhi0 = LOCALINPUT(BMuPhiInput);
 
    ewsb_solution(0) = solver->get_solution(0);
    ewsb_solution(1) = solver->get_solution(1) / s;
    ewsb_solution(2) = solver->get_solution(2);
 
-   set_soft_parameters_at_current_scale(ewsb_solution(0), m12, Azero);
+   set_soft_parameters_at_current_scale(ewsb_solution(0), m12, Azero,
+                                        BMuPr0, BMuPhi0);
 
    vs = s * Cos(ArcTan(ewsb_solution(1)));
    vsb = s * Sin(ArcTan(ewsb_solution(1)));
@@ -981,6 +999,8 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
    const double s = LOCALINPUT(sInput);
    const double m12 = LOCALINPUT(m12);
    const double Azero = LOCALINPUT(Azero);
+   const double BMuPr0 = LOCALINPUT(BMuPrInput);
+   const double BMuPhi0 = LOCALINPUT(BMuPhiInput);
    const double TanBeta = vu / vd;
    const double oneOTanBeta2 = 1.0 / Sqr(TanBeta);
 
@@ -1012,7 +1032,7 @@ int CLASSNAME::ewsb_step(double ewsb_parameters[number_of_ewsb_equations])
 
    m0 = AbsSqrt(m0);
 
-   set_soft_parameters_at_current_scale(m0, m12, Azero);
+   set_soft_parameters_at_current_scale(m0, m12, Azero, BMuPr0, BMuPhi0);
 
    // update TanTheta
    double TanTheta = ms2 - 0.7071067811865475 * vd * vu * TLambdax * Sqrt(1.0 + Sqr(vsb / vs))
@@ -1157,6 +1177,8 @@ int CLASSNAME::ewsb_step(const gsl_vector* x, void* params, gsl_vector* f)
    const double s = INPUT(sInput);
    const double m12 = INPUT(m12);
    const double Azero = INPUT(Azero);
+   const double BMuPr0 = INPUT(BMuPrInput);
+   const double BMuPhi0 = INPUT(BMuPhiInput);
 
    const double m0 = gsl_vector_get(x, 0);
    const double TanTheta = gsl_vector_get(x, 1) / s;
@@ -1164,7 +1186,7 @@ int CLASSNAME::ewsb_step(const gsl_vector* x, void* params, gsl_vector* f)
    const double XiF = gsl_vector_get(x, 3);
    const double LXiF = gsl_vector_get(x, 4);
 
-   model->set_soft_parameters_at_current_scale(m0, m12, Azero);
+   model->set_soft_parameters_at_current_scale(m0, m12, Azero, BMuPr0, BMuPhi0);
    model->set_vs(s * Cos(ArcTan(TanTheta)));
    model->set_vsb(s * Sin(ArcTan(TanTheta)));
    model->set_vphi(vphi);
@@ -2510,6 +2532,8 @@ void CLASSNAME::calculate_coefficients(double input_scale)
    static const double fit_Azero_values[number_of_fit_points] = {0., 1., 0., 1.};
    static const double fit_m12_values[number_of_fit_points] = {1., 0., 0., 1.};
    static const double fit_m0_values[number_of_fit_points] = {0., 0., 1., 0.};
+   static const double fit_BMuPr_values[number_of_fit_points] = {0., 0., 1., 0.};
+   static const double fit_BMuPhi_values[number_of_fit_points] = {0., 0., 0., 1.};
 
    // save current set of parameters
    CNE6SSM_soft_parameters saved_pars;
@@ -2526,6 +2550,7 @@ void CLASSNAME::calculate_coefficients(double input_scale)
 
    Eigen::Matrix<double,number_of_fit_points,2> dimension_one_inputs;
    Eigen::Matrix<double,number_of_fit_points,4> dimension_two_inputs;
+   Eigen::Matrix<double,number_of_fit_points,4> soft_bilinear_inputs;
 
    for (std::size_t i = 0; i < number_of_fit_points; ++i) {
       dimension_one_inputs(i,0) = fit_Azero_values[i];
@@ -2536,7 +2561,13 @@ void CLASSNAME::calculate_coefficients(double input_scale)
       dimension_two_inputs(i,2) = fit_m12_values[i] * fit_Azero_values[i];
       dimension_two_inputs(i,3) = Sqr(fit_Azero_values[i]);
 
-      set_soft_parameters_at_input_scale(fit_m0_values[i], fit_m12_values[i], fit_Azero_values[i]);
+      soft_bilinear_inputs(i,0) = fit_Azero_values[i];
+      soft_bilinear_inputs(i,1) = fit_m12_values[i];
+      soft_bilinear_inputs(i,2) = fit_BMuPr_values[i];
+      soft_bilinear_inputs(i,3) = fit_BMuPhi_values[i];
+
+      set_soft_parameters_at_input_scale(fit_m0_values[i], fit_m12_values[i], fit_Azero_values[i],
+                                         fit_BMuPr_values[i], fit_BMuPhi_values[i]);
 
       run_to(current_scale, precision);
 
@@ -2553,10 +2584,12 @@ void CLASSNAME::calculate_coefficients(double input_scale)
    // for implementation in FS, use FS SVD routines if possible
    Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,2> > dimension_one_svd(dimension_one_inputs, Eigen::ComputeFullU | Eigen::ComputeFullV);
    Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,4> > dimension_two_svd(dimension_two_inputs, Eigen::ComputeFullU | Eigen::ComputeFullV);
+   Eigen::JacobiSVD<Eigen::Matrix<double,number_of_fit_points,4> > soft_bilinear_svd(soft_bilinear_inputs, Eigen::ComputeFullU | Eigen::ComputeFullV);
 
    Eigen::Matrix<double,number_of_fit_points,1> rhs;
    Eigen::Matrix<double,2,1> dimension_one_solution;
    Eigen::Matrix<double,4,1> dimension_two_solution;
+   Eigen::Matrix<double,4,1> soft_bilinear_solution;
 
    // TODO temporary working (awful!) solution, needs to be replaced...
    for (std::size_t i = 0; i < 3; ++i) {
@@ -2907,14 +2940,33 @@ void CLASSNAME::calculate_coefficients(double input_scale)
    MassBp_Azero_coeff = dimension_one_solution(0);
    MassBp_m12_coeff = dimension_one_solution(1);
 
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_BMuPr();
+   }
+   soft_bilinear_solution = soft_bilinear_svd.solve(rhs);
+   BMuPr_Azero_coeff = soft_bilinear_solution(0);
+   BMuPr_m12_coeff = soft_bilinear_solution(1);
+   BMuPr_BMuPr_coeff = soft_bilinear_solution(2);
+   BMuPr_BMuPhi_coeff = soft_bilinear_solution(3);
+
+   for (std::size_t k = 0; k < number_of_fit_points; ++k) {
+      rhs(k) = parameter_values[k].get_BMuPhi();
+   }
+   soft_bilinear_solution = soft_bilinear_svd.solve(rhs);
+   BMuPhi_Azero_coeff = soft_bilinear_solution(0);
+   BMuPhi_m12_coeff = soft_bilinear_solution(1);
+   BMuPhi_BMuPr_coeff = soft_bilinear_solution(2);
+   BMuPhi_BMuPhi_coeff = soft_bilinear_solution(3);
+
    // reset parameters at initial scale
    set(saved_pars.get());
    set_scale(current_scale);
 
-   set_soft_parameters_at_current_scale(ewsb_solution(0), input.m12, input.Azero);
+   set_soft_parameters_at_current_scale(ewsb_solution(0), input.m12, input.Azero,
+                                        input.BMuPrInput, input.BMuPhiInput);
 }
 
-void CLASSNAME::set_soft_parameters_at_input_scale(double m0, double m12, double Azero)
+void CLASSNAME::set_soft_parameters_at_input_scale(double m0, double m12, double Azero, double BMuPr0, double BMuPhi0)
 {
    TYd = Azero * Yd;
    ThE = Azero * hE;
@@ -2950,9 +3002,11 @@ void CLASSNAME::set_soft_parameters_at_input_scale(double m0, double m12, double
    MassWB = m12;
    MassG = m12;
    MassBp = m12;
+   BMuPr = BMuPr0;
+   BMuPhi = BMuPhi0;
 }
 
-void CLASSNAME::set_soft_parameters_at_current_scale(double m0, double m12, double Azero)
+void CLASSNAME::set_soft_parameters_at_current_scale(double m0, double m12, double Azero, double BMuPr0, double BMuPhi0)
 {
    TYd = TYd_Azero_coeff * Azero + TYd_m12_coeff * m12;
    ThE = ThE_Azero_coeff * Azero + ThE_m12_coeff * m12;
@@ -2967,6 +3021,10 @@ void CLASSNAME::set_soft_parameters_at_current_scale(double m0, double m12, doub
    Tfu = Tfu_Azero_coeff * Azero + Tfu_m12_coeff * m12;
    Tfd = Tfd_Azero_coeff * Azero + Tfd_m12_coeff * m12;
    TYu = TYu_Azero_coeff * Azero + TYu_m12_coeff * m12;
+   BMuPr = BMuPr_BMuPr_coeff * BMuPr0 + BMuPr_BMuPhi_coeff * BMuPhi0
+      + BMuPr_Azero_coeff * Azero + BMuPr_m12_coeff * m12;
+   BMuPhi = BMuPhi_BMuPr_coeff * BMuPr0 + BMuPhi_BMuPhi_coeff * BMuPhi0
+      + BMuPhi_Azero_coeff * Azero + BMuPhi_m12_coeff * m12;
    mq2 = mq2_m02_coeff * Sqr(m0) + mq2_m122_coeff * Sqr(m12)
       + mq2_Azerom12_coeff * Azero * m12 + mq2_Azero2_coeff * Sqr(Azero);
    ml2 = ml2_m02_coeff * Sqr(m0) + ml2_m122_coeff * Sqr(m12)

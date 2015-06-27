@@ -557,8 +557,16 @@ void CNE6SSM_slha_io::set_extra(
             << FORMAT_ELEMENT(292, (SEMIANALYTICCOEFF(m12,TSigmax)), "m12_coeff_TSigmax") << '\n'
             << FORMAT_ELEMENT(431, (SEMIANALYTICCOEFF(Azero,TSigmaL)), "Azero_coeff_TSigmaL") << '\n'
             << FORMAT_ELEMENT(432, (SEMIANALYTICCOEFF(m12,TSigmaL)), "m12_coeff_TSigmaL") << '\n'
+            << FORMAT_ELEMENT(301, (SEMIANALYTICCOEFF(Azero,BMuPhi)), "Azero_coeff_BMuPhi") << '\n'
+            << FORMAT_ELEMENT(302, (SEMIANALYTICCOEFF(m12,BMuPhi)), "m12_coeff_BMuPhi") << '\n'
+            << FORMAT_ELEMENT(303, (SEMIANALYTICCOEFF(BMuPhi,BMuPhi)), "BMuPhi_coeff_BMuPhi") << '\n'
+            << FORMAT_ELEMENT(304, (SEMIANALYTICCOEFF(BMuPr,BMuPhi)), "BMuPr_coeff_BMuPhi") << '\n'
             << FORMAT_ELEMENT(21, (SEMIANALYTICCOEFF(Azero,TLambdax)), "Azero_coeff_TLambdax") << '\n'
             << FORMAT_ELEMENT(22, (SEMIANALYTICCOEFF(m12,TLambdax)), "m12_coeff_TLambdax") << '\n'
+            << FORMAT_ELEMENT(1011, (SEMIANALYTICCOEFF(Azero,BMuPr)), "Azero_coeff_BMuPr") << '\n'
+            << FORMAT_ELEMENT(1012, (SEMIANALYTICCOEFF(m12,BMuPr)), "m12_coeff_BMuPr") << '\n'
+            << FORMAT_ELEMENT(1013, (SEMIANALYTICCOEFF(BMuPhi,BMuPr)), "BMuPhi_coeff_BMuPr") << '\n'
+            << FORMAT_ELEMENT(1014, (SEMIANALYTICCOEFF(BMuPr,BMuPr)), "BMuPr_coeff_BMuPr") << '\n'
       ;
       slha_io.set_block(block);
    }
