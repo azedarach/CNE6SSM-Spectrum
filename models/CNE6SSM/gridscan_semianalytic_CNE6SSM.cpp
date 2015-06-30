@@ -354,21 +354,22 @@ int main(int argc, const char* argv[])
       } else {
          set_random_parameter_values(scanned_parameters, scan.get_position(), input);
       }
-   CNE6SSM_semianalytic_spectrum_generator<algorithm_type>
-      spectrum_generator;
-   spectrum_generator.set_precision_goal(1.0e-3);
-   spectrum_generator.set_max_iterations(0);   // 0 == automatic
-   spectrum_generator.set_calculate_sm_masses(0); // 0 == no
-   spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
-   spectrum_generator.set_ewsb_loop_order(2);
-   spectrum_generator.set_pole_mass_loop_order(2);
-   spectrum_generator.set_beta_loop_order(2);
-   spectrum_generator.set_threshold_corrections_loop_order(1);
+      CNE6SSM_semianalytic_spectrum_generator<algorithm_type>
+         spectrum_generator;
+      spectrum_generator.set_precision_goal(1.0e-3);
+      spectrum_generator.set_max_iterations(0);   // 0 == automatic
+      spectrum_generator.set_calculate_sm_masses(0); // 0 == no
+      spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
+      spectrum_generator.set_ewsb_loop_order(2);
+      spectrum_generator.set_pole_mass_loop_order(2);
+      spectrum_generator.set_beta_loop_order(2);
+      spectrum_generator.set_threshold_corrections_loop_order(1);
+      spectrum_generator.set_force_output(1);
 
-   spectrum_generator.run(oneset, input);
+      spectrum_generator.run(oneset, input);
 
-   const CNE6SSM_semianalytic<algorithm_type>& model
-      = spectrum_generator.get_model();
+      const CNE6SSM_semianalytic<algorithm_type>& model
+         = spectrum_generator.get_model();
 
       pole_mass_writer.extract_pole_masses(model);
 
