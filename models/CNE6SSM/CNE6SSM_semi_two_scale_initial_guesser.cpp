@@ -286,6 +286,9 @@ void CNE6SSM_semianalytic_initial_guesser<Two_scale>::guess_soft_parameters()
    model->calculate_coefficients(high_scale_guess);
    model->solve_ewsb_tree_level();
 
+   // DH: note saving VEV values to freeze D-terms
+   model->save_vev_values();
+
    // calculate tree-level spectrum
    model->calculate_DRbar_masses();
 }

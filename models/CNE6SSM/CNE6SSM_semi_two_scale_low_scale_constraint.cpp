@@ -84,7 +84,21 @@ void CNE6SSM_semianalytic_low_scale_constraint<Two_scale>::apply()
    assert(model && "Error: CNE6SSM_semianalytic_low_scale_constraint::apply():"
           " model pointer must not be zero");
 
+   // DH: note using saved values to freeze D-terms
+   double current_vs = model->get_vs();
+   double current_vsb = model->get_vsb();
+   double current_vphi = model->get_vphi();
+
+   model->set_vs(model->get_saved_vs());
+   model->set_vsb(model->get_saved_vsb());
+   model->set_vphi(model->get_saved_vphi());
+
    model->calculate_DRbar_masses();
+
+   model->set_vs(current_vs);
+   model->set_vsb(current_vsb);
+   model->set_vphi(current_vphi);
+
    update_scale();
    calculate_DRbar_gauge_couplings();
 

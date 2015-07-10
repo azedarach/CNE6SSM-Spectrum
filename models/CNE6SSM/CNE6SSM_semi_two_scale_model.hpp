@@ -58,6 +58,15 @@ public:
    int solve_ewsb();            ///< solve EWSB at ewsb_loop_order level
    double get_ewsb_output_parameter(unsigned) const;
 
+   /// saves the current values of the VEVs
+   void save_vev_values();
+   /// return saved values
+   double get_saved_vd() const { return saved_vd; }
+   double get_saved_vu() const { return saved_vu; }
+   double get_saved_vs() const { return saved_vs; }
+   double get_saved_vsb() const { return saved_vsb; }
+   double get_saved_vphi() const { return saved_vphi; }
+
    /// calculates the values of the modified tree level EWSB conditions
    double get_tree_level_ewsb_eq_hh_1() const;
    double get_tree_level_ewsb_eq_hh_2() const;
@@ -410,6 +419,13 @@ private:
    double MassG_m12_coeff;
    double MassBp_Azero_coeff;
    double MassBp_m12_coeff;
+
+   // DH: added saved VEVs to try freezing D-terms at SUSY scale
+   double saved_vd;
+   double saved_vu;
+   double saved_vs;
+   double saved_vsb;
+   double saved_vphi;
 };
 
 std::ostream& operator<<(std::ostream&, const CNE6SSM_semianalytic<Two_scale>&);

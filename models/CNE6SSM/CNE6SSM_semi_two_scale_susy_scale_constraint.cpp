@@ -72,6 +72,9 @@ void CNE6SSM_semianalytic_susy_scale_constraint<Two_scale>::apply()
    // defined at this scale (at the EWSB loop level defined in the
    // model)
    model->solve_ewsb();
+
+   // DH: note saving VEV values to freeze D-terms at this scale
+   model->save_vev_values();
 }
 
 double CNE6SSM_semianalytic_susy_scale_constraint<Two_scale>::get_scale() const

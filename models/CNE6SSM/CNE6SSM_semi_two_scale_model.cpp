@@ -130,6 +130,8 @@ CLASSNAME::CNE6SSM_semianalytic(const CNE6SSM_semianalytic_input_parameters<Two_
    , MassB_Azero_coeff(0), MassB_m12_coeff(0), MassWB_Azero_coeff(0)
    , MassWB_m12_coeff(0), MassG_Azero_coeff(0), MassG_m12_coeff(0)
    , MassBp_Azero_coeff(0), MassBp_m12_coeff(0)
+   , saved_vd(0), saved_vu(0), saved_vs(0), saved_vsb(0)
+   , saved_vphi(0)
 {
 }
 
@@ -173,6 +175,15 @@ double CLASSNAME::get_ewsb_loop_order() const
 double CLASSNAME::get_ewsb_output_parameter(unsigned i) const
 {
    return ewsb_solution(i);
+}
+
+void CLASSNAME::save_vev_values()
+{
+   saved_vd = vd;
+   saved_vu = vu;
+   saved_vs = vs;
+   saved_vsb = vsb;
+   saved_vphi = vphi;
 }
 
 const CNE6SSM_semianalytic_input_parameters<Two_scale>& CLASSNAME::get_input() const
