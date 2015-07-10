@@ -216,7 +216,7 @@ namespace CNE6SSM_info {
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2};
       
       const char* input_latex_names[NUMBER_OF_INPUTS] = {"m_{1/2}",
-         "A_0", "\\tan\\beta (M_Z)", "s(M_{{\\mathrm{SUSY}})", "\\tilde{Q}_S",
+         "A_0", "\\tan\\beta (M_Z)", "s(M_{\\mathrm{SUSY}})", "\\tilde{Q}_S",
          "h_{11}^E(M_{\\mathrm{GUT}})", "h_{12}^E(M_{\\mathrm{GUT}})", "h_{21}^E(M_{\\mathrm{GUT}})",
          "h_{22}^E(M_{\\mathrm{GUT}})", "h_{31}^E(M_{\\mathrm{GUT}})", "h_{32}^E(M_{\\mathrm{GUT}})",
          "\\sigma_L(M_{\\mathrm{GUT}})", "\\kappa(M_{\\mathrm{GUT}})", "\\sigma(M_{\\mathrm{GUT}})",
