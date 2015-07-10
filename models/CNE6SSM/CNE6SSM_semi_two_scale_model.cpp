@@ -150,7 +150,8 @@ void CLASSNAME::set_number_of_ewsb_iterations(std::size_t iterations)
 void CLASSNAME::set_precision(double precision_)
 {
    precision = precision_;
-   ewsb_iteration_precision = precision_;
+   // note: for large masses temporarily use fixed EWSB precision
+//   ewsb_iteration_precision = precision_;
    diagonalization_precision = precision_;
 }
 
@@ -593,7 +594,7 @@ int CLASSNAME::solve_ewsb_iteratively()
    EWSB_args params = {this, ewsb_loop_order};
 
    EWSB_solver* solvers[] = {
-//      new Fixed_point_iterator<number_of_ewsb_equations, fixed_point_iterator::Convergence_tester_absolute>(CLASSNAME::ewsb_step, &params, number_of_ewsb_iterations, ewsb_iteration_precision),
+//      new Fixed_point_iterator<number_of_ewsb_equations, fixed_point_iterator::Convergence_tester_relative>(CLASSNAME::ewsb_step, &params, number_of_ewsb_iterations, ewsb_iteration_precision),
       new Root_finder<number_of_ewsb_equations>(CLASSNAME::ewsb_equations, &params, number_of_ewsb_iterations, ewsb_iteration_precision, gsl_multiroot_fsolver_hybrid),
       new Root_finder<number_of_ewsb_equations>(CLASSNAME::ewsb_equations, &params, number_of_ewsb_iterations, ewsb_iteration_precision, gsl_multiroot_fsolver_hybrids),
       new Root_finder<number_of_ewsb_equations>(CLASSNAME::ewsb_equations, &params, number_of_ewsb_iterations, ewsb_iteration_precision, gsl_multiroot_fsolver_broyden),
