@@ -679,9 +679,9 @@ int CLASSNAME::solve_ewsb_iteratively_with(
    ewsb_solution(3) = solver->get_solution(3);
    ewsb_solution(4) = solver->get_solution(4);
 
-   // points with m0 < 0 are treated as invalid
+   // restrict m0 > 0
    if (ewsb_solution(0) < 0.)
-      error = EWSB_solver::FAIL;
+      ewsb_solution *= -1.;
 
    set_soft_parameters_at_current_scale(ewsb_solution(0), m12, Azero,
                                         BMuPr0, BMuPhi0);
