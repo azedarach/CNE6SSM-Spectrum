@@ -74,6 +74,8 @@ int main(int argc, const char* argv[])
       spectrum_generator_settings.get(Spectrum_generator_settings::threshold_corrections_loop_order));
    spectrum_generator.set_two_loop_corrections(
       spectrum_generator_settings.get_two_loop_corrections());
+   // note
+   spectrum_generator.set_ewsb_iteration_precision(100.0);
 
    spectrum_generator.run(oneset, input);
 

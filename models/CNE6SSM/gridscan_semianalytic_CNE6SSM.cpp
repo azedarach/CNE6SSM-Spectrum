@@ -366,6 +366,9 @@ int main(int argc, const char* argv[])
       spectrum_generator.set_threshold_corrections_loop_order(1);
       spectrum_generator.set_force_output(1);
 
+      // note
+      spectrum_generator.set_ewsb_iteration_precision(100.0);
+
       spectrum_generator.run(oneset, input);
 
       const CNE6SSM_semianalytic<algorithm_type>& model
