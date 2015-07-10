@@ -147,6 +147,7 @@ void CNE6SSM_semianalytic_spectrum_generator<T>::run(const QedQcd& oneset,
       // run to output scale (if scale > 0)
       if (!is_zero(parameter_output_scale)) {
          model.run_to(parameter_output_scale);
+         model.calculate_coefficients(high_scale);
       }
    } catch (const NoConvergenceError&) {
       model.get_problems().flag_no_convergence();
