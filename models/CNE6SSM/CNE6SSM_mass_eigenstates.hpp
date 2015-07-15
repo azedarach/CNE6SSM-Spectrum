@@ -88,6 +88,9 @@ public:
 
    virtual void print(std::ostream&) const;
 
+   // note
+   double get_approx_Mhh_2lp_upper_bound();
+
    double get_MVG() const { return MVG; }
    double get_MGlu() const { return MGlu; }
    const Eigen::Array<double,3,1>& get_MFv() const { return MFv; }
