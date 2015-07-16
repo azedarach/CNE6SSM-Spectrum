@@ -133,18 +133,18 @@ void CLASSNAME::tadpole_equations(double tadpole[number_of_ewsb_equations]) cons
    tadpole[4] = get_ewsb_eq_hh_5();
 
    if (ewsb_loop_order > 0) {
-      tadpole[0] -= Re(tadpole_hh(0));
-      tadpole[1] -= Re(tadpole_hh(1));
-      tadpole[2] -= Re(tadpole_hh(2));
-      tadpole[3] -= Re(tadpole_hh(3));
-      tadpole[4] -= Re(tadpole_hh(4));
+      tadpole[0] -= Re(tadpole_hh(0)) / vd;
+      tadpole[1] -= Re(tadpole_hh(1)) / vu;
+      tadpole[2] -= Re(tadpole_hh(2)) / vs;
+      tadpole[3] -= Re(tadpole_hh(3)) / vsb;
+      tadpole[4] -= Re(tadpole_hh(4)) / vphi;
 
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
-         tadpole[0] -= two_loop_tadpole[0];
-         tadpole[1] -= two_loop_tadpole[1];
-         tadpole[2] -= two_loop_tadpole[2];
+         tadpole[0] -= two_loop_tadpole[0] / vd;
+         tadpole[1] -= two_loop_tadpole[1] / vu;
+         tadpole[2] -= two_loop_tadpole[2] / vs;
 
       }
    }

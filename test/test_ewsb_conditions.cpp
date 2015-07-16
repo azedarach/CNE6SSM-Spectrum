@@ -25,12 +25,6 @@ BOOST_AUTO_TEST_CASE( test_default_ewsb_tree_level )
 {
    CNE6SSM<Two_scale> default_model = CNE6SSM<Two_scale>();
 
-   BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_1(), 0.);
-   BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_2(), 0.);
-   BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_3(), 0.);
-   BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_4(), 0.);
-   BOOST_CHECK_EQUAL(default_model.get_ewsb_eq_hh_5(), 0.);
-
    CNE6SSM_input_parameters<Two_scale> default_inputs;
    default_inputs.QSInput = 5.;
    default_model.set_input_parameters(default_inputs);
@@ -60,11 +54,11 @@ BOOST_AUTO_TEST_CASE( test_default_ewsb_tree_level )
    default_model.set_msbar2(2.1e6);
    default_model.set_mphi2(1.2e5);
 
-   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_1(), -9.551900152e8, 1.0e-7);
-   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_2(), -3.774462196e8, 1.0e-7);
-   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_3(), -3.850971629e10, 1.0e-7);
-   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_4(), -8.248055767e9, 1.0e-7);
-   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_5(), 2.475560387e11, 1.0e-7);
+   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_1(), -3.902254749e7, 1.0e-7);
+   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_2(), -1.541987751e6, 1.0e-7);
+   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_3(), -7.156101591e6, 1.0e-7);
+   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_4(), -1.393365501e6, 1.0e-7);
+   BOOST_CHECK_CLOSE(default_model.get_ewsb_eq_hh_5(), 3.094450484e7, 1.0e-7);
 
 }
 

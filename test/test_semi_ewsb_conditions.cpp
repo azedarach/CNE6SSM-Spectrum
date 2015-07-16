@@ -60,6 +60,10 @@ void set_test_model_parameters(CNE6SSM_semianalytic<Two_scale>& model)
    model.set_vd(23.63);
    model.set_vu(236.28);
 
+   model.set_TSigmax(513.2);
+   model.set_TLambdax(124.2);
+   model.set_TKappaPr(320.1);
+
    model.set_QS(model.get_input().QSInput);
 }
 
@@ -215,14 +219,88 @@ double get_automatic_ewsb_eq_hh_5(const CNE6SSM_mass_eigenstates& model)
    return result;
 }
 
-// tests that the rearranged EWSB conditions are equal to the 
-// automatically generated expressions
-BOOST_AUTO_TEST_CASE( test_rearranged_ewsb_eqs )
+Eigen::Array<double,5,1> get_automatic_ewsb_tree_level_soft_masses(const CNE6SSM_mass_eigenstates& model)
+{
+   const double Sigmax = model.get_Sigmax();
+   const double KappaPr = model.get_KappaPr();
+   const double Lambdax = model.get_Lambdax();
+   const double MuPhi = model.get_MuPhi();
+   const double XiF = model.get_XiF();
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+   const double QS = model.get_QS();
+   const double vd = model.get_vd();
+   const double vu = model.get_vu();
+   const double vs = model.get_vs();
+   const double vsb = model.get_vsb();
+   const double vphi = model.get_vphi();
+   const double TSigmax = model.get_TSigmax();
+   const double TKappaPr = model.get_TKappaPr();
+   const double TLambdax = model.get_TLambdax();
+   const double BMuPhi = model.get_BMuPhi();
+   const double LXiF = model.get_LXiF();
+
+   const double mHd2 = Re((0.0125*(28.284271247461902*vs*vu*Conj(TLambdax)
+      - 20*vphi*vsb*vu*Conj(Sigmax)*Lambdax - 20*vphi*vsb*vu*Conj(Lambdax)*Sigmax
+      - 6*Power(vd,3)*Sqr(g1) - 9*Power(vd,3)*Sqr(g1p) - 10*Power(vd,3)*Sqr(g2) -
+      40*vd*AbsSqr(Lambdax)*Sqr(vs) + 3*QS*vd*Sqr(g1p)*Sqr(vs) - 3*QS*vd*Sqr(g1p)*
+      Sqr(vsb) - 40*vd*AbsSqr(Lambdax)*Sqr(vu) + 6*vd*Sqr(g1)*Sqr(vu) - 6*vd*Sqr(
+      g1p)*Sqr(vu) + 10*vd*Sqr(g2)*Sqr(vu) + 28.284271247461902*vs*vu*TLambdax))
+      /vd);
+
+   const double mHu2 = Re((0.025*(14.142135623730951*vd*vs*Conj(TLambdax) -
+      10*vd*vphi*vsb*Conj(Sigmax)*Lambdax - 10*vd*vphi*vsb*Conj(Lambdax)*Sigmax -
+      3*Power(vu,3)*Sqr(g1) - 2*Power(vu,3)*Sqr(g1p) - 5*Power(vu,3)*Sqr(g2) - 20
+      *vu*AbsSqr(Lambdax)*Sqr(vd) + 3*vu*Sqr(g1)*Sqr(vd) - 3*vu*Sqr(g1p)*Sqr(vd) +
+      5*vu*Sqr(g2)*Sqr(vd) - 20*vu*AbsSqr(Lambdax)*Sqr(vs) + QS*vu*Sqr(g1p)*Sqr(
+      vs) - QS*vu*Sqr(g1p)*Sqr(vsb) + 14.142135623730951*vd*vs*TLambdax))/vu);
+
+   const double ms2 = Re((0.0125*(28.284271247461902*MuPhi*vphi*vsb*Conj(
+      Sigmax) + 28.284271247461902*vd*vu*Conj(TLambdax) + 28.284271247461902*vphi*
+      vsb*Conj(TSigmax) + 40*vsb*Conj(Sigmax)*XiF + 28.284271247461902*vphi*vsb*
+      Conj(MuPhi)*Sigmax + 40*vsb*Conj(XiF)*Sigmax - Power(vs,3)*Sqr(g1p)*Sqr(QS)
+      - 40*vs*AbsSqr(Lambdax)*Sqr(vd) + 3*QS*vs*Sqr(g1p)*Sqr(vd) - 40*vs*AbsSqr(
+      Sigmax)*Sqr(vphi) + 20*vsb*Conj(Sigmax)*KappaPr*Sqr(vphi) + 20*vsb*Conj(
+      KappaPr)*Sigmax*Sqr(vphi) - 40*vs*AbsSqr(Sigmax)*Sqr(vsb) + vs*Sqr(g1p)*Sqr(
+      QS)*Sqr(vsb) - 40*vs*AbsSqr(Lambdax)*Sqr(vu) + 2*QS*vs*Sqr(g1p)*Sqr(vu) +
+      28.284271247461902*vd*vu*TLambdax + 28.284271247461902*vphi*vsb*TSigmax))/vs
+      );
+
+   const double msbar2 = Re((0.0125*(28.284271247461902*MuPhi*vphi*vs*Conj(
+      Sigmax) + 28.284271247461902*vphi*vs*Conj(TSigmax) - 20*vd*vphi*vu*Conj(
+      Sigmax)*Lambdax + 40*vs*Conj(Sigmax)*XiF + 28.284271247461902*vphi*vs*Conj(
+      MuPhi)*Sigmax - 20*vd*vphi*vu*Conj(Lambdax)*Sigmax + 40*vs*Conj(XiF)*Sigmax
+      - Power(vsb,3)*Sqr(g1p)*Sqr(QS) - 3*QS*vsb*Sqr(g1p)*Sqr(vd) - 40*vsb*AbsSqr(
+      Sigmax)*Sqr(vphi) + 20*vs*Conj(Sigmax)*KappaPr*Sqr(vphi) + 20*vs*Conj(
+      KappaPr)*Sigmax*Sqr(vphi) - 40*vsb*AbsSqr(Sigmax)*Sqr(vs) + vsb*Sqr(g1p)*Sqr
+      (QS)*Sqr(vs) - 2*QS*vsb*Sqr(g1p)*Sqr(vu) + 28.284271247461902*vphi*vs*
+      TSigmax))/vsb);
+
+   const double mphi2 = Re((0.25*(-4*vphi*AbsSqr(MuPhi) - 4*Power(vphi,3)*
+      AbsSqr(KappaPr) - 2*vphi*BMuPhi - 2*vphi*Conj(BMuPhi) - 2.8284271247461903*
+      MuPhi*Conj(XiF) + 1.4142135623730951*MuPhi*vs*vsb*Conj(Sigmax) -
+      2.8284271247461903*Conj(LXiF) + 1.4142135623730951*vs*vsb*Conj(TSigmax) - 4*
+      vphi*Conj(XiF)*KappaPr + 2*vphi*vs*vsb*Conj(Sigmax)*KappaPr - vd*vsb*vu*Conj
+      (Sigmax)*Lambdax - 2.8284271247461903*Conj(MuPhi)*XiF - 4*vphi*Conj(KappaPr)
+      *XiF + 1.4142135623730951*vs*vsb*Conj(MuPhi)*Sigmax + 2*vphi*vs*vsb*Conj(
+      KappaPr)*Sigmax - vd*vsb*vu*Conj(Lambdax)*Sigmax - 2.8284271247461903*LXiF -
+      4.242640687119286*MuPhi*Conj(KappaPr)*Sqr(vphi) - 1.4142135623730951*Conj(
+      TKappaPr)*Sqr(vphi) - 4.242640687119286*Conj(MuPhi)*KappaPr*Sqr(vphi) - 2*
+      vphi*AbsSqr(Sigmax)*Sqr(vs) - 2*vphi*AbsSqr(Sigmax)*Sqr(vsb) -
+      1.4142135623730951*Sqr(vphi)*TKappaPr + 1.4142135623730951*vs*vsb*TSigmax))
+      /vphi);
+
+   Eigen::Array<double,5,1> masses;
+   masses << mHd2, mHu2, ms2, msbar2, mphi2;
+
+   return masses;
+}
+
+BOOST_AUTO_TEST_CASE( test_soft_higgs_masses )
 {
    CNE6SSM_semianalytic_input_parameters<Two_scale> input;
 
-   // for s too large lack of numerical precision
-   // causes this test to fail.
    input.sInput = 650000.0;
    input.QSInput = 0.;
    input.TanBeta = 10.;
@@ -241,11 +319,58 @@ BOOST_AUTO_TEST_CASE( test_rearranged_ewsb_eqs )
    model.set_XiF(1.0e9);
    model.set_LXiF(1.0e10);
 
-   const double automatic_ewsb_eq_hh_1 = get_automatic_ewsb_eq_hh_1(model);
-   const double automatic_ewsb_eq_hh_2 = get_automatic_ewsb_eq_hh_2(model);
-   const double automatic_ewsb_eq_hh_3 = get_automatic_ewsb_eq_hh_3(model);
-   const double automatic_ewsb_eq_hh_4 = get_automatic_ewsb_eq_hh_4(model);
-   const double automatic_ewsb_eq_hh_5 = get_automatic_ewsb_eq_hh_5(model);
+   Eigen::Array<double,5,1> tree_level_soft_masses
+      = model.get_ewsb_tree_level_soft_masses();
+
+   Eigen::Array<double,5,1> tree_level_soft_masses_old
+      = get_automatic_ewsb_tree_level_soft_masses(model);
+
+   const double prec = 1.0e-10;
+
+   BOOST_CHECK_CLOSE(tree_level_soft_masses(0),
+                     tree_level_soft_masses_old(0), prec);
+   BOOST_CHECK_CLOSE(tree_level_soft_masses(1),
+                     tree_level_soft_masses_old(1), prec);
+   BOOST_CHECK_CLOSE(tree_level_soft_masses(2),
+                     tree_level_soft_masses_old(2), prec);
+   BOOST_CHECK_CLOSE(tree_level_soft_masses(3),
+                     tree_level_soft_masses_old(3), prec);
+   BOOST_CHECK_CLOSE(tree_level_soft_masses(4),
+                     tree_level_soft_masses_old(4), prec);
+}
+
+// tests that the rearranged EWSB conditions are solved
+// by the same parameters as the automatically generated expressions
+BOOST_AUTO_TEST_CASE( test_rearranged_ewsb_eqs )
+{
+   CNE6SSM_semianalytic_input_parameters<Two_scale> input;
+
+   input.sInput = 650000.0;
+   input.QSInput = 0.;
+   input.TanBeta = 10.;
+   input.m12 = 1600;
+   input.Azero = 0.;
+
+   CNE6SSM_semianalytic<Two_scale> model(input);
+
+   set_test_model_parameters(model);
+   model.set_scale(1000.);
+
+   const double TanTheta = 0.95;
+   model.set_vs(input.sInput * Cos(ArcTan(TanTheta)));
+   model.set_vsb(input.sInput * Sin(ArcTan(TanTheta)));
+   model.set_vphi(23013.5);
+   model.set_XiF(1.0e9);
+   model.set_LXiF(1.0e10);
+
+   Eigen::Array<double,5,1> tree_level_soft_masses
+      = get_automatic_ewsb_tree_level_soft_masses(model);
+
+   model.set_mHd2(tree_level_soft_masses(0));
+   model.set_mHu2(tree_level_soft_masses(1));
+   model.set_ms2(tree_level_soft_masses(2));
+   model.set_msbar2(tree_level_soft_masses(3));
+   model.set_mphi2(tree_level_soft_masses(4));
 
    const double ewsb_eq_hh_1 = model.get_ewsb_eq_hh_1();
    const double ewsb_eq_hh_2 = model.get_ewsb_eq_hh_2();
@@ -253,24 +378,25 @@ BOOST_AUTO_TEST_CASE( test_rearranged_ewsb_eqs )
    const double ewsb_eq_hh_4 = model.get_ewsb_eq_hh_4();
    const double ewsb_eq_hh_5 = model.get_ewsb_eq_hh_5();
 
-   const double prec = 1.0e-14;
+   const double prec = 1.0e-5;
 
-   BOOST_CHECK_CLOSE(automatic_ewsb_eq_hh_1, ewsb_eq_hh_1, prec);
-   BOOST_CHECK_CLOSE(automatic_ewsb_eq_hh_2, ewsb_eq_hh_2, prec);
-   BOOST_CHECK_CLOSE(automatic_ewsb_eq_hh_3, ewsb_eq_hh_3, prec);
-   BOOST_CHECK_CLOSE(automatic_ewsb_eq_hh_4, ewsb_eq_hh_4, prec);
-   BOOST_CHECK_CLOSE(automatic_ewsb_eq_hh_5, ewsb_eq_hh_5, prec);
+   BOOST_CHECK_LT(Abs(ewsb_eq_hh_1), prec);
+   BOOST_CHECK_LT(Abs(ewsb_eq_hh_2), prec);
+   BOOST_CHECK_LT(Abs(ewsb_eq_hh_3), prec);
+   BOOST_CHECK_LT(Abs(ewsb_eq_hh_4), prec);
+   BOOST_CHECK_LT(Abs(ewsb_eq_hh_5), prec);
 }
 
 // tests that the parameters that zero the ordinary
 // EWSB conditions satisfy the modified ones
+// Note: assumes the rearranged versions match the
+// generated versions, i.e. this is only valid if
+// all of the tests above pass
 BOOST_AUTO_TEST_CASE( test_tree_level_ewsb_eqs_consistent )
 {
    const unsigned ewsb_loop_order = 0;
    CNE6SSM_semianalytic_input_parameters<Two_scale> input;
 
-   // for s too large lack of numerical precision
-   // causes this test to fail.
    input.sInput = 650000.0;
    input.QSInput = 0.;
    input.TanBeta = 10.;
@@ -291,20 +417,13 @@ BOOST_AUTO_TEST_CASE( test_tree_level_ewsb_eqs_consistent )
    model.set_LXiF(1.0e10);
 
    Eigen::Array<double,5,1> tree_level_soft_masses
-      = model.get_ewsb_tree_level_soft_masses();
+      = get_automatic_ewsb_tree_level_soft_masses(model);
 
    model.set_mHd2(tree_level_soft_masses(0));
    model.set_mHu2(tree_level_soft_masses(1));
    model.set_ms2(tree_level_soft_masses(2));
    model.set_msbar2(tree_level_soft_masses(3));
    model.set_mphi2(tree_level_soft_masses(4));
-
-   // note
-   std::cout << "ewsb_eq_hh_1 = " << model.get_ewsb_eq_hh_1() << '\n';
-   std::cout << "ewsb_eq_hh_2 = " << model.get_ewsb_eq_hh_2() << '\n';
-   std::cout << "ewsb_eq_hh_3 = " << model.get_ewsb_eq_hh_3() << '\n';
-   std::cout << "ewsb_eq_hh_4 = " << model.get_ewsb_eq_hh_4() << '\n';
-   std::cout << "ewsb_eq_hh_5 = " << model.get_ewsb_eq_hh_5() << '\n';
 
    BOOST_REQUIRE(Abs(model.get_ewsb_eq_hh_1()) < 1.0e-3);
    BOOST_REQUIRE(Abs(model.get_ewsb_eq_hh_2()) < 1.0e-3);
@@ -352,11 +471,10 @@ BOOST_AUTO_TEST_CASE( test_semi_ewsb_tree_level )
    model.tadpole_equations(ewsb_eqs);
 
    double residual = Abs(ewsb_eqs[0]);
-      std::cout << "Abs(ewsb_eqs[0]) = " << residual << '\n';
-   for (unsigned i = 1; i < model.number_of_tadpole_equations; ++i) {
-      std::cout << "Abs(ewsb_eqs[" << i << "]) = " << Abs(ewsb_eqs[i]) << '\n';
+
+   for (unsigned i = 1; i < model.number_of_tadpole_equations; ++i)
       residual += Abs(ewsb_eqs[i]);
-   }
+
    BOOST_CHECK_LT(residual, ewsb_iteration_precision);
 
 }
@@ -394,11 +512,10 @@ BOOST_AUTO_TEST_CASE( test_semi_ewsb_one_loop )
    model.tadpole_equations(ewsb_eqs);
 
    double residual = Abs(ewsb_eqs[0]);
-   std::cout << "Abs(ewsb_eqs[0]) = " << residual << '\n';
-   for (unsigned i = 1; i < model.number_of_tadpole_equations; ++i) {
-      std::cout << "Abs(ewsb_eqs[" << i << "]) = " << Abs(ewsb_eqs[i]) << '\n';
+
+   for (unsigned i = 1; i < model.number_of_tadpole_equations; ++i)
       residual += Abs(ewsb_eqs[i]);
-   }
+
    BOOST_CHECK_LT(residual, ewsb_iteration_precision);
 }
 
@@ -435,10 +552,9 @@ BOOST_AUTO_TEST_CASE( test_semi_ewsb_two_loop )
    model.tadpole_equations(ewsb_eqs);
 
    double residual = Abs(ewsb_eqs[0]);
-   std::cout << "Abs(ewsb_eqs[0]) = " << residual << '\n';
-   for (unsigned i = 1; i < model.number_of_tadpole_equations; ++i) {
-      std::cout << "Abs(ewsb_eqs[" << i << "]) = " << Abs(ewsb_eqs[i]) << '\n';
+
+   for (unsigned i = 1; i < model.number_of_tadpole_equations; ++i)
       residual += Abs(ewsb_eqs[i]);
-   }
+
    BOOST_CHECK_LT(residual, ewsb_iteration_precision);
 }

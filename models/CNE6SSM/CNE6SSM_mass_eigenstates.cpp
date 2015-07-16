@@ -340,51 +340,51 @@ int CNE6SSM_mass_eigenstates::solve_ewsb_tree_level_via_soft_higgs_masses()
 {
    int error = 0;
 
-   const double new_mHd2 = Re((0.0125*(28.284271247461902*vs*vu*Conj(TLambdax)
-      - 20*vphi*vsb*vu*Conj(Sigmax)*Lambdax - 20*vphi*vsb*vu*Conj(Lambdax)*Sigmax
-      - 6*Power(vd,3)*Sqr(g1) - 9*Power(vd,3)*Sqr(g1p) - 10*Power(vd,3)*Sqr(g2) -
-      40*vd*AbsSqr(Lambdax)*Sqr(vs) + 3*QS*vd*Sqr(g1p)*Sqr(vs) - 3*QS*vd*Sqr(g1p)*
-      Sqr(vsb) - 40*vd*AbsSqr(Lambdax)*Sqr(vu) + 6*vd*Sqr(g1)*Sqr(vu) - 6*vd*Sqr(
-      g1p)*Sqr(vu) + 10*vd*Sqr(g2)*Sqr(vu) + 28.284271247461902*vs*vu*TLambdax))
-      /vd);
-   const double new_mHu2 = Re((0.025*(14.142135623730951*vd*vs*Conj(TLambdax) -
-      10*vd*vphi*vsb*Conj(Sigmax)*Lambdax - 10*vd*vphi*vsb*Conj(Lambdax)*Sigmax -
-      3*Power(vu,3)*Sqr(g1) - 2*Power(vu,3)*Sqr(g1p) - 5*Power(vu,3)*Sqr(g2) - 20
-      *vu*AbsSqr(Lambdax)*Sqr(vd) + 3*vu*Sqr(g1)*Sqr(vd) - 3*vu*Sqr(g1p)*Sqr(vd) +
-      5*vu*Sqr(g2)*Sqr(vd) - 20*vu*AbsSqr(Lambdax)*Sqr(vs) + QS*vu*Sqr(g1p)*Sqr(
-      vs) - QS*vu*Sqr(g1p)*Sqr(vsb) + 14.142135623730951*vd*vs*TLambdax))/vu);
-   const double new_ms2 = Re((0.0125*(28.284271247461902*MuPhi*vphi*vsb*Conj(
-      Sigmax) + 28.284271247461902*vd*vu*Conj(TLambdax) + 28.284271247461902*vphi*
-      vsb*Conj(TSigmax) + 40*vsb*Conj(Sigmax)*XiF + 28.284271247461902*vphi*vsb*
-      Conj(MuPhi)*Sigmax + 40*vsb*Conj(XiF)*Sigmax - Power(vs,3)*Sqr(g1p)*Sqr(QS)
-      - 40*vs*AbsSqr(Lambdax)*Sqr(vd) + 3*QS*vs*Sqr(g1p)*Sqr(vd) - 40*vs*AbsSqr(
-      Sigmax)*Sqr(vphi) + 20*vsb*Conj(Sigmax)*KappaPr*Sqr(vphi) + 20*vsb*Conj(
-      KappaPr)*Sigmax*Sqr(vphi) - 40*vs*AbsSqr(Sigmax)*Sqr(vsb) + vs*Sqr(g1p)*Sqr(
-      QS)*Sqr(vsb) - 40*vs*AbsSqr(Lambdax)*Sqr(vu) + 2*QS*vs*Sqr(g1p)*Sqr(vu) +
-      28.284271247461902*vd*vu*TLambdax + 28.284271247461902*vphi*vsb*TSigmax))/vs
-      );
-   const double new_msbar2 = Re((0.0125*(28.284271247461902*MuPhi*vphi*vs*Conj(
-      Sigmax) + 28.284271247461902*vphi*vs*Conj(TSigmax) - 20*vd*vphi*vu*Conj(
-      Sigmax)*Lambdax + 40*vs*Conj(Sigmax)*XiF + 28.284271247461902*vphi*vs*Conj(
-      MuPhi)*Sigmax - 20*vd*vphi*vu*Conj(Lambdax)*Sigmax + 40*vs*Conj(XiF)*Sigmax
-      - Power(vsb,3)*Sqr(g1p)*Sqr(QS) - 3*QS*vsb*Sqr(g1p)*Sqr(vd) - 40*vsb*AbsSqr(
-      Sigmax)*Sqr(vphi) + 20*vs*Conj(Sigmax)*KappaPr*Sqr(vphi) + 20*vs*Conj(
-      KappaPr)*Sigmax*Sqr(vphi) - 40*vsb*AbsSqr(Sigmax)*Sqr(vs) + vsb*Sqr(g1p)*Sqr
-      (QS)*Sqr(vs) - 2*QS*vsb*Sqr(g1p)*Sqr(vu) + 28.284271247461902*vphi*vs*
-      TSigmax))/vsb);
-   const double new_mphi2 = Re((0.25*(-4*vphi*AbsSqr(MuPhi) - 4*Power(vphi,3)*
-      AbsSqr(KappaPr) - 2*vphi*BMuPhi - 2*vphi*Conj(BMuPhi) - 2.8284271247461903*
-      MuPhi*Conj(XiF) + 1.4142135623730951*MuPhi*vs*vsb*Conj(Sigmax) -
-      2.8284271247461903*Conj(LXiF) + 1.4142135623730951*vs*vsb*Conj(TSigmax) - 4*
-      vphi*Conj(XiF)*KappaPr + 2*vphi*vs*vsb*Conj(Sigmax)*KappaPr - vd*vsb*vu*Conj
-      (Sigmax)*Lambdax - 2.8284271247461903*Conj(MuPhi)*XiF - 4*vphi*Conj(KappaPr)
-      *XiF + 1.4142135623730951*vs*vsb*Conj(MuPhi)*Sigmax + 2*vphi*vs*vsb*Conj(
-      KappaPr)*Sigmax - vd*vsb*vu*Conj(Lambdax)*Sigmax - 2.8284271247461903*LXiF -
-      4.242640687119286*MuPhi*Conj(KappaPr)*Sqr(vphi) - 1.4142135623730951*Conj(
-      TKappaPr)*Sqr(vphi) - 4.242640687119286*Conj(MuPhi)*KappaPr*Sqr(vphi) - 2*
-      vphi*AbsSqr(Sigmax)*Sqr(vs) - 2*vphi*AbsSqr(Sigmax)*Sqr(vsb) -
-      1.4142135623730951*Sqr(vphi)*TKappaPr + 1.4142135623730951*vs*vsb*TSigmax))
-      /vphi);
+   const double TanBeta = vu / vd;
+
+   const double new_mHd2 = Re(0.7071067811865476 * vs * TanBeta * TLambdax
+      - 0.5 * vphi * vsb * TanBeta * Sigmax * Lambdax - 0.075 * Sqr(vd) * Sqr(g1)
+      - 0.1125 * Sqr(vd) * Sqr(g1p) - 0.125 * Sqr(vd) * Sqr(g2) - 0.5 * AbsSqr(Lambdax)
+      * Sqr(vs) + 0.0375 * QS * Sqr(g1p) * Sqr(vs) - 0.0375 * QS * Sqr(g1p) * Sqr(vsb)
+      - 0.5 * AbsSqr(Lambdax) * Sqr(vu) + 0.075 * Sqr(g1) * Sqr(vu) - 0.075 * Sqr(g1p)
+      * Sqr(vu) + 0.125 * Sqr(g2) * Sqr(vu));
+
+   const double oneOverTanBeta = 1.0 / TanBeta;
+
+   const double new_mHu2 = Re(0.7071067811865476 * oneOverTanBeta * vs * TLambdax
+      - 0.5 * oneOverTanBeta * vphi * vsb * Sigmax * Lambdax - 0.075 * Sqr(vu) *
+      Sqr(g1) - 0.05 * Sqr(vu) * Sqr(g1p) - 0.125 * Sqr(vu) * Sqr(g2) - 0.5 *
+      AbsSqr(Lambdax) * Sqr(vd) + 0.075 * Sqr(g1) * Sqr(vd) - 0.075 * Sqr(g1p) *
+      Sqr(vd) + 0.125 * Sqr(g2) * Sqr(vd) - 0.5 * AbsSqr(Lambdax) * Sqr(vs) +
+      0.025 * QS * Sqr(g1p) * Sqr(vs) - 0.025 * QS * Sqr(g1p) * Sqr(vsb));
+
+   const double TanTheta = vsb / vs;
+
+   const double new_ms2 = Re(0.7071067811865476 * MuPhi * vphi * TanTheta * Sigmax
+      + 0.7071067811865476 * vd * vu * TLambdax / vs + 0.7071067811865476 * vphi
+      * TanTheta * TSigmax + Sigmax * XiF * TanTheta - 0.0125 * Sqr(vs) * Sqr(g1p)
+      * Sqr(QS) - 0.5 * AbsSqr(Lambdax) * Sqr(vd) + 0.0375 * QS * Sqr(g1p) * Sqr(vd)
+      - 0.5 * AbsSqr(Sigmax) * Sqr(vphi) + 0.5 * TanTheta * Sigmax * KappaPr *
+      Sqr(vphi) - 0.5 * AbsSqr(Sigmax) * Sqr(vsb) + 0.0125 * Sqr(g1p) * Sqr(QS) *
+      Sqr(vsb) - 0.5 * AbsSqr(Lambdax) * Sqr(vu) + 0.025 * QS * Sqr(g1p) * Sqr(vu));
+
+   const double oneOverTanTheta = 1.0 / TanTheta;
+
+   const double new_msbar2 = Re(0.7071067811865476 * MuPhi * vphi * oneOverTanTheta
+      * Sigmax + 0.7071067811865476 * vphi * oneOverTanTheta * TSigmax - 0.5 * vd
+      * vphi * vu * Sigmax * Lambdax / vsb + oneOverTanTheta * Sigmax * XiF - 0.0125
+      * Sqr(vsb) *Sqr(g1p) * Sqr(QS) - 0.0375 * QS * Sqr(g1p) * Sqr(vd) - 0.5 *
+      AbsSqr(Sigmax) * Sqr(vphi) + 0.5 * oneOverTanTheta * Sigmax * KappaPr *
+      Sqr(vphi) - 0.5 * AbsSqr(Sigmax) * Sqr(vs) + 0.0125 * Sqr(g1p) * Sqr(QS) *
+      Sqr(vs) - 0.025 * QS * Sqr(g1p) * Sqr(vu));
+
+   const double new_mphi2 = Re(-AbsSqr(MuPhi) - Sqr(vphi) * AbsSqr(KappaPr) - BMuPhi
+      - 1.4142135623730951 * MuPhi * XiF / vphi + 0.7071067811865476 * MuPhi * vs
+      * vsb * Sigmax / vphi - 1.4142135623730951 * LXiF / vphi + 0.7071067811865476
+      * vs * vsb * TSigmax / vphi - 2.0 * XiF * KappaPr + vs * vsb * Sigmax * KappaPr
+      - 0.5 * vd * vsb * vu * Sigmax * Lambdax / vphi - 2.121320343559643 * MuPhi *
+      KappaPr * vphi - 0.7071067811865476 * TKappaPr * vphi - 0.5 * AbsSqr(Sigmax)
+      * Sqr(vs) - 0.5 * AbsSqr(Sigmax) * Sqr(vsb));
 
    if (IsFinite(new_mHd2))
       mHd2 = new_mHd2;
@@ -2309,76 +2309,96 @@ void CNE6SSM_mass_eigenstates::calculate_MVWm()
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_1() const
 {
-   double result = Re(mHd2*vd - 0.35355339059327373*vs*vu*Conj(TLambdax) + 0.25
-      *vphi*vsb*vu*Conj(Sigmax)*Lambdax + 0.25*vphi*vsb*vu*Conj(Lambdax)*Sigmax +
-      0.075*Power(vd,3)*Sqr(g1) + 0.1125*Power(vd,3)*Sqr(g1p) + 0.125*Power(vd,3)*
-      Sqr(g2) + 0.5*vd*AbsSqr(Lambdax)*Sqr(vs) - 0.0375*QS*vd*Sqr(g1p)*Sqr(vs) +
-      0.0375*QS*vd*Sqr(g1p)*Sqr(vsb) + 0.5*vd*AbsSqr(Lambdax)*Sqr(vu) - 0.075*vd*
-      Sqr(g1)*Sqr(vu) + 0.075*vd*Sqr(g1p)*Sqr(vu) - 0.125*vd*Sqr(g2)*Sqr(vu) -
-      0.35355339059327373*vs*vu*TLambdax);
+   const double TanBeta = vu / vd;
+
+   double result = Re(mHd2 - 0.35355339059327373 * vs * TanBeta * Conj(TLambdax)
+      + 0.25 * vphi * vsb * TanBeta * Conj(Sigmax) * Lambdax + 0.25 * vphi * vsb
+      * TanBeta * Conj(Lambdax) * Sigmax + 0.075 * Sqr(vd) * Sqr(g1) + 0.1125 *
+      Sqr(vd) * Sqr(g1p) + 0.125 * Sqr(vd) * Sqr(g2) + 0.5 * AbsSqr(Lambdax) *
+      Sqr(vs) - 0.0375 * QS * Sqr(g1p) * Sqr(vs) + 0.0375 * QS * Sqr(g1p) *
+      Sqr(vsb) + 0.5 * AbsSqr(Lambdax) * Sqr(vu) - 0.075 * Sqr(g1) * Sqr(vu)
+      + 0.075 * Sqr(g1p) * Sqr(vu) - 0.125 * Sqr(g2) * Sqr(vu) -
+      0.35355339059327373 * vs * TanBeta * TLambdax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_2() const
 {
-   double result = Re(mHu2*vu - 0.35355339059327373*vd*vs*Conj(TLambdax) + 0.25
-      *vd*vphi*vsb*Conj(Sigmax)*Lambdax + 0.25*vd*vphi*vsb*Conj(Lambdax)*Sigmax +
-      0.075*Power(vu,3)*Sqr(g1) + 0.05*Power(vu,3)*Sqr(g1p) + 0.125*Power(vu,3)*
-      Sqr(g2) + 0.5*vu*AbsSqr(Lambdax)*Sqr(vd) - 0.075*vu*Sqr(g1)*Sqr(vd) + 0.075*
-      vu*Sqr(g1p)*Sqr(vd) - 0.125*vu*Sqr(g2)*Sqr(vd) + 0.5*vu*AbsSqr(Lambdax)*Sqr(
-      vs) - 0.025*QS*vu*Sqr(g1p)*Sqr(vs) + 0.025*QS*vu*Sqr(g1p)*Sqr(vsb) -
-      0.35355339059327373*vd*vs*TLambdax);
+   const double oneOverTanBeta = vd / vu;
+
+   double result = Re(mHu2 - 0.35355339059327373 * oneOverTanBeta * vs *
+      Conj(TLambdax) + 0.25 * oneOverTanBeta * vphi * vsb * Conj(Sigmax)
+      * Lambdax + 0.25 * oneOverTanBeta * vphi * vsb * Conj(Lambdax) * Sigmax
+      + 0.075 * Sqr(vu) * Sqr(g1) + 0.05 * Sqr(vu) * Sqr(g1p) + 0.125 * Sqr(vu)
+      * Sqr(g2) + 0.5 * AbsSqr(Lambdax) * Sqr(vd) - 0.075 * Sqr(g1) * Sqr(vd)
+      + 0.075 * Sqr(g1p) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vd) + 0.5 *
+      AbsSqr(Lambdax) * Sqr(vs) - 0.025 * QS * Sqr(g1p) * Sqr(vs) + 0.025 *
+      QS * Sqr(g1p) * Sqr(vsb) - 0.35355339059327373 * oneOverTanBeta * vs
+      * TLambdax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_3() const
 {
-   double result = Re(ms2*vs - 0.35355339059327373*MuPhi*vphi*vsb*Conj(Sigmax)
-      - 0.35355339059327373*vd*vu*Conj(TLambdax) - 0.35355339059327373*vphi*vsb*
-      Conj(TSigmax) - 0.5*vsb*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vsb*Conj
-      (MuPhi)*Sigmax - 0.5*vsb*Conj(XiF)*Sigmax + 0.0125*Power(vs,3)*Sqr(g1p)*Sqr(
-      QS) + 0.5*vs*AbsSqr(Lambdax)*Sqr(vd) - 0.0375*QS*vs*Sqr(g1p)*Sqr(vd) + 0.5*
-      vs*AbsSqr(Sigmax)*Sqr(vphi) - 0.25*vsb*Conj(Sigmax)*KappaPr*Sqr(vphi) - 0.25
-      *vsb*Conj(KappaPr)*Sigmax*Sqr(vphi) + 0.5*vs*AbsSqr(Sigmax)*Sqr(vsb) -
-      0.0125*vs*Sqr(g1p)*Sqr(QS)*Sqr(vsb) + 0.5*vs*AbsSqr(Lambdax)*Sqr(vu) - 0.025
-      *QS*vs*Sqr(g1p)*Sqr(vu) - 0.35355339059327373*vd*vu*TLambdax -
-      0.35355339059327373*vphi*vsb*TSigmax);
+   const double TanTheta = vsb / vs;
+
+   double result = Re(ms2 - 0.35355339059327373 * MuPhi * vphi * TanTheta
+      * Conj(Sigmax) - 0.35355339059327373 * vd * vu * Conj(TLambdax) / vs -
+      0.35355339059327373 * vphi * TanTheta * Conj(TSigmax) - 0.5 * TanTheta
+      * Conj(Sigmax) * XiF - 0.35355339059327373 * vphi * TanTheta * Conj
+      (MuPhi) * Sigmax - 0.5 * TanTheta * Conj(XiF) * Sigmax + 0.0125 * Sqr(vs)
+      *Sqr(g1p) * Sqr(QS) + 0.5 * AbsSqr(Lambdax) * Sqr(vd) - 0.0375 * QS *
+      Sqr(g1p) * Sqr(vd) + 0.5 * AbsSqr(Sigmax) * Sqr(vphi) - 0.25 * TanTheta
+      * Conj(Sigmax) * KappaPr * Sqr(vphi) - 0.25 * TanTheta * Conj(KappaPr)
+      * Sigmax * Sqr(vphi) + 0.5 * AbsSqr(Sigmax) * Sqr(vsb) - 0.0125 * Sqr(g1p)
+      * Sqr(QS) * Sqr(vsb) + 0.5 * AbsSqr(Lambdax) * Sqr(vu) - 0.025 * QS *
+      Sqr(g1p) * Sqr(vu) - 0.35355339059327373 * vd * vu * TLambdax / vs -
+      0.35355339059327373 * vphi * TanTheta * TSigmax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_4() const
 {
-   double result = Re(msbar2*vsb - 0.35355339059327373*MuPhi*vphi*vs*Conj(
-      Sigmax) - 0.35355339059327373*vphi*vs*Conj(TSigmax) + 0.25*vd*vphi*vu*Conj(
-      Sigmax)*Lambdax - 0.5*vs*Conj(Sigmax)*XiF - 0.35355339059327373*vphi*vs*Conj
-      (MuPhi)*Sigmax + 0.25*vd*vphi*vu*Conj(Lambdax)*Sigmax - 0.5*vs*Conj(XiF)*
-      Sigmax + 0.0125*Power(vsb,3)*Sqr(g1p)*Sqr(QS) + 0.0375*QS*vsb*Sqr(g1p)*Sqr(
-      vd) + 0.5*vsb*AbsSqr(Sigmax)*Sqr(vphi) - 0.25*vs*Conj(Sigmax)*KappaPr*Sqr(
-      vphi) - 0.25*vs*Conj(KappaPr)*Sigmax*Sqr(vphi) + 0.5*vsb*AbsSqr(Sigmax)*Sqr(
-      vs) - 0.0125*vsb*Sqr(g1p)*Sqr(QS)*Sqr(vs) + 0.025*QS*vsb*Sqr(g1p)*Sqr(vu) -
-      0.35355339059327373*vphi*vs*TSigmax);
+   const double oneOverTanTheta = vs / vsb;
+
+   double result = Re(msbar2 - 0.35355339059327373 * MuPhi * vphi *
+      oneOverTanTheta * Conj(Sigmax) - 0.35355339059327373 * vphi *
+      oneOverTanTheta * Conj(TSigmax) + 0.25 * vd * vphi * vu * Conj(
+      Sigmax) * Lambdax / vsb - 0.5 * oneOverTanTheta * Conj(Sigmax) * XiF -
+      0.35355339059327373 * vphi * oneOverTanTheta * Conj(MuPhi) * Sigmax +
+      0.25 * vd * vphi * vu * Conj(Lambdax) * Sigmax / vsb - 0.5 *
+      oneOverTanTheta * Conj(XiF) * Sigmax + 0.0125 * Sqr(vsb) * Sqr(g1p) *
+      Sqr(QS) + 0.0375 * QS * Sqr(g1p) * Sqr(vd) + 0.5 * AbsSqr(Sigmax) *
+      Sqr(vphi) - 0.25 * oneOverTanTheta * Conj(Sigmax) * KappaPr * Sqr(
+      vphi) - 0.25 * oneOverTanTheta * Conj(KappaPr) * Sigmax * Sqr(vphi) +
+      0.5 * AbsSqr(Sigmax) * Sqr(vs) - 0.0125 * Sqr(g1p) * Sqr(QS) * Sqr(vs)
+      + 0.025 * QS * Sqr(g1p) * Sqr(vu) - 0.35355339059327373 * vphi *
+      oneOverTanTheta * TSigmax);
 
    return result;
 }
 
 double CNE6SSM_mass_eigenstates::get_ewsb_eq_hh_5() const
 {
-   double result = Re(mphi2*vphi + vphi*AbsSqr(MuPhi) + Power(vphi,3)*AbsSqr(
-      KappaPr) + 0.5*vphi*BMuPhi + 0.5*vphi*Conj(BMuPhi) + 0.7071067811865475*
-      MuPhi*Conj(XiF) - 0.35355339059327373*MuPhi*vs*vsb*Conj(Sigmax) +
-      0.7071067811865475*Conj(LXiF) - 0.35355339059327373*vs*vsb*Conj(TSigmax) +
-      vphi*Conj(XiF)*KappaPr - 0.5*vphi*vs*vsb*Conj(Sigmax)*KappaPr + 0.25*vd*vsb*
-      vu*Conj(Sigmax)*Lambdax + 0.7071067811865475*Conj(MuPhi)*XiF + vphi*Conj(
-      KappaPr)*XiF - 0.35355339059327373*vs*vsb*Conj(MuPhi)*Sigmax - 0.5*vphi*vs*
-      vsb*Conj(KappaPr)*Sigmax + 0.25*vd*vsb*vu*Conj(Lambdax)*Sigmax +
-      0.7071067811865475*LXiF + 1.0606601717798212*MuPhi*Conj(KappaPr)*Sqr(vphi) +
-      0.35355339059327373*Conj(TKappaPr)*Sqr(vphi) + 1.0606601717798212*Conj(
-      MuPhi)*KappaPr*Sqr(vphi) + 0.5*vphi*AbsSqr(Sigmax)*Sqr(vs) + 0.5*vphi*AbsSqr
-      (Sigmax)*Sqr(vsb) + 0.35355339059327373*Sqr(vphi)*TKappaPr -
-      0.35355339059327373*vs*vsb*TSigmax);
+   double result = Re(mphi2 + AbsSqr(MuPhi) + Sqr(vphi) * AbsSqr(
+      KappaPr) + 0.5 * BMuPhi + 0.5 * Conj(BMuPhi) + 0.7071067811865475 *
+      MuPhi * Conj(XiF) / vphi - 0.35355339059327373 * MuPhi * vs * vsb *
+      Conj(Sigmax) / vphi + 0.7071067811865475 * Conj(LXiF) / vphi -
+      0.35355339059327373 * vs * vsb * Conj(TSigmax) /vphi + Conj(XiF) *
+      KappaPr - 0.5 * vs * vsb * Conj(Sigmax) * KappaPr + 0.25 * vd * vsb
+      * vu * Conj(Sigmax) * Lambdax / vphi + 0.7071067811865475 * Conj(MuPhi)
+      * XiF / vphi + Conj(KappaPr) * XiF - 0.35355339059327373 * vs * vsb *
+      Conj(MuPhi) * Sigmax / vphi - 0.5 * vs * vsb * Conj(KappaPr) * Sigmax
+      + 0.25 * vd * vsb * vu * Conj(Lambdax) * Sigmax / vphi +
+      0.7071067811865475 * LXiF / vphi + 1.0606601717798212 * MuPhi *
+      Conj(KappaPr) * vphi + 0.35355339059327373 * Conj(TKappaPr) * vphi +
+      1.0606601717798212 * Conj(MuPhi) * KappaPr * vphi + 0.5 *
+      AbsSqr(Sigmax) * Sqr(vs) + 0.5 * AbsSqr(Sigmax) * Sqr(vsb) +
+      0.35355339059327373 * vphi * TKappaPr - 0.35355339059327373 * vs *
+      vsb * TSigmax / vphi);
 
    return result;
 }
@@ -2388,12 +2408,12 @@ double CNE6SSM_mass_eigenstates::get_tadpole_eq_hh_1(unsigned ewsb_loop_order) c
    double tadpole = get_ewsb_eq_hh_1();
 
    if (ewsb_loop_order > 0) {
-      tadpole -= Re(tadpole_hh(0));
+      tadpole -= Re(tadpole_hh(0)) / vd;
 
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
-         tadpole -= two_loop_tadpole[0];
+         tadpole -= two_loop_tadpole[0] / vd;
       }
    }
 
@@ -2405,12 +2425,12 @@ double CNE6SSM_mass_eigenstates::get_tadpole_eq_hh_2(unsigned ewsb_loop_order) c
    double tadpole = get_ewsb_eq_hh_2();
 
    if (ewsb_loop_order > 0) {
-      tadpole -= Re(tadpole_hh(1));
+      tadpole -= Re(tadpole_hh(1)) / vu;
 
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
-         tadpole -= two_loop_tadpole[1];
+         tadpole -= two_loop_tadpole[1] / vu;
       }
    }
 
@@ -2422,12 +2442,12 @@ double CNE6SSM_mass_eigenstates::get_tadpole_eq_hh_3(unsigned ewsb_loop_order) c
    double tadpole = get_ewsb_eq_hh_3();
 
    if (ewsb_loop_order > 0) {
-      tadpole -= Re(tadpole_hh(2));
+      tadpole -= Re(tadpole_hh(2)) / vs;
 
       if (ewsb_loop_order > 1) {
          double two_loop_tadpole[3];
          tadpole_hh_2loop(two_loop_tadpole);
-         tadpole -= two_loop_tadpole[2];
+         tadpole -= two_loop_tadpole[2] / vs;
       }
    }
 
@@ -2439,7 +2459,7 @@ double CNE6SSM_mass_eigenstates::get_tadpole_eq_hh_4(unsigned ewsb_loop_order) c
    double tadpole = get_ewsb_eq_hh_4();
 
    if (ewsb_loop_order > 0) {
-      tadpole -= Re(tadpole_hh(3));
+      tadpole -= Re(tadpole_hh(3)) / vsb;
 
       if (ewsb_loop_order > 1) {
 
@@ -2454,7 +2474,7 @@ double CNE6SSM_mass_eigenstates::get_tadpole_eq_hh_5(unsigned ewsb_loop_order) c
    double tadpole = get_ewsb_eq_hh_5();
 
    if (ewsb_loop_order > 0) {
-      tadpole -= Re(tadpole_hh(4));
+      tadpole -= Re(tadpole_hh(4)) / vphi;
 
       if (ewsb_loop_order > 1) {
 
