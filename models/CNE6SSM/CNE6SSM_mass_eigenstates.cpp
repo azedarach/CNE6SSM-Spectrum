@@ -44132,141 +44132,141 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
 
    result += -(B0(p,MVWm,MVWm)*CpUhhbargWmCgWmC(gO1)*CpUhhbargWmCgWmC(gO2));
    // note
-   std::cout << "-(B0(" << p << ",MVWm,MVWm)*CpUhhbargWmCgWmC(" << gO1
-             << ")*CpUhhbargWmCgWmC(" << gO2 << ")) = "
-             << -(B0(p,MVWm,MVWm)*CpUhhbargWmCgWmC(gO1)*CpUhhbargWmCgWmC(gO2)) << '\n';
+   std::cout << "oneOver16PiSqr*(-(B0(" << p << ",MVWm,MVWm)*CpUhhbargWmCgWmC(" << gO1
+             << ")*CpUhhbargWmCgWmC(" << gO2 << "))) = "
+             << oneOver16PiSqr*(-(B0(p,MVWm,MVWm)*CpUhhbargWmCgWmC(gO1)*CpUhhbargWmCgWmC(gO2))) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += -(B0(p,MVWm,MVWm)*CpUhhbargWmgWm(gO1)*CpUhhbargWmgWm(gO2));
    // note
-   std::cout << "-(B0(" << p << ",MVWm,MVWm)*CpUhhbargWmgWm(" << gO1
-             << ")*CpUhhbargWmgWm(" << gO2 << ")) = "
-             << -(B0(p,MVWm,MVWm)*CpUhhbargWmgWm(gO1)*CpUhhbargWmgWm(gO2)) << '\n';
+   std::cout << "oneOver16PiSqr*(-(B0(" << p << ",MVWm,MVWm)*CpUhhbargWmgWm(" << gO1
+             << ")*CpUhhbargWmgWm(" << gO2 << "))) = "
+             << oneOver16PiSqr*(-(B0(p,MVWm,MVWm)*CpUhhbargWmgWm(gO1)*CpUhhbargWmgWm(gO2))) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += -(B0(p,MVZ,MVZ)*CpUhhbargZgZ(gO1)*CpUhhbargZgZ(gO2));
    // note
-   std::cout << "-(B0(" << p << ",MVZ,MVZ)*CpUhhbargZgZ(" << gO1
-             << ")*CpUhhbargZgZ(" << gO2 << ")) = "
-             << -(B0(p,MVZ,MVZ)*CpUhhbargZgZ(gO1)*CpUhhbargZgZ(gO2)) << '\n';
+   std::cout << "oneOver16PiSqr*(-(B0(" << p << ",MVZ,MVZ)*CpUhhbargZgZ(" << gO1
+             << ")*CpUhhbargZgZ(" << gO2 << "))) = "
+             << oneOver16PiSqr*(-(B0(p,MVZ,MVZ)*CpUhhbargZgZ(gO1)*CpUhhbargZgZ(gO2))) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += -2*B0(p,MVZ,MVZp)*CpUhhbargZpgZ(gO1)*CpUhhbargZpgZ(gO2);
    // note
-   std::cout << "-2*B0(" << p << ",MVZ,MVZp)*CpUhhbargZpgZ(" << gO1
-             << ")*CpUhhbargZpgZ(" << gO2 << ") = "
-             << -2*B0(p,MVZ,MVZp)*CpUhhbargZpgZ(gO1)*CpUhhbargZpgZ(gO2) << '\n';
+   std::cout << "oneOver16PiSqr*(-2*B0(" << p << ",MVZ,MVZp)*CpUhhbargZpgZ(" << gO1
+             << ")*CpUhhbargZpgZ(" << gO2 << ")) = "
+             << oneOver16PiSqr*(-2*B0(p,MVZ,MVZp)*CpUhhbargZpgZ(gO1)*CpUhhbargZpgZ(gO2)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += -(B0(p,MVZp,MVZp)*CpUhhbargZpgZp(gO1)*CpUhhbargZpgZp(gO2));
    // note
-   std::cout << "-(B0(" << p << ",MVZp,MVZp)*CpUhhbargZpgZp(" << gO1
-             << ")*CpUhhbargZpgZp(" << gO2 << ")) = "
-             << -(B0(p,MVZp,MVZp)*CpUhhbargZpgZp(gO1)*CpUhhbargZpgZp(gO2)) << '\n';
+   std::cout << "oneOver16PiSqr*(-(B0(" << p << ",MVZp,MVZp)*CpUhhbargZpgZp(" << gO1
+             << ")*CpUhhbargZpgZp(" << gO2 << "))) = "
+             << oneOver16PiSqr*(-(B0(p,MVZp,MVZp)*CpUhhbargZpgZp(gO1)*CpUhhbargZpgZp(gO2))) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += 4*B0(p,MVWm,MVWm)*Conj(CpUhhconjVWmVWm(gO2))*CpUhhconjVWmVWm(gO1);
    // note
-   std::cout << "4*B0(" << p << ",MVWm,MVWm)*Conj(CpUhhconjVWmVWm("
-             << gO2 << "))*CpUhhconjVWmVWm(" << gO1 << ") = "
-             << 4*B0(p,MVWm,MVWm)*Conj(CpUhhconjVWmVWm(gO2))*CpUhhconjVWmVWm(gO1) << '\n';
+   std::cout << "oneOver16PiSqr*(4*B0(" << p << ",MVWm,MVWm)*Conj(CpUhhconjVWmVWm("
+             << gO2 << "))*CpUhhconjVWmVWm(" << gO1 << ")) = "
+             << oneOver16PiSqr*(4*B0(p,MVWm,MVWm)*Conj(CpUhhconjVWmVWm(gO2))*CpUhhconjVWmVWm(gO1)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += 4*A0(MVWm)*CpUhhUhhconjVWmVWm(gO1,gO2);
    // note
-   std::cout << "4*A0(MVWm)*CpUhhUhhconjVWmVWm(" << gO1 << "," << gO2 << ") = "
-             << 4*A0(MVWm)*CpUhhUhhconjVWmVWm(gO1,gO2) << '\n';
+   std::cout << "oneOver16PiSqr*(4*A0(MVWm)*CpUhhUhhconjVWmVWm(" << gO1 << "," << gO2 << ")) = "
+             << oneOver16PiSqr*(4*A0(MVWm)*CpUhhUhhconjVWmVWm(gO1,gO2)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += 2*A0(MVZp)*CpUhhUhhVZpVZp(gO1,gO2);
    // note
-   std::cout << "2*A0(MVZp)*CpUhhUhhVZpVZp(" << gO1 << "," << gO2 << ") = "
-             << 2*A0(MVZp)*CpUhhUhhVZpVZp(gO1,gO2) << '\n';
+   std::cout << "oneOver16PiSqr*(2*A0(MVZp)*CpUhhUhhVZpVZp(" << gO1 << "," << gO2 << ")) = "
+             << oneOver16PiSqr*(2*A0(MVZp)*CpUhhUhhVZpVZp(gO1,gO2)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += 2*A0(MVZ)*CpUhhUhhVZVZ(gO1,gO2);
    // note
-   std::cout << "2*A0(MVZ)*CpUhhUhhVZVZ(" << gO1 << "," << gO2 << ") = "
-             << 2*A0(MVZ)*CpUhhUhhVZVZ(gO1,gO2) << '\n';
+   std::cout << "oneOver16PiSqr*(2*A0(MVZ)*CpUhhUhhVZVZ(" << gO1 << "," << gO2 << ")) = "
+             << oneOver16PiSqr*(2*A0(MVZ)*CpUhhUhhVZVZ(gO1,gO2)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += 4*B0(p,MVZ,MVZp)*Conj(CpUhhVZpVZ(gO2))*CpUhhVZpVZ(gO1);
    // note
-   std::cout << "4*B0(" << p << ",MVZ,MVZp)*Conj(CpUhhVZpVZ(" << gO2
-             << "))*CpUhhVZpVZ(" << gO1 << ") = "
-             << 4*B0(p,MVZ,MVZp)*Conj(CpUhhVZpVZ(gO2))*CpUhhVZpVZ(gO1) << '\n';
+   std::cout << "oneOver16PiSqr*(4*B0(" << p << ",MVZ,MVZp)*Conj(CpUhhVZpVZ(" << gO2
+             << "))*CpUhhVZpVZ(" << gO1 << ")) = "
+             << oneOver16PiSqr*(4*B0(p,MVZ,MVZp)*Conj(CpUhhVZpVZ(gO2))*CpUhhVZpVZ(gO1)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += 2*B0(p,MVZp,MVZp)*Conj(CpUhhVZpVZp(gO2))*CpUhhVZpVZp(gO1);
    // note
-   std::cout << "2*B0(" << p << ",MVZp,MVZp)*Conj(CpUhhVZpVZp(" << gO2
-             << "))*CpUhhVZpVZp(" << gO1 << ") = "
-             << 2*B0(p,MVZp,MVZp)*Conj(CpUhhVZpVZp(gO2))*CpUhhVZpVZp(gO1) << '\n';
+   std::cout << "oneOver16PiSqr*(2*B0(" << p << ",MVZp,MVZp)*Conj(CpUhhVZpVZp(" << gO2
+             << "))*CpUhhVZpVZp(" << gO1 << ")) = "
+             << oneOver16PiSqr*(2*B0(p,MVZp,MVZp)*Conj(CpUhhVZpVZp(gO2))*CpUhhVZpVZp(gO1)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += 2*B0(p,MVZ,MVZ)*Conj(CpUhhVZVZ(gO2))*CpUhhVZVZ(gO1);
    // note
-   std::cout << "2*B0(" << p << ",MVZ,MVZ)*Conj(CpUhhVZVZ(" << gO2
-             << "))*CpUhhVZVZ(" << gO1 << ") = "
-             << 2*B0(p,MVZ,MVZ)*Conj(CpUhhVZVZ(gO2))*CpUhhVZVZ(gO1) << '\n';
+   std::cout << "oneOver16PiSqr*(2*B0(" << p << ",MVZ,MVZ)*Conj(CpUhhVZVZ(" << gO2
+             << "))*CpUhhVZVZ(" << gO1 << ")) = "
+             << oneOver16PiSqr*(2*B0(p,MVZ,MVZ)*Conj(CpUhhVZVZ(gO2))*CpUhhVZVZ(gO1)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += (Conj(CpUhhbarChaPChaPPL(gO2))*CpUhhbarChaPChaPPL(gO1) + Conj(
       CpUhhbarChaPChaPPR(gO2))*CpUhhbarChaPChaPPR(gO1))*G0(p,MChaP,MChaP);
    // note
-   std::cout << "(Conj(CpUhhbarChaPChaPPL(" << gO2
+   std::cout << "oneOver16PiSqr*((Conj(CpUhhbarChaPChaPPL(" << gO2
              << "))*CpUhhbarChaPChaPPL(" << gO1 << ") + Conj(CpUhhbarChaPChaPPR("
              << gO2 << "))*CpUhhbarChaPChaPPR(" << gO1
-             << "))*G0(" << p << ",MChaP,MChaP) = "
-             << (Conj(CpUhhbarChaPChaPPL(gO2))*CpUhhbarChaPChaPPL(gO1)
-                 + Conj(CpUhhbarChaPChaPPR(gO2))*CpUhhbarChaPChaPPR(gO1))*G0(p,MChaP,MChaP) << '\n';
+             << "))*G0(" << p << ",MChaP,MChaP)) = "
+             << oneOver16PiSqr*((Conj(CpUhhbarChaPChaPPL(gO2))*CpUhhbarChaPChaPPL(gO1)
+      + Conj(CpUhhbarChaPChaPPR(gO2))*CpUhhbarChaPChaPPR(gO1))*G0(p,MChaP,MChaP)) << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7579;
    std::complex<double> tmp_7580;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       tmp_7580 += A0(MHpm(gI1))*CpUhhUhhconjHpmHpm(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-1) * (A0(MHpm(" << gI1 << "))*CpUhhUhhconjHpmHpm(" << gO1 << ","
+      std::cout << "oneOver16PiSqr*(-1)*(A0(MHpm(" << gI1 << "))*CpUhhUhhconjHpmHpm(" << gO1 << ","
                 << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << (-1) * (A0(MHpm(gI1))*CpUhhUhhconjHpmHpm(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-1)*(A0(MHpm(gI1))*CpUhhUhhconjHpmHpm(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7579 += tmp_7580;
    result += (-1) * tmp_7579;
    // note
-   std::cout << "(-1) * tmp_7579 = " << (-1) * tmp_7579 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7579 = " << oneOver16PiSqr*(-1)*tmp_7579 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7581;
    std::complex<double> tmp_7582;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       tmp_7582 += A0(MSHp0(gI1))*CpUhhUhhconjSHp0SHp0(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-1) * (A0(MSHp0(" << gI1 << "))*CpUhhUhhconjSHp0SHp0(" << gO1
+      std::cout << "oneOver16PiSqr*(-1)*(A0(MSHp0(" << gI1 << "))*CpUhhUhhconjSHp0SHp0(" << gO1
                 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << (-1) * (A0(MSHp0(gI1))*CpUhhUhhconjSHp0SHp0(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-1)*(A0(MSHp0(gI1))*CpUhhUhhconjSHp0SHp0(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7581 += tmp_7582;
    result += (-1) * tmp_7581;
    // note
-   std::cout << "(-1) * tmp_7581 = " << (-1) * tmp_7581 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7581 = " << oneOver16PiSqr*(-1)*tmp_7581 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7583;
    std::complex<double> tmp_7584;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       tmp_7584 += A0(MSHpp(gI1))*CpUhhUhhconjSHppSHpp(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-1) * (A0(MSHpp(" << gI1 << "))*CpUhhUhhconjSHppSHpp(" << gO1
+      std::cout << "oneOver16PiSqr*(-1)*(A0(MSHpp(" << gI1 << "))*CpUhhUhhconjSHppSHpp(" << gO1
                 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << (-1) * (A0(MSHpp(gI1))*CpUhhUhhconjSHppSHpp(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-1)*(A0(MSHpp(gI1))*CpUhhUhhconjSHppSHpp(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7583 += tmp_7584;
    result += (-1) * tmp_7583;
    // note
-   std::cout << "(-1) * tmp_7583 = " << (-1) * tmp_7583 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7583 = " << oneOver16PiSqr*(-1)*tmp_7583 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7585;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       std::complex<double> tmp_7586;
@@ -44274,20 +44274,20 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7586 += B0(p,MHpm(gI1),MHpm(gI2))*Conj(CpUhhconjHpmHpm(gO2,
             gI1,gI2))*CpUhhconjHpmHpm(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MHpm(" << gI1 << "),MHpm("
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",MHpm(" << gI1 << "),MHpm("
                    << gI2 << "))*Conj(CpUhhconjHpmHpm(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhconjHpmHpm("
-                   << gO1 << "," << gI1 << "," << gI2 << ") = "
-                   << B0(p,MHpm(gI1),MHpm(gI2))*
-            Conj(CpUhhconjHpmHpm(gO2,gI1,gI2))*CpUhhconjHpmHpm(gO1,gI1,gI2) << '\n';
+                   << gO1 << "," << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MHpm(gI1),MHpm(gI2))*
+                                      Conj(CpUhhconjHpmHpm(gO2,gI1,gI2))*CpUhhconjHpmHpm(gO1,gI1,gI2)) << '\n';
       }
       tmp_7585 += tmp_7586;
    }
    result += tmp_7585;
    // note
-   std::cout << "tmp_7585 = " << tmp_7585 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7585 = " << oneOver16PiSqr*tmp_7585 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7587;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       std::complex<double> tmp_7588;
@@ -44295,20 +44295,20 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7588 += B0(p,MSHp0(gI1),MSHp0(gI2))*Conj(CpUhhconjSHp0SHp0(
             gO2,gI1,gI2))*CpUhhconjSHp0SHp0(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MSHp0(" << gI1 << "),MSHp0("
+         std::cout << "oneOver16PiSqr*B0(" << p << ",MSHp0(" << gI1 << "),MSHp0("
                    << gI2 << "))*Conj(CpUhhconjSHp0SHp0(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhconjSHp0SHp0("
-                   << gO1 << "," << gI1 << "," << gI2 << ") = "
-                   << B0(p,MSHp0(gI1),MSHp0(gI2))*
-            Conj(CpUhhconjSHp0SHp0(gO2,gI1,gI2))*CpUhhconjSHp0SHp0(gO1,gI1,gI2) << '\n';
+                   << gO1 << "," << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MSHp0(gI1),MSHp0(gI2))*
+                                      Conj(CpUhhconjSHp0SHp0(gO2,gI1,gI2))*CpUhhconjSHp0SHp0(gO1,gI1,gI2)) << '\n';
       }
       tmp_7587 += tmp_7588;
    }
    result += tmp_7587;
    // note
-   std::cout << "tmp_7587 = " << tmp_7587 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7587 = " << oneOver16PiSqr*tmp_7587 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7589;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       std::complex<double> tmp_7590;
@@ -44316,20 +44316,20 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7590 += B0(p,MSHpp(gI1),MSHpp(gI2))*Conj(CpUhhconjSHppSHpp(
             gO2,gI1,gI2))*CpUhhconjSHppSHpp(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MSHpp(" << gI1 << "),MSHpp("
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",MSHpp(" << gI1 << "),MSHpp("
                    << gI2 << "))*Conj(CpUhhconjSHppSHpp(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhconjSHppSHpp("
-                   << gO1 << "," << gI1 << "," << gI2 << ") = "
-                   << B0(p,MSHpp(gI1),MSHpp(gI2))*
-            Conj(CpUhhconjSHppSHpp(gO2,gI1,gI2))*CpUhhconjSHppSHpp(gO1,gI1,gI2) << '\n';
+                   << gO1 << "," << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MSHpp(gI1),MSHpp(gI2))*
+                                      Conj(CpUhhconjSHppSHpp(gO2,gI1,gI2))*CpUhhconjSHppSHpp(gO1,gI1,gI2)) << '\n';
       }
       tmp_7589 += tmp_7590;
    }
    result += tmp_7589;
    // note
-   std::cout << "tmp_7589 = " << tmp_7589 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7589 = " << oneOver16PiSqr*tmp_7589 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7591;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       std::complex<double> tmp_7592;
@@ -44338,23 +44338,23 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             CpUhhbarChaChaPL(gO1,gI1,gI2) + Conj(CpUhhbarChaChaPR(gO2,gI1,gI2))*
             CpUhhbarChaChaPR(gO1,gI1,gI2))*G0(p,MCha(gI1),MCha(gI2));
          // note
-         std::cout << "(Conj(CpUhhbarChaChaPL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*((Conj(CpUhhbarChaChaPL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhbarChaChaPL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhbarChaChaPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhbarChaChaPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
-                   << ",MCha(" << gI1 << "),MCha(" << gI2 << ")) = "
-                   << (Conj(CpUhhbarChaChaPL(gO2,gI1,gI2))*
+                   << ",MCha(" << gI1 << "),MCha(" << gI2 << "))) = "
+                   << oneOver16PiSqr*((Conj(CpUhhbarChaChaPL(gO2,gI1,gI2))*
                        CpUhhbarChaChaPL(gO1,gI1,gI2) + Conj(CpUhhbarChaChaPR(gO2,gI1,gI2))*
-                       CpUhhbarChaChaPR(gO1,gI1,gI2))*G0(p,MCha(gI1),MCha(gI2)) << '\n';
+                                       CpUhhbarChaChaPR(gO1,gI1,gI2))*G0(p,MCha(gI1),MCha(gI2))) << '\n';
       }
       tmp_7591 += tmp_7592;
    }
    result += tmp_7591;
    // note
-   std::cout << "tmp_7591 = " << tmp_7591 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7591 = " << oneOver16PiSqr*tmp_7591 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7593;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
       std::complex<double> tmp_7594;
@@ -44363,23 +44363,23 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             CpUhhbarChaIChaIPL(gO1,gI1,gI2) + Conj(CpUhhbarChaIChaIPR(gO2,gI1,gI2)
             )*CpUhhbarChaIChaIPR(gO1,gI1,gI2))*G0(p,MChaI(gI1),MChaI(gI2));
          // note
-         std::cout << "(Conj(CpUhhbarChaIChaIPL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*((Conj(CpUhhbarChaIChaIPL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhbarChaIChaIPL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhbarChaIChaIPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhbarChaIChaIPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
-                   << ",MChaI(" << gI1 << "),MChaI(" << gI2 << ")) = "
-                   << (Conj(CpUhhbarChaIChaIPL(gO2,gI1,gI2))*
+                   << ",MChaI(" << gI1 << "),MChaI(" << gI2 << "))) = "
+                   << oneOver16PiSqr*((Conj(CpUhhbarChaIChaIPL(gO2,gI1,gI2))*
                        CpUhhbarChaIChaIPL(gO1,gI1,gI2) + Conj(CpUhhbarChaIChaIPR(gO2,gI1,gI2)
-                          )*CpUhhbarChaIChaIPR(gO1,gI1,gI2))*G0(p,MChaI(gI1),MChaI(gI2)) << '\n';
+                          )*CpUhhbarChaIChaIPR(gO1,gI1,gI2))*G0(p,MChaI(gI1),MChaI(gI2))) << '\n';
       }
       tmp_7593 += tmp_7594;
    }
    result += tmp_7593;
    // note
-   std::cout << "tmp_7593 = " << tmp_7593 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7593 = " << oneOver16PiSqr*tmp_7593 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7595;
    std::complex<double> tmp_7596;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
@@ -44389,13 +44389,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gO1,gI1,gI2) + Conj(CpUhhChiPChiPPR(gO2,gI1,gI2))*CpUhhChiPChiPPR(gO1,
             gI1,gI2))*G0(p,MChiP(gI1),MChiP(gI2));
          // note
-         std::cout << "(0.5) * ((Conj(CpUhhChiPChiPPL(" << gO2 << "," << gI1
+         std::cout << "oneOver16PiSqr*(0.5)*((Conj(CpUhhChiPChiPPL(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhChiPChiPPL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhChiPChiPPR("
                    << gO2 << "," << gI1 << "," << gI2 << "))*CpUhhChiPChiPPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
                    << ",MChiP(" << gI1 << "),MChiP(" << gI2 << "))) = "
-                   << 0.5 * ((Conj(CpUhhChiPChiPPL(gO2,gI1,gI2))*CpUhhChiPChiPPL(
+                   << oneOver16PiSqr*0.5*((Conj(CpUhhChiPChiPPL(gO2,gI1,gI2))*CpUhhChiPChiPPL(
                           gO1,gI1,gI2) + Conj(CpUhhChiPChiPPR(gO2,gI1,gI2))*
                               CpUhhChiPChiPPR(gO1,gI1,gI2))*G0(p,MChiP(gI1),MChiP(gI2))) << '\n';
       }
@@ -44404,9 +44404,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7595 += tmp_7596;
    result += (0.5) * tmp_7595;
    // note
-   std::cout << "(0.5) * tmp_7595 = " << (0.5) * tmp_7595 << '\n';
+   std::cout << "oneOver16PiSqr*(0.5)*tmp_7595 = " << oneOver16PiSqr*(0.5)*tmp_7595 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7598;
    std::complex<double> tmp_7599;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
@@ -44417,13 +44417,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             ,gI1,gI2))*CpUhhbarChaChaPL(gO1,gI1,gI2) + Conj(CpUhhbarChaChaPL(gO2,
             gI1,gI2))*CpUhhbarChaChaPR(gO1,gI1,gI2))*MCha(gI2);
          // note
-         std::cout << "-2*MCha(" << gI1 << ")*(B0(" << p << ",MCha(" << gI1 << "),MCha(" << gI2
+         std::cout << "oneOver16PiSqr*(-2)*MCha(" << gI1 << ")*(B0(" << p << ",MCha(" << gI1 << "),MCha(" << gI2
                    << "))*(Conj(CpUhhbarChaChaPR(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhbarChaChaPL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhbarChaChaPL("
                    << gO2 << "," << gI1 << "," << gI2 << "))*CpUhhbarChaChaPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*MCha(" << gI2 << ")) = "
-                   << -2 * MCha(gI1) * (B0(p,MCha(gI1),MCha(gI2))*
+                   << oneOver16PiSqr*(-2)*MCha(gI1)*(B0(p,MCha(gI1),MCha(gI2))*
             (Conj(CpUhhbarChaChaPR(gO2,gI1,gI2))*CpUhhbarChaChaPL(gO1,gI1,gI2)
              + Conj(CpUhhbarChaChaPL(gO2,gI1,gI2))*CpUhhbarChaChaPR(gO1,gI1,gI2))*MCha(gI2))
                    << '\n';
@@ -44434,9 +44434,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7598 += tmp_7599;
    result += (-2) * tmp_7598;
    // note
-   std::cout << "(-2) * tmp_7598 = " << (-2) * tmp_7598 << '\n';
+   std::cout << "oneOver16PiSqr*(-2)*tmp_7598 = " << oneOver16PiSqr*(-2)*tmp_7598 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7602;
    std::complex<double> tmp_7603;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
@@ -44448,13 +44448,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             CpUhhbarChaIChaIPL(gO2,gI1,gI2))*CpUhhbarChaIChaIPR(gO1,gI1,gI2))*
             MChaI(gI2);
          // note
-         std::cout << "-2*MChaI(" << gI1 << ")*(B0(" << p << ",MChaI(" << gI1 << "),MChaI(" << gI2
+         std::cout << "oneOver16PiSqr*(-2)*MChaI(" << gI1 << ")*(B0(" << p << ",MChaI(" << gI1 << "),MChaI(" << gI2
                    << "))*(Conj(CpUhhbarChaIChaIPR(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhbarChaIChaIPL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhbarChaIChaIPL("
                    << gO2 << "," << gI1 << "," << gI2 << "))*CpUhhbarChaIChaIPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*MChaI(" << gI2 << ")) = "
-                   << -2.0 * MChaI(gI1) * (B0(p,MChaI(gI1),MChaI(gI2))*
+                   << oneOver16PiSqr*(-2.0)*MChaI(gI1)*(B0(p,MChaI(gI1),MChaI(gI2))*
             (Conj(CpUhhbarChaIChaIPR(gO2,gI1,gI2))*CpUhhbarChaIChaIPL(gO1,gI1,gI2) + Conj(
                CpUhhbarChaIChaIPL(gO2,gI1,gI2))*CpUhhbarChaIChaIPR(gO1,gI1,gI2))*
                                            MChaI(gI2)) << '\n';
@@ -44465,9 +44465,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7602 += tmp_7603;
    result += (-2) * tmp_7602;
    // note
-   std::cout << "(-2) * tmp_7602 = " << (-2) * tmp_7602 << '\n';
+   std::cout << "oneOver16PiSqr*(-2)*tmp_7602 = " << oneOver16PiSqr*(-2)*tmp_7602 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7606;
    std::complex<double> tmp_7607;
    for (unsigned gI1 = 0; gI1 < 2; ++gI1) {
@@ -44478,13 +44478,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gO2,gI1,gI2))*CpUhhChiPChiPPL(gO1,gI1,gI2) + Conj(CpUhhChiPChiPPL(gO2,
             gI1,gI2))*CpUhhChiPChiPPR(gO1,gI1,gI2))*MChiP(gI2);
          // note
-         std::cout << "-1*MChiP(" << gI1 << ")*(B0(" << p << ",MChiP(" << gI1 << "),MChiP(" << gI2
+         std::cout << "oneOver16PiSqr*(-1)*MChiP(" << gI1 << ")*(B0(" << p << ",MChiP(" << gI1 << "),MChiP(" << gI2
                    << "))*(Conj(CpUhhChiPChiPPR(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhChiPChiPPL(" << gO1 << "," << gI1 << ","
                    << gI2 << ") + Conj(CpUhhChiPChiPPL(" << gO2 << ","
                    << gI1 << "," << gI2 << "))*CpUhhChiPChiPPR(" << gO1 << ","
                    << gI1 << "," << gI2 << "))*MChiP(" << gI2 << ")) = "
-                   << -1.0 * MChiP(gI1) * (B0(p,MChiP(gI1),MChiP(gI2))*
+                   << oneOver16PiSqr*(-1.0)*MChiP(gI1)*(B0(p,MChiP(gI1),MChiP(gI2))*
             (Conj(CpUhhChiPChiPPR(gO2,gI1,gI2))*CpUhhChiPChiPPL(gO1,gI1,gI2)
              + Conj(CpUhhChiPChiPPL(gO2,gI1,gI2))*CpUhhChiPChiPPR(gO1,gI1,gI2))*MChiP(gI2)) << '\n';
       }
@@ -44494,24 +44494,24 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7606 += tmp_7607;
    result += (-1) * tmp_7606;
    // note
-   std::cout << "(-1) * tmp_7606 = " << (-1) * tmp_7606 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7606 = " << oneOver16PiSqr*(-1)*tmp_7606 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7610;
    std::complex<double> tmp_7611;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
       tmp_7611 += A0(MSv(gI1))*CpUhhUhhconjSvSv(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-1)*(A0(MSv(" << gI1 << "))*CpUhhUhhconjSvSv("
+      std::cout << "oneOver16PiSqr*(-1)*(A0(MSv(" << gI1 << "))*CpUhhUhhconjSvSv("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << (-1) * (A0(MSv(gI1))*CpUhhUhhconjSvSv(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-1)*(A0(MSv(gI1))*CpUhhUhhconjSvSv(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7610 += tmp_7611;
    result += (-1) * tmp_7610;
    // note
-   std::cout << "(-1) * tmp_7610 = " << (-1) * tmp_7610 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7610 = " << oneOver16PiSqr*(-1)*tmp_7610 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7612;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
       std::complex<double> tmp_7613;
@@ -44519,20 +44519,20 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7613 += B0(p,MSv(gI1),MSv(gI2))*Conj(CpUhhconjSvSv(gO2,gI1,
             gI2))*CpUhhconjSvSv(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MSv(" << gI1 << "),MSv(" << gI2
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",MSv(" << gI1 << "),MSv(" << gI2
                    << "))*Conj(CpUhhconjSvSv(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhconjSvSv(" << gO1 << ","
-                   << gI1 << "," << gI2 << ") = "
-                   << B0(p,MSv(gI1),MSv(gI2))*
-            Conj(CpUhhconjSvSv(gO2,gI1,gI2))*CpUhhconjSvSv(gO1,gI1,gI2) << '\n';
+                   << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MSv(gI1),MSv(gI2))*
+                                      Conj(CpUhhconjSvSv(gO2,gI1,gI2))*CpUhhconjSvSv(gO1,gI1,gI2)) << '\n';
       }
       tmp_7612 += tmp_7613;
    }
    result += tmp_7612;
    // note
-   std::cout << "tmp_7612 = " << tmp_7612 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7612 = " << oneOver16PiSqr*tmp_7612 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7614;
    std::complex<double> tmp_7615;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
@@ -44542,13 +44542,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gO1,gI1,gI2) + Conj(CpUhhbarFdFdPR(gO2,gI1,gI2))*CpUhhbarFdFdPR(gO1,
             gI1,gI2))*G0(p,MFd(gI1),MFd(gI2));
          // note
-         std::cout << "3*((Conj(CpUhhbarFdFdPL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*(3)*((Conj(CpUhhbarFdFdPL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhbarFdFdPL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhbarFdFdPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhbarFdFdPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
                    << ",MFd(" << gI1 << "),MFd(" << gI2 << "))) = "
-                   << 3*((Conj(CpUhhbarFdFdPL(gO2,gI1,gI2))*CpUhhbarFdFdPL(
+                   << oneOver16PiSqr*(3)*((Conj(CpUhhbarFdFdPL(gO2,gI1,gI2))*CpUhhbarFdFdPL(
                           gO1,gI1,gI2) + Conj(CpUhhbarFdFdPR(gO2,gI1,gI2))*
                           CpUhhbarFdFdPR(gO1,gI1,gI2))*G0(p,MFd(gI1),MFd(gI2))) << '\n';
       }
@@ -44557,9 +44557,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7614 += tmp_7615;
    result += (3) * tmp_7614;
    // note
-   std::cout << "(3) * tmp_7614 = " << (3) * tmp_7614 << '\n';
+   std::cout << "oneOver16PiSqr*(3)*tmp_7614 = " << oneOver16PiSqr*(3)*tmp_7614 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7617;
    std::complex<double> tmp_7618;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
@@ -44569,13 +44569,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             CpUhhbarFDXFDXPL(gO1,gI1,gI2) + Conj(CpUhhbarFDXFDXPR(gO2,gI1,gI2))*
             CpUhhbarFDXFDXPR(gO1,gI1,gI2))*G0(p,MFDX(gI1),MFDX(gI2));
          // note
-         std::cout << "3*((Conj(CpUhhbarFDXFDXPL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*(3)*((Conj(CpUhhbarFDXFDXPL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhbarFDXFDXPL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhbarFDXFDXPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhbarFDXFDXPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
                    << ",MFDX(" << gI1 << "),MFDX(" << gI2 << "))) = "
-                   << 3*((Conj(CpUhhbarFDXFDXPL(gO2,gI1,gI2))*
+                   << oneOver16PiSqr*(3)*((Conj(CpUhhbarFDXFDXPL(gO2,gI1,gI2))*
                        CpUhhbarFDXFDXPL(gO1,gI1,gI2) + Conj(CpUhhbarFDXFDXPR(gO2,gI1,gI2))*
                           CpUhhbarFDXFDXPR(gO1,gI1,gI2))*G0(p,MFDX(gI1),MFDX(gI2))) << '\n';
       }
@@ -44584,9 +44584,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7617 += tmp_7618;
    result += (3) * tmp_7617;
    // note
-   std::cout << "(3) * tmp_7617 = " << (3) * tmp_7617 << '\n';
+   std::cout << "oneOver16PiSqr*(3)*tmp_7617 = " << oneOver16PiSqr*(3)*tmp_7617 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7620;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
       std::complex<double> tmp_7621;
@@ -44595,23 +44595,23 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gO1,gI1,gI2) + Conj(CpUhhbarFeFePR(gO2,gI1,gI2))*CpUhhbarFeFePR(gO1,
             gI1,gI2))*G0(p,MFe(gI1),MFe(gI2));
          // note
-         std::cout << "(Conj(CpUhhbarFeFePL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*((Conj(CpUhhbarFeFePL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhbarFeFePL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhbarFeFePR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhbarFeFePR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
-                   << ",MFe(" << gI1 << "),MFe(" << gI2 << ")) = "
-                   << (Conj(CpUhhbarFeFePL(gO2,gI1,gI2))*CpUhhbarFeFePL(
+                   << ",MFe(" << gI1 << "),MFe(" << gI2 << "))) = "
+                   << oneOver16PiSqr*((Conj(CpUhhbarFeFePL(gO2,gI1,gI2))*CpUhhbarFeFePL(
                           gO1,gI1,gI2) + Conj(CpUhhbarFeFePR(gO2,gI1,gI2))*
-                       CpUhhbarFeFePR(gO1,gI1,gI2))*G0(p,MFe(gI1),MFe(gI2)) << '\n';
+                                       CpUhhbarFeFePR(gO1,gI1,gI2))*G0(p,MFe(gI1),MFe(gI2))) << '\n';
       }
       tmp_7620 += tmp_7621;
    }
    result += tmp_7620;
    // note
-   std::cout << "tmp_7620 = " << tmp_7620 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7620 = " << oneOver16PiSqr*tmp_7620 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7622;
    std::complex<double> tmp_7623;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
@@ -44621,13 +44621,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gO1,gI1,gI2) + Conj(CpUhhbarFuFuPR(gO2,gI1,gI2))*CpUhhbarFuFuPR(gO1,
             gI1,gI2))*G0(p,MFu(gI1),MFu(gI2));
          // note
-         std::cout << "3*((Conj(CpUhhbarFuFuPL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*(3)*((Conj(CpUhhbarFuFuPL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhbarFuFuPL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhbarFuFuPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhbarFuFuPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
                    << ",MFu(" << gI1 << "),MFu(" << gI2 << "))) = "
-                   << 3*((Conj(CpUhhbarFuFuPL(gO2,gI1,gI2))*CpUhhbarFuFuPL(
+                   << oneOver16PiSqr*(3)*((Conj(CpUhhbarFuFuPL(gO2,gI1,gI2))*CpUhhbarFuFuPL(
                           gO1,gI1,gI2) + Conj(CpUhhbarFuFuPR(gO2,gI1,gI2))*
                           CpUhhbarFuFuPR(gO1,gI1,gI2))*G0(p,MFu(gI1),MFu(gI2))) << '\n';
       }
@@ -44636,9 +44636,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7622 += tmp_7623;
    result += (3) * tmp_7622;
    // note
-   std::cout << "(3) * tmp_7622 = " << (3) * tmp_7622 << '\n';
+   std::cout << "oneOver16PiSqr*(3)*tmp_7622 = " << oneOver16PiSqr*(3)*tmp_7622 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7625;
    std::complex<double> tmp_7626;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
@@ -44649,14 +44649,14 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             ,gI2))*CpUhhbarFdFdPL(gO1,gI1,gI2) + Conj(CpUhhbarFdFdPL(gO2,gI1,gI2))
             *CpUhhbarFdFdPR(gO1,gI1,gI2))*MFd(gI2);
          // note
-         std::cout << "-6*MFd(" << gI1 << "*(B0(" << p << ",MFd(" << gI1 << "),MFd(" << gI2
+         std::cout << "oneOver16PiSqr*(-6)*MFd(" << gI1 << "*(B0(" << p << ",MFd(" << gI1 << "),MFd(" << gI2
                    << "))*(Conj(CpUhhbarFdFdPR(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhbarFdFdPL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhbarFdFdPL("
                    << gO2 << "," << gI1 << "," << gI2 << "))*CpUhhbarFdFdPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*MFd(" << gI2
                    << ")) = "
-                   << -6*MFd(gI1)*(B0(p,MFd(gI1),MFd(gI2))*
+                   << oneOver16PiSqr*(-6)*MFd(gI1)*(B0(p,MFd(gI1),MFd(gI2))*
             (Conj(CpUhhbarFdFdPR(gO2,gI1,gI2))*CpUhhbarFdFdPL(gO1,gI1,gI2)
              + Conj(CpUhhbarFdFdPL(gO2,gI1,gI2))*CpUhhbarFdFdPR(gO1,gI1,gI2))*MFd(gI2))
                    << '\n';
@@ -44667,9 +44667,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7625 += tmp_7626;
    result += (-6) * tmp_7625;
    // note
-   std::cout << "(-6) * tmp_7625 = " << (-6) * tmp_7625 << '\n';
+   std::cout << "oneOver16PiSqr*(-6)*tmp_7625 = " << oneOver16PiSqr*(-6)*tmp_7625 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7629;
    std::complex<double> tmp_7630;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
@@ -44680,14 +44680,14 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             ,gI1,gI2))*CpUhhbarFDXFDXPL(gO1,gI1,gI2) + Conj(CpUhhbarFDXFDXPL(gO2,
             gI1,gI2))*CpUhhbarFDXFDXPR(gO1,gI1,gI2))*MFDX(gI2);
          // note
-         std::cout << "-6*MFDX(" << gI1 << ")*(B0(" << p << ",MFDX(" << gI1 << "),MFDX(" << gI2
+         std::cout << "oneOver16PiSqr*(-6)*MFDX(" << gI1 << ")*(B0(" << p << ",MFDX(" << gI1 << "),MFDX(" << gI2
                    << "))*(Conj(CpUhhbarFDXFDXPR(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhbarFDXFDXPL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhbarFDXFDXPL("
                    << gO2 << "," << gI1 << "," << gI2 << "))*CpUhhbarFDXFDXPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*MFDX(" << gI2
                    << ")) = "
-                   << -6*MFDX(gI1)*(B0(p,MFDX(gI1),MFDX(gI2))*
+                   << oneOver16PiSqr*(-6)*MFDX(gI1)*(B0(p,MFDX(gI1),MFDX(gI2))*
             (Conj(CpUhhbarFDXFDXPR(gO2,gI1,gI2))*CpUhhbarFDXFDXPL(gO1,gI1,gI2)
              + Conj(CpUhhbarFDXFDXPL(gO2,gI1,gI2))*CpUhhbarFDXFDXPR(gO1,gI1,gI2))*MFDX(gI2))
                    << '\n';
@@ -44698,9 +44698,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7629 += tmp_7630;
    result += (-6) * tmp_7629;
    // note
-   std::cout << "(-6) * tmp_7629 = " << (-6) * tmp_7629 << '\n';
+   std::cout << "oneOver16PiSqr*(-6)*tmp_7629 = " << oneOver16PiSqr*(-6)*tmp_7629 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7633;
    std::complex<double> tmp_7634;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
@@ -44711,14 +44711,14 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             ,gI2))*CpUhhbarFeFePL(gO1,gI1,gI2) + Conj(CpUhhbarFeFePL(gO2,gI1,gI2))
             *CpUhhbarFeFePR(gO1,gI1,gI2))*MFe(gI2);
          // note
-         std::cout << "-2*MFe(" << gI1 << ")*(B0(" << p << ",MFe(" << gI1 << "),MFe(" << gI2
+         std::cout << "oneOver16PiSqr*(-2)*MFe(" << gI1 << ")*(B0(" << p << ",MFe(" << gI1 << "),MFe(" << gI2
                    << "))*(Conj(CpUhhbarFeFePR(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhbarFeFePL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhbarFeFePL("
                    << gO2 << "," << gI1 << "," << gI2 << "))*CpUhhbarFeFePR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*MFe(" << gI2
                    << ")) = "
-                   << -2*MFe(gI1)*(B0(p,MFe(gI1),MFe(gI2))*
+                   << oneOver16PiSqr*(-2)*MFe(gI1)*(B0(p,MFe(gI1),MFe(gI2))*
             (Conj(CpUhhbarFeFePR(gO2,gI1,gI2))*CpUhhbarFeFePL(gO1,gI1,gI2)
              + Conj(CpUhhbarFeFePL(gO2,gI1,gI2))*CpUhhbarFeFePR(gO1,gI1,gI2))*MFe(gI2))
                    << '\n';
@@ -44729,9 +44729,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7633 += tmp_7634;
    result += (-2) * tmp_7633;
    // note
-   std::cout << "(-2) * tmp_7633 = " << (-2) * tmp_7633 << '\n';
+   std::cout << "oneOver16PiSqr*(-2)*tmp_7633 = " << oneOver16PiSqr*(-2)*tmp_7633 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7637;
    std::complex<double> tmp_7638;
    for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
@@ -44742,7 +44742,7 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             ,gI2))*CpUhhbarFuFuPL(gO1,gI1,gI2) + Conj(CpUhhbarFuFuPL(gO2,gI1,gI2))
             *CpUhhbarFuFuPR(gO1,gI1,gI2))*MFu(gI2);
          // note
-         std::cout << "-6*MFu(" << gI1 << ")*(B0(" << p << ",MFu(" << gI1 << "),MFu("
+         std::cout << "oneOver16PiSqr*(-6)*MFu(" << gI1 << ")*(B0(" << p << ",MFu(" << gI1 << "),MFu("
                    << gI2 << "))*(Conj(CpUhhbarFuFuPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhbarFuFuPL("
                    << gO1 << "," << gI1 << "," << gI2
@@ -44750,7 +44750,7 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
                    << gI1 << "," << gI2 << "))*CpUhhbarFuFuPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*MFu("
                    << gI2 << ")) = "
-                   << -6*MFu(gI1)*(B0(p,MFu(gI1),MFu(gI2))*
+                   << oneOver16PiSqr*(-6)*MFu(gI1)*(B0(p,MFu(gI1),MFu(gI2))*
             (Conj(CpUhhbarFuFuPR(gO2,gI1,gI2))*CpUhhbarFuFuPL(gO1,gI1,gI2)
              + Conj(CpUhhbarFuFuPL(gO2,gI1,gI2))*CpUhhbarFuFuPR(gO1,gI1,gI2))*MFu(gI2))
                    << '\n';
@@ -44761,25 +44761,25 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7637 += tmp_7638;
    result += (-6) * tmp_7637;
    // note
-   std::cout << "(-6) * tmp_7637 = " << (-6) * tmp_7637 << '\n';
+   std::cout << "oneOver16PiSqr*(-6)*tmp_7637 = " << oneOver16PiSqr*(-6)*tmp_7637 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7641;
    std::complex<double> tmp_7642;
    for (unsigned gI1 = 0; gI1 < 4; ++gI1) {
       tmp_7642 += A0(MSHIPM(gI1))*CpUhhUhhconjSHIPMSHIPM(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-1)*(A0(MSHIPM(" << gI1 << "))*CpUhhUhhconjSHIPMSHIPM("
+      std::cout << "oneOver16PiSqr*(-1)*(A0(MSHIPM(" << gI1 << "))*CpUhhUhhconjSHIPMSHIPM("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << (-1)*(A0(MSHIPM(gI1))*CpUhhUhhconjSHIPMSHIPM(gO1,gO2,gI1,gI1))
+                << oneOver16PiSqr*(-1)*(A0(MSHIPM(gI1))*CpUhhUhhconjSHIPMSHIPM(gO1,gO2,gI1,gI1))
                 << '\n';
    }
    tmp_7641 += tmp_7642;
    result += (-1) * tmp_7641;
    // note
-   std::cout << "(-1) * tmp_7641 = " << (-1) * tmp_7641 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7641 = " << oneOver16PiSqr*(-1)*tmp_7641 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7643;
    for (unsigned gI1 = 0; gI1 < 4; ++gI1) {
       std::complex<double> tmp_7644;
@@ -44787,51 +44787,51 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7644 += B0(p,MSHIPM(gI1),MSHIPM(gI2))*Conj(
             CpUhhconjSHIPMSHIPM(gO2,gI1,gI2))*CpUhhconjSHIPMSHIPM(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MSHIPM(" << gI1 << "),MSHIPM("
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",MSHIPM(" << gI1 << "),MSHIPM("
                    << gI2 << "))*Conj(CpUhhconjSHIPMSHIPM(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhconjSHIPMSHIPM("
-                   << gO1 << "," << gI1 << "," << gI2 << ") = "
-                   << B0(p,MSHIPM(gI1),MSHIPM(gI2))*
-            Conj(CpUhhconjSHIPMSHIPM(gO2,gI1,gI2))*CpUhhconjSHIPMSHIPM(gO1,gI1,gI2)
+                   << gO1 << "," << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MSHIPM(gI1),MSHIPM(gI2))*
+                                      Conj(CpUhhconjSHIPMSHIPM(gO2,gI1,gI2))*CpUhhconjSHIPMSHIPM(gO1,gI1,gI2))
                    << '\n';
       }
       tmp_7643 += tmp_7644;
    }
    result += tmp_7643;
    // note
-   std::cout << "tmp_7643 = " << tmp_7643 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7643 = " << oneOver16PiSqr*tmp_7643 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7645;
    std::complex<double> tmp_7646;
    for (unsigned gI1 = 0; gI1 < 5; ++gI1) {
       tmp_7646 += A0(MAh(gI1))*CpUhhUhhAhAh(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-0.5)*(A0(MAh(" << gI1 << "))*CpUhhUhhAhAh("
+      std::cout << "oneOver16PiSqr*(-0.5)*(A0(MAh(" << gI1 << "))*CpUhhUhhAhAh("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << -0.5*(A0(MAh(gI1))*CpUhhUhhAhAh(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-0.5)*(A0(MAh(gI1))*CpUhhUhhAhAh(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7645 += tmp_7646;
    result += (-0.5) * tmp_7645;
    // note
-   std::cout << "(-0.5) * tmp_7645 = " << (-0.5) * tmp_7645 << '\n';
+   std::cout << "oneOver16PiSqr*(-0.5)*tmp_7645 = " << oneOver16PiSqr*(-0.5)*tmp_7645 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7647;
    std::complex<double> tmp_7648;
    for (unsigned gI1 = 0; gI1 < 5; ++gI1) {
       tmp_7648 += A0(Mhh(gI1))*CpUhhUhhhhhh(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-0.5)*(A0(Mhh(" << gI1 << "))*CpUhhUhhhhhh("
+      std::cout << "oneOver16PiSqr*(-0.5)*(A0(Mhh(" << gI1 << "))*CpUhhUhhhhhh("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << -0.5*(A0(Mhh(gI1))*CpUhhUhhhhhh(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-0.5)*(A0(Mhh(gI1))*CpUhhUhhhhhh(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7647 += tmp_7648;
    result += (-0.5) * tmp_7647;
    // note
-   std::cout << "(-0.5) * tmp_7647 = " << (-0.5) * tmp_7647 << '\n';
+   std::cout << "oneOver16PiSqr*(-0.5)*tmp_7647 = " << oneOver16PiSqr*(-0.5)*tmp_7647 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7649;
    std::complex<double> tmp_7650;
    for (unsigned gI1 = 0; gI1 < 5; ++gI1) {
@@ -44840,11 +44840,11 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7651 += B0(p,MAh(gI1),MAh(gI2))*Conj(CpUhhAhAh(gO2,gI1,gI2))
             *CpUhhAhAh(gO1,gI1,gI2);
          // note
-         std::cout << "0.5*(B0(" << p << ",MAh(" << gI1 << "),MAh(" << gI2
+         std::cout << "oneOver16PiSqr*(0.5)*(B0(" << p << ",MAh(" << gI1 << "),MAh(" << gI2
                    << "))*Conj(CpUhhAhAh(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhAhAh(" << gO1 << "," << gI1 << ","
                    << gI2 << ")) = "
-                   << 0.5*(B0(p,MAh(gI1),MAh(gI2))*Conj(CpUhhAhAh(gO2,gI1,gI2))
+                   << oneOver16PiSqr*(0.5)*(B0(p,MAh(gI1),MAh(gI2))*Conj(CpUhhAhAh(gO2,gI1,gI2))
                            *CpUhhAhAh(gO1,gI1,gI2)) << '\n';
       }
       tmp_7650 += tmp_7651;
@@ -44852,9 +44852,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7649 += tmp_7650;
    result += (0.5) * tmp_7649;
    // note
-   std::cout << "(0.5) * tmp_7649 = " << (0.5) * tmp_7649 << '\n';
+   std::cout << "oneOver16PiSqr*(0.5)*tmp_7649 = " << oneOver16PiSqr*(0.5)*tmp_7649 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7652;
    for (unsigned gI1 = 0; gI1 < 5; ++gI1) {
       std::complex<double> tmp_7653;
@@ -44862,20 +44862,20 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7653 += B0(p,Mhh(gI1),MAh(gI2))*Conj(CpUhhhhAh(gO2,gI1,gI2))
             *CpUhhhhAh(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",Mhh(" << gI1 << "),MAh(" << gI2
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",Mhh(" << gI1 << "),MAh(" << gI2
                    << "))*Conj(CpUhhhhAh(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhhhAh(" << gO1 << "," << gI1 << ","
-                   << gI2 << ") = "
-                   << B0(p,Mhh(gI1),MAh(gI2))*Conj(CpUhhhhAh(gO2,gI1,gI2))
-            *CpUhhhhAh(gO1,gI1,gI2) << '\n';
+                   << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,Mhh(gI1),MAh(gI2))*Conj(CpUhhhhAh(gO2,gI1,gI2))
+                                      *CpUhhhhAh(gO1,gI1,gI2)) << '\n';
       }
       tmp_7652 += tmp_7653;
    }
    result += tmp_7652;
    // note
-   std::cout << "tmp_7652 = " << tmp_7652 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7652 = " << oneOver16PiSqr*tmp_7652 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7654;
    std::complex<double> tmp_7655;
    for (unsigned gI1 = 0; gI1 < 5; ++gI1) {
@@ -44884,11 +44884,11 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7656 += B0(p,Mhh(gI1),Mhh(gI2))*Conj(CpUhhhhhh(gO2,gI1,gI2))
             *CpUhhhhhh(gO1,gI1,gI2);
          // note
-         std::cout << "0.5*(B0(" << p << ",Mhh(" << gI1 << "),Mhh(" << gI2
+         std::cout << "oneOver16PiSqr*(0.5)*(B0(" << p << ",Mhh(" << gI1 << "),Mhh(" << gI2
                    << "))*Conj(CpUhhhhhh(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhhhhh(" << gO1 << "," << gI1 << ","
                    << gI2 << ")) = "
-                   << 0.5*(B0(p,Mhh(gI1),Mhh(gI2))*Conj(CpUhhhhhh(gO2,gI1,gI2))
+                   << oneOver16PiSqr*(0.5)*(B0(p,Mhh(gI1),Mhh(gI2))*Conj(CpUhhhhhh(gO2,gI1,gI2))
                            *CpUhhhhhh(gO1,gI1,gI2)) << '\n';
       }
       tmp_7655 += tmp_7656;
@@ -44896,69 +44896,69 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7654 += tmp_7655;
    result += (0.5) * tmp_7654;
    // note
-   std::cout << "(0.5) * tmp_7654 = " << (0.5) * tmp_7654 << '\n';
+   std::cout << "oneOver16PiSqr*(0.5)*tmp_7654 = " << oneOver16PiSqr*(0.5)*tmp_7654 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7657;
    std::complex<double> tmp_7658;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
       tmp_7658 += A0(MSd(gI1))*CpUhhUhhconjSdSd(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-3)*(A0(MSd(" << gI1 << "))*CpUhhUhhconjSdSd("
+      std::cout << "oneOver16PiSqr*(-3)*(A0(MSd(" << gI1 << "))*CpUhhUhhconjSdSd("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << -3*(A0(MSd(gI1))*CpUhhUhhconjSdSd(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-3)*(A0(MSd(gI1))*CpUhhUhhconjSdSd(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7657 += tmp_7658;
    result += (-3) * tmp_7657;
    // note
-   std::cout << "(-3) * tmp_7657 = " << (-3) * tmp_7657 << '\n';
+   std::cout << "oneOver16PiSqr*(-3)*tmp_7657 = " << oneOver16PiSqr*(-3)*tmp_7657 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7659;
    std::complex<double> tmp_7660;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
       tmp_7660 += A0(MSDX(gI1))*CpUhhUhhconjSDXSDX(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-3)*(A0(MSDX(" << gI1 << "))*CpUhhUhhconjSDXSDX("
+      std::cout << "oneOver16PiSqr*(-3)*(A0(MSDX(" << gI1 << "))*CpUhhUhhconjSDXSDX("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << -3*(A0(MSDX(gI1))*CpUhhUhhconjSDXSDX(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-3)*(A0(MSDX(gI1))*CpUhhUhhconjSDXSDX(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7659 += tmp_7660;
    result += (-3) * tmp_7659;
    // note
-   std::cout << "(-3) * tmp_7659 = " << (-3) * tmp_7659 << '\n';
+   std::cout << "oneOver16PiSqr*(-3)*tmp_7659 = " << oneOver16PiSqr*(-3)*tmp_7659 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7661;
    std::complex<double> tmp_7662;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
       tmp_7662 += A0(MSe(gI1))*CpUhhUhhconjSeSe(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-1)*(A0(MSe(" << gI1 << "))*CpUhhUhhconjSeSe("
+      std::cout << "oneOver16PiSqr*(-1)*(A0(MSe(" << gI1 << "))*CpUhhUhhconjSeSe("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << -1*(A0(MSe(gI1))*CpUhhUhhconjSeSe(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-1)*(A0(MSe(gI1))*CpUhhUhhconjSeSe(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7661 += tmp_7662;
    result += (-1) * tmp_7661;
    // note
-   std::cout << "(-1) * tmp_7661 = " << (-1) * tmp_7661 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7661 = " << oneOver16PiSqr*(-1)*tmp_7661 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7663;
    std::complex<double> tmp_7664;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
       tmp_7664 += A0(MSu(gI1))*CpUhhUhhconjSuSu(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-3)*(A0(MSu(" << gI1 << "))*CpUhhUhhconjSuSu("
+      std::cout << "oneOver16PiSqr*(-3)*(A0(MSu(" << gI1 << "))*CpUhhUhhconjSuSu("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << -3*(A0(MSu(gI1))*CpUhhUhhconjSuSu(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-3)*(A0(MSu(gI1))*CpUhhUhhconjSuSu(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7663 += tmp_7664;
    result += (-3) * tmp_7663;
    // note
-   std::cout << "(-3) * tmp_7663 = " << (-3) * tmp_7663 << '\n';
+   std::cout << "oneOver16PiSqr*(-3)*tmp_7663 = " << oneOver16PiSqr*(-3)*tmp_7663 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7665;
    std::complex<double> tmp_7666;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
@@ -44967,11 +44967,11 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7667 += B0(p,MSd(gI1),MSd(gI2))*Conj(CpUhhconjSdSd(gO2,gI1,
             gI2))*CpUhhconjSdSd(gO1,gI1,gI2);
          // note
-         std::cout << "3*(B0(" << p << ",MSd(" << gI1 << "),MSd("
+         std::cout << "oneOver16PiSqr*(3)*(B0(" << p << ",MSd(" << gI1 << "),MSd("
                    << gI2 << "))*Conj(CpUhhconjSdSd(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhconjSdSd("
                    << gO1 << "," << gI1 << "," << gI2 << ")) = "
-                   << 3*(B0(p,MSd(gI1),MSd(gI2))*
+                   << oneOver16PiSqr*(3)*(B0(p,MSd(gI1),MSd(gI2))*
                          Conj(CpUhhconjSdSd(gO2,gI1,gI2))*CpUhhconjSdSd(gO1,gI1,gI2)) << '\n';
       }
       tmp_7666 += tmp_7667;
@@ -44979,9 +44979,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7665 += tmp_7666;
    result += (3) * tmp_7665;
    // note
-   std::cout << "(3) * tmp_7665 = " << (3) * tmp_7665 << '\n';
+   std::cout << "oneOver16PiSqr*(3)*tmp_7665 = " << oneOver16PiSqr*(3)*tmp_7665 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7668;
    std::complex<double> tmp_7669;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
@@ -44990,12 +44990,12 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7670 += B0(p,MSDX(gI1),MSDX(gI2))*Conj(CpUhhconjSDXSDX(gO2,
             gI1,gI2))*CpUhhconjSDXSDX(gO1,gI1,gI2);
          // note
-         std::cout << "3*(B0(" << p << ",MSDX(" << gI1 << "),MSDX("
+         std::cout << "oneOver16PiSqr*(3)*(B0(" << p << ",MSDX(" << gI1 << "),MSDX("
                    << gI2 << "))*Conj(CpUhhconjSDXSDX(" << gO2
                    << "," << gI1 << "," << gI2
                    << "))*CpUhhconjSDXSDX(" << gO1 << "," << gI1
                    << "," << gI2 << ")) = "
-                   << 3*(B0(p,MSDX(gI1),MSDX(gI2))*
+                   << oneOver16PiSqr*(3)*(B0(p,MSDX(gI1),MSDX(gI2))*
                          Conj(CpUhhconjSDXSDX(gO2,gI1,gI2))*CpUhhconjSDXSDX(gO1,gI1,gI2))
                    << '\n';
       }
@@ -45004,9 +45004,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7668 += tmp_7669;
    result += (3) * tmp_7668;
    // note
-   std::cout << "(3) * tmp_7668 = " << (3) * tmp_7668 << '\n';
+   std::cout << "oneOver16PiSqr*(3)*tmp_7668 = " << oneOver16PiSqr*(3)*tmp_7668 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7671;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
       std::complex<double> tmp_7672;
@@ -45014,21 +45014,21 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7672 += B0(p,MSe(gI1),MSe(gI2))*Conj(CpUhhconjSeSe(gO2,gI1,
             gI2))*CpUhhconjSeSe(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MSe(" << gI1 << "),MSe("
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",MSe(" << gI1 << "),MSe("
                    << gI2 << "))*Conj(CpUhhconjSeSe(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhconjSeSe("
-                   << gO1 << "," << gI1 << "," << gI2 << ") = "
-                   << B0(p,MSe(gI1),MSe(gI2))*
-            Conj(CpUhhconjSeSe(gO2,gI1,gI2))*CpUhhconjSeSe(gO1,gI1,gI2)
+                   << gO1 << "," << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MSe(gI1),MSe(gI2))*
+                                      Conj(CpUhhconjSeSe(gO2,gI1,gI2))*CpUhhconjSeSe(gO1,gI1,gI2))
                    << '\n';
       }
       tmp_7671 += tmp_7672;
    }
    result += tmp_7671;
    // note
-   std::cout << "tmp_7671 = " << tmp_7671 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7671 = " << oneOver16PiSqr*tmp_7671 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7673;
    std::complex<double> tmp_7674;
    for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
@@ -45037,11 +45037,11 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7675 += B0(p,MSu(gI1),MSu(gI2))*Conj(CpUhhconjSuSu(gO2,gI1,
             gI2))*CpUhhconjSuSu(gO1,gI1,gI2);
          // note
-         std::cout << "3*(B0(" << p << ",MSu(" << gI1 << "),MSu("
+         std::cout << "oneOver16PiSqr*(3)*(B0(" << p << ",MSu(" << gI1 << "),MSu("
                    << gI2 << "))*Conj(CpUhhconjSuSu(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhconjSuSu("
                    << gO1 << "," << gI1 << "," << gI2 << ")) = "
-                   << 3*(B0(p,MSu(gI1),MSu(gI2))*
+                   << oneOver16PiSqr*(3)*(B0(p,MSu(gI1),MSu(gI2))*
                          Conj(CpUhhconjSuSu(gO2,gI1,gI2))*CpUhhconjSuSu(gO1,gI1,gI2))
                    << '\n';
       }
@@ -45050,24 +45050,24 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7673 += tmp_7674;
    result += (3) * tmp_7673;
    // note
-   std::cout << "(3) * tmp_7673 = " << (3) * tmp_7673 << '\n';
+   std::cout << "oneOver16PiSqr*(3)*tmp_7673 = " << oneOver16PiSqr*(3)*tmp_7673 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7676;
    std::complex<double> tmp_7677;
    for (unsigned gI1 = 0; gI1 < 7; ++gI1) {
       tmp_7677 += A0(MSHI0(gI1))*CpUhhUhhconjSHI0SHI0(gO1,gO2,gI1,gI1);
       // note
-      std::cout << "(-1)*(A0(MSHI0(" << gI1 << "))*CpUhhUhhconjSHI0SHI0("
+      std::cout << "oneOver16PiSqr*(-1)*(A0(MSHI0(" << gI1 << "))*CpUhhUhhconjSHI0SHI0("
                 << gO1 << "," << gO2 << "," << gI1 << "," << gI1 << ")) = "
-                << -1*(A0(MSHI0(gI1))*CpUhhUhhconjSHI0SHI0(gO1,gO2,gI1,gI1)) << '\n';
+                << oneOver16PiSqr*(-1)*(A0(MSHI0(gI1))*CpUhhUhhconjSHI0SHI0(gO1,gO2,gI1,gI1)) << '\n';
    }
    tmp_7676 += tmp_7677;
    result += (-1) * tmp_7676;
    // note
-   std::cout << "(-1) * tmp_7676 = " << (-1) * tmp_7676 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7676 = " << oneOver16PiSqr*(-1)*tmp_7676 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7678;
    for (unsigned gI1 = 0; gI1 < 7; ++gI1) {
       std::complex<double> tmp_7679;
@@ -45075,22 +45075,22 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7679 += B0(p,MSHI0(gI1),MSHI0(gI2))*Conj(CpUhhconjSHI0SHI0(
             gO2,gI1,gI2))*CpUhhconjSHI0SHI0(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MSHI0(" << gI1 << "),MSHI0("
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",MSHI0(" << gI1 << "),MSHI0("
                    << gI2 << "))*Conj(CpUhhconjSHI0SHI0(" << gO2
                    << "," << gI1 << "," << gI2
                    << "))*CpUhhconjSHI0SHI0(" << gO1 << ","
-                   << gI1 << "," << gI2 << ") = "
-                   << B0(p,MSHI0(gI1),MSHI0(gI2))*
-            Conj(CpUhhconjSHI0SHI0(gO2,gI1,gI2))*CpUhhconjSHI0SHI0(gO1,gI1,gI2)
+                   << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MSHI0(gI1),MSHI0(gI2))*
+                                      Conj(CpUhhconjSHI0SHI0(gO2,gI1,gI2))*CpUhhconjSHI0SHI0(gO1,gI1,gI2))
                    << '\n';
       }
       tmp_7678 += tmp_7679;
    }
    result += tmp_7678;
    // note
-   std::cout << "tmp_7678 = " << tmp_7678 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7678 = " << oneOver16PiSqr*tmp_7678 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7680;
    for (unsigned gI1 = 0; gI1 < 7; ++gI1) {
       std::complex<double> tmp_7681;
@@ -45098,21 +45098,21 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
          tmp_7681 += B0(p,MSHI0(gI1),MSHI0(gI2))*Conj(CpUhhSHI0SHI0(gO2,
             gI1,gI2))*CpUhhSHI0SHI0(gO1,gI1,gI2);
          // note
-         std::cout << "B0(" << p << ",MSHI0(" << gI1 << "),MSHI0("
+         std::cout << "oneOver16PiSqr*(B0(" << p << ",MSHI0(" << gI1 << "),MSHI0("
                    << gI2 << "))*Conj(CpUhhSHI0SHI0(" << gO2 << ","
                    << gI1 << "," << gI2 << "))*CpUhhSHI0SHI0("
-                   << gO1 << "," << gI1 << "," << gI2 << ") = "
-                   << B0(p,MSHI0(gI1),MSHI0(gI2))*
-            Conj(CpUhhSHI0SHI0(gO2,gI1,gI2))*CpUhhSHI0SHI0(gO1,gI1,gI2)
+                   << gO1 << "," << gI1 << "," << gI2 << ")) = "
+                   << oneOver16PiSqr*(B0(p,MSHI0(gI1),MSHI0(gI2))*
+                                      Conj(CpUhhSHI0SHI0(gO2,gI1,gI2))*CpUhhSHI0SHI0(gO1,gI1,gI2))
                    << '\n';
       }
       tmp_7680 += tmp_7681;
    }
    result += tmp_7680;
    // note
-   std::cout << "tmp_7680 = " << tmp_7680 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7680 = " << oneOver16PiSqr*tmp_7680 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7682;
    std::complex<double> tmp_7683;
    for (unsigned gI1 = 0; gI1 < 7; ++gI1) {
@@ -45122,13 +45122,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gO1,gI1,gI2) + Conj(CpUhhChiIChiIPR(gO2,gI1,gI2))*CpUhhChiIChiIPR(gO1,
             gI1,gI2))*G0(p,MChiI(gI1),MChiI(gI2));
          // note
-         std::cout << "0.5*((Conj(CpUhhChiIChiIPL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*(0.5)*((Conj(CpUhhChiIChiIPL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhChiIChiIPL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhChiIChiIPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhChiIChiIPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0(" << p
                    << ",MChiI(" << gI1 << "),MChiI(" << gI2 << "))) = "
-                   << 0.5*((Conj(CpUhhChiIChiIPL(gO2,gI1,gI2))*CpUhhChiIChiIPL(
+                   << oneOver16PiSqr*(0.5)*((Conj(CpUhhChiIChiIPL(gO2,gI1,gI2))*CpUhhChiIChiIPL(
                           gO1,gI1,gI2) + Conj(CpUhhChiIChiIPR(gO2,gI1,gI2))
                             *CpUhhChiIChiIPR(gO1,gI1,gI2))*G0(p,MChiI(gI1),MChiI(gI2)))
                    << '\n';
@@ -45138,9 +45138,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7682 += tmp_7683;
    result += (0.5) * tmp_7682;
    // note
-   std::cout << "(0.5) * tmp_7682 = " << (0.5) * tmp_7682 << '\n';
+   std::cout << "oneOver16PiSqr*(0.5)*tmp_7682 = " << oneOver16PiSqr*(0.5)*tmp_7682 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7685;
    std::complex<double> tmp_7686;
    for (unsigned gI1 = 0; gI1 < 7; ++gI1) {
@@ -45151,14 +45151,14 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gO2,gI1,gI2))*CpUhhChiIChiIPL(gO1,gI1,gI2) + Conj(CpUhhChiIChiIPL(gO2,
             gI1,gI2))*CpUhhChiIChiIPR(gO1,gI1,gI2))*MChiI(gI2);
          // note
-         std::cout << "(-1)*MChiI(" << gI1 << ")*(B0(" << p << ",MChiI(" << gI1 << "),MChiI(" << gI2
+         std::cout << "oneOver16PiSqr*(-1)*MChiI(" << gI1 << ")*(B0(" << p << ",MChiI(" << gI1 << "),MChiI(" << gI2
                    << "))*(Conj(CpUhhChiIChiIPR(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhChiIChiIPL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhChiIChiIPL("
                    << gO2 << "," << gI1 << "," << gI2
                    << "))*CpUhhChiIChiIPR(" << gO1 << "," << gI1 << ","
                    << gI2 << "))*MChiI(" << gI2 << ")) = "
-                   << -1*MChiI(gI1)*(B0(p,MChiI(gI1),MChiI(gI2))*
+                   << oneOver16PiSqr*(-1)*MChiI(gI1)*(B0(p,MChiI(gI1),MChiI(gI2))*
             (Conj(CpUhhChiIChiIPR(gO2,gI1,gI2))*CpUhhChiIChiIPL(gO1,gI1,gI2)
              + Conj(CpUhhChiIChiIPL(gO2,gI1,gI2))*CpUhhChiIChiIPR(gO1,gI1,gI2))*MChiI(gI2))
                    << '\n';
@@ -45169,9 +45169,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7685 += tmp_7686;
    result += (-1) * tmp_7685;
    // note
-   std::cout << "(-1) * tmp_7685 = " << (-1) * tmp_7685 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7685 = " << oneOver16PiSqr*(-1)*tmp_7685 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7689;
    std::complex<double> tmp_7690;
    for (unsigned gI1 = 0; gI1 < 8; ++gI1) {
@@ -45181,13 +45181,13 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gI1,gI2) + Conj(CpUhhChiChiPR(gO2,gI1,gI2))*CpUhhChiChiPR(gO1,gI1,gI2)
             )*G0(p,MChi(gI1),MChi(gI2));
          // note
-         std::cout << "0.5*((Conj(CpUhhChiChiPL(" << gO2 << "," << gI1 << ","
+         std::cout << "oneOver16PiSqr*(0.5)*((Conj(CpUhhChiChiPL(" << gO2 << "," << gI1 << ","
                    << gI2 << "))*CpUhhChiChiPL(" << gO1 << "," << gI1
                    << "," << gI2 << ") + Conj(CpUhhChiChiPR(" << gO2
                    << "," << gI1 << "," << gI2 << "))*CpUhhChiChiPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*G0("
                    << p << ",MChi(" << gI1 << "),MChi(" << gI2 << "))) = "
-                   << 0.5*((Conj(CpUhhChiChiPL(gO2,gI1,gI2))*
+                   << oneOver16PiSqr*(0.5)*((Conj(CpUhhChiChiPL(gO2,gI1,gI2))*
                        CpUhhChiChiPL(gO1,gI1,gI2) + Conj(CpUhhChiChiPR(gO2,gI1,gI2))*
                             CpUhhChiChiPR(gO1,gI1,gI2))*G0(p,MChi(gI1),MChi(gI2)))
                    << '\n';
@@ -45197,9 +45197,9 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7689 += tmp_7690;
    result += (0.5) * tmp_7689;
    // note
-   std::cout << "(0.5) * tmp_7689 = " << (0.5) * tmp_7689 << '\n';
+   std::cout << "oneOver16PiSqr*(0.5)*tmp_7689 = " << oneOver16PiSqr*(0.5)*tmp_7689 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7692;
    std::complex<double> tmp_7693;
    for (unsigned gI1 = 0; gI1 < 8; ++gI1) {
@@ -45210,14 +45210,14 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
             gI1,gI2))*CpUhhChiChiPL(gO1,gI1,gI2) + Conj(CpUhhChiChiPL(gO2,gI1,gI2)
             )*CpUhhChiChiPR(gO1,gI1,gI2))*MChi(gI2);
          // note
-         std::cout << "(-1)*MChi(" << gI1 << ")*(B0(" << p << ",MChi(" << gI1 << "),MChi(" << gI2
+         std::cout << "oneOver16PiSqr*(-1)*MChi(" << gI1 << ")*(B0(" << p << ",MChi(" << gI1 << "),MChi(" << gI2
                    << "))*(Conj(CpUhhChiChiPR(" << gO2 << "," << gI1
                    << "," << gI2 << "))*CpUhhChiChiPL(" << gO1 << ","
                    << gI1 << "," << gI2 << ") + Conj(CpUhhChiChiPL("
                    << gO2 << "," << gI1 << "," << gI2 << "))*CpUhhChiChiPR("
                    << gO1 << "," << gI1 << "," << gI2 << "))*MChi("
                    << gI2 << ")) = "
-                   << -1*MChi(gI1)*(B0(p,MChi(gI1),MChi(gI2))*
+                   << oneOver16PiSqr*(-1)*MChi(gI1)*(B0(p,MChi(gI1),MChi(gI2))*
             (Conj(CpUhhChiChiPR(gO2,gI1,gI2))*CpUhhChiChiPL(gO1,gI1,gI2)
              + Conj(CpUhhChiChiPL(gO2,gI1,gI2))*CpUhhChiChiPR(gO1,gI1,gI2))*MChi(gI2))
                    << '\n';
@@ -45228,76 +45228,76 @@ std::complex<double> CNE6SSM_mass_eigenstates::self_energy_hh(double p , unsigne
    tmp_7692 += tmp_7693;
    result += (-1) * tmp_7692;
    // note
-   std::cout << "(-1) * tmp_7692 = " << (-1) * tmp_7692 << '\n';
+   std::cout << "oneOver16PiSqr*(-1)*tmp_7692 = " << oneOver16PiSqr*(-1)*tmp_7692 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7696;
    std::complex<double> tmp_7697;
    for (unsigned gI2 = 0; gI2 < 2; ++gI2) {
       tmp_7697 += Conj(CpUhhconjVWmHpm(gO2,gI2))*CpUhhconjVWmHpm(gO1,gI2)*F0
          (p,MHpm(gI2),MVWm);
       // note
-      std::cout << "2*(Conj(CpUhhconjVWmHpm(" << gO2 << "," << gI2
+      std::cout << "oneOver16PiSqr*(2)*(Conj(CpUhhconjVWmHpm(" << gO2 << "," << gI2
                 << "))*CpUhhconjVWmHpm(" << gO1 << "," << gI2
                 << ")*F0(" << p << ",MHpm(" << gI2 << "),MVWm)) = "
-                << 2*(Conj(CpUhhconjVWmHpm(gO2,gI2))*CpUhhconjVWmHpm(gO1,gI2)*F0
+                << oneOver16PiSqr*(2)*(Conj(CpUhhconjVWmHpm(gO2,gI2))*CpUhhconjVWmHpm(gO1,gI2)*F0
                       (p,MHpm(gI2),MVWm))
                 << '\n';
    }
    tmp_7696 += tmp_7697;
    result += (2) * tmp_7696;
    // note
-   std::cout << "(2) * tmp_7696 = " << (2) * tmp_7696 << '\n';
+   std::cout << "oneOver16PiSqr*(2)*tmp_7696 = " << oneOver16PiSqr*(2)*tmp_7696 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7698;
    for (unsigned gI2 = 0; gI2 < 5; ++gI2) {
       tmp_7698 += Conj(CpUhhVZAh(gO2,gI2))*CpUhhVZAh(gO1,gI2)*F0(p,MAh(gI2),
          MVZ);
       // note
-      std::cout << "Conj(CpUhhVZAh(" << gO2 << "," << gI2
+      std::cout << "oneOver16PiSqr*(Conj(CpUhhVZAh(" << gO2 << "," << gI2
                 << "))*CpUhhVZAh(" << gO1 << "," << gI2 << ")*F0("
-                << p << ",MAh(" << gI2 << "),MVZ) = "
-                << Conj(CpUhhVZAh(gO2,gI2))*CpUhhVZAh(gO1,gI2)
-         *F0(p,MAh(gI2),MVZ)
+                << p << ",MAh(" << gI2 << "),MVZ)) = "
+                << oneOver16PiSqr*(Conj(CpUhhVZAh(gO2,gI2))*CpUhhVZAh(gO1,gI2)
+                                   *F0(p,MAh(gI2),MVZ))
                 << '\n';
    }
    result += tmp_7698;
    // note
-   std::cout << "tmp_7698 = " << tmp_7698 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7698 = " << oneOver16PiSqr*tmp_7698 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    std::complex<double> tmp_7699;
    for (unsigned gI2 = 0; gI2 < 5; ++gI2) {
       tmp_7699 += Conj(CpUhhVZpAh(gO2,gI2))*CpUhhVZpAh(gO1,gI2)*F0(p,MAh(gI2
          ),MVZp);
       // note
-      std::cout << "Conj(CpUhhVZpAh(" << gO2 << "," << gI2
+      std::cout << "oneOver16PiSqr*(Conj(CpUhhVZpAh(" << gO2 << "," << gI2
                 << "))*CpUhhVZpAh(" << gO1 << "," << gI2 << ")*F0("
-                << p << ",MAh(" << gI2 << "),MVZp) = "
-                << Conj(CpUhhVZpAh(gO2,gI2))*CpUhhVZpAh(gO1,gI2)*
-         F0(p,MAh(gI2),MVZp)
+                << p << ",MAh(" << gI2 << "),MVZp)) = "
+                << oneOver16PiSqr*(Conj(CpUhhVZpAh(gO2,gI2))*CpUhhVZpAh(gO1,gI2)*
+                                   F0(p,MAh(gI2),MVZp))
                 << '\n';
    }
    result += tmp_7699;
    // note
-   std::cout << "tmp_7699 = " << tmp_7699 << '\n';
+   std::cout << "oneOver16PiSqr*tmp_7699 = " << oneOver16PiSqr*tmp_7699 << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
    result += -2*B0(p,MChaP,MChaP)*(Conj(CpUhhbarChaPChaPPR(gO2))*
       CpUhhbarChaPChaPPL(gO1) + Conj(CpUhhbarChaPChaPPL(gO2))*CpUhhbarChaPChaPPR(
       gO1))*Sqr(MChaP);
    // note
-   std::cout << "-2*B0(" << p << ",MChaP,MChaP)*(Conj(CpUhhbarChaPChaPPR("
+   std::cout << "oneOver16PiSqr*(-2*B0(" << p << ",MChaP,MChaP)*(Conj(CpUhhbarChaPChaPPR("
              << gO2 << "))*CpUhhbarChaPChaPPL(" << gO1
              << ") + Conj(CpUhhbarChaPChaPPL(" << gO2
-             << "))*CpUhhbarChaPChaPPR(" << gO1 << "))*Sqr(MChaP) = "
-             << -2*B0(p,MChaP,MChaP)*
+             << "))*CpUhhbarChaPChaPPR(" << gO1 << "))*Sqr(MChaP)) = "
+             << oneOver16PiSqr*(-2*B0(p,MChaP,MChaP)*
       (Conj(CpUhhbarChaPChaPPR(gO2))*CpUhhbarChaPChaPPL(gO1)
-       + Conj(CpUhhbarChaPChaPPL(gO2))*CpUhhbarChaPChaPPR(gO1))*Sqr(MChaP)
+       + Conj(CpUhhbarChaPChaPPL(gO2))*CpUhhbarChaPChaPPR(gO1))*Sqr(MChaP))
              << '\n';
    // note
-   std::cout << "result = " << result << '\n';
+   std::cout << "result = " << oneOver16PiSqr * result << '\n';
 
    // note
    std::cout << "=======================================\n"
