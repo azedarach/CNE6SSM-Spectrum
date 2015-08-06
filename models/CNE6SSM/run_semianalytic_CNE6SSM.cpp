@@ -113,10 +113,5 @@ int main(int argc, const char* argv[])
 
    const int exit_code = spectrum_generator.get_exit_code();
 
-   // note
-   CNE6SSM_semianalytic<Two_scale> test(model);
-   double upper_higgs = test.get_approx_Mhh_2lp_upper_bound();
-   std::cout << "Higgs upper bound = " << upper_higgs << '\n';
-
    return exit_code;
 }
