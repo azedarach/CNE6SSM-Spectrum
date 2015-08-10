@@ -28,6 +28,7 @@ CNE6SSM_TARBALL := \
 		$(MODNAME).tar.gz
 
 LIBCNE6SSM_SRC := \
+		$(DIR)/CNE6SSM_higgs_upper_bound.cpp \
 		$(DIR)/CNE6SSM_info.cpp \
 		$(DIR)/CNE6SSM_mass_eigenstates.cpp \
 		$(DIR)/CNE6SSM_physical.cpp \
@@ -42,6 +43,7 @@ EXECNE6SSM_SRC :=
 LIBCNE6SSM_HDR := \
 		$(DIR)/CNE6SSM_constraint_handler.hpp \
 		$(DIR)/CNE6SSM_convergence_tester.hpp \
+		$(DIR)/CNE6SSM_higgs_upper_bound.hpp \
 		$(DIR)/CNE6SSM_high_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_info.hpp \
 		$(DIR)/CNE6SSM_initial_guesser.hpp \

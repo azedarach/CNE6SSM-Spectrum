@@ -14,6 +14,7 @@ LIBTEST_DEP := \
 LIBTEST     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 
 TEST_SRC := \
+		$(DIR)/test_CNE6SSM_higgs_upper_bound.cpp \
 		$(DIR)/test_derivs_root_finder.cpp \
 		$(DIR)/test_ewsb_conditions.cpp \
 		$(DIR)/test_fixed_point_iterator.cpp \
@@ -84,6 +85,9 @@ execute-compiled-tests: $(TEST_EXE_LOG)
 clean:: clean-$(MODNAME)
 
 distclean:: distclean-$(MODNAME)
+
+$(DIR)/test_CNE6SSM_higgs_upper_bound.x: $(DIR)/test_CNE6SSM_higgs_upper_bound.o $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
 
 $(DIR)/test_derivs_root_finder.x: $(DIR)/test_derivs_root_finder.o $(LIBFLEXI) $(LIBLEGACY) $(LIBTEST) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(FLIBS)
