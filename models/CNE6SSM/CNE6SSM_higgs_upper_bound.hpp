@@ -30,6 +30,28 @@ public:
       include_inert_charged_higgs = flag;
    }
 
+   Eigen::Array<double,2,1> calculate_MSu2(unsigned) const;
+   double calculate_Sin2ThetaSu(unsigned) const;
+   double calculate_Cos2ThetaSu(unsigned) const;
+   double calculate_MFu2(unsigned) const;
+
+   Eigen::Array<double,2,1> calculate_MSDX2(unsigned) const;
+   double calculate_Sin2ThetaSDX(unsigned) const;
+   double calculate_Cos2ThetaSDX(unsigned) const;
+   double calculate_MFDX2(unsigned) const;
+
+   Eigen::Array<double,2,1> calculate_MHI02(unsigned) const;
+   double calculate_Sin2ThetaHI0(unsigned) const;
+   double calculate_Cos2ThetaHI0(unsigned) const;
+   double calculate_MFHI02(unsigned) const;
+
+   double calculate_MSI02(unsigned gen) const;
+
+   Eigen::Array<double,2,1> calculate_MHIPM2(unsigned) const;
+   double calculate_Sin2ThetaHIPM(unsigned) const;
+   double calculate_Cos2ThetaHIPM(unsigned) const;
+   double calculate_MFHIPM2(unsigned) const;
+
    double get_upper_bound() const { return upper_bound; }
 
    double calculate_upper_bound();
@@ -59,58 +81,64 @@ private:
    bool include_inert_charged_higgs;
 
    Eigen::Matrix<double,2,2> get_mass_matrix_Su(unsigned) const;
-   Eigen::Array<double,2,1> calculate_MSu2(unsigned) const;
-   double calculate_Sin2ThetaSu(unsigned) const;
-   double calculate_Cos2ThetaSu(unsigned) const;
-   double calculate_MFu2(unsigned) const;
-
    Eigen::Matrix<double,2,2> get_mass_matrix_SDX(unsigned) const;
-   Eigen::Array<double,2,1> calculate_MSDX2(unsigned) const;
-   double calculate_Sin2ThetaSDX(unsigned) const;
-   double calculate_Cos2ThetaSDX(unsigned) const;
-   double calculate_MFDX2(unsigned) const;
-
    Eigen::Matrix<double,2,2> get_mass_matrix_HI0(unsigned) const;
-   Eigen::Array<double,2,1> calculate_MHI02(unsigned) const;
-   double calculate_Sin2ThetaHI0(unsigned) const;
-   double calculate_Cos2ThetaHI0(unsigned) const;
-   double calculate_MFHI02(unsigned) const;
-
-   double calculate_MSI02(unsigned gen) const;
-
    Eigen::Matrix<double,2,2> get_mass_matrix_HIPM(unsigned) const;
-   Eigen::Array<double,2,1> calculate_MHIPM2(unsigned) const;
-   double calculate_Sin2ThetaHIPM(unsigned) const;
-   double calculate_Cos2ThetaHIPM(unsigned) const;
-   double calculate_MFHIPM2(unsigned) const;
 
    // convenient helper functions for derivatives
    Eigen::Matrix<double,2,2> get_dmass_matrix_Su_dvd(unsigned) const;
    Eigen::Matrix<double,2,2> get_dmass_matrix_Su_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_Su_dvd_dvd(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_Su_dvd_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_Su_dvu_dvu(unsigned) const;
 
    Eigen::Matrix<double,2,2> get_dmass_matrix_SDX_dvd(unsigned) const;
    Eigen::Matrix<double,2,2> get_dmass_matrix_SDX_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_SDX_dvd_dvd(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_SDX_dvd_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_SDX_dvu_dvu(unsigned) const;
 
    Eigen::Matrix<double,2,2> get_dmass_matrix_HI0_dvd(unsigned) const;
    Eigen::Matrix<double,2,2> get_dmass_matrix_HI0_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_HI0_dvd_dvd(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_HI0_dvd_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_HI0_dvu_dvu(unsigned) const;
 
    Eigen::Matrix<double,2,2> get_dmass_matrix_HIPM_dvd(unsigned) const;
    Eigen::Matrix<double,2,2> get_dmass_matrix_HIPM_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_HIPM_dvd_dvd(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_HIPM_dvd_dvu(unsigned) const;
+   Eigen::Matrix<double,2,2> get_d2mass_matrix_HIPM_dvu_dvu(unsigned) const;
 
    double get_dV1lp_up_dvd(unsigned) const;
    double get_dV1lp_up_dvu(unsigned) const;
+   double get_d2V1lp_up_dvd_dvd(unsigned) const;
+   double get_d2V1lp_up_dvd_dvu(unsigned) const;
+   double get_d2V1lp_up_dvu_dvu(unsigned) const;
 
    double get_dV1lp_exotic_dvd(unsigned) const;
    double get_dV1lp_exotic_dvu(unsigned) const;
+   double get_d2V1lp_exotic_dvd_dvd(unsigned) const;
+   double get_d2V1lp_exotic_dvd_dvu(unsigned) const;
+   double get_d2V1lp_exotic_dvu_dvu(unsigned) const;
 
    double get_dV1lp_inert_singlet_dvd(unsigned) const;
    double get_dV1lp_inert_singlet_dvu(unsigned) const;
+   double get_d2V1lp_inert_singlet_dvd_dvd(unsigned) const;
+   double get_d2V1lp_inert_singlet_dvd_dvu(unsigned) const;
+   double get_d2V1lp_inert_singlet_dvu_dvu(unsigned) const;
 
    double get_dV1lp_inert_neutral_higgs_dvd(unsigned) const;
    double get_dV1lp_inert_neutral_higgs_dvu(unsigned) const;
+   double get_d2V1lp_inert_neutral_higgs_dvd_dvd(unsigned) const;
+   double get_d2V1lp_inert_neutral_higgs_dvd_dvu(unsigned) const;
+   double get_d2V1lp_inert_neutral_higgs_dvu_dvu(unsigned) const;
 
    double get_dV1lp_inert_charged_higgs_dvd(unsigned) const;
    double get_dV1lp_inert_charged_higgs_dvu(unsigned) const;
+   double get_d2V1lp_inert_charged_higgs_dvd_dvd(unsigned) const;
+   double get_d2V1lp_inert_charged_higgs_dvd_dvu(unsigned) const;
+   double get_d2V1lp_inert_charged_higgs_dvu_dvu(unsigned) const;
 };
 
 } // namespace flexiblesusy

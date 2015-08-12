@@ -242,29 +242,79 @@ double CNE6SSM_higgs_upper_bound::get_inert_charged_higgs_contribution(unsigned 
 }
 
 
-double CNE6SSM_higgs_upper_bound::get_unrotated_up_contribution(unsigned,unsigned,unsigned) const
+double CNE6SSM_higgs_upper_bound::get_unrotated_up_contribution(unsigned gen, unsigned i, unsigned j) const
 {
-   return 0.;
+   double result = 0.;
+
+   if (i == 0 && j == 0) {
+      result = get_d2V1lp_up_dvd_dvd(gen);
+   } else if ((i == 0 && j == 1) || (i == 1 && j == 0)) {
+      result = get_d2V1lp_up_dvd_dvu(gen);
+   } else if (i == 1 && j == 1) {
+      result = get_d2V1lp_up_dvu_dvu(gen);
+   }
+
+   return result;
 }
 
-double CNE6SSM_higgs_upper_bound::get_unrotated_exotic_contribution(unsigned,unsigned,unsigned) const
+double CNE6SSM_higgs_upper_bound::get_unrotated_exotic_contribution(unsigned gen, unsigned i, unsigned j) const
 {
-   return 0.;
+   double result = 0.;
+
+   if (i == 0 && j == 0) {
+      result = get_d2V1lp_exotic_dvd_dvd(gen);
+   } else if ((i == 0 && j == 1) || (i == 1 && j == 0)) {
+      result = get_d2V1lp_exotic_dvd_dvu(gen);
+   } else if (i == 1 && j == 1) {
+      result = get_d2V1lp_exotic_dvu_dvu(gen);
+   }
+
+   return result;
 }
 
-double CNE6SSM_higgs_upper_bound::get_unrotated_inert_singlet_contribution(unsigned,unsigned,unsigned) const
+double CNE6SSM_higgs_upper_bound::get_unrotated_inert_singlet_contribution(unsigned gen, unsigned i, unsigned j) const
 {
-   return 0.;
+   double result = 0.;
+
+   if (i == 0 && j == 0) {
+      result = get_d2V1lp_inert_singlet_dvd_dvd(gen);
+   } else if ((i == 0 && j == 1) || (i == 1 && j == 0)) {
+      result = get_d2V1lp_inert_singlet_dvd_dvu(gen);
+   } else if (i == 1 && j == 1) {
+      result = get_d2V1lp_inert_singlet_dvu_dvu(gen);
+   }
+
+   return result;
 }
 
-double CNE6SSM_higgs_upper_bound::get_unrotated_inert_neutral_higgs_contribution(unsigned,unsigned,unsigned) const
+double CNE6SSM_higgs_upper_bound::get_unrotated_inert_neutral_higgs_contribution(unsigned gen, unsigned i, unsigned j) const
 {
-   return 0.;
+   double result = 0.;
+
+   if (i == 0 && j == 0) {
+      result = get_d2V1lp_inert_neutral_higgs_dvd_dvd(gen);
+   } else if ((i == 0 && j == 1) || (i == 1 && j == 0)) {
+      result = get_d2V1lp_inert_neutral_higgs_dvd_dvu(gen);
+   } else if (i == 1 && j == 1) {
+      result = get_d2V1lp_inert_neutral_higgs_dvu_dvu(gen);
+   }
+
+   return result;
 }
 
-double CNE6SSM_higgs_upper_bound::get_unrotated_inert_charged_higgs_contribution(unsigned,unsigned,unsigned) const
+double CNE6SSM_higgs_upper_bound::get_unrotated_inert_charged_higgs_contribution(unsigned gen, unsigned i, unsigned j) const
 {
-   return 0.;
+   double result = 0.;
+
+   if (i == 0 && j == 0) {
+      result = get_d2V1lp_inert_charged_higgs_dvd_dvd(gen);
+   } else if ((i == 0 && j == 1) || (i == 1 && j == 0)) {
+      result = get_d2V1lp_inert_charged_higgs_dvd_dvu(gen);
+   } else if (i == 1 && j == 1) {
+      result = get_d2V1lp_inert_charged_higgs_dvu_dvu(gen);
+   }
+
+   return result;
 }
 
 Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_mass_matrix_Su(unsigned gen) const
@@ -770,6 +820,183 @@ Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_dmass_matrix_HIPM_dvu(u
    return derivatives;
 }
 
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_Su_dvd_dvd(unsigned) const
+{
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = 0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.075 * Sqr(g1p);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = 0.2 * Sqr(g1) - 0.075 * Sqr(g1p);
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_Su_dvd_dvu(unsigned) const
+{
+   return Eigen::Matrix<double,2,2>::Zero();
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_Su_dvu_dvu(unsigned gen) const
+{
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+   const double yf = model.get_Yu(gen, gen);
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = -0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.05 * Sqr(g1p) + Sqr(yf);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = -0.2 * Sqr(g1) - 0.05 * Sqr(g1p) + Sqr(yf);
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_SDX_dvd_dvd(unsigned) const
+{
+   const double g1 = model.get_g1();
+   const double g1p = model.get_g1p();
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = 0.1 * Sqr(g1) + 0.15 * Sqr(g1p);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = -0.1 * Sqr(g1) + 0.225 * Sqr(g1p);
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_SDX_dvd_dvu(unsigned gen) const
+{
+   const double Lambdax = model.get_Lambdax();
+   const double Kappa = model.get_Kappa(gen, gen);
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = 0.;
+   derivatives(0,1) = -0.5 * Kappa * Lambdax;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = 0.;
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_SDX_dvu_dvu(unsigned) const
+{
+   const double g1 = model.get_g1();
+   const double g1p = model.get_g1p();
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = -0.1 * Sqr(g1) + 0.1 * Sqr(g1p);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = 0.1 * Sqr(g1) + 0.15 * Sqr(g1p);
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_HI0_dvd_dvd(unsigned) const
+{
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = 0.25 * (Sqr(g2) + 0.6 * Sqr(g1)) + 0.225 * Sqr(g1p);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = -0.25 * (Sqr(g2) + 0.6 * Sqr(g1)) + 0.15 * Sqr(g1p);
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_HI0_dvd_dvu(unsigned gen) const
+{
+   const double Lambdax = model.get_Lambdax();
+   const double Lambda = model.get_Lambda12(gen, gen);
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = 0.;
+   derivatives(0,1) = 0.5 * Lambda * Lambdax;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = 0.;
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_HI0_dvu_dvu(unsigned) const
+{
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = -0.25 * (Sqr(g2) + 0.6 * Sqr(g1)) + 0.15 * Sqr(g1p);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = 0.25 * (Sqr(g2) + 0.6 * Sqr(g1)) + 0.1 * Sqr(g1p);
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_HIPM_dvd_dvd(unsigned) const
+{
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = -0.25 * (Sqr(g2) - 0.6 * Sqr(g1)) + 0.225 * Sqr(g1p);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = 0.25 * (Sqr(g2) - 0.6 * Sqr(g1)) + 0.15 * Sqr(g1p);
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_HIPM_dvd_dvu(unsigned gen) const
+{
+   const double Lambdax = model.get_Lambdax();
+   const double Lambda = model.get_Lambda12(gen, gen);
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = 0.;
+   derivatives(0,1) = -0.5 * Lambda * Lambdax;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = 0.;
+
+   return derivatives;
+}
+
+Eigen::Matrix<double,2,2> CNE6SSM_higgs_upper_bound::get_d2mass_matrix_HIPM_dvu_dvu(unsigned) const
+{
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   Eigen::Matrix<double,2,2> derivatives;
+
+   derivatives(0,0) = 0.25 * (Sqr(g2) - 0.6 * Sqr(g1)) + 0.15 * Sqr(g1p);
+   derivatives(0,1) = 0.;
+   derivatives(1,0) = derivatives(0,1);
+   derivatives(1,1) = -0.25 * (Sqr(g2) - 0.6 * Sqr(g1)) + 0.1 * Sqr(g1p);
+
+   return derivatives;
+}
+
 double CNE6SSM_higgs_upper_bound::get_dV1lp_up_dvd(unsigned gen) const
 {
    const Eigen::Matrix<double,2,2> derivatives(get_dmass_matrix_Su_dvd(gen));
@@ -1001,6 +1228,723 @@ double CNE6SSM_higgs_upper_bound::get_dV1lp_inert_charged_higgs_dvu(unsigned gen
 
    const double result = -oneOver16PiSqr * (dMS20_dvu * A0MS0
       + dMS21_dvu * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_up_dvd_dvd(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_Su_dvd(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_Su_dvd_dvd(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaSu(gen);
+   const double Cos2Theta = calculate_Cos2ThetaSu(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MSu2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * 3.0 * (Sqr(dMS20_dvd) * logMS20Q2
+      - d2MS20_dvd_dvd * A0MS0 + Sqr(dMS21_dvd) * logMS21Q2 - d2MS21_dvd_dvd
+      * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_up_dvd_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> vd_first_derivatives(get_dmass_matrix_Su_dvd(gen));
+   const Eigen::Matrix<double,2,2> vu_first_derivatives(get_dmass_matrix_Su_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_Su_dvd_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaSu(gen);
+   const double Cos2Theta = calculate_Cos2ThetaSu(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) + Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) - 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) - Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) + 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+
+   const double dMS20_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) + Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) - 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) - Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) + 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MSu2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) + Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) - 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double d2MS21_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) - Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) + 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * 3.0 * (dMS20_dvd * dMS20_dvu *
+      logMS20Q2 - d2MS20_dvd_dvu * A0MS0 + dMS21_dvd * dMS21_dvu * logMS21Q2
+      - d2MS21_dvd_dvu * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_up_dvu_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_Su_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_Su_dvu_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaSu(gen);
+   const double Cos2Theta = calculate_Cos2ThetaSu(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double yf = model.get_Yu(gen, gen);
+   const double vu = model.get_vu();
+
+   const double dMS20_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMF2_dvu = Sqr(yf) * vu;
+
+   const Eigen::Array<double,2,1> MS2(calculate_MSu2(gen));
+   const double MF2 = calculate_MFu2(gen);
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MF2_dvu_dvu = Sqr(yf);
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double logMF2Q2 = Log(MF2 / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+   const double A0MF = passarino_veltman::ReA0(MF2, Sqr(scale));
+
+   const double result = oneOver16PiSqr * 3.0 * (Sqr(dMS20_dvu) * logMS20Q2
+      - d2MS20_dvu_dvu * A0MS0 + Sqr(dMS21_dvu) * logMS21Q2 - d2MS21_dvu_dvu
+      * A0MS1 - 2.0 * Sqr(dMF2_dvu) * logMF2Q2 + 2.0 * d2MF2_dvu_dvu * A0MF);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_exotic_dvd_dvd(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_SDX_dvd(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_SDX_dvd_dvd(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaSDX(gen);
+   const double Cos2Theta = calculate_Cos2ThetaSDX(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MSDX2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * 3.0 * (Sqr(dMS20_dvd) * logMS20Q2
+      - d2MS20_dvd_dvd * A0MS0 + Sqr(dMS21_dvd) * logMS21Q2 - d2MS21_dvd_dvd
+      * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_exotic_dvd_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> vd_first_derivatives(get_dmass_matrix_SDX_dvd(gen));
+   const Eigen::Matrix<double,2,2> vu_first_derivatives(get_dmass_matrix_SDX_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_SDX_dvd_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaSDX(gen);
+   const double Cos2Theta = calculate_Cos2ThetaSDX(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) + Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) - 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) - Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) + 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+
+   const double dMS20_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) + Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) - 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) - Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) + 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MSDX2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) + Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) - 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double d2MS21_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) - Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) + 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * 3.0 * (dMS20_dvd * dMS20_dvu *
+      logMS20Q2 - d2MS20_dvd_dvu * A0MS0 + dMS21_dvd * dMS21_dvu * logMS21Q2
+      - d2MS21_dvd_dvu * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_exotic_dvu_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_SDX_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_SDX_dvu_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaSDX(gen);
+   const double Cos2Theta = calculate_Cos2ThetaSDX(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MSDX2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * 3.0 * (Sqr(dMS20_dvu) * logMS20Q2
+      - d2MS20_dvu_dvu * A0MS0 + Sqr(dMS21_dvu) * logMS21Q2 - d2MS21_dvu_dvu
+      * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_singlet_dvd_dvd(unsigned gen) const
+{
+   const double g1p = model.get_g1p();
+   const double vd = model.get_vd();
+
+   const double dMS2_dvd = -0.375 * Sqr(g1p) * vd;
+   const double d2MS2_dvd_dvd = -0.375 * Sqr(g1p);
+
+   const double MS2 = calculate_MSI02(gen);
+
+   const double scale = model.get_scale();
+   const double logMS2Q2 = Log(MS2 / Sqr(scale));
+   const double A0MS = passarino_veltman::ReA0(MS2, Sqr(scale));
+
+   const double result = oneOver16PiSqr * (Sqr(dMS2_dvd) * logMS2Q2
+      - d2MS2_dvd_dvd * A0MS);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_singlet_dvd_dvu(unsigned gen) const
+{
+   const double g1p = model.get_g1p();
+   const double vd = model.get_vd();
+   const double vu = model.get_vu();
+
+   const double dMS2_dvd = - 0.375 * Sqr(g1p) * vd;
+   const double dMS2_dvu = -0.25 * Sqr(g1p) * vu;
+
+   const double MS2 = calculate_MSI02(gen);
+
+   const double scale = model.get_scale();
+   const double logMS2Q2 = Log(MS2 / Sqr(scale));
+
+   const double result = oneOver16PiSqr * (dMS2_dvd * dMS2_dvu *
+      logMS2Q2);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_singlet_dvu_dvu(unsigned gen) const
+{
+   const double g1p = model.get_g1p();
+   const double vu = model.get_vu();
+
+   const double dMS2_dvu = -0.25 * Sqr(g1p) * vu;
+   const double d2MS2_dvu_dvu = -0.25 * Sqr(g1p);
+
+   const double MS2 = calculate_MSI02(gen);
+
+   const double scale = model.get_scale();
+   const double logMS2Q2 = Log(MS2 / Sqr(scale));
+   const double A0MS = passarino_veltman::ReA0(MS2, Sqr(scale));
+
+   const double result = oneOver16PiSqr * (Sqr(dMS2_dvu) * logMS2Q2
+      - d2MS2_dvu_dvu * A0MS);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_neutral_higgs_dvd_dvd(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_HI0_dvd(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_HI0_dvd_dvd(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaHI0(gen);
+   const double Cos2Theta = calculate_Cos2ThetaHI0(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MHI02(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * (Sqr(dMS20_dvd) * logMS20Q2
+      - d2MS20_dvd_dvd * A0MS0 + Sqr(dMS21_dvd) * logMS21Q2 - d2MS21_dvd_dvd
+      * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_neutral_higgs_dvd_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> vd_first_derivatives(get_dmass_matrix_HI0_dvd(gen));
+   const Eigen::Matrix<double,2,2> vu_first_derivatives(get_dmass_matrix_HI0_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_HI0_dvd_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaHI0(gen);
+   const double Cos2Theta = calculate_Cos2ThetaHI0(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) + Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) - 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) - Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) + 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+
+   const double dMS20_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) + Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) - 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) - Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) + 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MHI02(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) + Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) - 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double d2MS21_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) - Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) + 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * (dMS20_dvd * dMS20_dvu *
+      logMS20Q2 - d2MS20_dvd_dvu * A0MS0 + dMS21_dvd * dMS21_dvu * logMS21Q2
+      - d2MS21_dvd_dvu * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_neutral_higgs_dvu_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_HI0_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_HI0_dvu_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaHI0(gen);
+   const double Cos2Theta = calculate_Cos2ThetaHI0(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MHI02(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * (Sqr(dMS20_dvu) * logMS20Q2
+      - d2MS20_dvu_dvu * A0MS0 + Sqr(dMS21_dvu) * logMS21Q2 - d2MS21_dvu_dvu
+      * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_charged_higgs_dvd_dvd(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_HIPM_dvd(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_HIPM_dvd_dvd(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaHIPM(gen);
+   const double Cos2Theta = calculate_Cos2ThetaHIPM(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MHIPM2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvd_dvd = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * (Sqr(dMS20_dvd) * logMS20Q2
+      - d2MS20_dvd_dvd * A0MS0 + Sqr(dMS21_dvd) * logMS21Q2 - d2MS21_dvd_dvd
+      * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_charged_higgs_dvd_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> vd_first_derivatives(get_dmass_matrix_HIPM_dvd(gen));
+   const Eigen::Matrix<double,2,2> vu_first_derivatives(get_dmass_matrix_HIPM_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_HIPM_dvd_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaHIPM(gen);
+   const double Cos2Theta = calculate_Cos2ThetaHIPM(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) + Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) - 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+   const double dMS21_dvd = 0.5 * (vd_first_derivatives(0,0) +
+      vd_first_derivatives(1,1) - Cos2Theta * (vd_first_derivatives(0,0)
+      - vd_first_derivatives(1,1)) + 2.0 * Sin2Theta * vd_first_derivatives(0,1));
+
+   const double dMS20_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) + Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) - 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (vu_first_derivatives(0,0) +
+      vu_first_derivatives(1,1) - Cos2Theta * (vu_first_derivatives(0,0)
+      - vu_first_derivatives(1,1)) + 2.0 * Sin2Theta * vu_first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MHIPM2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) + Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) - 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double d2MS21_dvd_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      (vd_first_derivatives(0,0) - vd_first_derivatives(1,1)) * (
+      vu_first_derivatives(0,0) - vu_first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * vd_first_derivatives(0,1) * vu_first_derivatives(0,1)
+      + Sin4Theta * (vd_first_derivatives(0,1) * (vu_first_derivatives(0,0) -
+      vu_first_derivatives(1,1)) + vu_first_derivatives(0,1) * (
+      vd_first_derivatives(0,0) - vd_first_derivatives(1,1)))) - Cos2Theta *
+      (second_derivatives(0,0) - second_derivatives(1,1)) + 2.0 * Sin2Theta *
+      second_derivatives(0,1));
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * (dMS20_dvd * dMS20_dvu *
+      logMS20Q2 - d2MS20_dvd_dvu * A0MS0 + dMS21_dvd * dMS21_dvu * logMS21Q2
+      - d2MS21_dvd_dvu * A0MS1);
+
+   return result;
+}
+
+double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_charged_higgs_dvu_dvu(unsigned gen) const
+{
+   const Eigen::Matrix<double,2,2> first_derivatives(get_dmass_matrix_HIPM_dvu(gen));
+   const Eigen::Matrix<double,2,2> second_derivatives(get_d2mass_matrix_HIPM_dvu_dvu(gen));
+
+   const double Sin2Theta = calculate_Sin2ThetaHIPM(gen);
+   const double Cos2Theta = calculate_Cos2ThetaHIPM(gen);
+   const double Sin4Theta = 2.0 * Sin2Theta * Cos2Theta;
+
+   const double dMS20_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) + Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) - 2.0 * Sin2Theta * first_derivatives(0,1));
+   const double dMS21_dvu = 0.5 * (first_derivatives(0,0) +
+      first_derivatives(1,1) - Cos2Theta * (first_derivatives(0,0)
+      - first_derivatives(1,1)) + 2.0 * Sin2Theta * first_derivatives(0,1));
+
+   const Eigen::Array<double,2,1> MS2(calculate_MHIPM2(gen));
+   const double inverse_mass_diff = 1.0 / (MS2(1) - MS2(0));
+
+   const double d2MS20_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) - inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) + Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) - 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double d2MS21_dvu_dvu = 0.5 * (second_derivatives(0,0) +
+      second_derivatives(1,1) + inverse_mass_diff * (Sqr(Sin2Theta) *
+      Sqr(first_derivatives(0,0) - first_derivatives(1,1)) + 4.0 *
+      Sqr(Cos2Theta) * Sqr(first_derivatives(0,1)) + 2.0 * Sin4Theta *
+      first_derivatives(0,1) * (first_derivatives(0,0) -
+      first_derivatives(1,1))) - Cos2Theta * (second_derivatives(0,0) -
+      second_derivatives(1,1)) + 2.0 * Sin2Theta * second_derivatives(0,1)
+      );
+
+   const double scale = model.get_scale();
+   const double logMS20Q2 = Log(MS2(0) / Sqr(scale));
+   const double logMS21Q2 = Log(MS2(1) / Sqr(scale));
+   const double A0MS0 = passarino_veltman::ReA0(MS2(0), Sqr(scale));
+   const double A0MS1 = passarino_veltman::ReA0(MS2(1), Sqr(scale));
+
+   const double result = oneOver16PiSqr * (Sqr(dMS20_dvu) * logMS20Q2
+      - d2MS20_dvu_dvu * A0MS0 + Sqr(dMS21_dvu) * logMS21Q2 - d2MS21_dvu_dvu
+      * A0MS1);
 
    return result;
 }

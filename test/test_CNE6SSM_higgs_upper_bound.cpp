@@ -117,7 +117,7 @@ using namespace flexiblesusy;
 
 void set_test_model_parameters(CNE6SSM_mass_eigenstates& model)
 {
-   model.set_scale(3864.263);
+   model.set_scale(1000.0);//3864.263);
 
    model.set_g1(0.4741);
    model.set_g2(0.6358);
@@ -436,7 +436,7 @@ BOOST_AUTO_TEST_CASE( test_tadpole_vu )
    BOOST_CHECK_CLOSE(upper_bound_tadpole, model_tadpole, 1.0e-10);
 }
 
-double dV1lpdvd_at_vd(double vd, void* params)
+double dV1lp_up_dvd_at_vd(double vd, void* params)
 {
    CNE6SSM_soft_parameters* model
       = static_cast<CNE6SSM_soft_parameters*>(params);
@@ -444,11 +444,17 @@ double dV1lpdvd_at_vd(double vd, void* params)
    model->set_vd(vd);
 
    CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
 
    return -upper_bound.get_tadpole_vd();
 }
 
-double dV1lpdvd_at_vu(double vu, void* params)
+double dV1lp_up_dvd_at_vu(double vu, void* params)
 {
    CNE6SSM_soft_parameters* model
       = static_cast<CNE6SSM_soft_parameters*>(params);
@@ -457,10 +463,16 @@ double dV1lpdvd_at_vu(double vu, void* params)
 
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
-   return -upper_bound.get_tadpole_vd();   
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
 }
 
-double dV1lpdvu_at_vd(double vd, void* params)
+double dV1lp_up_dvu_at_vd(double vd, void* params)
 {
    CNE6SSM_soft_parameters* model
       = static_cast<CNE6SSM_soft_parameters*>(params);
@@ -469,10 +481,16 @@ double dV1lpdvu_at_vd(double vd, void* params)
 
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
    return -upper_bound.get_tadpole_vu();
 }
 
-double dV1lpdvu_at_vu(double vu, void* params)
+double dV1lp_up_dvu_at_vu(double vu, void* params)
 {
    CNE6SSM_soft_parameters* model
       = static_cast<CNE6SSM_soft_parameters*>(params);
@@ -481,7 +499,13 @@ double dV1lpdvu_at_vu(double vu, void* params)
 
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
-   return -upper_bound.get_tadpole_vu();   
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
 }
 
 BOOST_AUTO_TEST_CASE( test_up_contributions )
@@ -498,60 +522,642 @@ BOOST_AUTO_TEST_CASE( test_up_contributions )
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
    upper_bound.set_include_inert_charged_higgs_tadpoles(false);
 
+   double Delta00Pr_exact = 0.;
+   double Delta01Pr_exact = 0.;
+   double Delta11Pr_exact = 0.;
 
    for (unsigned gen = 0; gen < 3; ++gen) {
-      const double Delta00Pr_exact
-         = upper_bound.get_unrotated_up_contribution(gen, 0, 0);
-      const double Delta01Pr_exact
-         = upper_bound.get_unrotated_up_contribution(gen, 0, 1);
-      const double Delta11Pr_exact
-         = upper_bound.get_unrotated_up_contribution(gen, 1, 1);
-
-      const double h = 1.0e-5;
-
-      double Delta00Pr_approx;
-      double Delta00Pr_approx_err;
-
-      gsl_function F1 = {&dV1lpdvd_at_vd, &model};
-      gsl_deriv_central(&F1, model.get_vd(), h, &Delta00Pr_approx,
-                        &Delta00Pr_approx_err);
-
-      double Delta01Pr_approx;
-      double Delta01Pr_approx_err;
-
-      gsl_function F2 = {&dV1lpdvd_at_vu, &model};
-      gsl_deriv_central(&F2, model.get_vu(), h, &Delta01Pr_approx,
-                        &Delta01Pr_approx_err);
-
-      double Delta11Pr_approx;
-      double Delta11Pr_approx_err;
-
-      gsl_function F3 = {&dV1lpdvu_at_vu, &model};
-      gsl_deriv_central(&F3, model.get_vu(), h, &Delta11Pr_approx,
-                        &Delta11Pr_approx_err);
-
-      BOOST_CHECK_CLOSE(Delta00Pr_exact, Delta00Pr_approx, 1.0e-5);
-      BOOST_CHECK_CLOSE(Delta01Pr_exact, Delta01Pr_approx, 1.0e-5);
-      BOOST_CHECK_CLOSE(Delta11Pr_exact, Delta11Pr_approx, 1.0e-5);
+      Delta00Pr_exact += upper_bound.get_unrotated_up_contribution(gen, 0, 0);
+      Delta01Pr_exact += upper_bound.get_unrotated_up_contribution(gen, 0, 1);
+      Delta11Pr_exact += upper_bound.get_unrotated_up_contribution(gen, 1, 1);
    }
+
+   const double h = 1.0e-5;
+
+   double Delta00Pr_approx;
+   double Delta00Pr_approx_err;
+
+   gsl_function F1 = {&dV1lp_up_dvd_at_vd, &model};
+   gsl_deriv_central(&F1, model.get_vd(), h, &Delta00Pr_approx,
+                     &Delta00Pr_approx_err);
+
+   double Delta01Pr_approx;
+   double Delta01Pr_approx_err;
+
+   gsl_function F2 = {&dV1lp_up_dvd_at_vu, &model};
+   gsl_deriv_central(&F2, model.get_vu(), h, &Delta01Pr_approx,
+                     &Delta01Pr_approx_err);
+
+   double Delta11Pr_approx;
+   double Delta11Pr_approx_err;
+
+   gsl_function F3 = {&dV1lp_up_dvu_at_vu, &model};
+   gsl_deriv_central(&F3, model.get_vu(), h, &Delta11Pr_approx,
+                     &Delta11Pr_approx_err);
+
+   BOOST_CHECK_LT(Abs(Delta00Pr_exact - Delta00Pr_approx), Delta00Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta01Pr_exact - Delta01Pr_approx), Delta01Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
+}
+
+double dV1lp_exotic_dvd_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(true);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_exotic_dvd_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(true);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_exotic_dvu_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(true);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
+}
+
+double dV1lp_exotic_dvu_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(true);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
 }
 
 BOOST_AUTO_TEST_CASE( test_exotic_contributions )
 {
+   CNE6SSM_mass_eigenstates model;
 
+   set_test_model_parameters(model);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(true);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   double Delta00Pr_exact = 0.;
+   double Delta01Pr_exact = 0.;
+   double Delta11Pr_exact = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      Delta00Pr_exact +=
+         upper_bound.get_unrotated_exotic_contribution(gen, 0, 0);
+      Delta01Pr_exact +=
+         upper_bound.get_unrotated_exotic_contribution(gen, 0, 1);
+      Delta11Pr_exact +=
+         upper_bound.get_unrotated_exotic_contribution(gen, 1, 1);
+   }
+
+   const double h = 1.0e-5;
+
+   double Delta00Pr_approx;
+   double Delta00Pr_approx_err;
+
+   gsl_function F1 = {&dV1lp_exotic_dvd_at_vd, &model};
+   gsl_deriv_central(&F1, model.get_vd(), h, &Delta00Pr_approx,
+                     &Delta00Pr_approx_err);
+
+   double Delta01Pr_approx;
+   double Delta01Pr_approx_err;
+
+   gsl_function F2 = {&dV1lp_exotic_dvd_at_vu, &model};
+   gsl_deriv_central(&F2, model.get_vu(), h, &Delta01Pr_approx,
+                     &Delta01Pr_approx_err);
+
+   double Delta11Pr_approx;
+   double Delta11Pr_approx_err;
+
+   gsl_function F3 = {&dV1lp_exotic_dvu_at_vu, &model};
+   gsl_deriv_central(&F3, model.get_vu(), h, &Delta11Pr_approx,
+                     &Delta11Pr_approx_err);
+
+   BOOST_CHECK_LT(Abs(Delta00Pr_exact - Delta00Pr_approx), Delta00Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta01Pr_exact - Delta01Pr_approx), Delta01Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
+}
+
+double dV1lp_inert_singlet_dvd_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(true);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_inert_singlet_dvd_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(true);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_inert_singlet_dvu_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(true);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
+}
+
+double dV1lp_inert_singlet_dvu_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(true);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
 }
 
 BOOST_AUTO_TEST_CASE( test_inert_singlet_contributions )
 {
+   CNE6SSM_mass_eigenstates model;
 
+   set_test_model_parameters(model);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(true);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   double Delta00Pr_exact = 0.;
+   double Delta01Pr_exact = 0.;
+   double Delta11Pr_exact = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      Delta00Pr_exact +=
+         upper_bound.get_unrotated_inert_singlet_contribution(gen, 0, 0);
+      Delta01Pr_exact +=
+         upper_bound.get_unrotated_inert_singlet_contribution(gen, 0, 1);
+      Delta11Pr_exact +=
+         upper_bound.get_unrotated_inert_singlet_contribution(gen, 1, 1);
+   }
+
+   const double h = 1.0e-5;
+
+   double Delta00Pr_approx;
+   double Delta00Pr_approx_err;
+
+   gsl_function F1 = {&dV1lp_inert_singlet_dvd_at_vd, &model};
+   gsl_deriv_central(&F1, model.get_vd(), h, &Delta00Pr_approx,
+                     &Delta00Pr_approx_err);
+
+   double Delta01Pr_approx;
+   double Delta01Pr_approx_err;
+
+   gsl_function F2 = {&dV1lp_inert_singlet_dvd_at_vu, &model};
+   gsl_deriv_central(&F2, model.get_vu(), h, &Delta01Pr_approx,
+                     &Delta01Pr_approx_err);
+
+   double Delta11Pr_approx;
+   double Delta11Pr_approx_err;
+
+   gsl_function F3 = {&dV1lp_inert_singlet_dvu_at_vu, &model};
+   gsl_deriv_central(&F3, model.get_vu(), h, &Delta11Pr_approx,
+                     &Delta11Pr_approx_err);
+
+   BOOST_CHECK_LT(Abs(Delta00Pr_exact - Delta00Pr_approx), Delta00Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta01Pr_exact - Delta01Pr_approx), Delta01Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
+}
+
+double dV1lp_inert_neutral_higgs_dvd_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_inert_neutral_higgs_dvd_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_inert_neutral_higgs_dvu_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
+}
+
+double dV1lp_inert_neutral_higgs_dvu_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
 }
 
 BOOST_AUTO_TEST_CASE( test_inert_neutral_higgs_contributions )
 {
+   CNE6SSM_mass_eigenstates model;
 
+   set_test_model_parameters(model);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   double Delta00Pr_exact = 0.;
+   double Delta01Pr_exact = 0.;
+   double Delta11Pr_exact = 0.;
+
+   for (unsigned gen = 0; gen < 2; ++gen) {
+      Delta00Pr_exact +=
+         upper_bound.get_unrotated_inert_neutral_higgs_contribution(gen, 0, 0);
+      Delta01Pr_exact +=
+         upper_bound.get_unrotated_inert_neutral_higgs_contribution(gen, 0, 1);
+      Delta11Pr_exact +=
+         upper_bound.get_unrotated_inert_neutral_higgs_contribution(gen, 1, 1);
+   }
+
+   const double h = 1.0e-5;
+
+   double Delta00Pr_approx;
+   double Delta00Pr_approx_err;
+
+   gsl_function F1 = {&dV1lp_inert_neutral_higgs_dvd_at_vd, &model};
+   gsl_deriv_central(&F1, model.get_vd(), h, &Delta00Pr_approx,
+                     &Delta00Pr_approx_err);
+
+   double Delta01Pr_approx;
+   double Delta01Pr_approx_err;
+
+   gsl_function F2 = {&dV1lp_inert_neutral_higgs_dvd_at_vu, &model};
+   gsl_deriv_central(&F2, model.get_vu(), h, &Delta01Pr_approx,
+                     &Delta01Pr_approx_err);
+
+   double Delta11Pr_approx;
+   double Delta11Pr_approx_err;
+
+   gsl_function F3 = {&dV1lp_inert_neutral_higgs_dvu_at_vu, &model};
+   gsl_deriv_central(&F3, model.get_vu(), h, &Delta11Pr_approx,
+                     &Delta11Pr_approx_err);
+
+   BOOST_CHECK_LT(Abs(Delta00Pr_exact - Delta00Pr_approx), Delta00Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta01Pr_exact - Delta01Pr_approx), Delta01Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
+}
+
+double dV1lp_inert_charged_higgs_dvd_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(true);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_inert_charged_higgs_dvd_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(true);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_inert_charged_higgs_dvu_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(true);
+
+   return -upper_bound.get_tadpole_vu();
+}
+
+double dV1lp_inert_charged_higgs_dvu_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(true);
+
+   return -upper_bound.get_tadpole_vu();
 }
 
 BOOST_AUTO_TEST_CASE( test_inert_charged_higgs_contributions )
+{
+   CNE6SSM_mass_eigenstates model;
+
+   set_test_model_parameters(model);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(true);
+
+   double Delta00Pr_exact = 0.;
+   double Delta01Pr_exact = 0.;
+   double Delta11Pr_exact = 0.;
+
+   for (unsigned gen = 0; gen < 2; ++gen) {
+      Delta00Pr_exact +=
+         upper_bound.get_unrotated_inert_charged_higgs_contribution(gen, 0, 0);
+      Delta01Pr_exact +=
+         upper_bound.get_unrotated_inert_charged_higgs_contribution(gen, 0, 1);
+      Delta11Pr_exact +=
+         upper_bound.get_unrotated_inert_charged_higgs_contribution(gen, 1, 1);
+   }
+
+   const double h = 1.0e-5;
+
+   double Delta00Pr_approx;
+   double Delta00Pr_approx_err;
+
+   gsl_function F1 = {&dV1lp_inert_charged_higgs_dvd_at_vd, &model};
+   gsl_deriv_central(&F1, model.get_vd(), h, &Delta00Pr_approx,
+                     &Delta00Pr_approx_err);
+
+   double Delta01Pr_approx;
+   double Delta01Pr_approx_err;
+
+   gsl_function F2 = {&dV1lp_inert_charged_higgs_dvd_at_vu, &model};
+   gsl_deriv_central(&F2, model.get_vu(), h, &Delta01Pr_approx,
+                     &Delta01Pr_approx_err);
+
+   double Delta11Pr_approx;
+   double Delta11Pr_approx_err;
+
+   gsl_function F3 = {&dV1lp_inert_charged_higgs_dvu_at_vu, &model};
+   gsl_deriv_central(&F3, model.get_vu(), h, &Delta11Pr_approx,
+                     &Delta11Pr_approx_err);
+
+   BOOST_CHECK_LT(Abs(Delta00Pr_exact - Delta00Pr_approx), Delta00Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta01Pr_exact - Delta01Pr_approx), Delta01Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
+}
+
+double get_Delta00tPr(const CNE6SSM_mass_eigenstates& model)
+{
+   const double scale = model.get_scale();
+
+   const double Lambdax = model.get_Lambdax();
+   const double vd = model.get_vd();
+   const double vs = model.get_vs();
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+
+   const double QHd = -3.0 / Sqrt(40.0);
+   const double QQ = 1.0 / Sqrt(40.0);
+   const double Qu = 1.0 / Sqrt(40.0);
+
+   const double diag_sum = 0.125 * Sqr(gbar) + 0.5 * Sqr(g1p)
+      * QHd * (QQ + Qu);
+   const double diag_diff = 0.125 * (Sqr(g2) - Sqr(g1)) + 0.5
+      * Sqr(g1p) * QHd * (QQ - Qu);
+
+   double result = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      CNE6SSM_higgs_upper_bound upper_bound(model);
+
+      const Eigen::Array<double,2,1> MSu2(upper_bound.calculate_MSu2(gen));
+      const double Sin2ThetaSu = upper_bound.calculate_Sin2ThetaSu(gen);
+      const double Cos2ThetaSu = upper_bound.calculate_Cos2ThetaSu(gen);
+      const double Sin4ThetaSu = 2.0 * Sin2ThetaSu * Cos2ThetaSu;
+
+      const double yf = model.get_Yu(gen, gen);
+
+      const double logM20Q2 = Log(MSu2(0) / Sqr(scale));
+      const double logM21Q2 = Log(MSu2(1) / Sqr(scale));
+      const double A0M20 = MSu2(0) * (1.0 - logM20Q2);
+      const double A0M21 = MSu2(1) * (1.0 - logM21Q2);
+
+      result -= (A0M20 + A0M21) * diag_sum;
+      result += (logM20Q2 + logM21Q2) * (Sqr(diag_sum) * Sqr(vd) +
+         0.25 * Sqr(Lambdax) * Sqr(yf) * Sqr(vs) * Sqr(Sin2ThetaSu)
+         + 0.5 * vd * diag_diff * (2.0 * vd * Sqr(Cos2ThetaSu) *
+         diag_diff + 0.5 * Lambdax * yf * vs * Sin4ThetaSu));
+      result += vd * (logM20Q2 - logM21Q2) * diag_sum * (Lambdax *
+         yf * vs * Sin2ThetaSu + 2.0 * vd * Cos2ThetaSu * diag_diff);
+      result += (A0M20 - A0M21) * (0.5 * Sqr(Lambdax) * Sqr(yf) *
+         Sqr(vs) * Sqr(Cos2ThetaSu) / (MSu2(1) - MSu2(0)) - diag_diff
+         * (Cos2ThetaSu + Lambdax * yf * vs * vd * Sin4ThetaSu /
+         (MSu2(1) - MSu2(0)) - 2.0 * Sqr(vd) * Sqr(Sin2ThetaSu) *
+         diag_diff / (MSu2(1) - MSu2(0))));
+   }
+
+   return result * 3.0 * oneOver16PiSqr;
+}
+
+BOOST_AUTO_TEST_CASE( test_analytic_stop_contributions )
+{
+   CNE6SSM_mass_eigenstates model;
+
+   set_test_model_parameters(model);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   double Delta00Pr = 0.;
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      Delta00Pr += upper_bound.get_unrotated_up_contribution(gen, 0, 0);
+   }
+
+   const double Delta00Pr_expect = get_Delta00tPr(model);
+
+   BOOST_CHECK_CLOSE(Delta00Pr, Delta00Pr_expect, 1.0e-10);
+}
+
+BOOST_AUTO_TEST_CASE( test_analytic_exotic_contributions )
+{
+
+}
+
+BOOST_AUTO_TEST_CASE( test_analytic_inert_singlet_contributions )
+{
+
+}
+
+BOOST_AUTO_TEST_CASE( test_analytic_inert_neutral_higgs_contributions )
+{
+
+}
+
+BOOST_AUTO_TEST_CASE( test_analytic_inert_charged_contributions )
 {
 
 }
