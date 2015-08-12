@@ -63,7 +63,7 @@ double CNE6SSM_higgs_upper_bound::calculate_upper_bound()
             upper_bound += get_inert_singlet_contribution(gen);
       }
       if (include_inert_neutral_higgs) {
-         for (unsigned gen = 0; gen < 4; ++gen)
+         for (unsigned gen = 0; gen < 2; ++gen)
             upper_bound += get_inert_neutral_higgs_contribution(gen);
       }
       if (include_inert_charged_higgs) {
@@ -71,6 +71,8 @@ double CNE6SSM_higgs_upper_bound::calculate_upper_bound()
             upper_bound += get_inert_charged_higgs_contribution(gen);
       }
    }
+
+   upper_bound = Sqrt(upper_bound);
 
    return upper_bound;
 }
