@@ -6,7 +6,7 @@
 #ifndef CNE6SSM_HIGGS_UPPER_BOUND_H
 #define CNE6SSM_HIGGS_UPPER_BOUND_H
 
-#include "CNE6SSM_soft_parameters.hpp"
+#include "CNE6SSM_mass_eigenstates.hpp"
 
 #include <Eigen/Core>
 
@@ -14,7 +14,7 @@ namespace flexiblesusy {
 
 class CNE6SSM_higgs_upper_bound {
 public:
-   CNE6SSM_higgs_upper_bound(const CNE6SSM_soft_parameters&);
+   CNE6SSM_higgs_upper_bound(const CNE6SSM_mass_eigenstates&);
    ~CNE6SSM_higgs_upper_bound();
 
    // if false (default), include only the third
@@ -51,7 +51,7 @@ public:
    double calculate_Cos2ThetaHI0(unsigned) const;
    double calculate_MFHI02(unsigned) const;
 
-   double calculate_MSI02(unsigned gen) const;
+   double calculate_MSI02(unsigned) const;
 
    Eigen::Array<double,2,1> calculate_MHIPM2(unsigned) const;
    double calculate_Sin2ThetaHIPM(unsigned) const;
@@ -79,8 +79,27 @@ public:
    double get_unrotated_inert_neutral_higgs_contribution(unsigned,unsigned,unsigned) const;
    double get_unrotated_inert_charged_higgs_contribution(unsigned,unsigned,unsigned) const;
 
+   // methods for comparing against 1-loop self-energies
+   std::complex<double> get_full_self_energy(double, unsigned, unsigned) const;
+   std::complex<double> get_unrotated_full_self_energy(double, unsigned, unsigned) const;
+
+   std::complex<double> get_self_energy(double, unsigned, unsigned) const;
+   std::complex<double> get_unrotated_self_energy(double, unsigned, unsigned) const;
+
+   std::complex<double> get_up_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_down_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_exotic_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_inert_higgs_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_inert_charged_higgs_self_energy(double,unsigned,unsigned) const;
+
+   std::complex<double> get_unrotated_up_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_unrotated_down_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_unrotated_exotic_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_unrotated_inert_higgs_self_energy(double,unsigned,unsigned) const;
+   std::complex<double> get_unrotated_inert_charged_higgs_self_energy(double,unsigned,unsigned) const;
+
 private:
-   CNE6SSM_soft_parameters model;
+   CNE6SSM_mass_eigenstates model;
    double upper_bound;
    bool include_all_gens;
    bool include_ups;
@@ -95,6 +114,11 @@ private:
    Eigen::Matrix<double,2,2> get_mass_matrix_SDX(unsigned) const;
    Eigen::Matrix<double,2,2> get_mass_matrix_HI0(unsigned) const;
    Eigen::Matrix<double,2,2> get_mass_matrix_HIPM(unsigned) const;
+
+   // wrappers for Passarino-Veltman functions
+   double A0(double) const;
+   double B0(double,double,double) const;
+   double G0(double,double,double) const;
 
    // convenient helper functions for derivatives
    Eigen::Matrix<double,2,2> get_dmass_matrix_Su_dvd(unsigned) const;
