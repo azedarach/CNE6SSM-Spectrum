@@ -38,6 +38,8 @@ std::complex<double> partial_tadpole_hh(const CNE6SSM_mass_eigenstates& model,
 {
    Eigen::Array<double,6,1> MSu(model.get_MSu());
    Eigen::Array<double,3,1> MFu(model.get_MFu());
+   Eigen::Array<double,6,1> MSd(model.get_MSd());
+   Eigen::Array<double,3,1> MFd(model.get_MFd());
    Eigen::Array<double,6,1> MSDX(model.get_MSDX());
    Eigen::Array<double,3,1> MFDX(model.get_MFDX());
    Eigen::Array<double,7,1> MSHI0(model.get_MSHI0());
@@ -107,6 +109,21 @@ std::complex<double> partial_tadpole_hh(const CNE6SSM_mass_eigenstates& model,
          model.CpUhhChiIChiIPR(gO1,gI1,gI1))*MChiI(gI1);
    }
    result += tmp_9765;
+   std::complex<double> tmp_9741;
+   std::complex<double> tmp_9742;
+   for (unsigned gI1 = 0; gI1 < 3; ++gI1) {
+      tmp_9742 += A0(MFd(gI1))*(model.CpUhhbarFdFdPL(gO1,gI1,gI1)
+         + model.CpUhhbarFdFdPR(gO1,gI1,gI1))*MFd(gI1);
+   }
+   tmp_9741 += tmp_9742;
+   result += (6) * tmp_9741;
+   std::complex<double> tmp_9755;
+   std::complex<double> tmp_9756;
+   for (unsigned gI1 = 0; gI1 < 6; ++gI1) {
+      tmp_9756 += A0(MSd(gI1))*model.CpUhhconjSdSd(gO1,gI1,gI1);
+   }
+   tmp_9755 += tmp_9756;
+   result += (-3) * tmp_9755;
 
    return result * oneOver16PiSqr;
 }
@@ -446,6 +463,8 @@ double dV1lp_up_dvd_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(true);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -464,6 +483,8 @@ double dV1lp_up_dvd_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(true);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -482,6 +503,8 @@ double dV1lp_up_dvu_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(true);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -500,6 +523,8 @@ double dV1lp_up_dvu_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(true);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -517,6 +542,8 @@ BOOST_AUTO_TEST_CASE( test_up_contributions )
    CNE6SSM_higgs_upper_bound upper_bound(model);
 
    upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(true);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -560,6 +587,140 @@ BOOST_AUTO_TEST_CASE( test_up_contributions )
    BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
 }
 
+double dV1lp_down_dvd_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_down_dvd_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vd();
+}
+
+double dV1lp_down_dvu_at_vd(double vd, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vd(vd);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
+}
+
+double dV1lp_down_dvu_at_vu(double vu, void* params)
+{
+   CNE6SSM_soft_parameters* model
+      = static_cast<CNE6SSM_soft_parameters*>(params);
+
+   model->set_vu(vu);
+
+   CNE6SSM_higgs_upper_bound upper_bound(*model);
+
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   return -upper_bound.get_tadpole_vu();
+}
+
+BOOST_AUTO_TEST_CASE( test_down_contributions )
+{
+   CNE6SSM_mass_eigenstates model;
+
+   set_test_model_parameters(model);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(true);
+   upper_bound.set_include_exotic_tadpoles(false);
+   upper_bound.set_include_inert_singlet_tadpoles(false);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(false);
+
+   double Delta00Pr_exact = 0.;
+   double Delta01Pr_exact = 0.;
+   double Delta11Pr_exact = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      Delta00Pr_exact += upper_bound.get_unrotated_down_contribution(gen, 0, 0);
+      Delta01Pr_exact += upper_bound.get_unrotated_down_contribution(gen, 0, 1);
+      Delta11Pr_exact += upper_bound.get_unrotated_down_contribution(gen, 1, 1);
+   }
+
+   const double h = 1.0e-5;
+
+   double Delta00Pr_approx;
+   double Delta00Pr_approx_err;
+
+   gsl_function F1 = {&dV1lp_down_dvd_at_vd, &model};
+   gsl_deriv_central(&F1, model.get_vd(), h, &Delta00Pr_approx,
+                     &Delta00Pr_approx_err);
+
+   double Delta01Pr_approx;
+   double Delta01Pr_approx_err;
+
+   gsl_function F2 = {&dV1lp_down_dvd_at_vu, &model};
+   gsl_deriv_central(&F2, model.get_vu(), h, &Delta01Pr_approx,
+                     &Delta01Pr_approx_err);
+
+   double Delta11Pr_approx;
+   double Delta11Pr_approx_err;
+
+   gsl_function F3 = {&dV1lp_down_dvu_at_vu, &model};
+   gsl_deriv_central(&F3, model.get_vu(), h, &Delta11Pr_approx,
+                     &Delta11Pr_approx_err);
+
+   BOOST_CHECK_LT(Abs(Delta00Pr_exact - Delta00Pr_approx), Delta00Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta01Pr_exact - Delta01Pr_approx), Delta01Pr_approx_err);
+   BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
+}
+
 double dV1lp_exotic_dvd_at_vd(double vd, void* params)
 {
    CNE6SSM_soft_parameters* model
@@ -570,6 +731,7 @@ double dV1lp_exotic_dvd_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(true);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -588,6 +750,7 @@ double dV1lp_exotic_dvd_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(true);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -606,6 +769,7 @@ double dV1lp_exotic_dvu_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(true);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -624,6 +788,7 @@ double dV1lp_exotic_dvu_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(true);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -641,6 +806,7 @@ BOOST_AUTO_TEST_CASE( test_exotic_contributions )
    CNE6SSM_higgs_upper_bound upper_bound(model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(true);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -697,6 +863,7 @@ double dV1lp_inert_singlet_dvd_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(true);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -715,6 +882,7 @@ double dV1lp_inert_singlet_dvd_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(true);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -733,6 +901,7 @@ double dV1lp_inert_singlet_dvu_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(true);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -751,6 +920,7 @@ double dV1lp_inert_singlet_dvu_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(true);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -768,6 +938,7 @@ BOOST_AUTO_TEST_CASE( test_inert_singlet_contributions )
    CNE6SSM_higgs_upper_bound upper_bound(model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(true);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -824,6 +995,7 @@ double dV1lp_inert_neutral_higgs_dvd_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
@@ -842,6 +1014,7 @@ double dV1lp_inert_neutral_higgs_dvd_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
@@ -860,6 +1033,7 @@ double dV1lp_inert_neutral_higgs_dvu_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
@@ -878,6 +1052,7 @@ double dV1lp_inert_neutral_higgs_dvu_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
@@ -895,6 +1070,7 @@ BOOST_AUTO_TEST_CASE( test_inert_neutral_higgs_contributions )
    CNE6SSM_higgs_upper_bound upper_bound(model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
@@ -951,6 +1127,7 @@ double dV1lp_inert_charged_higgs_dvd_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -969,6 +1146,7 @@ double dV1lp_inert_charged_higgs_dvd_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -987,6 +1165,7 @@ double dV1lp_inert_charged_higgs_dvu_at_vd(double vd, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -1005,6 +1184,7 @@ double dV1lp_inert_charged_higgs_dvu_at_vu(double vu, void* params)
    CNE6SSM_higgs_upper_bound upper_bound(*model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
@@ -1022,6 +1202,7 @@ BOOST_AUTO_TEST_CASE( test_inert_charged_higgs_contributions )
    CNE6SSM_higgs_upper_bound upper_bound(model);
 
    upper_bound.set_include_up_tadpoles(false);
+   upper_bound.set_include_down_tadpoles(false);
    upper_bound.set_include_exotic_tadpoles(false);
    upper_bound.set_include_inert_singlet_tadpoles(false);
    upper_bound.set_include_inert_neutral_higgs_tadpoles(false);
