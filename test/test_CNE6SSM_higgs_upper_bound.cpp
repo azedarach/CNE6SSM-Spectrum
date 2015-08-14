@@ -135,6 +135,7 @@ using namespace flexiblesusy;
 void set_test_model_parameters(CNE6SSM_mass_eigenstates& model)
 {
    model.set_scale(1000.0);//3864.263);
+   model.set_QS(5.0);
 
    model.set_g1(0.4741);
    model.set_g2(0.6358);
@@ -455,8 +456,8 @@ BOOST_AUTO_TEST_CASE( test_tadpole_vu )
 
 double dV1lp_up_dvd_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -475,8 +476,8 @@ double dV1lp_up_dvd_at_vd(double vd, void* params)
 
 double dV1lp_up_dvd_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -495,8 +496,8 @@ double dV1lp_up_dvd_at_vu(double vu, void* params)
 
 double dV1lp_up_dvu_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -515,8 +516,8 @@ double dV1lp_up_dvu_at_vd(double vd, void* params)
 
 double dV1lp_up_dvu_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -589,8 +590,8 @@ BOOST_AUTO_TEST_CASE( test_up_contributions )
 
 double dV1lp_down_dvd_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -609,8 +610,8 @@ double dV1lp_down_dvd_at_vd(double vd, void* params)
 
 double dV1lp_down_dvd_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -629,8 +630,8 @@ double dV1lp_down_dvd_at_vu(double vu, void* params)
 
 double dV1lp_down_dvu_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -649,8 +650,8 @@ double dV1lp_down_dvu_at_vd(double vd, void* params)
 
 double dV1lp_down_dvu_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -723,8 +724,8 @@ BOOST_AUTO_TEST_CASE( test_down_contributions )
 
 double dV1lp_exotic_dvd_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -742,8 +743,8 @@ double dV1lp_exotic_dvd_at_vd(double vd, void* params)
 
 double dV1lp_exotic_dvd_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -761,8 +762,8 @@ double dV1lp_exotic_dvd_at_vu(double vu, void* params)
 
 double dV1lp_exotic_dvu_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -780,8 +781,8 @@ double dV1lp_exotic_dvu_at_vd(double vd, void* params)
 
 double dV1lp_exotic_dvu_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -855,8 +856,8 @@ BOOST_AUTO_TEST_CASE( test_exotic_contributions )
 
 double dV1lp_inert_singlet_dvd_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -874,8 +875,8 @@ double dV1lp_inert_singlet_dvd_at_vd(double vd, void* params)
 
 double dV1lp_inert_singlet_dvd_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -893,8 +894,8 @@ double dV1lp_inert_singlet_dvd_at_vu(double vu, void* params)
 
 double dV1lp_inert_singlet_dvu_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -912,8 +913,8 @@ double dV1lp_inert_singlet_dvu_at_vd(double vd, void* params)
 
 double dV1lp_inert_singlet_dvu_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -987,8 +988,8 @@ BOOST_AUTO_TEST_CASE( test_inert_singlet_contributions )
 
 double dV1lp_inert_neutral_higgs_dvd_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -1006,8 +1007,8 @@ double dV1lp_inert_neutral_higgs_dvd_at_vd(double vd, void* params)
 
 double dV1lp_inert_neutral_higgs_dvd_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -1025,8 +1026,8 @@ double dV1lp_inert_neutral_higgs_dvd_at_vu(double vu, void* params)
 
 double dV1lp_inert_neutral_higgs_dvu_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -1044,8 +1045,8 @@ double dV1lp_inert_neutral_higgs_dvu_at_vd(double vd, void* params)
 
 double dV1lp_inert_neutral_higgs_dvu_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -1119,8 +1120,8 @@ BOOST_AUTO_TEST_CASE( test_inert_neutral_higgs_contributions )
 
 double dV1lp_inert_charged_higgs_dvd_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -1138,8 +1139,8 @@ double dV1lp_inert_charged_higgs_dvd_at_vd(double vd, void* params)
 
 double dV1lp_inert_charged_higgs_dvd_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -1157,8 +1158,8 @@ double dV1lp_inert_charged_higgs_dvd_at_vu(double vu, void* params)
 
 double dV1lp_inert_charged_higgs_dvu_at_vd(double vd, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vd(vd);
 
@@ -1176,8 +1177,8 @@ double dV1lp_inert_charged_higgs_dvu_at_vd(double vd, void* params)
 
 double dV1lp_inert_charged_higgs_dvu_at_vu(double vu, void* params)
 {
-   CNE6SSM_soft_parameters* model
-      = static_cast<CNE6SSM_soft_parameters*>(params);
+   CNE6SSM_mass_eigenstates* model
+      = static_cast<CNE6SSM_mass_eigenstates*>(params);
 
    model->set_vu(vu);
 
@@ -1247,6 +1248,231 @@ BOOST_AUTO_TEST_CASE( test_inert_charged_higgs_contributions )
    BOOST_CHECK_LT(Abs(Delta00Pr_exact - Delta00Pr_approx), Delta00Pr_approx_err);
    BOOST_CHECK_LT(Abs(Delta01Pr_exact - Delta01Pr_approx), Delta01Pr_approx_err);
    BOOST_CHECK_LT(Abs(Delta11Pr_exact - Delta11Pr_approx), Delta11Pr_approx_err);
+}
+
+double get_tadpole_hh_0(const CNE6SSM_mass_eigenstates& model)
+{
+   const double Lambdax = model.get_Lambdax();
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+   const double g1p = model.get_g1p();
+   const double vd = model.get_vd();
+   const double vu = model.get_vu();
+   const double vs = model.get_vs();
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   A0_fn A0(model.get_scale());
+
+   const double QHd = -3.0;
+   const double QHu = -2.0;
+   const double QQ = 1.0;
+   const double Qu = 1.0;
+   const double Qd = 2.0;
+   const double QDX = -2.0;
+   const double QDXbar = -3.0;
+   const double QS = model.get_QS();
+
+   double t1_up = 0.;
+   double t1_down = 0.;
+   double t1_exotic = 0.;
+   double t1_inert_singlet = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      const double yu = model.get_Yu(gen, gen);
+      const Eigen::Array<double,2,1> MSu2(upper_bound.calculate_MSu2(gen));
+      const double Sin2ThetaSu = upper_bound.calculate_Sin2ThetaSu(gen);
+      const double Cos2ThetaSu = upper_bound.calculate_Cos2ThetaSu(gen);
+
+      t1_up += 1.5 * oneOver16PiSqr * vd * ((A0(Sqrt(MSu2(0))) + A0(Sqrt(MSu2(1))))
+         * (0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHd * (QQ + Qu)) +
+         (A0(Sqrt(MSu2(0))) - A0(Sqrt(MSu2(1)))) * (Lambdax * yu * vs * Sin2ThetaSu
+         / vd + Cos2ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) + 0.025 * Sqr(g1p) * QHd
+         * (QQ - Qu))));
+
+      const double yd = model.get_Yd(gen, gen);
+      const double Tyd = model.get_TYd(gen, gen);
+      const Eigen::Array<double,2,1> MSd2(upper_bound.calculate_MSd2(gen));
+      const double MFd2 = upper_bound.calculate_MFd2(gen);
+      const double Sin2ThetaSd = upper_bound.calculate_Sin2ThetaSd(gen);
+      const double Cos2ThetaSd = upper_bound.calculate_Cos2ThetaSd(gen);
+
+      t1_down += -6.0 * oneOver16PiSqr * vd * Sqr(yd) * A0(Sqrt(MFd2)) + 1.5 *
+         oneOver16PiSqr * vd * ((A0(Sqrt(MSd2(0))) + A0(Sqrt(MSd2(1)))) * (-0.25
+         * Sqr(gbar) + 0.025 * Sqr(g1p) * QHd * (QQ + Qd) + 2.0 * Sqr(yd)) +
+         (A0(Sqrt(MSd2(1))) - A0(Sqrt(MSd2(0)))) * (Sqrt(2.0) * Tyd * Sin2ThetaSd
+         / vd + Cos2ThetaSd * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.025 * Sqr(g1p)
+         * QHd * (QQ - Qd))));
+
+      const double Kappa = model.get_Kappa(gen, gen);
+      const Eigen::Array<double,2,1> MSDX2(upper_bound.calculate_MSDX2(gen));
+      const double Sin2ThetaSDX = upper_bound.calculate_Sin2ThetaSDX(gen);
+      const double Cos2ThetaSDX = upper_bound.calculate_Cos2ThetaSDX(gen);
+
+      t1_exotic += 1.5 * oneOver16PiSqr * vd * (0.025 * Sqr(g1p) * QHd * (QDX +
+         QDXbar) * (A0(Sqrt(MSDX2(0))) + A0(Sqrt(MSDX2(1)))) + (A0(Sqrt(MSDX2(0)))
+         - A0(Sqrt(MSDX2(1)))) * (Kappa * Lambdax * vu * Sin2ThetaSDX / vd +
+         Cos2ThetaSDX * (0.2 * Sqr(g1) + 0.025 * Sqr(g1p) * QHd * (QDX - QDXbar))));
+
+      const double MSI02 = upper_bound.calculate_MSI02(gen);
+
+      t1_inert_singlet += 0.025 * oneOver16PiSqr * vd * Sqr(g1p) * QHd * QS *
+         A0(Sqrt(MSI02));
+   }
+
+   double t1_inert_neutral = 0.;
+   double t1_inert_charged = 0.;
+
+   for (unsigned gen = 0; gen < 2; ++gen) {
+      const double Lambda = model.get_Lambda12(gen, gen);
+      const Eigen::Array<double,2,1> MHI02(upper_bound.calculate_MHI02(gen));
+      const double Sin2ThetaHI0 = upper_bound.calculate_Sin2ThetaHI0(gen);
+      const double Cos2ThetaHI0 = upper_bound.calculate_Cos2ThetaHI0(gen);
+
+      t1_inert_neutral += 0.5 * oneOver16PiSqr * vd * (0.025 * Sqr(g1p) * QHd *
+         (QHd + QHu) * (A0(Sqrt(MHI02(0))) + A0(Sqrt(MHI02(1)))) + (A0(Sqrt(MHI02(1)))
+         - A0(Sqrt(MHI02(0)))) * (Lambda * Lambdax * vu * Sin2ThetaHI0 / vd -
+         Cos2ThetaHI0 * (0.5 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHd * (QHd - QHu))));
+
+      const Eigen::Array<double,2,1> MHIPM2(upper_bound.calculate_MHIPM2(gen));
+      const double Sin2ThetaHIPM = upper_bound.calculate_Sin2ThetaHIPM(gen);
+      const double Cos2ThetaHIPM = upper_bound.calculate_Cos2ThetaHIPM(gen);
+
+      t1_inert_charged += 0.5 * oneOver16PiSqr * vd * (0.025 * Sqr(g1p) * QHd *
+         (QHd + QHu) * (A0(Sqrt(MHIPM2(0))) + A0(Sqrt(MHIPM2(1)))) +
+         (A0(Sqrt(MHIPM2(0))) - A0(Sqrt(MHIPM2(1)))) * (Lambda * Lambdax * vu *
+         Sin2ThetaHIPM / vd - Cos2ThetaHIPM * (0.5 * (Sqr(g2) - 0.6 * Sqr(g1)) -
+         0.025 * Sqr(g1p) * QHd * (QHd - QHu))));
+   }
+
+   return t1_up + t1_down + t1_exotic + t1_inert_neutral + t1_inert_singlet
+      + t1_inert_charged;
+}
+
+double get_tadpole_hh_1(const CNE6SSM_mass_eigenstates& model)
+{
+   const double Lambdax = model.get_Lambdax();
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+   const double g1p = model.get_g1p();
+   const double vd = model.get_vd();
+   const double vu = model.get_vu();
+   const double vs = model.get_vs();
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   A0_fn A0(model.get_scale());
+
+   const double QHd = -3.0;
+   const double QHu = -2.0;
+   const double QQ = 1.0;
+   const double Qu = 1.0;
+   const double Qd = 2.0;
+   const double QDX = -2.0;
+   const double QDXbar = -3.0;
+   const double QS = model.get_QS();
+
+   double t2_up = 0.;
+   double t2_down = 0.;
+   double t2_exotic = 0.;
+   double t2_inert_singlet = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      const double yu = model.get_Yu(gen, gen);
+      const double Tyu = model.get_TYu(gen, gen);
+      const Eigen::Array<double,2,1> MSu2(upper_bound.calculate_MSu2(gen));
+      const double MFu2 = upper_bound.calculate_MFu2(gen);
+      const double Sin2ThetaSu = upper_bound.calculate_Sin2ThetaSu(gen);
+      const double Cos2ThetaSu = upper_bound.calculate_Cos2ThetaSu(gen);
+
+      t2_up += -6.0 * oneOver16PiSqr * vu * Sqr(yu) * A0(Sqrt(MFu2)) + 1.5 *
+         oneOver16PiSqr * vu * ((A0(Sqrt(MSu2(0))) + A0(Sqrt(MSu2(1)))) * (-0.25 *
+         Sqr(gbar) + 0.025 * Sqr(g1p) * QHu * (QQ + Qu) + 2.0 * Sqr(yu)) +
+         (A0(Sqrt(MSu2(1))) - A0(Sqrt(MSu2(0)))) * (Sqrt(2.0) * Tyu * Sin2ThetaSu
+         / vu + Cos2ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) - 0.025 * Sqr(g1p) * QHu
+         * (QQ - Qu))));
+
+      const double yd = model.get_Yd(gen, gen);
+      const Eigen::Array<double,2,1> MSd2(upper_bound.calculate_MSd2(gen));
+      const double Sin2ThetaSd = upper_bound.calculate_Sin2ThetaSd(gen);
+      const double Cos2ThetaSd = upper_bound.calculate_Cos2ThetaSd(gen);
+
+      t2_down += 1.5 * oneOver16PiSqr * vu * ((A0(Sqrt(MSd2(0))) + A0(Sqrt(MSd2(1))))
+         * (0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHu * (QQ + Qd)) + (A0(Sqrt(MSd2(0)))
+         - A0(Sqrt(MSd2(1)))) * (Lambdax * yd * vs * Sin2ThetaSd / vu + Cos2ThetaSd *
+         (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) + 0.025 * Sqr(g1p) * QHu * (QQ - Qd))));
+
+      const double Kappa = model.get_Kappa(gen, gen);
+      const Eigen::Array<double,2,1> MSDX2(upper_bound.calculate_MSDX2(gen));
+      const double Sin2ThetaSDX = upper_bound.calculate_Sin2ThetaSDX(gen);
+      const double Cos2ThetaSDX = upper_bound.calculate_Cos2ThetaSDX(gen);
+
+      t2_exotic += 1.5 * oneOver16PiSqr * vu * (0.025 * Sqr(g1p) * QHu * (QDX + QDXbar)
+         * (A0(Sqrt(MSDX2(0))) + A0(Sqrt(MSDX2(1)))) + (A0(Sqrt(MSDX2(0))) -
+         A0(Sqrt(MSDX2(1)))) * (Kappa * Lambdax * vd * Sin2ThetaSDX / vu + Cos2ThetaSDX
+         * (-0.2 * Sqr(g1) + 0.025 * Sqr(g1p) * QHu * (QDX - QDXbar))));
+
+      const double MSI02 = upper_bound.calculate_MSI02(gen);
+
+      t2_inert_singlet += 0.025 * oneOver16PiSqr * vu * Sqr(g1p) * QHu * QS *
+         A0(Sqrt(MSI02));
+   }
+
+   double t2_inert_neutral = 0.;
+   double t2_inert_charged = 0.;
+
+   for (unsigned gen = 0; gen < 2; ++gen) {
+      const double Lambda = model.get_Lambda12(gen, gen);
+      const Eigen::Array<double,2,1> MHI02(upper_bound.calculate_MHI02(gen));
+      const double Sin2ThetaHI0 = upper_bound.calculate_Sin2ThetaHI0(gen);
+      const double Cos2ThetaHI0 = upper_bound.calculate_Cos2ThetaHI0(gen);
+
+      t2_inert_neutral += 0.5 * oneOver16PiSqr * vu * (0.025 * Sqr(g1p) * QHu *
+         (QHd + QHu) * (A0(Sqrt(MHI02(0))) + A0(Sqrt(MHI02(1)))) + (A0(Sqrt(MHI02(1)))
+         - A0(Sqrt(MHI02(0)))) * (Lambda * Lambdax * vd * Sin2ThetaHI0 / vu +
+         Cos2ThetaHI0 * (0.5 * Sqr(gbar) - 0.025 * Sqr(g1p) * QHu * (QHd - QHu))));
+
+      const Eigen::Array<double,2,1> MHIPM2(upper_bound.calculate_MHIPM2(gen));
+      const double Sin2ThetaHIPM = upper_bound.calculate_Sin2ThetaHIPM(gen);
+      const double Cos2ThetaHIPM = upper_bound.calculate_Cos2ThetaHIPM(gen);
+
+      t2_inert_charged += 0.5 * oneOver16PiSqr * vu * (0.025 * Sqr(g1p) * QHu *
+         (QHd + QHu) * (A0(Sqrt(MHIPM2(0))) + A0(Sqrt(MHIPM2(1)))) +
+         (A0(Sqrt(MHIPM2(0))) - A0(Sqrt(MHIPM2(1)))) * (Lambda * Lambdax * vd *
+         Sin2ThetaHIPM / vu + Cos2ThetaHIPM * (0.5 * (Sqr(g2) - 0.6 * Sqr(g1)) +
+         0.025 * Sqr(g1p) * QHu * (QHd - QHu))));
+   }
+
+   return t2_up + t2_down + t2_exotic + t2_inert_neutral + t2_inert_singlet
+      + t2_inert_charged;
+}
+
+BOOST_AUTO_TEST_CASE( test_analytic_tadpoles )
+{
+   CNE6SSM_mass_eigenstates model;
+
+   set_test_model_parameters(model);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   upper_bound.set_include_all_SM_generations(true);
+   upper_bound.set_include_up_tadpoles(true);
+   upper_bound.set_include_down_tadpoles(true);
+   upper_bound.set_include_exotic_tadpoles(true);
+   upper_bound.set_include_inert_singlet_tadpoles(true);
+   upper_bound.set_include_inert_neutral_higgs_tadpoles(true);
+   upper_bound.set_include_inert_charged_higgs_tadpoles(true);
+
+   const double t1 = upper_bound.get_tadpole_vd();
+   const double t2 = upper_bound.get_tadpole_vu();
+
+   const double expect_t1 = get_tadpole_hh_0(model);
+   const double expect_t2 = get_tadpole_hh_1(model);
+
+   BOOST_CHECK_CLOSE(t1, expect_t1, 1.0e-10);
+   BOOST_CHECK_CLOSE(t2, expect_t2, 1.0e-10);
 }
 
 double get_Delta00tPr(const CNE6SSM_mass_eigenstates& model)

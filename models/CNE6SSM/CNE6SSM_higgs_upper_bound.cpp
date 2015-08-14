@@ -1395,7 +1395,8 @@ double CNE6SSM_higgs_upper_bound::get_dV1lp_inert_singlet_dvd(unsigned gen) cons
 {
    const double vd = model.get_vd();
    const double g1p = model.get_g1p();
-   const double dMS2_dvd = -0.375 * Sqr(g1p) * vd;
+   const double QS = model.get_QS();
+   const double dMS2_dvd = -0.075 * QS * Sqr(g1p) * vd;
 
    const double MS2 = calculate_MSI02(gen);
    const double scale = model.get_scale();
@@ -1410,7 +1411,8 @@ double CNE6SSM_higgs_upper_bound::get_dV1lp_inert_singlet_dvu(unsigned gen) cons
 {
    const double vu = model.get_vu();
    const double g1p = model.get_g1p();
-   const double dMS2_dvu = -0.25 * Sqr(g1p) * vu;
+   const double QS = model.get_QS();
+   const double dMS2_dvu = -0.05 * QS * Sqr(g1p) * vu;
 
    const double MS2 = calculate_MSI02(gen);
    const double scale = model.get_scale();
@@ -2029,9 +2031,10 @@ double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_singlet_dvd_dvd(unsigned gen)
 {
    const double g1p = model.get_g1p();
    const double vd = model.get_vd();
+   const double QS = model.get_QS();
 
-   const double dMS2_dvd = -0.375 * Sqr(g1p) * vd;
-   const double d2MS2_dvd_dvd = -0.375 * Sqr(g1p);
+   const double dMS2_dvd = -0.075 * QS * Sqr(g1p) * vd;
+   const double d2MS2_dvd_dvd = -0.075 * QS * Sqr(g1p);
 
    const double MS2 = calculate_MSI02(gen);
 
@@ -2050,9 +2053,10 @@ double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_singlet_dvd_dvu(unsigned gen)
    const double g1p = model.get_g1p();
    const double vd = model.get_vd();
    const double vu = model.get_vu();
+   const double QS = model.get_QS();
 
-   const double dMS2_dvd = - 0.375 * Sqr(g1p) * vd;
-   const double dMS2_dvu = -0.25 * Sqr(g1p) * vu;
+   const double dMS2_dvd = - 0.075 * QS * Sqr(g1p) * vd;
+   const double dMS2_dvu = -0.05 * QS * Sqr(g1p) * vu;
 
    const double MS2 = calculate_MSI02(gen);
 
@@ -2069,9 +2073,10 @@ double CNE6SSM_higgs_upper_bound::get_d2V1lp_inert_singlet_dvu_dvu(unsigned gen)
 {
    const double g1p = model.get_g1p();
    const double vu = model.get_vu();
+   const double QS = model.get_QS();
 
-   const double dMS2_dvu = -0.25 * Sqr(g1p) * vu;
-   const double d2MS2_dvu_dvu = -0.25 * Sqr(g1p);
+   const double dMS2_dvu = -0.05 * QS * Sqr(g1p) * vu;
+   const double d2MS2_dvu_dvu = -0.05 * QS * Sqr(g1p);
 
    const double MS2 = calculate_MSI02(gen);
 
