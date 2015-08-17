@@ -1528,6 +1528,122 @@ double get_d2V1lp_up_dvd_dvd(const CNE6SSM_mass_eigenstates& model)
    return result;
 }
 
+double get_d2V1lp_up_dvd_dvu(const CNE6SSM_mass_eigenstates& model)
+{
+   const double Lambdax = model.get_Lambdax();
+   const double vd = model.get_vd();
+   const double vu = model.get_vu();
+   const double vs = model.get_vs();
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+
+   const double QHd = -3.0;
+   const double QHu = -2.0;
+   const double QQ = 1.0;
+   const double Qu = 1.0;
+
+   const double scale = model.get_scale();
+   A0_fn A0(scale);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   double result = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      const Eigen::Array<double,2,1> MSu2(upper_bound.calculate_MSu2(gen));
+      const double Sin2ThetaSu = upper_bound.calculate_Sin2ThetaSu(gen);
+      const double Cos2ThetaSu = upper_bound.calculate_Cos2ThetaSu(gen);
+      const double Sin4ThetaSu = 2.0 * Sin2ThetaSu * Cos2ThetaSu;
+
+      const double inverse_mass_diff = 1.0 / (MSu2(1) - MSu2(0));
+
+      const double yf = model.get_Yu(gen, gen);
+      const double Tyf = model.get_TYu(gen, gen);
+
+      result += 1.5 * oneOver16PiSqr * (0.5 * vd * vu * Log(MSu2(0) * MSu2(1)
+         / Power(scale, 4)) * ((0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHd *
+         (QQ + Qu)) * (-0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHu * (QQ + Qu)
+         + 2.0 * Sqr(yf)) - (Lambdax * yf * vs * Sin2ThetaSu / vd +
+         Cos2ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) + 0.025 * Sqr(g1p) * QHd *
+         (QQ - Qu))) * (Sqrt(2.0) * Tyf * Sin2ThetaSu / vu + Cos2ThetaSu * (
+         0.25 * (Sqr(g2) - Sqr(g1)) - 0.025 * Sqr(g1p) * QHu * (QQ - Qu)))) +
+         0.5 * vd * vu * Log(MSu2(1) / MSu2(0)) * ((0.25 * Sqr(gbar) + 0.025
+         * Sqr(g1p) * QHd * (QQ + Qu)) * (Sqrt(2.0) * Tyf * Sin2ThetaSu / vu
+         + Cos2ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) - 0.025 * Sqr(g1p) * QHu
+         * (QQ - Qu))) - (-0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHu * (QQ +
+         Qu) + 2.0 * Sqr(yf)) * (Lambdax * yf * vs * Sin2ThetaSu / vd +
+         Cos2ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) + 0.025 * Sqr(g1p) * QHd
+         * (QQ - Qu)))) + vd * vu * inverse_mass_diff * (A0(Sqrt(MSu2(1))) -
+         A0(Sqrt(MSu2(0)))) * (Sqr(Sin2ThetaSu) * (0.25 * (Sqr(g2) - Sqr(g1))
+         + 0.025 * Sqr(g1p) * QHd * (QQ - Qu)) * (0.25 * (Sqr(g2) - Sqr(g1))
+         - 0.025 * Sqr(g1p) * QHu * (QQ - Qu)) + Sqrt(2.0) * Lambdax * yf *
+         Tyf * vs * Sqr(Cos2ThetaSu) / (vd * vu) - Sin4ThetaSu * (Tyf * (0.25
+         * (Sqr(g2) - Sqr(g1)) + 0.025 * Sqr(g1p) * QHd * (QQ - Qu)) / (Sqrt(
+         2.0) * vu) + yf * Lambdax * vs * (0.25 * (Sqr(g2) - Sqr(g1)) - 0.025
+         * Sqr(g1p) * QHu * (QQ - Qu)) / (2.0 * vd))));
+   }
+
+   return result;
+}
+
+double get_d2V1lp_up_dvu_dvu(const CNE6SSM_mass_eigenstates& model)
+{
+   const double vu = model.get_vu();
+
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+
+   const double QHu = -2.0;
+   const double QQ = 1.0;
+   const double Qu = 1.0;
+
+   const double scale = model.get_scale();
+   A0_fn A0(scale);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   double result = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      const Eigen::Array<double,2,1> MSu2(upper_bound.calculate_MSu2(gen));
+      const double Sin2ThetaSu = upper_bound.calculate_Sin2ThetaSu(gen);
+      const double Cos2ThetaSu = upper_bound.calculate_Cos2ThetaSu(gen);
+      const double Sin4ThetaSu = 2.0 * Sin2ThetaSu * Cos2ThetaSu;
+      const double MFu2 = upper_bound.calculate_MFu2(gen);
+
+      const double inverse_mass_diff = 1.0 / (MSu2(1) - MSu2(0));
+
+      const double yf = model.get_Yu(gen, gen);
+      const double Tyf = model.get_TYu(gen, gen);
+
+      result += 1.5 * oneOver16PiSqr * (0.5 * Sqr(vu) * Log(MSu2(0) * MSu2(1)
+         / Power(scale, 4)) * (Sqr(0.25 * Sqr(gbar) - 0.025 * Sqr(g1p) * QHu
+         * (QQ + Qu) - 2.0 * Sqr(yf)) + Sqr(Sqrt(2.0) * Tyf * Sin2ThetaSu /
+         vu + Cos2ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) - 0.025 * Sqr(g1p) *
+         QHu * (QQ - Qu)))) - Sqr(vu) * Log(MSu2(1) / MSu2(0)) * (0.25 *
+         Sqr(gbar) - 0.025 * Sqr(g1p) * QHu * (QQ + Qu) - 2.0 * Sqr(yf)) * (
+         Sqrt(2.0) * Tyf * Sin2ThetaSu / vu + Cos2ThetaSu * (0.25 * (Sqr(g2)
+         - Sqr(g1)) - 0.025 * Sqr(g1p) * QHu * (QQ - Qu))) + (0.25 * Sqr(gbar)
+         - 0.025 * Sqr(g1p) * QHu * (QQ + Qu) - 2.0 * Sqr(yf)) * (A0(Sqrt(MSu2(
+         0))) + A0(Sqrt(MSu2(1)))) - (A0(Sqrt(MSu2(1))) - A0(Sqrt(MSu2(0)))) *
+         (Cos2ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) - 0.025 * Sqr(g1p) * QHu *
+         (QQ - Qu)) + Sqr(vu) * inverse_mass_diff * (Sqr(Sin2ThetaSu) * Sqr(
+         0.25 * (Sqr(g2) - Sqr(g1)) - 0.025 * Sqr(g1p) * QHu * (QQ - Qu)) +
+         2.0 * Sqr(Tyf) * Sqr(Cos2ThetaSu) / Sqr(vu) - Sqrt(2.0) * Tyf *
+         Sin4ThetaSu * (0.25 * (Sqr(g2) - Sqr(g1)) - 0.025 * Sqr(g1p) * QHu *
+         (QQ - Qu)) / vu )) - 4.0 * Power(yf, 4) * Sqr(vu) * Log(MFu2 / Sqr(
+         scale)) + 4.0 * Sqr(yf) * A0(Sqrt(MFu2)));
+   }
+
+   return result;
+}
+
 BOOST_AUTO_TEST_CASE( test_analytic_up_contributions )
 {
    CNE6SSM_mass_eigenstates model;
@@ -1537,13 +1653,21 @@ BOOST_AUTO_TEST_CASE( test_analytic_up_contributions )
    CNE6SSM_higgs_upper_bound upper_bound(model);
 
    double Delta00Pr = 0.;
+   double Delta01Pr = 0.;
+   double Delta11Pr = 0.;
    for (unsigned gen = 0; gen < 3; ++gen) {
       Delta00Pr += upper_bound.get_unrotated_up_contribution(gen, 0, 0);
+      Delta01Pr += upper_bound.get_unrotated_up_contribution(gen, 0, 1);
+      Delta11Pr += upper_bound.get_unrotated_up_contribution(gen, 1, 1);
    }
 
    const double Delta00Pr_expect = get_d2V1lp_up_dvd_dvd(model);
+   const double Delta01Pr_expect = get_d2V1lp_up_dvd_dvu(model);
+   const double Delta11Pr_expect = get_d2V1lp_up_dvu_dvu(model);
 
    BOOST_CHECK_CLOSE(Delta00Pr, Delta00Pr_expect, 1.0e-10);
+   BOOST_CHECK_CLOSE(Delta01Pr, Delta01Pr_expect, 1.0e-10);
+   BOOST_CHECK_CLOSE(Delta11Pr, Delta11Pr_expect, 1.0e-10);
 }
 
 double get_d2V1lp_down_dvd_dvd(const CNE6SSM_mass_eigenstates& model)
@@ -1603,6 +1727,7 @@ double get_d2V1lp_down_dvd_dvd(const CNE6SSM_mass_eigenstates& model)
 double get_d2V1lp_down_dvd_dvu(const CNE6SSM_mass_eigenstates& model)
 {
    const double Lambdax = model.get_Lambdax();
+   const double vd = model.get_vd();
    const double vu = model.get_vu();
    const double vs = model.get_vs();
    const double g1 = model.get_g1();
@@ -1632,8 +1757,29 @@ double get_d2V1lp_down_dvd_dvu(const CNE6SSM_mass_eigenstates& model)
       const double inverse_mass_diff = 1.0 / (MSd2(1) - MSd2(0));
 
       const double yf = model.get_Yd(gen, gen);
+      const double Tyf = model.get_TYd(gen, gen);
 
-      result += 0.;
+      result += 1.5 * oneOver16PiSqr * (0.5 * vd * vu * Log(MSd2(0) * MSd2(1)
+         / Power(scale, 4)) * ((-0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHd *
+         (QQ + Qd) + 2.0 * Sqr(yf)) * (0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) *
+         QHu * (QQ + Qd)) - (Sqrt(2.0) * Tyf * Sin2ThetaSd / vd + Cos2ThetaSd
+         * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.025 * Sqr(g1p) * QHd * (QQ -
+         Qd))) * (Lambdax * yf * vs * Sin2ThetaSd / vu + Cos2ThetaSd * (0.25
+         * (Sqr(g2) - 0.2 * Sqr(g1)) + 0.025 * Sqr(g1p) * QHu * (QQ - Qd))))
+         + 0.5 * vd * vu * Log(MSd2(1) / MSd2(0)) * ((0.25 * Sqr(gbar) + 0.025
+         * Sqr(g1p) * QHu * (QQ + Qd)) * (Sqrt(2.0) * Tyf * Sin2ThetaSd / vd +
+         Cos2ThetaSd * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.025 * Sqr(g1p) *
+         QHd * (QQ - Qd))) - (-0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHd * (QQ
+         + Qd) + 2.0 * Sqr(yf)) * (Lambdax * yf * vs * Sin2ThetaSd / vu +
+         Cos2ThetaSd * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) + 0.025 * Sqr(g1p) *
+         QHu * (QQ - Qd)))) + vd * vu * inverse_mass_diff * (A0(Sqrt(MSd2(1)))
+         - A0(Sqrt(MSd2(0)))) * (Sqr(Sin2ThetaSd) * (0.25 * (Sqr(g2) - 0.2 *
+         Sqr(g1)) - 0.025 * Sqr(g1p) * QHd * (QQ - Qd)) * (0.25 * (Sqr(g2) -
+         0.2 * Sqr(g1)) + 0.025 * Sqr(g1p) * QHu * (QQ - Qd)) + Sqrt(2.0) *
+         Lambdax * yf * Tyf * vs * Sqr(Cos2ThetaSd) / (vd * vu) - Sin4ThetaSd *
+         (Tyf * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) + 0.025 * Sqr(g1p) * QHu * (QQ
+         - Qd)) / (Sqrt(2.0) * vd) + yf * Lambdax * vs * (0.25 * (Sqr(g2) - 0.2
+         * Sqr(g1)) - 0.025 * Sqr(g1p) * QHd * (QQ - Qd)) / (2.0 * vu))));
    }
 
    return result;
