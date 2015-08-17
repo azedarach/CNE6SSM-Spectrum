@@ -1546,6 +1546,99 @@ BOOST_AUTO_TEST_CASE( test_analytic_up_contributions )
    BOOST_CHECK_CLOSE(Delta00Pr, Delta00Pr_expect, 1.0e-10);
 }
 
+double get_d2V1lp_down_dvd_dvd(const CNE6SSM_mass_eigenstates& model)
+{
+   const double vd = model.get_vd();
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+
+   const double QHd = -3.0;
+   const double QQ = 1.0;
+   const double Qd = 2.0;
+
+   const double scale = model.get_scale();
+   A0_fn A0(scale);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   double result = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      const Eigen::Array<double,2,1> MSd2(upper_bound.calculate_MSd2(gen));
+      const double Sin2ThetaSd = upper_bound.calculate_Sin2ThetaSd(gen);
+      const double Cos2ThetaSd = upper_bound.calculate_Cos2ThetaSd(gen);
+      const double Sin4ThetaSd = 2.0 * Sin2ThetaSd * Cos2ThetaSd;
+      const double MFd2 = upper_bound.calculate_MFd2(gen);
+
+      const double inverse_mass_diff = 1.0 / (MSd2(1) - MSd2(0));
+
+      const double yf = model.get_Yd(gen, gen);
+      const double Tyf = model.get_TYd(gen, gen);
+
+      result += 1.5 * oneOver16PiSqr * (0.5 * Sqr(vd) * Log(MSd2(0) * MSd2(1)
+         / Power(scale, 4)) * (Sqr(-0.25 * Sqr(gbar) + 0.025 * Sqr(g1p) * QHd
+         * (QQ + Qd) + 2.0 * Sqr(yf)) + Sqr(Sqrt(2.0) * Tyf * Sin2ThetaSd /
+         vd + Cos2ThetaSd * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.025 * Sqr(g1p)
+         * QHd * (QQ - Qd)))) + Sqr(vd) * Log(MSd2(1) / MSd2(0)) * (-0.25 *
+         Sqr(gbar) + 0.025 * Sqr(g1p) * QHd * (QQ + Qd) + 2.0 * Sqr(yf)) * (
+         Sqrt(2.0) * Tyf * Sin2ThetaSd / vd + Cos2ThetaSd * (0.25 * (Sqr(g2) -
+         0.2 * Sqr(g1)) - 0.025 * Sqr(g1p) * QHd * (QQ - Qd))) - (-0.25 * Sqr(
+         gbar) + 0.025 * Sqr(g1p) * QHd * (QQ + Qd) + 2.0 * Sqr(yf)) * (A0(Sqrt(
+         MSd2(0))) + A0(Sqrt(MSd2(1)))) - (A0(Sqrt(MSd2(1))) - A0(Sqrt(MSd2(0))))
+         * (Cos2ThetaSd * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.025 * Sqr(g1p) *
+         QHd * (QQ - Qd)) + Sqr(vd) * inverse_mass_diff * (Sqr(Sin2ThetaSd) * Sqr(
+         0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.025 * Sqr(g1p) * QHd * (QQ - Qd)) +
+         2.0 * Sqr(Tyf) * Sqr(Cos2ThetaSd) / Sqr(vd) - Sqrt(2.0) * Tyf *
+         Sin4ThetaSd * (0.25 * (Sqr(g2) - 0.2 * Sqr(g1)) - 0.025 * Sqr(g1p) * QHd
+         * (QQ - Qd)) / vd )) - 4.0 * Power(yf, 4) * Sqr(vd) * Log(MFd2 /
+         Sqr(scale)) + 4.0 * Sqr(yf) * A0(Sqrt(MFd2)));
+   }
+
+   return result;
+}
+
+double get_d2V1lp_down_dvd_dvu(const CNE6SSM_mass_eigenstates& model)
+{
+   const double Lambdax = model.get_Lambdax();
+   const double vu = model.get_vu();
+   const double vs = model.get_vs();
+   const double g1 = model.get_g1();
+   const double g2 = model.get_g2();
+   const double g1p = model.get_g1p();
+
+   const double gbar = Sqrt(Sqr(g2) + 0.6 * Sqr(g1));
+
+   const double QHd = -3.0;
+   const double QHu = -2.0;
+   const double QQ = 1.0;
+   const double Qd = 2.0;
+
+   const double scale = model.get_scale();
+   A0_fn A0(scale);
+
+   CNE6SSM_higgs_upper_bound upper_bound(model);
+
+   double result = 0.;
+
+   for (unsigned gen = 0; gen < 3; ++gen) {
+      const Eigen::Array<double,2,1> MSd2(upper_bound.calculate_MSd2(gen));
+      const double Sin2ThetaSd = upper_bound.calculate_Sin2ThetaSd(gen);
+      const double Cos2ThetaSd = upper_bound.calculate_Cos2ThetaSd(gen);
+      const double Sin4ThetaSd = 2.0 * Sin2ThetaSd * Cos2ThetaSd;
+
+      const double inverse_mass_diff = 1.0 / (MSd2(1) - MSd2(0));
+
+      const double yf = model.get_Yd(gen, gen);
+
+      result += 0.;
+   }
+
+   return result;
+}
+
 double get_d2V1lp_down_dvu_dvu(const CNE6SSM_mass_eigenstates& model)
 {
    const double Lambdax = model.get_Lambdax();
@@ -1608,13 +1701,21 @@ BOOST_AUTO_TEST_CASE( test_analytic_down_contributions )
 
    CNE6SSM_higgs_upper_bound upper_bound(model);
 
+   double Delta00Pr = 0.;
+   double Delta01Pr = 0.;
    double Delta11Pr = 0.;
    for (unsigned gen = 0; gen < 3; ++gen) {
+      Delta00Pr += upper_bound.get_unrotated_down_contribution(gen, 0, 0);
+      Delta01Pr += upper_bound.get_unrotated_down_contribution(gen, 0, 1);
       Delta11Pr += upper_bound.get_unrotated_down_contribution(gen, 1, 1);
    }
 
+   const double Delta00Pr_expect = get_d2V1lp_down_dvd_dvd(model);
+   const double Delta01Pr_expect = get_d2V1lp_down_dvd_dvu(model);
    const double Delta11Pr_expect = get_d2V1lp_down_dvu_dvu(model);
 
+   BOOST_CHECK_CLOSE(Delta00Pr, Delta00Pr_expect, 1.0e-10);
+   BOOST_CHECK_CLOSE(Delta01Pr, Delta01Pr_expect, 1.0e-10);
    BOOST_CHECK_CLOSE(Delta11Pr, Delta11Pr_expect, 1.0e-10);
 }
 
