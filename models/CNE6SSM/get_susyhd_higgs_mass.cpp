@@ -23,6 +23,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <Eigen/Core>
+
 namespace flexiblesusy {
 
 void print_usage()
@@ -505,6 +507,7 @@ void set_command_line_args(int argc, const char* argv[], std::string& susy_pars_
 
       if (strcmp(option,"--use-mssm-mA") == 0) {
          use_MSSM_mA = true;
+         continue;
       }
 
       if (strcmp(option,"--help") == 0 || strcmp(option,"-h") == 0) {
@@ -519,7 +522,8 @@ void set_command_line_args(int argc, const char* argv[], std::string& susy_pars_
 
 void print_result_header(int width)
 {
-   std::cout << std::left << std::setw(width) << "m12/GeV" << ' '
+   std::cout << "#" << ' '
+             << std::left << std::setw(width) << "m12/GeV" << ' '
              << std::left << std::setw(width) << "Azero/GeV" << ' '
              << std::left << std::setw(width) << "TanBeta" << ' '
              << std::left << std::setw(width) << "sInput/GeV" << ' '
@@ -594,11 +598,12 @@ void print_result_header(int width)
              << std::left << std::setw(width) << "mL1(MS)/GeV" << ' '
              << std::left << std::setw(width) << "mE1(MS)/GeV" << ' '
              << std::left << std::setw(width) << "mA(MS)/GeV" << ' '
+             << std::left << std::setw(width) << "Rscale/GeV" << ' '
              << std::left << std::setw(width) << "MhhEFT/GeV" << ' '
              << std::left << std::setw(width) << "error" << '\n';
 }
 
-void print_result_line(const CNE6SSM_semianalytic_input_parameters<Two_scale>& inputs, const SUSYHD::SUSYHD_input_parameters& higgs_mass_inputs, double Mhh, int width)
+void print_result_line(const CNE6SSM_semianalytic_input_parameters<Two_scale>& inputs, const SUSYHD::SUSYHD_input_parameters& higgs_mass_inputs, double Rscale, double Mhh, int width)
 {
    const bool error = (Mhh < 1.0 ? true : false);
 
@@ -678,6 +683,7 @@ void print_result_line(const CNE6SSM_semianalytic_input_parameters<Two_scale>& i
              << std::left << std::setw(width) << higgs_mass_inputs.mL1 << ' '
              << std::left << std::setw(width) << higgs_mass_inputs.mE1 << ' '
              << std::left << std::setw(width) << higgs_mass_inputs.mA << ' '
+             << std::left << std::setw(width) << Rscale << ' '
              << std::left << std::setw(width) << Mhh << ' '
              << std::left << std::setw(width) << error << ' ';
    if (Mhh < 1.0) {
@@ -764,12 +770,26 @@ int main(int argc, const char* argv[])
          CNE6SSM_mass_eigenstates model(
             initialize_model_from_datapoint(susy_pars_line, soft_pars_line, columns));
 
+         model.calculate_DRbar_masses();
+
+         const Eigen::Array<double,6,1> MSu(model.get_MSu());
+         const Eigen::Matrix<double,6,6> ZU(model.get_ZU());
+         const double Rscale = Sqrt(Power(MSu(0),Sqr(Abs(ZU(0,2)))
+            + Sqr(Abs(ZU(0,5))))*Power(MSu(1),Sqr(Abs(ZU(1,2))) +
+            Sqr(Abs(ZU(1,5))))*Power(MSu(2),Sqr(Abs(ZU(2,2))) +
+            Sqr(Abs(ZU(2,5))))*Power(MSu(3),Sqr(Abs(ZU(3,2))) +
+            Sqr(Abs(ZU(3,5))))*Power(MSu(4),Sqr(Abs(ZU(4,2))) +
+            Sqr(Abs(ZU(4,5))))*Power(MSu(5),Sqr(Abs(ZU(5,2))) +
+            Sqr(Abs(ZU(5,5)))));
+
          SUSYHD::SUSYHD_input_parameters higgs_mass_inputs
             = match_to_MSSM(model, use_MSSM_mA);
 
+         susyhd.set_Rscale(Rscale);
+
          const double eft_mhh = susyhd.calculate_MHiggs(higgs_mass_inputs);
 
-         print_result_line(inputs, higgs_mass_inputs, eft_mhh, width);
+         print_result_line(inputs, higgs_mass_inputs, Rscale, eft_mhh, width);
       }
    } catch (const mathematica::Error& error) {
       ERROR(error.what());
