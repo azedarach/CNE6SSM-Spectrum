@@ -29,7 +29,7 @@ ENABLE_VERBOSE        := @ENABLE_VERBOSE@
 MODELS             := @MODELS@
 ADDONS             := @ADDONS@
 MODULES            := config src fflite legacy slhaea doc
-MODULES            += $(MODELS) $(ADDONS)
+MODULES            += $(ADDONS) $(MODELS)
 MODULES            += test examples
 
 # Variables for Mathematica meta code
