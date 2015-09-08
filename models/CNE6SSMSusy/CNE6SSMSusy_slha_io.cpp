@@ -22,7 +22,7 @@
 #include "CNE6SSMSusy_two_scale_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
-#include "numerics.hpp"
+#include "numerics2.hpp"
 #include "spectrum_generator_settings.hpp"
 #include "lowe.h"
 #include "config.h"

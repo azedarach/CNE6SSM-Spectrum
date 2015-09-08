@@ -27,7 +27,7 @@
  */
 
 #include "CNE6SSMSusy_two_scale_model.hpp"
-#include "numerics.hpp"
+#include "numerics2.hpp"
 #include "wrappers.hpp"
 #include "logger.hpp"
 #include "error.hpp"
