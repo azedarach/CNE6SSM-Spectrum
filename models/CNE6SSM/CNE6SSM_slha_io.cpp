@@ -302,7 +302,7 @@ void CNE6SSM_slha_io::set_mixing_matrices(const CNE6SSM_physical& physical,
                                               bool write_sm_mixing_matrics)
 {
    slha_io.set_block("UHNIMIX", LOCALPHYSICAL(UHI0), "UHI0");
-   slha_io.set_block("UHPPMIX", LOCALPHYSICAL(UHIPM), "UHIPM");
+   slha_io.set_block("UHIPMIX", LOCALPHYSICAL(UHIPM), "UHIPM");
    slha_io.set_block("UHNPMIX", LOCALPHYSICAL(UHp0), "UHp0");
    slha_io.set_block("UHPPMIX", LOCALPHYSICAL(UHpp), "UHpp");
    slha_io.set_block("UMIX", LOCALPHYSICAL(UM), "UM");
