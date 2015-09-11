@@ -269,6 +269,7 @@ void CNE6SSM_slha_io::set_model_parameters(const CNE6SSM_slha<T>& model)
    {
       std::ostringstream block;
       block << "Block HMIX Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(10, ArcTan((MODELPARAMETER(vu)) / (MODELPARAMETER(vd))), "Beta")
             << FORMAT_ELEMENT(30, (MODELPARAMETER(XiF)), "XiF")
             << FORMAT_ELEMENT(31, (MODELPARAMETER(MuPhi)), "MuPhi")
             << FORMAT_ELEMENT(32, (MODELPARAMETER(KappaPr)), "KappaPr")
@@ -376,6 +377,7 @@ void CNE6SSM_slha_io::set_model_parameters(const CNE6SSM_semianalytic_slha<T>& m
    {
       std::ostringstream block;
       block << "Block HMIX Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(10, ArcTan((MODELPARAMETER(vu)) / (MODELPARAMETER(vd))), "Beta")
             << FORMAT_ELEMENT(30, (MODELPARAMETER(XiF)), "XiF")
             << FORMAT_ELEMENT(31, (MODELPARAMETER(MuPhi)), "MuPhi")
             << FORMAT_ELEMENT(32, (MODELPARAMETER(KappaPr)), "KappaPr")
