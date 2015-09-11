@@ -113,7 +113,7 @@ public:
 
 private:
    SLHA_io slha_io; ///< SLHA io class
-   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 30;
+   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 31;
    static char const * const drbar_blocks[NUMBER_OF_DRBAR_BLOCKS];
 
    void set_mass(const CNE6SSM_physical&, bool);
@@ -333,7 +333,13 @@ void CNE6SSM_slha_io::set_model_parameters(const CNE6SSM_slha<T>& model)
    slha_io.set_block("ESIXTKAPPA", MODELPARAMETER(TKappa), "TKappa", model.get_scale());
    slha_io.set_block("ESIXLAMBDA", MODELPARAMETER(Lambda12), "Lambda12", model.get_scale());
    slha_io.set_block("ESIXTLAMBDA", MODELPARAMETER(TLambda12), "TLambda12", model.get_scale());
-
+   {
+      std::ostringstream block;
+      block << "Block PHASES Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(1, Re((MODELPARAMETER(PhaseGlu))), "Re(PhaseGlu)")
+         ;
+      slha_io.set_block(block);
+   }
 }
 
 /**
@@ -434,7 +440,13 @@ void CNE6SSM_slha_io::set_model_parameters(const CNE6SSM_semianalytic_slha<T>& m
    slha_io.set_block("ESIXTKAPPA", MODELPARAMETER(TKappa), "TKappa", model.get_scale());
    slha_io.set_block("ESIXLAMBDA", MODELPARAMETER(Lambda12), "Lambda12", model.get_scale());
    slha_io.set_block("ESIXTLAMBDA", MODELPARAMETER(TLambda12), "TLambda12", model.get_scale());
-
+   {
+      std::ostringstream block;
+      block << "Block PHASES Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(1, Re((MODELPARAMETER(PhaseGlu))), "Re(PhaseGlu)")
+         ;
+      slha_io.set_block(block);
+   }
 }
 
 /**
