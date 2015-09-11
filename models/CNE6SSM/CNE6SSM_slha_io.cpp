@@ -48,7 +48,7 @@ using namespace softsusy;
 namespace flexiblesusy {
 
 char const * const CNE6SSM_slha_io::drbar_blocks[NUMBER_OF_DRBAR_BLOCKS] =
-   { "gauge", "Yu", "Yd", "Ye", "Te", "Td", "Tu", "HMIX", "ESIXHEYUK",
+   { "gauge", "NCharge", "Yu", "Yd", "Ye", "Te", "Td", "Tu", "HMIX", "ESIXHEYUK",
    "ESIXRUN", "ESIXGDYUK", "ESIXFUYUK", "ESIXFDYUK", "ESIXTHETRI", "ESIXTGDTRI"
    , "ESIXTFUTRI", "ESIXTFDTRI", "MSQ2", "MSE2", "MSL2", "MSU2", "MSD2",
    "MSOFT", "mX2", "mXBar2", "ESIXKAPPA", "ESIXTKAPPA", "ESIXLAMBDA",
@@ -463,6 +463,7 @@ void CNE6SSM_slha_io::fill_drbar_parameters(CNE6SSM_mass_eigenstates& model) con
    model.set_g2(slha_io.read_entry("gauge", 2));
    model.set_g3(slha_io.read_entry("gauge", 3));
    model.set_g1p(slha_io.read_entry("gauge", 4));
+   model.set_QS(slha_io.read_entry("NCharge", 1));
    {
       DEFINE_PARAMETER(Yu);
       slha_io.read_block("Yu", Yu);

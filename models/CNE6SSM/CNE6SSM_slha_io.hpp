@@ -113,7 +113,7 @@ public:
 
 private:
    SLHA_io slha_io; ///< SLHA io class
-   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 29;
+   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 30;
    static char const * const drbar_blocks[NUMBER_OF_DRBAR_BLOCKS];
 
    void set_mass(const CNE6SSM_physical&, bool);
@@ -253,6 +253,13 @@ void CNE6SSM_slha_io::set_model_parameters(const CNE6SSM_slha<T>& model)
       ;
       slha_io.set_block(block);
    }
+   {
+      std::ostringstream block;
+      block << "Block NCharge Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(1, (MODELPARAMETER(QS)), "QS")
+         ;
+      slha_io.set_block(block);
+   }
    slha_io.set_block("Yu", ToMatrix(MODELPARAMETER(Yu_slha)), "Yu", model.get_scale());
    slha_io.set_block("Yd", ToMatrix(MODELPARAMETER(Yd_slha)), "Yd", model.get_scale());
    slha_io.set_block("Ye", ToMatrix(MODELPARAMETER(Ye_slha)), "Ye", model.get_scale());
@@ -345,6 +352,13 @@ void CNE6SSM_slha_io::set_model_parameters(const CNE6SSM_semianalytic_slha<T>& m
             << FORMAT_ELEMENT(3, (MODELPARAMETER(g3)), "g3")
             << FORMAT_ELEMENT(4, (MODELPARAMETER(g1p)), "g1p")
       ;
+      slha_io.set_block(block);
+   }
+   {
+      std::ostringstream block;
+      block << "Block NCharge Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(1, (MODELPARAMETER(QS)), "QS")
+         ;
       slha_io.set_block(block);
    }
    slha_io.set_block("Yu", ToMatrix(MODELPARAMETER(Yu_slha)), "Yu", model.get_scale());
