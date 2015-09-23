@@ -188,6 +188,7 @@ void lowMSSM_slha_io::set_model_parameters(const lowMSSM_slha<T>& model)
       std::ostringstream block;
       block << "Block HMIX Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
             << FORMAT_ELEMENT(1, (MODELPARAMETER(Mu)), "Mu")
+            << FORMAT_ELEMENT(10, ArcTan((MODELPARAMETER(vu)) / (MODELPARAMETER(vd))), "Beta")
             << FORMAT_ELEMENT(101, (MODELPARAMETER(BMu)), "BMu")
             << FORMAT_ELEMENT(102, (MODELPARAMETER(vd)), "vd")
             << FORMAT_ELEMENT(103, (MODELPARAMETER(vu)), "vu")
@@ -247,6 +248,7 @@ void lowMSSM_slha_io::set_extra(
             << FORMAT_ELEMENT(2, (MODELPARAMETER(vu)/MODELPARAMETER(vd)), "vu/vd")
             << FORMAT_ELEMENT(3, (Sqrt(Sqr(MODELPARAMETER(vd)) + Sqr(MODELPARAMETER(vu)))), "Sqrt(Sqr(vd) + Sqr(vu))")
             << FORMAT_ELEMENT(4, (Sqr(MODELPARAMETER(MAh)(1))), "Sqr(MAh(1))")
+            << FORMAT_ELEMENT(10, ArcTan((MODELPARAMETER(vu)) / (MODELPARAMETER(vd))), "Beta")
             << FORMAT_ELEMENT(101, (MODELPARAMETER(BMu)), "BMu")
             << FORMAT_ELEMENT(102, (MODELPARAMETER(vd)), "vd")
             << FORMAT_ELEMENT(103, (MODELPARAMETER(vu)), "vu")
