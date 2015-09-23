@@ -131,7 +131,7 @@ CLASSNAME::CNE6SSM_semianalytic(const CNE6SSM_semianalytic_input_parameters<Two_
    , MassWB_m12_coeff(0), MassG_Azero_coeff(0), MassG_m12_coeff(0)
    , MassBp_Azero_coeff(0), MassBp_m12_coeff(0)
    , saved_vd(0), saved_vu(0), saved_vs(0), saved_vsb(0)
-   , saved_vphi(0)
+   , saved_vphi(0), has_previous_ewsb_solution(false)
 {
 }
 
@@ -650,8 +650,10 @@ int CLASSNAME::solve_ewsb_iteratively()
 
    if (status == EWSB_solver::SUCCESS) {
       problems.unflag_no_ewsb();
+      has_previous_ewsb_solution = true;
    } else {
       problems.flag_no_ewsb();
+      has_previous_ewsb_solution = false;
 #ifdef ENABLE_VERBOSE
       WARNING("\tCould not find a solution to the EWSB equations!"
               " (requested precision: " << ewsb_iteration_precision << ")");
@@ -906,13 +908,17 @@ int CLASSNAME::ewsb_initial_guess(double x_init[number_of_ewsb_equations])
    // to solving the EWSB conditions at tree level
    // current approach: only take points for which a solution
    // is found at tree level (this is very conservative though)
-   const int status = solve_ewsb_tree_level();
+   int status = EWSB_solver::SUCCESS;
+
+   if (!has_previous_ewsb_solution) {
+      status = solve_ewsb_tree_level();
 
 #ifdef ENABLE_VERBOSE
-   if (status != EWSB_solver::SUCCESS) {
-      WARNING("\tCould not find solution to the tree level EWSB equations!");
-   }
+      if (status != EWSB_solver::SUCCESS) {
+         WARNING("\tCould not find solution to the tree level EWSB equations!");
+      }
 #endif
+   }
 
    const double sInput = LOCALINPUT(sInput);
 

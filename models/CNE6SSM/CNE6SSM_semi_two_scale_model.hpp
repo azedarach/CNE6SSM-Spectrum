@@ -426,6 +426,9 @@ private:
    double saved_vs;
    double saved_vsb;
    double saved_vphi;
+
+   // DH: use previous EWSB solution as initial guess if possible
+   bool has_previous_ewsb_solution;
 };
 
 std::ostream& operator<<(std::ostream&, const CNE6SSM_semianalytic<Two_scale>&);
