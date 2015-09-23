@@ -94,7 +94,7 @@ public:
 
 private:
    SLHA_io slha_io; ///< SLHA io class
-   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 14;
+   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 15;
    static char const * const drbar_blocks[NUMBER_OF_DRBAR_BLOCKS];
 
    void set_mass(const MSSM_physical&, bool);
@@ -209,6 +209,13 @@ void lowMSSM_slha_io::set_model_parameters(const lowMSSM_slha<T>& model)
             << FORMAT_ELEMENT(2, (MODELPARAMETER(MassWB)), "MassWB")
             << FORMAT_ELEMENT(3, (MODELPARAMETER(MassG)), "MassG")
       ;
+      slha_io.set_block(block);
+   }
+   {
+      std::ostringstream block;
+      block << "Block PHASES Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(1, Re((MODELPARAMETER(PhaseGlu))), "Re(PhaseGlu)")
+         ;
       slha_io.set_block(block);
    }
 

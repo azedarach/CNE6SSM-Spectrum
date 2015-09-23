@@ -48,7 +48,7 @@ namespace flexiblesusy {
 
 char const * const lowMSSM_slha_io::drbar_blocks[NUMBER_OF_DRBAR_BLOCKS] =
    { "gauge", "Yu", "Yd", "Ye", "Te", "Td", "Tu", "HMIX", "MSQ2", "MSE2",
-   "MSL2", "MSU2", "MSD2", "MSOFT" }
+   "MSL2", "MSU2", "MSD2", "MSOFT", "PHASES" }
 ;
 
 lowMSSM_slha_io::lowMSSM_slha_io()
