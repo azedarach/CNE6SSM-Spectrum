@@ -444,8 +444,18 @@ int CLASSNAME::ewsb_equations(const gsl_vector* x, void* params, gsl_vector* f)
    model->set_XiF(XiF);
    model->set_LXiF(LXiF);
 
-   if (ewsb_loop_order > 0)
+   if (ewsb_loop_order > 0) {
+      Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> old_problems = model->get_problems();
       model->calculate_DRbar_masses();
+      Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> new_problems = model->get_problems();
+      if (new_problems.have_tachyon() && !old_problems.have_tachyon()) {
+         for (unsigned i = 0; i < CNE6SSM_info::NUMBER_OF_PARTICLES; ++i) {
+            // unflag tachyons introduced during EWSB iteration
+            if (new_problems.is_tachyon(i) && !old_problems.is_tachyon(i))
+               model->get_problems().unflag_tachyon(i);
+         }
+      }
+   }
 
    double tadpole[number_of_ewsb_equations] = { 0. };
 
