@@ -25,7 +25,7 @@ namespace flexiblesusy {
 
 void write_CNE6SSM_inputs(const CNE6SSM_input_parameters<Two_scale>&, std::ostream &, std::size_t);
 void write_CNE6SSM_inputs_list(std::ostream &, std::size_t);
-void write_CNE6SSM_input(const CNE6SSM_semianalytic_input_parameters<Two_scale>&, std::ostream &, std::size_t);
+void write_CNE6SSM_inputs(const CNE6SSM_semianalytic_input_parameters<Two_scale>&, std::ostream &, std::size_t);
 void write_CNE6SSM_semianalytic_inputs_list(std::ostream &, std::size_t);
 std::valarray<double> to_valarray(double);
 
