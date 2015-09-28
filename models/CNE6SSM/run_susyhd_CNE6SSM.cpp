@@ -121,6 +121,18 @@ int main(int argc, const char* argv[])
    scales.SUSYScale = spectrum_generator.get_susy_scale();
    scales.LowScale = spectrum_generator.get_low_scale();
 
+   // SUSYHD calculation of Higgs mass
+   double eft_mhh = 0.;
+   try {
+      mathematica::MathematicaLink link("-linkname \"math -mathlink\"");
+      SUSYHD::SUSYHDLink susyhd(&link);
+
+      eft_mhh = susyhd.calculate_MHiggs(match_to_MSSM(model));
+   } catch (const mathematica::Error& error) {
+      ERROR(error.what());
+      return EXIT_FAILURE;
+   }
+
    // output
    slha_io.set_spinfo(problems);
    slha_io.set_sminputs(oneset);
@@ -129,7 +141,7 @@ int main(int argc, const char* argv[])
    if (!problems.have_problem() ||
        spectrum_generator_settings.get(Spectrum_generator_settings::force_output)) {
       slha_io.set_spectrum(model);
-      slha_io.set_extra(model, scales);
+      slha_io.set_extra(model, scales, eft_mhh);
    }
 
    if (slha_output_file.empty()) {
@@ -143,20 +155,6 @@ int main(int argc, const char* argv[])
 
    if (!rgflow_file.empty())
       spectrum_generator.write_running_couplings(rgflow_file);
-
-   // SUSYHD calculation of Higgs mass
-   try {
-      mathematica::MathematicaLink link("-linkname \"math -mathlink\"");
-      SUSYHD::SUSYHDLink susyhd(&link);
-
-      double eft_mhh = susyhd.calculate_MHiggs(match_to_MSSM(model));
-
-      std::cout << "SUSYHD MHiggs = " << eft_mhh << '\n';
-
-   } catch (const mathematica::Error& error) {
-      ERROR(error.what());
-      return EXIT_FAILURE;
-   }
 
    const int exit_code = spectrum_generator.get_exit_code();
 

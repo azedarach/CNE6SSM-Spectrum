@@ -79,6 +79,7 @@ public:
    void set_extpar(const CNE6SSM_semianalytic_input_parameters<Two_scale>&);
    template <class T> void set_extra(const CNE6SSM_slha<T>&, const CNE6SSM_scales&);
    template <class T> void set_extra(const CNE6SSM_semianalytic_slha<T>&, const CNE6SSM_scales&);
+   template <class T> void set_extra(const CNE6SSM_semianalytic_slha<T>&, const CNE6SSM_scales&, double MhhEFT);
    void set_minpar(const CNE6SSM_input_parameters<Two_scale>&);
    void set_minpar(const CNE6SSM_semianalytic_input_parameters<Two_scale>&);
    void set_sminputs(const softsusy::QedQcd&);
@@ -568,6 +569,184 @@ void CNE6SSM_slha_io::set_extra(
             << FORMAT_MIXING_MATRIX(2, 2, (MODELPARAMETER(TYe)(1,1)/MODELPARAMETER(Ye)(1,1)), "TYe(1,1)/Ye(1,1)")
             << FORMAT_MIXING_MATRIX(3, 3, (MODELPARAMETER(TYe)(2,2)/MODELPARAMETER(Ye)(2,2)), "TYe(2,2)/Ye(2,2)")
       ;
+      slha_io.set_block(block);
+   }
+   slha_io.set_block("TeAzeroCoeffs", SEMIANALYTICCOEFF(Azero,TYe), "Azero_coeff_TYe", model.get_scale());
+   slha_io.set_block("Tem12Coeffs", SEMIANALYTICCOEFF(m12,TYe), "m12_coeff_TYe", model.get_scale());
+   slha_io.set_block("TdAzeroCoeffs", SEMIANALYTICCOEFF(Azero,TYd), "Azero_coeff_TYd", model.get_scale());
+   slha_io.set_block("Tdm12Coeffs", SEMIANALYTICCOEFF(m12,TYd), "m12_coeff_TYd", model.get_scale());
+   slha_io.set_block("TuAzeroCoeffs", SEMIANALYTICCOEFF(Azero,TYu), "Azero_coeff_TYu", model.get_scale());
+   slha_io.set_block("Tum12Coeffs", SEMIANALYTICCOEFF(m12,TYu), "m12_coeff_TYu", model.get_scale());
+   {
+      std::ostringstream block;
+      block << "Block ESIXRUNCoeffs Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(281, (SEMIANALYTICCOEFF(Azero,TKappaPr)), "Azero_coeff_TKappaPr") << '\n'
+            << FORMAT_ELEMENT(282, (SEMIANALYTICCOEFF(m12,TKappaPr)), "m12_coeff_TKappaPr") << '\n'
+            << FORMAT_ELEMENT(291, (SEMIANALYTICCOEFF(Azero,TSigmax)), "Azero_coeff_TSigmax") << '\n'
+            << FORMAT_ELEMENT(292, (SEMIANALYTICCOEFF(m12,TSigmax)), "m12_coeff_TSigmax") << '\n'
+            << FORMAT_ELEMENT(431, (SEMIANALYTICCOEFF(Azero,TSigmaL)), "Azero_coeff_TSigmaL") << '\n'
+            << FORMAT_ELEMENT(432, (SEMIANALYTICCOEFF(m12,TSigmaL)), "m12_coeff_TSigmaL") << '\n'
+            << FORMAT_ELEMENT(301, (SEMIANALYTICCOEFF(Azero,BMuPhi)), "Azero_coeff_BMuPhi") << '\n'
+            << FORMAT_ELEMENT(302, (SEMIANALYTICCOEFF(m12,BMuPhi)), "m12_coeff_BMuPhi") << '\n'
+            << FORMAT_ELEMENT(303, (SEMIANALYTICCOEFF(BMuPhi,BMuPhi)), "BMuPhi_coeff_BMuPhi") << '\n'
+            << FORMAT_ELEMENT(304, (SEMIANALYTICCOEFF(BMuPr,BMuPhi)), "BMuPr_coeff_BMuPhi") << '\n'
+            << FORMAT_ELEMENT(21, (SEMIANALYTICCOEFF(Azero,TLambdax)), "Azero_coeff_TLambdax") << '\n'
+            << FORMAT_ELEMENT(22, (SEMIANALYTICCOEFF(m12,TLambdax)), "m12_coeff_TLambdax") << '\n'
+            << FORMAT_ELEMENT(1011, (SEMIANALYTICCOEFF(Azero,BMuPr)), "Azero_coeff_BMuPr") << '\n'
+            << FORMAT_ELEMENT(1012, (SEMIANALYTICCOEFF(m12,BMuPr)), "m12_coeff_BMuPr") << '\n'
+            << FORMAT_ELEMENT(1013, (SEMIANALYTICCOEFF(BMuPhi,BMuPr)), "BMuPhi_coeff_BMuPr") << '\n'
+            << FORMAT_ELEMENT(1014, (SEMIANALYTICCOEFF(BMuPr,BMuPr)), "BMuPr_coeff_BMuPr") << '\n'
+      ;
+      slha_io.set_block(block);
+   }
+   slha_io.set_block("ThEAzeroCoeffs", SEMIANALYTICCOEFF(Azero,ThE), "Azero_coeff_ThE", model.get_scale());
+   slha_io.set_block("ThEm12Coeffs", SEMIANALYTICCOEFF(m12,ThE), "m12_coeff_ThE", model.get_scale());
+   slha_io.set_block("TgDAzeroCoeffs", SEMIANALYTICCOEFF(Azero,TgD), "Azero_coeff_TgD", model.get_scale());
+   slha_io.set_block("TgDm12Coeffs", SEMIANALYTICCOEFF(m12,TgD), "m12_coeff_TgD", model.get_scale());
+   slha_io.set_block("TfuAzeroCoeffs", SEMIANALYTICCOEFF(Azero,Tfu), "Azero_coeff_Tfu", model.get_scale());
+   slha_io.set_block("Tfum12Coeffs", SEMIANALYTICCOEFF(m12,Tfu), "m12_coeff_Tfu", model.get_scale());
+   slha_io.set_block("TfdAzeroCoeffs", SEMIANALYTICCOEFF(Azero,Tfd), "Azero_coeff_Tfd", model.get_scale());
+   slha_io.set_block("Tfdm12Coeffs", SEMIANALYTICCOEFF(m12,Tfd), "m12_coeff_Tfd", model.get_scale());
+   slha_io.set_block("mq2m02Coeffs", SEMIANALYTICCOEFF(m02,mq2), "m02_coeff_mq2", model.get_scale());
+   slha_io.set_block("mq2m122Coeffs", SEMIANALYTICCOEFF(m122,mq2), "m122_coeff_mq2", model.get_scale());
+   slha_io.set_block("mq2Azerom12Coeffs", SEMIANALYTICCOEFF(Azerom12,mq2), "Azerom12_coeff_mq2", model.get_scale());
+   slha_io.set_block("mq2Azero2Coeffs", SEMIANALYTICCOEFF(Azero2,mq2), "Azero2_coeff_mq2", model.get_scale());
+   slha_io.set_block("me2m02Coeffs", SEMIANALYTICCOEFF(m02,me2), "m02_coeff_me2", model.get_scale());
+   slha_io.set_block("me2m122Coeffs", SEMIANALYTICCOEFF(m122,me2), "m122_coeff_me2", model.get_scale());
+   slha_io.set_block("me2Azerom12Coeffs", SEMIANALYTICCOEFF(Azerom12,me2), "Azerom12_coeff_me2", model.get_scale());
+   slha_io.set_block("me2Azero2Coeffs", SEMIANALYTICCOEFF(Azero2,me2), "Azero2_coeff_me2", model.get_scale());
+   slha_io.set_block("ml2m02Coeffs", SEMIANALYTICCOEFF(m02,ml2), "m02_coeff_ml2", model.get_scale());
+   slha_io.set_block("ml2m122Coeffs", SEMIANALYTICCOEFF(m122,ml2), "m122_coeff_ml2", model.get_scale());
+   slha_io.set_block("ml2Azerom12Coeffs", SEMIANALYTICCOEFF(Azerom12,ml2), "Azerom12_coeff_ml2", model.get_scale());
+   slha_io.set_block("ml2Azero2Coeffs", SEMIANALYTICCOEFF(Azero2,ml2), "Azero2_coeff_ml2", model.get_scale());
+   slha_io.set_block("mu2m02Coeffs", SEMIANALYTICCOEFF(m02,mu2), "m02_coeff_mu2", model.get_scale());
+   slha_io.set_block("mu2m122Coeffs", SEMIANALYTICCOEFF(m122,mu2), "m122_coeff_mu2", model.get_scale());
+   slha_io.set_block("mu2Azerom12Coeffs", SEMIANALYTICCOEFF(Azerom12,mu2), "Azerom12_coeff_mu2", model.get_scale());
+   slha_io.set_block("mu2Azero2Coeffs", SEMIANALYTICCOEFF(Azero2,mu2), "Azero2_coeff_mu2", model.get_scale());
+   slha_io.set_block("md2m02Coeffs", SEMIANALYTICCOEFF(m02,md2), "m02_coeff_md2", model.get_scale());
+   slha_io.set_block("md2m122Coeffs", SEMIANALYTICCOEFF(m122,md2), "m122_coeff_md2", model.get_scale());
+   slha_io.set_block("md2Azerom12Coeffs", SEMIANALYTICCOEFF(Azerom12,md2), "Azerom12_coeff_md2", model.get_scale());
+   slha_io.set_block("md2Azero2Coeffs", SEMIANALYTICCOEFF(Azero2,md2), "Azero2_coeff_md2", model.get_scale());
+   {
+      std::ostringstream block;
+      block << "Block MSOFTCoeffs Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(211, (SEMIANALYTICCOEFF(m02,mHd2)), "m02_coeff_mHd2") << '\n'
+            << FORMAT_ELEMENT(212, (SEMIANALYTICCOEFF(m122,mHd2)), "m122_coeff_mHd2") << '\n'
+            << FORMAT_ELEMENT(213, (SEMIANALYTICCOEFF(Azerom12,mHd2)), "Azerom12_coeff_mHd2") << '\n'
+            << FORMAT_ELEMENT(214, (SEMIANALYTICCOEFF(Azero2,mHd2)), "Azero2_coeff_mHd2") << '\n'
+            << FORMAT_ELEMENT(221, (SEMIANALYTICCOEFF(m02,mHu2)), "m02_coeff_mHu2") << '\n'
+            << FORMAT_ELEMENT(222, (SEMIANALYTICCOEFF(m122,mHu2)), "m122_coeff_mHu2") << '\n'
+            << FORMAT_ELEMENT(223, (SEMIANALYTICCOEFF(Azerom12,mHu2)), "Azerom12_coeff_mHu2") << '\n'
+            << FORMAT_ELEMENT(224, (SEMIANALYTICCOEFF(Azero2,mHu2)), "Azero2_coeff_mHu2") << '\n'
+            << FORMAT_ELEMENT(231, (SEMIANALYTICCOEFF(m02,ms2)), "m02_coeff_ms2") << '\n'
+            << FORMAT_ELEMENT(232, (SEMIANALYTICCOEFF(m122,ms2)), "m122_coeff_ms2") << '\n'
+            << FORMAT_ELEMENT(233, (SEMIANALYTICCOEFF(Azerom12,ms2)), "Azerom12_coeff_ms2") << '\n'
+            << FORMAT_ELEMENT(234, (SEMIANALYTICCOEFF(Azero2,ms2)), "Azero2_coeff_ms2") << '\n'
+            << FORMAT_ELEMENT(241, (SEMIANALYTICCOEFF(m02,msbar2)), "m02_coeff_msbar2") << '\n'
+            << FORMAT_ELEMENT(242, (SEMIANALYTICCOEFF(m122,msbar2)), "m122_coeff_msbar2") << '\n'
+            << FORMAT_ELEMENT(243, (SEMIANALYTICCOEFF(Azerom12,msbar2)), "Azerom12_coeff_msbar2") << '\n'
+            << FORMAT_ELEMENT(244, (SEMIANALYTICCOEFF(Azero2,msbar2)), "Azero2_coeff_msbar2") << '\n'
+            << FORMAT_ELEMENT(251, (SEMIANALYTICCOEFF(m02,mphi2)), "m02_coeff_mphi2") << '\n'
+            << FORMAT_ELEMENT(252, (SEMIANALYTICCOEFF(m122,mphi2)), "m122_coeff_mphi2") << '\n'
+            << FORMAT_ELEMENT(253, (SEMIANALYTICCOEFF(Azerom12,mphi2)), "Azerom12_coeff_mphi2") << '\n'
+            << FORMAT_ELEMENT(254, (SEMIANALYTICCOEFF(Azero2,mphi2)), "Azero2_coeff_mphi2") << '\n'
+            << FORMAT_ELEMENT(261, (SEMIANALYTICCOEFF(m02,mHp2)), "m02_coeff_mHp2") << '\n'
+            << FORMAT_ELEMENT(262, (SEMIANALYTICCOEFF(m122,mHp2)), "m122_coeff_mHp2") << '\n'
+            << FORMAT_ELEMENT(263, (SEMIANALYTICCOEFF(Azerom12,mHp2)), "Azerom12_coeff_mHp2") << '\n'
+            << FORMAT_ELEMENT(264, (SEMIANALYTICCOEFF(Azero2,mHp2)), "Azero2_coeff_mHp2") << '\n'
+            << FORMAT_ELEMENT(271, (SEMIANALYTICCOEFF(m02,mHpbar2)), "m02_coeff_mHpbar2") << '\n'
+            << FORMAT_ELEMENT(272, (SEMIANALYTICCOEFF(m122,mHpbar2)), "m122_coeff_mHpbar2") << '\n'
+            << FORMAT_ELEMENT(273, (SEMIANALYTICCOEFF(Azerom12,mHpbar2)), "Azerom12_coeff_mHpbar2") << '\n'
+            << FORMAT_ELEMENT(274, (SEMIANALYTICCOEFF(Azero2,mHpbar2)), "Azero2_coeff_mHpbar2") << '\n'
+            << FORMAT_ELEMENT(11, (SEMIANALYTICCOEFF(Azero,MassB)), "Azero_coeff_MassB") << '\n'
+            << FORMAT_ELEMENT(12, (SEMIANALYTICCOEFF(m12,MassB)), "m12_coeff_MassB") << '\n'
+            << FORMAT_ELEMENT(21, (SEMIANALYTICCOEFF(Azero,MassWB)), "Azero_coeff_MassWB") << '\n'
+            << FORMAT_ELEMENT(22, (SEMIANALYTICCOEFF(m12,MassWB)), "m12_coeff_MassWB") << '\n'
+            << FORMAT_ELEMENT(31, (SEMIANALYTICCOEFF(Azero,MassG)), "Azero_coeff_MassG") << '\n'
+            << FORMAT_ELEMENT(32, (SEMIANALYTICCOEFF(m12,MassG)), "m12_coeff_MassG") << '\n'
+            << FORMAT_ELEMENT(41, (SEMIANALYTICCOEFF(Azero,MassBp)), "Azero_coeff_MassBp") << '\n'
+            << FORMAT_ELEMENT(42, (SEMIANALYTICCOEFF(m12,MassBp)), "m12_coeff_MassBp") << '\n'
+      ;
+      slha_io.set_block(block);
+   }
+   slha_io.set_block("mX2m02Coeffs", SEMIANALYTICCOEFF(m02,mDx2), "m02_coeff_mDx2", model.get_scale());
+   slha_io.set_block("mX2m122Coeffs", SEMIANALYTICCOEFF(m122,mDx2), "m122_coeff_mDx2", model.get_scale());
+   slha_io.set_block("mX2Azerom12Coeffs", SEMIANALYTICCOEFF(Azerom12,mDx2), "Azerom12_coeff_mDx2", model.get_scale());
+   slha_io.set_block("mX2Azero2Coeffs", SEMIANALYTICCOEFF(Azero2,mDx2), "Azero2_coeff_mDx2", model.get_scale());
+   slha_io.set_block("mXBar2m02Coeffs", SEMIANALYTICCOEFF(m02,mDxbar2), "m02_coeff_mDxbar2", model.get_scale());
+   slha_io.set_block("mXBar2m122Coeffs", SEMIANALYTICCOEFF(m122,mDxbar2), "m122_coeff_mDxbar2", model.get_scale());
+   slha_io.set_block("mXBar2Azerom12Coeffs", SEMIANALYTICCOEFF(Azerom12,mDxbar2), "Azerom12_coeff_mDxbar2", model.get_scale());
+   slha_io.set_block("mXBar2Azero2Coeffs", SEMIANALYTICCOEFF(Azero2,mDxbar2), "Azero2_coeff_mDxbar2", model.get_scale());
+   slha_io.set_block("TKappaAzeroCoeffs", SEMIANALYTICCOEFF(Azero,TKappa), "Azero_coeff_TKappa", model.get_scale());
+   slha_io.set_block("TKappam12Coeffs", SEMIANALYTICCOEFF(m12,TKappa), "m12_coeff_TKappa", model.get_scale());
+   slha_io.set_block("TLambda12AzeroCoeffs", SEMIANALYTICCOEFF(Azero,TLambda12), "Azero_coeff_TLambda12", model.get_scale());
+   slha_io.set_block("TLambda12m12Coeffs", SEMIANALYTICCOEFF(m12,TLambda12), "m12_coeff_TLambda12", model.get_scale());
+
+}
+
+/**
+ * Writes extra SLHA blocks
+ *
+ * @param model model class
+ */
+template <class T>
+void CNE6SSM_slha_io::set_extra(
+   const CNE6SSM_semianalytic_slha<T>& model, const CNE6SSM_scales& scales, double MhhEFT)
+{
+   const CNE6SSM_physical physical(model.get_physical_slha());
+
+   {
+      std::ostringstream block;
+      block << "Block FlexibleSUSYOutput Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(0, (SCALES(HighScale)), "HighScale")
+            << FORMAT_ELEMENT(1, (SCALES(SUSYScale)), "SUSYScale")
+            << FORMAT_ELEMENT(2, (SCALES(LowScale)), "LowScale")
+      ;
+      slha_io.set_block(block);
+   }
+   {
+      std::ostringstream block;
+      block << "Block EWSBOutputParameters Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(0, model.get_ewsb_output_parameter(0), "m0")
+            << FORMAT_ELEMENT(1, model.get_ewsb_output_parameter(1), "TanTheta")
+            << FORMAT_ELEMENT(2, model.get_ewsb_output_parameter(2), "vphi")
+            << FORMAT_ELEMENT(3, model.get_ewsb_output_parameter(3), "XiF")
+            << FORMAT_ELEMENT(4, model.get_ewsb_output_parameter(4), "LXiF")
+      ;
+      slha_io.set_block(block);
+   }
+   {
+      std::ostringstream block;
+      block << "Block Au Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_MIXING_MATRIX(1, 1, (MODELPARAMETER(TYu)(0,0)/MODELPARAMETER(Yu)(0,0)), "TYu(0,0)/Yu(0,0)")
+            << FORMAT_MIXING_MATRIX(2, 2, (MODELPARAMETER(TYu)(1,1)/MODELPARAMETER(Yu)(1,1)), "TYu(1,1)/Yu(1,1)")
+            << FORMAT_MIXING_MATRIX(3, 3, (MODELPARAMETER(TYu)(2,2)/MODELPARAMETER(Yu)(2,2)), "TYu(2,2)/Yu(2,2)")
+      ;
+      slha_io.set_block(block);
+   }
+   {
+      std::ostringstream block;
+      block << "Block Ad Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_MIXING_MATRIX(1, 1, (MODELPARAMETER(TYd)(0,0)/MODELPARAMETER(Yd)(0,0)), "TYd(0,0)/Yd(0,0)")
+            << FORMAT_MIXING_MATRIX(2, 2, (MODELPARAMETER(TYd)(1,1)/MODELPARAMETER(Yd)(1,1)), "TYd(1,1)/Yd(1,1)")
+            << FORMAT_MIXING_MATRIX(3, 3, (MODELPARAMETER(TYd)(2,2)/MODELPARAMETER(Yd)(2,2)), "TYd(2,2)/Yd(2,2)")
+      ;
+      slha_io.set_block(block);
+   }
+   {
+      std::ostringstream block;
+      block << "Block Ae Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_MIXING_MATRIX(1, 1, (MODELPARAMETER(TYe)(0,0)/MODELPARAMETER(Ye)(0,0)), "TYe(0,0)/Ye(0,0)")
+            << FORMAT_MIXING_MATRIX(2, 2, (MODELPARAMETER(TYe)(1,1)/MODELPARAMETER(Ye)(1,1)), "TYe(1,1)/Ye(1,1)")
+            << FORMAT_MIXING_MATRIX(3, 3, (MODELPARAMETER(TYe)(2,2)/MODELPARAMETER(Ye)(2,2)), "TYe(2,2)/Ye(2,2)")
+      ;
+      slha_io.set_block(block);
+   }
+   {
+      std::ostringstream block;
+      block << "Block SUSYHD Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
+            << FORMAT_ELEMENT(1, MhhEFT, "SUSYHD Higgs pole mass")
+         ;
       slha_io.set_block(block);
    }
    slha_io.set_block("TeAzeroCoeffs", SEMIANALYTICCOEFF(Azero,TYe), "Azero_coeff_TYe", model.get_scale());
