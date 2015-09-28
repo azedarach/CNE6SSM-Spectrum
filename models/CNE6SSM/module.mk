@@ -113,7 +113,8 @@ EXECNE6SSM_SRC += \
 		$(DIR)/gridscan_semianalytic_CNE6SSM.cpp \
 		$(DIR)/scan_semianalytic_CNE6SSM.cpp \
 		$(DIR)/run_susyhd_CNE6SSM.cpp \
-		$(DIR)/get_susyhd_higgs_mass.cpp
+		$(DIR)/get_susyhd_higgs_mass.cpp \
+		$(DIR)/generate_semianalytic_points.cpp
 
 LIBCNE6SSM_HDR += \
 		$(DIR)/CNE6SSM_semi_constraint_handler.hpp \
@@ -219,6 +220,9 @@ SCAN_SEMI_CNE6SSM_EXE := $(DIR)/scan_semianalytic_CNE6SSM.x
 GET_HIGGS_MASS_OBJ := $(DIR)/get_susyhd_higgs_mass.o
 GET_HIGGS_MASS_EXE := $(DIR)/get_susyhd_higgs_mass.x
 
+GENERATE_POINTS_OBJ := $(DIR)/generate_semianalytic_points.o
+GENERATE_POINTS_EXE := $(DIR)/generate_semianalytic_points.x
+
 METACODE_STAMP_CNE6SSM := $(DIR)/00_DELETE_ME_TO_RERUN_METACODE
 
 ifeq ($(ENABLE_META),yes)
@@ -269,6 +273,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(GRIDSCAN_SEMI_CNE6SSM_EXE)
 		-rm -f $(SCAN_SEMI_CNE6SSM_EXE)
 		-rm -f $(GET_HIGGS_MASS_EXE)
+		-rm -f $(GENERATE_POINTS_EXE)
 
 distclean-$(MODNAME): clean-$(MODNAME)
 
@@ -350,6 +355,9 @@ $(SCAN_SEMI_CNE6SSM_EXE): $(SCAN_SEMI_CNE6SSM_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(L
 $(GET_HIGGS_MASS_EXE): $(GET_HIGGS_MASS_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS)) $(LIBMATHLINK) $(LIBSUSYHDLINK)
 		$(CXX) -Wl,-no-as-needed -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(MLINKLIBS) $(EXTRA_MLINK_LIBS)
 
+$(GENERATE_POINTS_EXE): $(GENERATE_POINTS_OBJ) $(LIBCNE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 ALLDEP += $(LIBCNE6SSM_DEP) $(EXECNE6SSM_DEP)
 ALLSRC += $(LIBCNE6SSM_SRC) $(EXECNE6SSM_SRC)
 ALLLIB += $(LIBCNE6SSM)
@@ -357,5 +365,5 @@ ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 ALLEXE += $(GRIDSCAN_CNE6SSM_EXE) $(GRIDSCAN_RGE_CNE6SSM_EXE) $(RGE_COEFF_CNE6SSM_EXE) $(RUN_CNE6SSM_EXE) $(RUN_CMD_LINE_CNE6SSM_EXE) $(SCAN_CNE6SSM_EXE)
 endif
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
-ALLEXE += $(RUN_SEMI_CNE6SSM_EXE) $(RUN_SUSYHD_CNE6SSM_EXE) $(GRIDSCAN_SEMI_CNE6SSM_EXE) $(SCAN_SEMI_CNE6SSM_EXE) $(GET_HIGGS_MASS_EXE)
+ALLEXE += $(RUN_SEMI_CNE6SSM_EXE) $(RUN_SUSYHD_CNE6SSM_EXE) $(GRIDSCAN_SEMI_CNE6SSM_EXE) $(SCAN_SEMI_CNE6SSM_EXE) $(GET_HIGGS_MASS_EXE) $(GENERATE_POINTS_EXE)
 endif
