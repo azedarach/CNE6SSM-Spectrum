@@ -114,9 +114,11 @@ public:
 
 private:
    SLHA_io slha_io; ///< SLHA io class
-   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 31;
+   static unsigned const NUMBER_OF_DRBAR_BLOCKS = 59;
    static char const * const drbar_blocks[NUMBER_OF_DRBAR_BLOCKS];
 
+   void set_drbar_mass(const CNE6SSM_physical&, double, bool);
+   void set_drbar_mixing_matrices(const CNE6SSM_physical&, double, bool);
    void set_mass(const CNE6SSM_physical&, bool);
    void set_mixing_matrices(const CNE6SSM_physical&, bool);
    template <class T> void set_model_parameters(const CNE6SSM_slha<T>&);
@@ -125,6 +127,7 @@ private:
    void set_pmns(const Eigen::Matrix<std::complex<double>,3,3>&, double);
    double read_scale() const;
    void fill_drbar_parameters(CNE6SSM_mass_eigenstates&) const;
+   void fill_drbar(CNE6SSM_physical&) const;
    void fill_physical(CNE6SSM_physical&) const;
 };
 
@@ -136,6 +139,7 @@ template <class T>
 void CNE6SSM_slha_io::fill(CNE6SSM_slha<T>& model) const
 {
    fill(static_cast<CNE6SSM_mass_eigenstates&>(model));
+   fill_drbar(model.get_drbar_slha());
    fill_physical(model.get_physical_slha());
 }
 
@@ -147,6 +151,7 @@ template <class T>
 void CNE6SSM_slha_io::fill(CNE6SSM_semianalytic_slha<T>& model) const
 {
    fill(static_cast<CNE6SSM_mass_eigenstates&>(model));
+   fill_drbar(model.get_drbar_slha());
    fill_physical(model.get_physical_slha());
 }
 
@@ -898,9 +903,12 @@ template <class T>
 void CNE6SSM_slha_io::set_spectrum(const CNE6SSM_slha<T>& model)
 {
    const CNE6SSM_physical physical(model.get_physical_slha());
+   const CNE6SSM_physical drbar(model.get_drbar_slha());
    const bool write_sm_masses = model.do_calculate_sm_pole_masses();
 
    set_model_parameters(model);
+   set_drbar_mass(drbar, model.get_scale(), write_sm_masses);
+   set_drbar_mixing_matrices(drbar, model.get_scale(), write_sm_masses);
    set_mass(physical, write_sm_masses);
    set_mixing_matrices(physical, write_sm_masses);
 
@@ -921,9 +929,12 @@ template <class T>
 void CNE6SSM_slha_io::set_spectrum(const CNE6SSM_semianalytic_slha<T>& model)
 {
    const CNE6SSM_physical physical(model.get_physical_slha());
+   const CNE6SSM_physical drbar(model.get_drbar_slha());
    const bool write_sm_masses = model.do_calculate_sm_pole_masses();
 
    set_model_parameters(model);
+   set_drbar_mass(drbar, model.get_scale(), write_sm_masses);
+   set_drbar_mixing_matrices(drbar, model.get_scale(), write_sm_masses);
    set_mass(physical, write_sm_masses);
    set_mixing_matrices(physical, write_sm_masses);
 
