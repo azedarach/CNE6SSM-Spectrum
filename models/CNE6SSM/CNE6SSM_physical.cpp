@@ -155,7 +155,7 @@ void CNE6SSM_physical::convert_to_slha()
 void CNE6SSM_physical::print(std::ostream& ostr) const
 {
    ostr << "----------------------------------------\n"
-           "pole masses:\n"
+           "masses:\n"
            "----------------------------------------\n";
    ostr << "MVG = " << MVG << '\n';
    ostr << "MGlu = " << MGlu << '\n';
@@ -188,7 +188,7 @@ void CNE6SSM_physical::print(std::ostream& ostr) const
    ostr << "MVWm = " << MVWm << '\n';
 
    ostr << "----------------------------------------\n"
-           "pole mass mixing matrices:\n"
+           "mixing matrices:\n"
            "----------------------------------------\n";
    ostr << "ZD = " << ZD << '\n';
    ostr << "ZV = " << ZV << '\n';
