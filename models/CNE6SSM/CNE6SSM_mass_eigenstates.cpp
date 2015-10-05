@@ -81,7 +81,7 @@ CNE6SSM_mass_eigenstates::CNE6SSM_mass_eigenstates()
    , calculate_sm_pole_masses(false)
    , force_output(false)
    , physical()
-   , drbar_masses()
+   , drbar()
    , two_loop_corrections()
    , problems(CNE6SSM_info::particle_names)
 #ifdef ENABLE_THREADS
@@ -189,141 +189,14 @@ void CNE6SSM_mass_eigenstates::set_physical(const CNE6SSM_physical& physical_)
    physical = physical_;
 }
 
-void CNE6SSM_mass_eigenstates::set_saved_drbar_masses(const CNE6SSM_physical& drbar_masses_)
-{
-   drbar_masses = drbar_masses_;
-}
-
-void CNE6SSM_mass_eigenstates::save_DRbar_masses()
-{
-   drbar_masses.MVG = MVG;
-   drbar_masses.MGlu = MGlu;
-   drbar_masses.MFv = MFv;
-   drbar_masses.MChaP = MChaP;
-   drbar_masses.MVP = MVP;
-   drbar_masses.MVZ = MVZ;
-   drbar_masses.MVZp = MVZp;
-   drbar_masses.MSd = MSd;
-   drbar_masses.MSv = MSv;
-   drbar_masses.MSu = MSu;
-   drbar_masses.MSe = MSe;
-   drbar_masses.MSDX = MSDX;
-   drbar_masses.Mhh = Mhh;
-   drbar_masses.MAh = MAh;
-   drbar_masses.MHpm = MHpm;
-   drbar_masses.MChi = MChi;
-   drbar_masses.MCha = MCha;
-   drbar_masses.MFe = MFe;
-   drbar_masses.MFd = MFd;
-   drbar_masses.MFu = MFu;
-   drbar_masses.MFDX = MFDX;
-   drbar_masses.MSHI0 = MSHI0;
-   drbar_masses.MSHIPM = MSHIPM;
-   drbar_masses.MChaI = MChaI;
-   drbar_masses.MChiI = MChiI;
-   drbar_masses.MSHp0 = MSHp0;
-   drbar_masses.MSHpp = MSHpp;
-   drbar_masses.MChiP = MChiP;
-   drbar_masses.MVWm = MVWm;
-
-   drbar_masses.ZD = ZD;
-   drbar_masses.ZV = ZV;
-   drbar_masses.ZU = ZU;
-   drbar_masses.ZE = ZE;
-   drbar_masses.ZDX = ZDX;
-   drbar_masses.ZH = ZH;
-   drbar_masses.ZA = ZA;
-   drbar_masses.ZP = ZP;
-   drbar_masses.ZN = ZN;
-   drbar_masses.UM = UM;
-   drbar_masses.UP = UP;
-   drbar_masses.ZEL = ZEL;
-   drbar_masses.ZER = ZER;
-   drbar_masses.ZDL = ZDL;
-   drbar_masses.ZDR = ZDR;
-   drbar_masses.ZUL = ZUL;
-   drbar_masses.ZUR = ZUR;
-   drbar_masses.ZDXL = ZDXL;
-   drbar_masses.ZDXR = ZDXR;
-   drbar_masses.UHI0 = UHI0;
-   drbar_masses.UHIPM = UHIPM;
-   drbar_masses.ZMI = ZMI;
-   drbar_masses.ZPI = ZPI;
-   drbar_masses.ZNI = ZNI;
-   drbar_masses.UHp0 = UHp0;
-   drbar_masses.UHpp = UHpp;
-   drbar_masses.ZNp = ZNp;
-}
-
-void CNE6SSM_mass_eigenstates::set_drbar_masses(const CNE6SSM_physical& saved_masses)
-{
-   MVG = saved_masses.MVG;
-   MGlu = saved_masses.MGlu;
-   MFv = saved_masses.MFv;
-   MChaP = saved_masses.MChaP;
-   MVP = saved_masses.MVP;
-   MVZ = saved_masses.MVZ;
-   MVZp = saved_masses.MVZp;
-   MSd = saved_masses.MSd;
-   MSv = saved_masses.MSv;
-   MSu = saved_masses.MSu;
-   MSe = saved_masses.MSe;
-   MSDX = saved_masses.MSDX;
-   Mhh = saved_masses.Mhh;
-   MAh = saved_masses.MAh;
-   MHpm = saved_masses.MHpm;
-   MChi = saved_masses.MChi;
-   MCha = saved_masses.MCha;
-   MFe = saved_masses.MFe;
-   MFd = saved_masses.MFd;
-   MFu = saved_masses.MFu;
-   MFDX = saved_masses.MFDX;
-   MSHI0 = saved_masses.MSHI0;
-   MSHIPM = saved_masses.MSHIPM;
-   MChaI = saved_masses.MChaI;
-   MChiI = saved_masses.MChiI;
-   MSHp0 = saved_masses.MSHp0;
-   MSHpp = saved_masses.MSHpp;
-   MChiP = saved_masses.MChiP;
-   MVWm = saved_masses.MVWm;
-
-   ZD = saved_masses.ZD;
-   ZV = saved_masses.ZV;
-   ZU = saved_masses.ZU;
-   ZE = saved_masses.ZE;
-   ZDX = saved_masses.ZDX;
-   ZH = saved_masses.ZH;
-   ZA = saved_masses.ZA;
-   ZP = saved_masses.ZP;
-   ZN = saved_masses.ZN;
-   UM = saved_masses.UM;
-   UP = saved_masses.UP;
-   ZEL = saved_masses.ZEL;
-   ZER = saved_masses.ZER;
-   ZDL = saved_masses.ZDL;
-   ZDR = saved_masses.ZDR;
-   ZUL = saved_masses.ZUL;
-   ZUR = saved_masses.ZUR;
-   ZDXL = saved_masses.ZDXL;
-   ZDXR = saved_masses.ZDXR;
-   UHI0 = saved_masses.UHI0;
-   UHIPM = saved_masses.UHIPM;
-   ZMI = saved_masses.ZMI;
-   ZPI = saved_masses.ZPI;
-   ZNI = saved_masses.ZNI;
-   UHp0 = saved_masses.UHp0;
-   UHpp = saved_masses.UHpp;
-   ZNp = saved_masses.ZNp;
-}
-
 const CNE6SSM_physical& CNE6SSM_mass_eigenstates::get_drbar_masses() const
 {
-   return drbar_masses;
+   return drbar;
 }
 
 CNE6SSM_physical& CNE6SSM_mass_eigenstates::get_drbar_masses()
 {
-   return drbar_masses;
+   return drbar;
 }
 
 const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& CNE6SSM_mass_eigenstates::get_problems() const
@@ -601,7 +474,6 @@ void CNE6SSM_mass_eigenstates::calculate_DRbar_masses()
    msbar2 = old_msbar2;
    mphi2 = old_mphi2;
 
-   save_DRbar_masses();
 }
 
 /**
@@ -797,6 +669,11 @@ void CNE6SSM_mass_eigenstates::reorder_DRbar_masses()
    move_goldstone_to(1, MVZp, MAh, ZA);
    move_goldstone_to(0, MVWm, MHpm, ZP);
 
+   drbar.MAh = MAh;
+   drbar.ZA = ZA;
+   drbar.MHpm = MHpm;
+   drbar.ZP = ZP;
+
 }
 
 /**
@@ -874,6 +751,8 @@ void CNE6SSM_mass_eigenstates::clear_DRbar_parameters()
 
    PhaseGlu = std::complex<double>(1.,0.);
 
+   drbar.clear();
+
 }
 
 void CNE6SSM_mass_eigenstates::clear()
@@ -921,6 +800,7 @@ void CNE6SSM_mass_eigenstates::calculate_MVG()
 {
    const auto mass_matrix_VG = get_mass_matrix_VG();
    MVG = calculate_singlet_mass(mass_matrix_VG);
+   drbar.MVG = MVG;
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_Glu() const
@@ -934,6 +814,7 @@ void CNE6SSM_mass_eigenstates::calculate_MGlu()
 {
    const auto mass_matrix_Glu = get_mass_matrix_Glu();
    MGlu = calculate_singlet_mass(mass_matrix_Glu, PhaseGlu);
+   drbar.MGlu = MGlu;
 }
 
 Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_Fv() const
@@ -955,6 +836,7 @@ Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_Fv() const
 void CNE6SSM_mass_eigenstates::calculate_MFv()
 {
    MFv.setConstant(0);
+   drbar.MFv = MFv;
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_ChaP() const
@@ -969,6 +851,7 @@ void CNE6SSM_mass_eigenstates::calculate_MChaP()
 {
    const auto mass_matrix_ChaP = get_mass_matrix_ChaP();
    MChaP = calculate_singlet_mass(mass_matrix_ChaP);
+   drbar.MChaP = MChaP;
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VP() const
@@ -982,6 +865,7 @@ void CNE6SSM_mass_eigenstates::calculate_MVP()
 {
    const auto mass_matrix_VP = get_mass_matrix_VP();
    MVP = calculate_singlet_mass(mass_matrix_VP);
+   drbar.MVP = MVP;
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VZ() const
@@ -1008,6 +892,7 @@ void CNE6SSM_mass_eigenstates::calculate_MVZ()
       problems.flag_tachyon(CNE6SSM_info::VZ);
 
    MVZ = AbsSqrt(MVZ);
+   drbar.MVZ = MVZ;
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VZp() const
@@ -1031,6 +916,7 @@ void CNE6SSM_mass_eigenstates::calculate_MVZp()
       problems.flag_tachyon(CNE6SSM_info::VZp);
 
    MVZp = AbsSqrt(MVZp);
+   drbar.MVZp = MVZp;
 }
 
 Eigen::Matrix<double,6,6> CNE6SSM_mass_eigenstates::get_mass_matrix_Sd() const
@@ -1102,6 +988,8 @@ void CNE6SSM_mass_eigenstates::calculate_MSd()
       problems.flag_tachyon(CNE6SSM_info::Sd);
 
    MSd = AbsSqrt(MSd);
+   drbar.MSd = MSd;
+   drbar.ZD = ZD;
 }
 
 Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_Sv() const
@@ -1146,6 +1034,8 @@ void CNE6SSM_mass_eigenstates::calculate_MSv()
       problems.flag_tachyon(CNE6SSM_info::Sv);
 
    MSv = AbsSqrt(MSv);
+   drbar.MSv = MSv;
+   drbar.ZV = ZV;
 }
 
 Eigen::Matrix<double,6,6> CNE6SSM_mass_eigenstates::get_mass_matrix_Su() const
@@ -1214,6 +1104,8 @@ void CNE6SSM_mass_eigenstates::calculate_MSu()
       problems.flag_tachyon(CNE6SSM_info::Su);
 
    MSu = AbsSqrt(MSu);
+   drbar.MSu = MSu;
+   drbar.ZU = ZU;
 }
 
 Eigen::Matrix<double,6,6> CNE6SSM_mass_eigenstates::get_mass_matrix_Se() const
@@ -1285,6 +1177,8 @@ void CNE6SSM_mass_eigenstates::calculate_MSe()
       problems.flag_tachyon(CNE6SSM_info::Se);
 
    MSe = AbsSqrt(MSe);
+   drbar.MSe = MSe;
+   drbar.ZE = ZE;
 }
 
 Eigen::Matrix<double,6,6> CNE6SSM_mass_eigenstates::get_mass_matrix_SDX() const
@@ -1357,6 +1251,8 @@ void CNE6SSM_mass_eigenstates::calculate_MSDX()
       problems.flag_tachyon(CNE6SSM_info::SDX);
 
    MSDX = AbsSqrt(MSDX);
+   drbar.MSDX = MSDX;
+   drbar.ZDX = ZDX;
 }
 
 Eigen::Matrix<double,5,5> CNE6SSM_mass_eigenstates::get_mass_matrix_hh() const
@@ -1528,6 +1424,8 @@ void CNE6SSM_mass_eigenstates::calculate_Mhh()
       problems.flag_tachyon(CNE6SSM_info::hh);
 
    Mhh = AbsSqrt(Mhh);
+   drbar.Mhh = Mhh;
+   drbar.ZH = ZH;
 }
 
 Eigen::Matrix<double,5,5> CNE6SSM_mass_eigenstates::get_mass_matrix_Ah() const
@@ -1639,6 +1537,8 @@ void CNE6SSM_mass_eigenstates::calculate_MAh()
       problems.flag_tachyon(CNE6SSM_info::Ah);
 
    MAh = AbsSqrt(MAh);
+   drbar.MAh = MAh;
+   drbar.ZA = ZA;
 }
 
 Eigen::Matrix<double,2,2> CNE6SSM_mass_eigenstates::get_mass_matrix_Hpm() const
@@ -1678,6 +1578,8 @@ void CNE6SSM_mass_eigenstates::calculate_MHpm()
       problems.flag_tachyon(CNE6SSM_info::Hpm);
 
    MHpm = AbsSqrt(MHpm);
+   drbar.MHpm = MHpm;
+   drbar.ZP = ZP;
 }
 
 Eigen::Matrix<double,8,8> CNE6SSM_mass_eigenstates::get_mass_matrix_Chi() const
@@ -1738,6 +1640,9 @@ void CNE6SSM_mass_eigenstates::calculate_MChi()
 #else
    fs_diagonalize_symmetric(mass_matrix_Chi, MChi, ZN);
 #endif
+
+   drbar.MChi = MChi;
+   drbar.ZN = ZN;
 }
 
 Eigen::Matrix<double,2,2> CNE6SSM_mass_eigenstates::get_mass_matrix_Cha() const
@@ -1764,6 +1669,10 @@ void CNE6SSM_mass_eigenstates::calculate_MCha()
 #else
    fs_svd(mass_matrix_Cha, MCha, UM, UP);
 #endif
+
+   drbar.MCha = MCha;
+   drbar.UM = UM;
+   drbar.UP = UP;
 }
 
 Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_Fe() const
@@ -1794,6 +1703,10 @@ void CNE6SSM_mass_eigenstates::calculate_MFe()
 #else
    fs_svd(mass_matrix_Fe, MFe, ZEL, ZER);
 #endif
+
+   drbar.MFe = MFe;
+   drbar.ZEL = ZEL;
+   drbar.ZER = ZER;
 }
 
 Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_Fd() const
@@ -1824,6 +1737,10 @@ void CNE6SSM_mass_eigenstates::calculate_MFd()
 #else
    fs_svd(mass_matrix_Fd, MFd, ZDL, ZDR);
 #endif
+
+   drbar.MFd = MFd;
+   drbar.ZDL = ZDL;
+   drbar.ZDR = ZDR;
 }
 
 Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_Fu() const
@@ -1854,6 +1771,10 @@ void CNE6SSM_mass_eigenstates::calculate_MFu()
 #else
    fs_svd(mass_matrix_Fu, MFu, ZUL, ZUR);
 #endif
+
+   drbar.MFu = MFu;
+   drbar.ZUL = ZUL;
+   drbar.ZUR = ZUR;
 }
 
 Eigen::Matrix<double,3,3> CNE6SSM_mass_eigenstates::get_mass_matrix_FDX() const
@@ -1884,6 +1805,9 @@ void CNE6SSM_mass_eigenstates::calculate_MFDX()
 #else
    fs_svd(mass_matrix_FDX, MFDX, ZDXL, ZDXR);
 #endif
+   drbar.MFDX = MFDX;
+   drbar.ZDXL = ZDXL;
+   drbar.ZDXR = ZDXR;
 }
 
 Eigen::Matrix<double,7,7> CNE6SSM_mass_eigenstates::get_mass_matrix_SHI0() const
@@ -1985,6 +1909,9 @@ void CNE6SSM_mass_eigenstates::calculate_MSHI0()
       problems.flag_tachyon(CNE6SSM_info::SHI0);
 
    MSHI0 = AbsSqrt(MSHI0);
+
+   drbar.MSHI0 = MSHI0;
+   drbar.UHI0 = UHI0;
 }
 
 Eigen::Matrix<double,4,4> CNE6SSM_mass_eigenstates::get_mass_matrix_SHIPM() const
@@ -2041,6 +1968,9 @@ void CNE6SSM_mass_eigenstates::calculate_MSHIPM()
       problems.flag_tachyon(CNE6SSM_info::SHIPM);
 
    MSHIPM = AbsSqrt(MSHIPM);
+
+   drbar.MSHIPM = MSHIPM;
+   drbar.UHIPM = UHIPM;
 }
 
 Eigen::Matrix<double,2,2> CNE6SSM_mass_eigenstates::get_mass_matrix_ChaI() const
@@ -2068,6 +1998,10 @@ void CNE6SSM_mass_eigenstates::calculate_MChaI()
 #else
    fs_svd(mass_matrix_ChaI, MChaI, ZMI, ZPI);
 #endif
+
+   drbar.MChaI = MChaI;
+   drbar.ZMI = ZMI;
+   drbar.ZPI = ZPI;
 }
 
 Eigen::Matrix<double,7,7> CNE6SSM_mass_eigenstates::get_mass_matrix_ChiI() const
@@ -2121,6 +2055,9 @@ void CNE6SSM_mass_eigenstates::calculate_MChiI()
 #else
    fs_diagonalize_symmetric(mass_matrix_ChiI, MChiI, ZNI);
 #endif
+
+   drbar.MChiI = MChiI;
+   drbar.ZNI = ZNI;
 }
 
 Eigen::Matrix<double,2,2> CNE6SSM_mass_eigenstates::get_mass_matrix_SHp0() const
@@ -2166,6 +2103,9 @@ void CNE6SSM_mass_eigenstates::calculate_MSHp0()
       problems.flag_tachyon(CNE6SSM_info::SHp0);
 
    MSHp0 = AbsSqrt(MSHp0);
+
+   drbar.MSHp0 = MSHp0;
+   drbar.UHp0 = UHp0;
 }
 
 Eigen::Matrix<double,2,2> CNE6SSM_mass_eigenstates::get_mass_matrix_SHpp() const
@@ -2211,6 +2151,9 @@ void CNE6SSM_mass_eigenstates::calculate_MSHpp()
       problems.flag_tachyon(CNE6SSM_info::SHpp);
 
    MSHpp = AbsSqrt(MSHpp);
+
+   drbar.MSHpp = MSHpp;
+   drbar.UHpp = UHpp;
 }
 
 Eigen::Matrix<double,2,2> CNE6SSM_mass_eigenstates::get_mass_matrix_ChiP() const
@@ -2239,6 +2182,9 @@ void CNE6SSM_mass_eigenstates::calculate_MChiP()
 #else
    fs_diagonalize_symmetric(mass_matrix_ChiP, MChiP, ZNp);
 #endif
+
+   drbar.MChiP = MChiP;
+   drbar.ZNp = ZNp;
 }
 
 double CNE6SSM_mass_eigenstates::get_mass_matrix_VWm() const
@@ -2257,6 +2203,8 @@ void CNE6SSM_mass_eigenstates::calculate_MVWm()
       problems.flag_tachyon(CNE6SSM_info::VWm);
 
    MVWm = AbsSqrt(MVWm);
+
+   drbar.MVWm = MVWm;
 }
 
 

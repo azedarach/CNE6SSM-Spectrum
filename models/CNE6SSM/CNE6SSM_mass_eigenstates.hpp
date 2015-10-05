@@ -78,8 +78,6 @@ public:
    void set_physical(const CNE6SSM_physical&);
    const CNE6SSM_physical& get_physical() const;
    CNE6SSM_physical& get_physical();
-   void set_saved_drbar_masses(const CNE6SSM_physical&);
-   void set_drbar_masses(const CNE6SSM_physical&);
    const CNE6SSM_physical& get_drbar_masses() const;
    CNE6SSM_physical& get_drbar_masses();
    const Problems<CNE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const;
@@ -1333,7 +1331,7 @@ protected:
    bool calculate_sm_pole_masses; ///< switch to calculate the pole masses of the Standard Model particles
    bool force_output;             ///< switch to force output of pole masses
    CNE6SSM_physical physical; ///< contains the pole masses and mixings
-   CNE6SSM_physical drbar_masses;  ///< contains the running masses and mixings
+   CNE6SSM_physical drbar;  ///< contains the running masses and mixings
    Two_loop_corrections two_loop_corrections; ///< used 2-loop corrections
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> problems;
 
@@ -1363,8 +1361,6 @@ private:
 #endif
 
    int solve_ewsb_tree_level_via_soft_higgs_masses();
-
-   void save_DRbar_masses();
 
    // Passarino-Veltman loop functions
    double A0(double) const;
