@@ -53,6 +53,8 @@ public:
    const Eigen::Matrix<std::complex<double>,3,3>& get_pmns_matrix() const { return pmns; }
    const CNE6SSM_physical& get_physical_slha() const; ///< returns pole masses to SLHA convention
    CNE6SSM_physical& get_physical_slha(); ///< returns pole masses to SLHA convention
+   const CNE6SSM_physical& get_drbar_slha() const; ///< returns DR-bar masses to SLHA convention
+   CNE6SSM_physical& get_drbar_slha(); ///< returns DR-bar masses to SLHA convention
 
    // interface functions
    virtual void calculate_spectrum();
@@ -165,6 +167,113 @@ public:
    const Eigen::Matrix<std::complex<double>,2,2>& get_ZNp_pole_slha() const { return physical_slha.ZNp; }
    const std::complex<double>& get_ZNp_pole_slha(int i, int k) const { return physical_slha.ZNp(i,k); }
 
+   double get_MVG_drbar_slha() const { return drbar_slha.MVG; }
+   double get_MGlu_drbar_slha() const { return drbar_slha.MGlu; }
+   const Eigen::Array<double,3,1>& get_MFv_drbar_slha() const { return drbar_slha.MFv; }
+   double get_MFv_drbar_slha(int i) const { return drbar_slha.MFv(i); }
+   double get_MChaP_drbar_slha() const { return drbar_slha.MChaP; }
+   double get_MVP_drbar_slha() const { return drbar_slha.MVP; }
+   double get_MVZ_drbar_slha() const { return drbar_slha.MVZ; }
+   double get_MVZp_drbar_slha() const { return drbar_slha.MVZp; }
+   const Eigen::Array<double,6,1>& get_MSd_drbar_slha() const { return drbar_slha.MSd; }
+   double get_MSd_drbar_slha(int i) const { return drbar_slha.MSd(i); }
+   const Eigen::Array<double,3,1>& get_MSv_drbar_slha() const { return drbar_slha.MSv; }
+   double get_MSv_drbar_slha(int i) const { return drbar_slha.MSv(i); }
+   const Eigen::Array<double,6,1>& get_MSu_drbar_slha() const { return drbar_slha.MSu; }
+   double get_MSu_drbar_slha(int i) const { return drbar_slha.MSu(i); }
+   const Eigen::Array<double,6,1>& get_MSe_drbar_slha() const { return drbar_slha.MSe; }
+   double get_MSe_drbar_slha(int i) const { return drbar_slha.MSe(i); }
+   const Eigen::Array<double,6,1>& get_MSDX_drbar_slha() const { return drbar_slha.MSDX; }
+   double get_MSDX_drbar_slha(int i) const { return drbar_slha.MSDX(i); }
+   const Eigen::Array<double,5,1>& get_Mhh_drbar_slha() const { return drbar_slha.Mhh; }
+   double get_Mhh_drbar_slha(int i) const { return drbar_slha.Mhh(i); }
+   const Eigen::Array<double,5,1>& get_MAh_drbar_slha() const { return drbar_slha.MAh; }
+   double get_MAh_drbar_slha(int i) const { return drbar_slha.MAh(i); }
+   const Eigen::Array<double,2,1>& get_MHpm_drbar_slha() const { return drbar_slha.MHpm; }
+   double get_MHpm_drbar_slha(int i) const { return drbar_slha.MHpm(i); }
+   const Eigen::Array<double,8,1>& get_MChi_drbar_slha() const { return drbar_slha.MChi; }
+   double get_MChi_drbar_slha(int i) const { return drbar_slha.MChi(i); }
+   const Eigen::Array<double,2,1>& get_MCha_drbar_slha() const { return drbar_slha.MCha; }
+   double get_MCha_drbar_slha(int i) const { return drbar_slha.MCha(i); }
+   const Eigen::Array<double,3,1>& get_MFe_drbar_slha() const { return drbar_slha.MFe; }
+   double get_MFe_drbar_slha(int i) const { return drbar_slha.MFe(i); }
+   const Eigen::Array<double,3,1>& get_MFd_drbar_slha() const { return drbar_slha.MFd; }
+   double get_MFd_drbar_slha(int i) const { return drbar_slha.MFd(i); }
+   const Eigen::Array<double,3,1>& get_MFu_drbar_slha() const { return drbar_slha.MFu; }
+   double get_MFu_drbar_slha(int i) const { return drbar_slha.MFu(i); }
+   const Eigen::Array<double,3,1>& get_MFDX_drbar_slha() const { return drbar_slha.MFDX; }
+   double get_MFDX_drbar_slha(int i) const { return drbar_slha.MFDX(i); }
+   const Eigen::Array<double,7,1>& get_MSHI0_drbar_slha() const { return drbar_slha.MSHI0; }
+   double get_MSHI0_drbar_slha(int i) const { return drbar_slha.MSHI0(i); }
+   const Eigen::Array<double,4,1>& get_MSHIPM_drbar_slha() const { return drbar_slha.MSHIPM; }
+   double get_MSHIPM_drbar_slha(int i) const { return drbar_slha.MSHIPM(i); }
+   const Eigen::Array<double,2,1>& get_MChaI_drbar_slha() const { return drbar_slha.MChaI; }
+   double get_MChaI_drbar_slha(int i) const { return drbar_slha.MChaI(i); }
+   const Eigen::Array<double,7,1>& get_MChiI_drbar_slha() const { return drbar_slha.MChiI; }
+   double get_MChiI_drbar_slha(int i) const { return drbar_slha.MChiI(i); }
+   const Eigen::Array<double,2,1>& get_MSHp0_drbar_slha() const { return drbar_slha.MSHp0; }
+   double get_MSHp0_drbar_slha(int i) const { return drbar_slha.MSHp0(i); }
+   const Eigen::Array<double,2,1>& get_MSHpp_drbar_slha() const { return drbar_slha.MSHpp; }
+   double get_MSHpp_drbar_slha(int i) const { return drbar_slha.MSHpp(i); }
+   const Eigen::Array<double,2,1>& get_MChiP_drbar_slha() const { return drbar_slha.MChiP; }
+   double get_MChiP_drbar_slha(int i) const { return drbar_slha.MChiP(i); }
+   double get_MVWm_drbar_slha() const { return drbar_slha.MVWm; }
+
+   const Eigen::Matrix<double,6,6>& get_ZD_drbar_slha() const { return drbar_slha.ZD; }
+   double get_ZD_drbar_slha(int i, int k) const { return drbar_slha.ZD(i,k); }
+   const Eigen::Matrix<double,3,3>& get_ZV_drbar_slha() const { return drbar_slha.ZV; }
+   double get_ZV_drbar_slha(int i, int k) const { return drbar_slha.ZV(i,k); }
+   const Eigen::Matrix<double,6,6>& get_ZU_drbar_slha() const { return drbar_slha.ZU; }
+   double get_ZU_drbar_slha(int i, int k) const { return drbar_slha.ZU(i,k); }
+   const Eigen::Matrix<double,6,6>& get_ZE_drbar_slha() const { return drbar_slha.ZE; }
+   double get_ZE_drbar_slha(int i, int k) const { return drbar_slha.ZE(i,k); }
+   const Eigen::Matrix<double,6,6>& get_ZDX_drbar_slha() const { return drbar_slha.ZDX; }
+   double get_ZDX_drbar_slha(int i, int k) const { return drbar_slha.ZDX(i,k); }
+   const Eigen::Matrix<double,5,5>& get_ZH_drbar_slha() const { return drbar_slha.ZH; }
+   double get_ZH_drbar_slha(int i, int k) const { return drbar_slha.ZH(i,k); }
+   const Eigen::Matrix<double,5,5>& get_ZA_drbar_slha() const { return drbar_slha.ZA; }
+   double get_ZA_drbar_slha(int i, int k) const { return drbar_slha.ZA(i,k); }
+   const Eigen::Matrix<double,2,2>& get_ZP_drbar_slha() const { return drbar_slha.ZP; }
+   double get_ZP_drbar_slha(int i, int k) const { return drbar_slha.ZP(i,k); }
+   const Eigen::Matrix<std::complex<double>,8,8>& get_ZN_drbar_slha() const { return drbar_slha.ZN; }
+   const std::complex<double>& get_ZN_drbar_slha(int i, int k) const { return drbar_slha.ZN(i,k); }
+   const Eigen::Matrix<std::complex<double>,2,2>& get_UM_drbar_slha() const { return drbar_slha.UM; }
+   const std::complex<double>& get_UM_drbar_slha(int i, int k) const { return drbar_slha.UM(i,k); }
+   const Eigen::Matrix<std::complex<double>,2,2>& get_UP_drbar_slha() const { return drbar_slha.UP; }
+   const std::complex<double>& get_UP_drbar_slha(int i, int k) const { return drbar_slha.UP(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZEL_drbar_slha() const { return drbar_slha.ZEL; }
+   const std::complex<double>& get_ZEL_drbar_slha(int i, int k) const { return drbar_slha.ZEL(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZER_drbar_slha() const { return drbar_slha.ZER; }
+   const std::complex<double>& get_ZER_drbar_slha(int i, int k) const { return drbar_slha.ZER(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZDL_drbar_slha() const { return drbar_slha.ZDL; }
+   const std::complex<double>& get_ZDL_drbar_slha(int i, int k) const { return drbar_slha.ZDL(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZDR_drbar_slha() const { return drbar_slha.ZDR; }
+   const std::complex<double>& get_ZDR_drbar_slha(int i, int k) const { return drbar_slha.ZDR(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZUL_drbar_slha() const { return drbar_slha.ZUL; }
+   const std::complex<double>& get_ZUL_drbar_slha(int i, int k) const { return drbar_slha.ZUL(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZUR_drbar_slha() const { return drbar_slha.ZUR; }
+   const std::complex<double>& get_ZUR_drbar_slha(int i, int k) const { return drbar_slha.ZUR(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZDXL_drbar_slha() const { return drbar_slha.ZDXL; }
+   const std::complex<double>& get_ZDXL_drbar_slha(int i, int k) const { return drbar_slha.ZDXL(i,k); }
+   const Eigen::Matrix<std::complex<double>,3,3>& get_ZDXR_drbar_slha() const { return drbar_slha.ZDXR; }
+   const std::complex<double>& get_ZDXR_drbar_slha(int i, int k) const { return drbar_slha.ZDXR(i,k); }
+   const Eigen::Matrix<double,7,7>& get_UHI0_drbar_slha() const { return drbar_slha.UHI0; }
+   double get_UHI0_drbar_slha(int i, int k) const { return drbar_slha.UHI0(i,k); }
+   const Eigen::Matrix<double,4,4>& get_UHIPM_drbar_slha() const { return drbar_slha.UHIPM; }
+   double get_UHIPM_drbar_slha(int i, int k) const { return drbar_slha.UHIPM(i,k); }
+   const Eigen::Matrix<std::complex<double>,2,2>& get_ZMI_drbar_slha() const { return drbar_slha.ZMI; }
+   const std::complex<double>& get_ZMI_drbar_slha(int i, int k) const { return drbar_slha.ZMI(i,k); }
+   const Eigen::Matrix<std::complex<double>,2,2>& get_ZPI_drbar_slha() const { return drbar_slha.ZPI; }
+   const std::complex<double>& get_ZPI_drbar_slha(int i, int k) const { return drbar_slha.ZPI(i,k); }
+   const Eigen::Matrix<std::complex<double>,7,7>& get_ZNI_drbar_slha() const { return drbar_slha.ZNI; }
+   const std::complex<double>& get_ZNI_drbar_slha(int i, int k) const { return drbar_slha.ZNI(i,k); }
+   const Eigen::Matrix<double,2,2>& get_UHp0_drbar_slha() const { return drbar_slha.UHp0; }
+   double get_UHp0_drbar_slha(int i, int k) const { return drbar_slha.UHp0(i,k); }
+   const Eigen::Matrix<double,2,2>& get_UHpp_drbar_slha() const { return drbar_slha.UHpp; }
+   double get_UHpp_drbar_slha(int i, int k) const { return drbar_slha.UHpp(i,k); }
+   const Eigen::Matrix<std::complex<double>,2,2>& get_ZNp_drbar_slha() const { return drbar_slha.ZNp; }
+   const std::complex<double>& get_ZNp_drbar_slha(int i, int k) const { return drbar_slha.ZNp(i,k); }
+
    const Eigen::Array<double,3,1>& get_Yu_slha() const { return Yu_slha; }
    double get_Yu_slha(int i) const { return Yu_slha(i); }
    const Eigen::Array<double,3,1>& get_Yd_slha() const { return Yd_slha; }
@@ -206,6 +315,7 @@ public:
 
 private:
    CNE6SSM_physical physical_slha; ///< contains the pole masses and mixings in slha convention
+   CNE6SSM_physical drbar_slha;    ///< contains the DR-bar masses and mixings in slha convention
    Eigen::Matrix<std::complex<double>,3,3> ckm;
    Eigen::Matrix<std::complex<double>,3,3> pmns;
    Eigen::Array<double,3,1> Yu_slha;

@@ -36,6 +36,7 @@ namespace flexiblesusy {
 CLASSNAME::CNE6SSM_slha(const CNE6SSM_input_parameters<Two_scale>& input_)
    : CNE6SSM<Two_scale>(input_)
    , physical_slha()
+   , drbar_slha()
    , ckm(Eigen::Matrix<std::complex<double>,3,3>::Identity())
    , pmns(Eigen::Matrix<std::complex<double>,3,3>::Identity())
 {
@@ -61,6 +62,7 @@ void CLASSNAME::clear()
 {
    CNE6SSM<Two_scale>::clear();
    physical_slha.clear();
+   drbar_slha.clear();
 }
 
 void CLASSNAME::calculate_spectrum()
@@ -73,6 +75,9 @@ void CLASSNAME::convert_to_slha()
 {
    physical_slha = get_physical();
    physical_slha.convert_to_slha();
+
+   drbar_slha = get_drbar_masses();
+   drbar_slha.convert_to_slha();
 
    convert_yukawa_couplings_to_slha();
    calculate_ckm_matrix();
@@ -139,6 +144,16 @@ CNE6SSM_physical& CLASSNAME::get_physical_slha()
    return physical_slha;
 }
 
+const CNE6SSM_physical& CLASSNAME::get_drbar_slha() const
+{
+   return drbar_slha;
+}
+
+CNE6SSM_physical& CLASSNAME::get_drbar_slha()
+{
+   return drbar_slha;
+}
+
 void CLASSNAME::print(std::ostream& ostr) const
 {
    CNE6SSM<Two_scale>::print(ostr);
@@ -146,7 +161,14 @@ void CLASSNAME::print(std::ostream& ostr) const
    ostr << "----------------------------------------\n"
            "SLHA convention:\n"
            "----------------------------------------\n";
+   ostr << "----------------------------------------\n"
+           "Pole masses:\n"
+           "----------------------------------------\n";
    physical_slha.print(ostr);
+   ostr << "----------------------------------------\n"
+           "DR-bar masses:\n"
+           "----------------------------------------\n";
+   drbar_slha.print(ostr);
 }
 
 } // namespace flexiblesusy
