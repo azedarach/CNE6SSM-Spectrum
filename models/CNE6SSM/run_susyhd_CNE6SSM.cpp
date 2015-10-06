@@ -41,8 +41,7 @@ SUSYHD::SUSYHD_input_parameters match_to_MSSM(flexiblesusy::CNE6SSM_semianalytic
    input.mE2 = flexiblesusy::Sqrt(model.get_me2(1,1));
    input.mL1 = flexiblesusy::Sqrt(model.get_ml2(0,0));
    input.mE1 = flexiblesusy::Sqrt(model.get_me2(0,0));
-   model.calculate_MAh();
-   input.mA = model.get_MAh(3);
+   input.mA = model.get_MAh(2);
 
    return input;
 }
