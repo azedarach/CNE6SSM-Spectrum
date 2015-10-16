@@ -418,6 +418,10 @@ int main(int argc, const char* argv[])
          = spectrum_generator.get_model();
       const CNE6SSM_semianalytic_slha<algorithm_type> model_slha(model);
 
+      slha_values_writer.set_high_scale(spectrum_generator.get_high_scale());
+      slha_values_writer.set_susy_scale(spectrum_generator.get_susy_scale());
+      slha_values_writer.set_low_scale(spectrum_generator.get_low_scale());
+
       pole_mass_writer.extract_pole_masses(model);
 
       if (must_write_drbar_masses)

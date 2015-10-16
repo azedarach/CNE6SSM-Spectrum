@@ -1184,12 +1184,9 @@ CNE6SSM_slha_values_writer::CNE6SSM_slha_values_writer()
    , slha_soft_pars_problems(CNE6SSM_info::particle_names)
    , slha_pole_mixings_problems(CNE6SSM_info::particle_names)
    , slha_running_mixings_problems(CNE6SSM_info::particle_names)
-   , slha_pole_masses_scale()
-   , slha_running_masses_scale()
-   , slha_susy_pars_scale()
-   , slha_soft_pars_scale()
-   , slha_pole_mixings_scale()
-   , slha_running_mixings_scale()
+   , high_scale(0)
+   , susy_scale(0)
+   , low_scale(0)
    , width(18)
 {
 }
@@ -1213,12 +1210,9 @@ CNE6SSM_semianalytic_slha_values_writer::CNE6SSM_semianalytic_slha_values_writer
    , slha_soft_pars_problems(CNE6SSM_info::particle_names)
    , slha_pole_mixings_problems(CNE6SSM_info::particle_names)
    , slha_running_mixings_problems(CNE6SSM_info::particle_names)
-   , slha_pole_masses_scale()
-   , slha_running_masses_scale()
-   , slha_susy_pars_scale()
-   , slha_soft_pars_scale()
-   , slha_pole_mixings_scale()
-   , slha_running_mixings_scale()
+   , high_scale(0)
+   , susy_scale(0)
+   , low_scale(0)
    , slha_pole_masses_m0(0)
    , slha_running_masses_m0(0)
    , slha_susy_pars_m0(0)
@@ -1249,7 +1243,21 @@ void CNE6SSM_slha_values_writer::write_slha_pole_masses_comment_line(std::ostrea
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -1303,7 +1311,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_lin
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -1350,7 +1372,21 @@ void CNE6SSM_slha_values_writer::write_slha_running_masses_comment_line(std::ost
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -1404,7 +1440,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -1451,7 +1501,21 @@ void CNE6SSM_slha_values_writer::write_slha_susy_pars_comment_line(std::ostream 
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -1506,7 +1570,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line(
    write_CNE6SSM_semianalytic_inputs_list(filestr, width);
 
    if (!filestr.good()) {
-      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line: "
             "file stream is corrupted");
       return;
    }
@@ -1517,7 +1581,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line(
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -1576,7 +1654,21 @@ void CNE6SSM_slha_values_writer::write_slha_soft_pars_comment_line(std::ostream 
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -1631,7 +1723,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line(
    write_CNE6SSM_semianalytic_inputs_list(filestr, width);
 
    if (!filestr.good()) {
-      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line: "
             "file stream is corrupted");
       return;
    }
@@ -1642,7 +1734,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line(
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -1701,7 +1807,21 @@ void CNE6SSM_slha_values_writer::write_slha_pole_mixings_comment_line(std::ostre
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
       if (!filestr.good()) {
@@ -1774,7 +1894,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_li
    write_CNE6SSM_semianalytic_inputs_list(filestr, width);
 
    if (!filestr.good()) {
-      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line: "
             "file stream is corrupted");
       return;
    }
@@ -1785,7 +1905,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_li
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
 
    for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
@@ -1863,7 +1997,21 @@ void CNE6SSM_slha_values_writer::write_slha_running_mixings_comment_line(std::os
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
    for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
       if (!filestr.good()) {
@@ -1936,7 +2084,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment
    write_CNE6SSM_semianalytic_inputs_list(filestr, width);
 
    if (!filestr.good()) {
-      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line: "
             "file stream is corrupted");
       return;
    }
@@ -1947,7 +2095,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
 
 
    for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
@@ -2017,7 +2179,21 @@ void CNE6SSM_slha_values_writer::write_slha_pole_masses_line(std::ostream & file
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_pole_masses_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -2062,7 +2238,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line(std::o
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_pole_masses_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -2100,7 +2290,21 @@ void CNE6SSM_slha_values_writer::write_slha_running_masses_line(std::ostream & f
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_running_masses_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -2145,7 +2349,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line(std
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_running_masses_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -2183,7 +2401,21 @@ void CNE6SSM_slha_values_writer::write_slha_susy_pars_line(std::ostream & filest
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_susy_pars_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -2230,7 +2462,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line(std::ost
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_susy_pars_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -2270,7 +2516,21 @@ void CNE6SSM_slha_values_writer::write_slha_soft_pars_line(std::ostream & filest
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_soft_pars_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -2317,7 +2577,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line(std::ost
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_soft_pars_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
       if (!filestr.good()) {
@@ -2357,7 +2631,21 @@ void CNE6SSM_slha_values_writer::write_slha_pole_mixings_line(std::ostream & fil
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_pole_mixings_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
       if (!filestr.good()) {
@@ -2402,7 +2690,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line(std::
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_pole_mixings_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
       if (!filestr.good()) {
@@ -2440,7 +2742,21 @@ void CNE6SSM_slha_values_writer::write_slha_running_mixings_line(std::ostream & 
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_running_mixings_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
       if (!filestr.good()) {
@@ -2485,7 +2801,21 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line(st
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_running_mixings_scale << ' ';
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
 
    for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
       if (!filestr.good()) {

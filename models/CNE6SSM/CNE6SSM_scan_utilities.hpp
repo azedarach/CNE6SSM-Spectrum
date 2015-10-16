@@ -324,6 +324,10 @@ public:
    CNE6SSM_slha_values_writer();
    ~CNE6SSM_slha_values_writer() {}
 
+   void set_high_scale(double high_scale_) { high_scale = high_scale_; }
+   void set_susy_scale(double susy_scale_) { susy_scale = susy_scale_; }
+   void set_low_scale(double low_scale_) { low_scale = low_scale_; }
+
    template <class T>
    void extract_slha_pole_masses(const CNE6SSM_slha<T>&);
    template <class T>
@@ -425,12 +429,9 @@ private:
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_pole_mixings_problems;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_running_mixings_problems;
 
-   double slha_pole_masses_scale;
-   double slha_running_masses_scale;
-   double slha_susy_pars_scale;
-   double slha_soft_pars_scale;
-   double slha_pole_mixings_scale;
-   double slha_running_mixings_scale;
+   double high_scale;
+   double susy_scale;
+   double low_scale;
    unsigned width;
 };
 
@@ -438,6 +439,10 @@ class CNE6SSM_semianalytic_slha_values_writer {
 public:
    CNE6SSM_semianalytic_slha_values_writer();
    ~CNE6SSM_semianalytic_slha_values_writer() {}
+
+   void set_high_scale(double high_scale_) { high_scale = high_scale_; }
+   void set_susy_scale(double susy_scale_) { susy_scale = susy_scale_; }
+   void set_low_scale(double low_scale_) { low_scale = low_scale_; }
 
    template <class T>
    void extract_slha_pole_masses(const CNE6SSM_semianalytic_slha<T>&);
@@ -540,12 +545,9 @@ private:
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_pole_mixings_problems;
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_running_mixings_problems;
 
-   double slha_pole_masses_scale;
-   double slha_running_masses_scale;
-   double slha_susy_pars_scale;
-   double slha_soft_pars_scale;
-   double slha_pole_mixings_scale;
-   double slha_running_mixings_scale;
+   double high_scale;
+   double susy_scale;
+   double low_scale;
    double slha_pole_masses_m0;
    double slha_running_masses_m0;
    double slha_susy_pars_m0;
@@ -962,7 +964,6 @@ template <class T>
 void CNE6SSM_slha_values_writer::extract_slha_pole_masses(const CNE6SSM_slha<T>& model)
 {
    slha_pole_masses.clear();
-   slha_pole_masses_scale = model.get_scale();
    slha_pole_masses_inputs = model.get_input();
    slha_pole_masses_problems = model.get_problems();
 
@@ -1005,7 +1006,6 @@ template <class T>
 void CNE6SSM_semianalytic_slha_values_writer::extract_slha_pole_masses(const CNE6SSM_semianalytic_slha<T>& model)
 {
    slha_pole_masses.clear();
-   slha_pole_masses_scale = model.get_scale();
    slha_pole_masses_inputs = model.get_input();
    slha_pole_masses_problems = model.get_problems();
    slha_pole_masses_m0 = model.get_ewsb_output_parameter(0);
@@ -1049,41 +1049,40 @@ template <class T>
 void CNE6SSM_slha_values_writer::extract_slha_running_masses(const CNE6SSM_slha<T>& model)
 {
    slha_running_masses.clear();
-   slha_running_masses_scale = model.get_scale();
    slha_running_masses_inputs = model.get_input();
    slha_running_masses_problems = model.get_problems();
 
-   slha_running_masses.push_back(TMass("DRBarMGlu", to_valarray(DRBARSLHA(MGlu))));
-   slha_running_masses.push_back(TMass("DRBarMChaP", to_valarray(DRBARSLHA(MChaP))));
-   slha_running_masses.push_back(TMass("DRBarMVZp", to_valarray(DRBARSLHA(MVZp))));
-   slha_running_masses.push_back(TMass("DRBarMSd", to_valarray(DRBARSLHA(MSd))));
-   slha_running_masses.push_back(TMass("DRBarMSv", to_valarray(DRBARSLHA(MSv))));
-   slha_running_masses.push_back(TMass("DRBarMSu", to_valarray(DRBARSLHA(MSu))));
-   slha_running_masses.push_back(TMass("DRBarMSe", to_valarray(DRBARSLHA(MSe))));
-   slha_running_masses.push_back(TMass("DRBarMSDX", to_valarray(DRBARSLHA(MSDX))));
-   slha_running_masses.push_back(TMass("DRBarMhh", to_valarray(DRBARSLHA(Mhh))));
-   slha_running_masses.push_back(TMass("DRBarMAh", to_valarray(DRBARSLHA(MAh))));
-   slha_running_masses.push_back(TMass("DRBarMHpm", to_valarray(DRBARSLHA(MHpm))));
-   slha_running_masses.push_back(TMass("DRBarMChi", to_valarray(DRBARSLHA(MChi))));
-   slha_running_masses.push_back(TMass("DRBarMCha", to_valarray(DRBARSLHA(MCha))));
-   slha_running_masses.push_back(TMass("DRBarMFDX", to_valarray(DRBARSLHA(MFDX))));
-   slha_running_masses.push_back(TMass("DRBarMSHI0", to_valarray(DRBARSLHA(MSHI0))));
-   slha_running_masses.push_back(TMass("DRBarMSHIPM", to_valarray(DRBARSLHA(MSHIPM))));
-   slha_running_masses.push_back(TMass("DRBarMChaI", to_valarray(DRBARSLHA(MChaI))));
-   slha_running_masses.push_back(TMass("DRBarMChiI", to_valarray(DRBARSLHA(MChiI))));
-   slha_running_masses.push_back(TMass("DRBarMSHp0", to_valarray(DRBARSLHA(MSHp0))));
-   slha_running_masses.push_back(TMass("DRBarMSHpp", to_valarray(DRBARSLHA(MSHpp))));
-   slha_running_masses.push_back(TMass("DRBarMChiP", to_valarray(DRBARSLHA(MChiP))));
+   slha_running_masses.push_back(TMass("DRbarMGlu", to_valarray(DRBARSLHA(MGlu))));
+   slha_running_masses.push_back(TMass("DRbarMChaP", to_valarray(DRBARSLHA(MChaP))));
+   slha_running_masses.push_back(TMass("DRbarMVZp", to_valarray(DRBARSLHA(MVZp))));
+   slha_running_masses.push_back(TMass("DRbarMSd", to_valarray(DRBARSLHA(MSd))));
+   slha_running_masses.push_back(TMass("DRbarMSv", to_valarray(DRBARSLHA(MSv))));
+   slha_running_masses.push_back(TMass("DRbarMSu", to_valarray(DRBARSLHA(MSu))));
+   slha_running_masses.push_back(TMass("DRbarMSe", to_valarray(DRBARSLHA(MSe))));
+   slha_running_masses.push_back(TMass("DRbarMSDX", to_valarray(DRBARSLHA(MSDX))));
+   slha_running_masses.push_back(TMass("DRbarMhh", to_valarray(DRBARSLHA(Mhh))));
+   slha_running_masses.push_back(TMass("DRbarMAh", to_valarray(DRBARSLHA(MAh))));
+   slha_running_masses.push_back(TMass("DRbarMHpm", to_valarray(DRBARSLHA(MHpm))));
+   slha_running_masses.push_back(TMass("DRbarMChi", to_valarray(DRBARSLHA(MChi))));
+   slha_running_masses.push_back(TMass("DRbarMCha", to_valarray(DRBARSLHA(MCha))));
+   slha_running_masses.push_back(TMass("DRbarMFDX", to_valarray(DRBARSLHA(MFDX))));
+   slha_running_masses.push_back(TMass("DRbarMSHI0", to_valarray(DRBARSLHA(MSHI0))));
+   slha_running_masses.push_back(TMass("DRbarMSHIPM", to_valarray(DRBARSLHA(MSHIPM))));
+   slha_running_masses.push_back(TMass("DRbarMChaI", to_valarray(DRBARSLHA(MChaI))));
+   slha_running_masses.push_back(TMass("DRbarMChiI", to_valarray(DRBARSLHA(MChiI))));
+   slha_running_masses.push_back(TMass("DRbarMSHp0", to_valarray(DRBARSLHA(MSHp0))));
+   slha_running_masses.push_back(TMass("DRbarMSHpp", to_valarray(DRBARSLHA(MSHpp))));
+   slha_running_masses.push_back(TMass("DRbarMChiP", to_valarray(DRBARSLHA(MChiP))));
 
    if (model.do_calculate_sm_pole_masses()) {
-      slha_running_masses.push_back(TMass("DRBarMFd", to_valarray(DRBARSLHA(MFd))));
-      slha_running_masses.push_back(TMass("DRBarMFe", to_valarray(DRBARSLHA(MFe))));
-      slha_running_masses.push_back(TMass("DRBarMFu", to_valarray(DRBARSLHA(MFu))));
-      slha_running_masses.push_back(TMass("DRBarMFv", to_valarray(DRBARSLHA(MFv))));
-      slha_running_masses.push_back(TMass("DRBarMVG", to_valarray(DRBARSLHA(MVG))));
-      slha_running_masses.push_back(TMass("DRBarMVP", to_valarray(DRBARSLHA(MVP))));
-      slha_running_masses.push_back(TMass("DRBarMVWm", to_valarray(DRBARSLHA(MVWm))));
-      slha_running_masses.push_back(TMass("DRBarMVZ", to_valarray(DRBARSLHA(MVZ))));
+      slha_running_masses.push_back(TMass("DRbarMFd", to_valarray(DRBARSLHA(MFd))));
+      slha_running_masses.push_back(TMass("DRbarMFe", to_valarray(DRBARSLHA(MFe))));
+      slha_running_masses.push_back(TMass("DRbarMFu", to_valarray(DRBARSLHA(MFu))));
+      slha_running_masses.push_back(TMass("DRbarMFv", to_valarray(DRBARSLHA(MFv))));
+      slha_running_masses.push_back(TMass("DRbarMVG", to_valarray(DRBARSLHA(MVG))));
+      slha_running_masses.push_back(TMass("DRbarMVP", to_valarray(DRBARSLHA(MVP))));
+      slha_running_masses.push_back(TMass("DRbarMVWm", to_valarray(DRBARSLHA(MVWm))));
+      slha_running_masses.push_back(TMass("DRbarMVZ", to_valarray(DRBARSLHA(MVZ))));
 
    }
 }
@@ -1092,42 +1091,41 @@ template <class T>
 void CNE6SSM_semianalytic_slha_values_writer::extract_slha_running_masses(const CNE6SSM_semianalytic_slha<T>& model)
 {
    slha_running_masses.clear();
-   slha_running_masses_scale = model.get_scale();
    slha_running_masses_inputs = model.get_input();
    slha_running_masses_problems = model.get_problems();
    slha_running_masses_m0 = model.get_ewsb_output_parameter(0);
 
-   slha_running_masses.push_back(TMass("DRBarMGlu", to_valarray(DRBARSLHA(MGlu))));
-   slha_running_masses.push_back(TMass("DRBarMChaP", to_valarray(DRBARSLHA(MChaP))));
-   slha_running_masses.push_back(TMass("DRBarMVZp", to_valarray(DRBARSLHA(MVZp))));
-   slha_running_masses.push_back(TMass("DRBarMSd", to_valarray(DRBARSLHA(MSd))));
-   slha_running_masses.push_back(TMass("DRBarMSv", to_valarray(DRBARSLHA(MSv))));
-   slha_running_masses.push_back(TMass("DRBarMSu", to_valarray(DRBARSLHA(MSu))));
-   slha_running_masses.push_back(TMass("DRBarMSe", to_valarray(DRBARSLHA(MSe))));
-   slha_running_masses.push_back(TMass("DRBarMSDX", to_valarray(DRBARSLHA(MSDX))));
-   slha_running_masses.push_back(TMass("DRBarMhh", to_valarray(DRBARSLHA(Mhh))));
-   slha_running_masses.push_back(TMass("DRBarMAh", to_valarray(DRBARSLHA(MAh))));
-   slha_running_masses.push_back(TMass("DRBarMHpm", to_valarray(DRBARSLHA(MHpm))));
-   slha_running_masses.push_back(TMass("DRBarMChi", to_valarray(DRBARSLHA(MChi))));
-   slha_running_masses.push_back(TMass("DRBarMCha", to_valarray(DRBARSLHA(MCha))));
-   slha_running_masses.push_back(TMass("DRBarMFDX", to_valarray(DRBARSLHA(MFDX))));
-   slha_running_masses.push_back(TMass("DRBarMSHI0", to_valarray(DRBARSLHA(MSHI0))));
-   slha_running_masses.push_back(TMass("DRBarMSHIPM", to_valarray(DRBARSLHA(MSHIPM))));
-   slha_running_masses.push_back(TMass("DRBarMChaI", to_valarray(DRBARSLHA(MChaI))));
-   slha_running_masses.push_back(TMass("DRBarMChiI", to_valarray(DRBARSLHA(MChiI))));
-   slha_running_masses.push_back(TMass("DRBarMSHp0", to_valarray(DRBARSLHA(MSHp0))));
-   slha_running_masses.push_back(TMass("DRBarMSHpp", to_valarray(DRBARSLHA(MSHpp))));
-   slha_running_masses.push_back(TMass("DRBarMChiP", to_valarray(DRBARSLHA(MChiP))));
+   slha_running_masses.push_back(TMass("DRbarMGlu", to_valarray(DRBARSLHA(MGlu))));
+   slha_running_masses.push_back(TMass("DRbarMChaP", to_valarray(DRBARSLHA(MChaP))));
+   slha_running_masses.push_back(TMass("DRbarMVZp", to_valarray(DRBARSLHA(MVZp))));
+   slha_running_masses.push_back(TMass("DRbarMSd", to_valarray(DRBARSLHA(MSd))));
+   slha_running_masses.push_back(TMass("DRbarMSv", to_valarray(DRBARSLHA(MSv))));
+   slha_running_masses.push_back(TMass("DRbarMSu", to_valarray(DRBARSLHA(MSu))));
+   slha_running_masses.push_back(TMass("DRbarMSe", to_valarray(DRBARSLHA(MSe))));
+   slha_running_masses.push_back(TMass("DRbarMSDX", to_valarray(DRBARSLHA(MSDX))));
+   slha_running_masses.push_back(TMass("DRbarMhh", to_valarray(DRBARSLHA(Mhh))));
+   slha_running_masses.push_back(TMass("DRbarMAh", to_valarray(DRBARSLHA(MAh))));
+   slha_running_masses.push_back(TMass("DRbarMHpm", to_valarray(DRBARSLHA(MHpm))));
+   slha_running_masses.push_back(TMass("DRbarMChi", to_valarray(DRBARSLHA(MChi))));
+   slha_running_masses.push_back(TMass("DRbarMCha", to_valarray(DRBARSLHA(MCha))));
+   slha_running_masses.push_back(TMass("DRbarMFDX", to_valarray(DRBARSLHA(MFDX))));
+   slha_running_masses.push_back(TMass("DRbarMSHI0", to_valarray(DRBARSLHA(MSHI0))));
+   slha_running_masses.push_back(TMass("DRbarMSHIPM", to_valarray(DRBARSLHA(MSHIPM))));
+   slha_running_masses.push_back(TMass("DRbarMChaI", to_valarray(DRBARSLHA(MChaI))));
+   slha_running_masses.push_back(TMass("DRbarMChiI", to_valarray(DRBARSLHA(MChiI))));
+   slha_running_masses.push_back(TMass("DRbarMSHp0", to_valarray(DRBARSLHA(MSHp0))));
+   slha_running_masses.push_back(TMass("DRbarMSHpp", to_valarray(DRBARSLHA(MSHpp))));
+   slha_running_masses.push_back(TMass("DRbarMChiP", to_valarray(DRBARSLHA(MChiP))));
 
    if (model.do_calculate_sm_pole_masses()) {
-      slha_running_masses.push_back(TMass("DRBarMFd", to_valarray(DRBARSLHA(MFd))));
-      slha_running_masses.push_back(TMass("DRBarMFe", to_valarray(DRBARSLHA(MFe))));
-      slha_running_masses.push_back(TMass("DRBarMFu", to_valarray(DRBARSLHA(MFu))));
-      slha_running_masses.push_back(TMass("DRBarMFv", to_valarray(DRBARSLHA(MFv))));
-      slha_running_masses.push_back(TMass("DRBarMVG", to_valarray(DRBARSLHA(MVG))));
-      slha_running_masses.push_back(TMass("DRBarMVP", to_valarray(DRBARSLHA(MVP))));
-      slha_running_masses.push_back(TMass("DRBarMVWm", to_valarray(DRBARSLHA(MVWm))));
-      slha_running_masses.push_back(TMass("DRBarMVZ", to_valarray(DRBARSLHA(MVZ))));
+      slha_running_masses.push_back(TMass("DRbarMFd", to_valarray(DRBARSLHA(MFd))));
+      slha_running_masses.push_back(TMass("DRbarMFe", to_valarray(DRBARSLHA(MFe))));
+      slha_running_masses.push_back(TMass("DRbarMFu", to_valarray(DRBARSLHA(MFu))));
+      slha_running_masses.push_back(TMass("DRbarMFv", to_valarray(DRBARSLHA(MFv))));
+      slha_running_masses.push_back(TMass("DRbarMVG", to_valarray(DRBARSLHA(MVG))));
+      slha_running_masses.push_back(TMass("DRbarMVP", to_valarray(DRBARSLHA(MVP))));
+      slha_running_masses.push_back(TMass("DRbarMVWm", to_valarray(DRBARSLHA(MVWm))));
+      slha_running_masses.push_back(TMass("DRbarMVZ", to_valarray(DRBARSLHA(MVZ))));
 
    }
 }
@@ -1136,7 +1134,6 @@ template <class T>
 void CNE6SSM_slha_values_writer::extract_slha_susy_pars(const CNE6SSM_slha<T>& model)
 {
    slha_susy_pars.clear();
-   slha_susy_pars_scale = model.get_scale();
    slha_susy_pars_inputs = model.get_input();
    slha_susy_pars_problems = model.get_problems();
 
@@ -1174,7 +1171,6 @@ template <class T>
 void CNE6SSM_semianalytic_slha_values_writer::extract_slha_susy_pars(const CNE6SSM_semianalytic_slha<T>& model)
 {
    slha_susy_pars.clear();
-   slha_susy_pars_scale = model.get_scale();
    slha_susy_pars_inputs = model.get_input();
    slha_susy_pars_problems = model.get_problems();
    slha_susy_pars_m0 = model.get_ewsb_output_parameter(0);
@@ -1213,7 +1209,6 @@ template <class T>
 void CNE6SSM_slha_values_writer::extract_slha_soft_pars(const CNE6SSM_slha<T>& model)
 {
    slha_soft_pars.clear();
-   slha_soft_pars_scale = model.get_scale();
    slha_soft_pars_inputs = model.get_input();
    slha_soft_pars_problems = model.get_problems();
 
@@ -1262,7 +1257,6 @@ template <class T>
 void CNE6SSM_semianalytic_slha_values_writer::extract_slha_soft_pars(const CNE6SSM_semianalytic_slha<T>& model)
 {
    slha_soft_pars.clear();
-   slha_soft_pars_scale = model.get_scale();
    slha_soft_pars_inputs = model.get_input();
    slha_soft_pars_problems = model.get_problems();
    slha_soft_pars_m0 = model.get_ewsb_output_parameter(0);
@@ -1312,7 +1306,6 @@ template <class T>
 void CNE6SSM_slha_values_writer::extract_slha_pole_mixings(const CNE6SSM_slha<T>& model)
 {
    slha_pole_mixings.clear();
-   slha_pole_mixings_scale = model.get_scale();
    slha_pole_mixings_inputs = model.get_input();
    slha_pole_mixings_problems = model.get_problems();
 
@@ -1349,7 +1342,6 @@ template <class T>
 void CNE6SSM_semianalytic_slha_values_writer::extract_slha_pole_mixings(const CNE6SSM_semianalytic_slha<T>& model)
 {
    slha_pole_mixings.clear();
-   slha_pole_mixings_scale = model.get_scale();
    slha_pole_mixings_inputs = model.get_input();
    slha_pole_mixings_problems = model.get_problems();
    slha_pole_mixings_m0 = model.get_ewsb_output_parameter(0);
@@ -1387,75 +1379,73 @@ template <class T>
 void CNE6SSM_slha_values_writer::extract_slha_running_mixings(const CNE6SSM_slha<T>& model)
 {
    slha_running_mixings.clear();
-   slha_running_mixings_scale = model.get_scale();
    slha_running_mixings_inputs = model.get_input();
    slha_running_mixings_problems = model.get_problems();
 
-   slha_running_mixings.push_back(TMixing("DRBarZD", 6, true, to_valarray(DRBARSLHA(ZD))));
-   slha_running_mixings.push_back(TMixing("DRBarZV", 3, true, to_valarray(DRBARSLHA(ZV))));
-   slha_running_mixings.push_back(TMixing("DRBarZU", 6, true, to_valarray(DRBARSLHA(ZU))));
-   slha_running_mixings.push_back(TMixing("DRBarZE", 6, true, to_valarray(DRBARSLHA(ZE))));
-   slha_running_mixings.push_back(TMixing("DRBarZDX", 6, true, to_valarray(DRBARSLHA(ZDX))));
-   slha_running_mixings.push_back(TMixing("DRBarZH", 5, true, to_valarray(DRBARSLHA(ZH))));
-   slha_running_mixings.push_back(TMixing("DRBarZA", 5, true, to_valarray(DRBARSLHA(ZA))));
-   slha_running_mixings.push_back(TMixing("DRBarZP", 2, true, to_valarray(DRBARSLHA(ZP))));
-   slha_running_mixings.push_back(TMixing("DRBarZN", 8, false, to_valarray(DRBARSLHA(ZN))));
-   slha_running_mixings.push_back(TMixing("DRBarUM", 2, false, to_valarray(DRBARSLHA(UM))));
-   slha_running_mixings.push_back(TMixing("DRBarUP", 2, false, to_valarray(DRBARSLHA(UP))));
-   slha_running_mixings.push_back(TMixing("DRBarZEL", 3, false, to_valarray(DRBARSLHA(ZEL))));
-   slha_running_mixings.push_back(TMixing("DRBarZER", 3, false, to_valarray(DRBARSLHA(ZER))));
-   slha_running_mixings.push_back(TMixing("DRBarZDL", 3, false, to_valarray(DRBARSLHA(ZDL))));
-   slha_running_mixings.push_back(TMixing("DRBarZDR", 3, false, to_valarray(DRBARSLHA(ZDR))));
-   slha_running_mixings.push_back(TMixing("DRBarZUL", 3, false, to_valarray(DRBARSLHA(ZUL))));
-   slha_running_mixings.push_back(TMixing("DRBarZUR", 3, false, to_valarray(DRBARSLHA(ZUR))));
-   slha_running_mixings.push_back(TMixing("DRBarZDXL", 3, false, to_valarray(DRBARSLHA(ZDXL))));
-   slha_running_mixings.push_back(TMixing("DRBarZDXR", 3, false, to_valarray(DRBARSLHA(ZDXR))));
-   slha_running_mixings.push_back(TMixing("DRBarUHI0", 7, true, to_valarray(DRBARSLHA(UHI0))));
-   slha_running_mixings.push_back(TMixing("DRBarUHIPM", 4, true, to_valarray(DRBARSLHA(UHIPM))));
-   slha_running_mixings.push_back(TMixing("DRBarZMI", 2, false, to_valarray(DRBARSLHA(ZMI))));
-   slha_running_mixings.push_back(TMixing("DRBarZPI", 2, false, to_valarray(DRBARSLHA(ZPI))));
-   slha_running_mixings.push_back(TMixing("DRBarZNI", 7, false, to_valarray(DRBARSLHA(ZNI))));
-   slha_running_mixings.push_back(TMixing("DRBarUHp0", 2, true, to_valarray(DRBARSLHA(UHp0))));
-   slha_running_mixings.push_back(TMixing("DRBarUHpp", 2, true, to_valarray(DRBARSLHA(UHpp))));
-   slha_running_mixings.push_back(TMixing("DRBarZNp", 2, false, to_valarray(DRBARSLHA(ZNp))));
+   slha_running_mixings.push_back(TMixing("DRbarZD", 6, true, to_valarray(DRBARSLHA(ZD))));
+   slha_running_mixings.push_back(TMixing("DRbarZV", 3, true, to_valarray(DRBARSLHA(ZV))));
+   slha_running_mixings.push_back(TMixing("DRbarZU", 6, true, to_valarray(DRBARSLHA(ZU))));
+   slha_running_mixings.push_back(TMixing("DRbarZE", 6, true, to_valarray(DRBARSLHA(ZE))));
+   slha_running_mixings.push_back(TMixing("DRbarZDX", 6, true, to_valarray(DRBARSLHA(ZDX))));
+   slha_running_mixings.push_back(TMixing("DRbarZH", 5, true, to_valarray(DRBARSLHA(ZH))));
+   slha_running_mixings.push_back(TMixing("DRbarZA", 5, true, to_valarray(DRBARSLHA(ZA))));
+   slha_running_mixings.push_back(TMixing("DRbarZP", 2, true, to_valarray(DRBARSLHA(ZP))));
+   slha_running_mixings.push_back(TMixing("DRbarZN", 8, false, to_valarray(DRBARSLHA(ZN))));
+   slha_running_mixings.push_back(TMixing("DRbarUM", 2, false, to_valarray(DRBARSLHA(UM))));
+   slha_running_mixings.push_back(TMixing("DRbarUP", 2, false, to_valarray(DRBARSLHA(UP))));
+   slha_running_mixings.push_back(TMixing("DRbarZEL", 3, false, to_valarray(DRBARSLHA(ZEL))));
+   slha_running_mixings.push_back(TMixing("DRbarZER", 3, false, to_valarray(DRBARSLHA(ZER))));
+   slha_running_mixings.push_back(TMixing("DRbarZDL", 3, false, to_valarray(DRBARSLHA(ZDL))));
+   slha_running_mixings.push_back(TMixing("DRbarZDR", 3, false, to_valarray(DRBARSLHA(ZDR))));
+   slha_running_mixings.push_back(TMixing("DRbarZUL", 3, false, to_valarray(DRBARSLHA(ZUL))));
+   slha_running_mixings.push_back(TMixing("DRbarZUR", 3, false, to_valarray(DRBARSLHA(ZUR))));
+   slha_running_mixings.push_back(TMixing("DRbarZDXL", 3, false, to_valarray(DRBARSLHA(ZDXL))));
+   slha_running_mixings.push_back(TMixing("DRbarZDXR", 3, false, to_valarray(DRBARSLHA(ZDXR))));
+   slha_running_mixings.push_back(TMixing("DRbarUHI0", 7, true, to_valarray(DRBARSLHA(UHI0))));
+   slha_running_mixings.push_back(TMixing("DRbarUHIPM", 4, true, to_valarray(DRBARSLHA(UHIPM))));
+   slha_running_mixings.push_back(TMixing("DRbarZMI", 2, false, to_valarray(DRBARSLHA(ZMI))));
+   slha_running_mixings.push_back(TMixing("DRbarZPI", 2, false, to_valarray(DRBARSLHA(ZPI))));
+   slha_running_mixings.push_back(TMixing("DRbarZNI", 7, false, to_valarray(DRBARSLHA(ZNI))));
+   slha_running_mixings.push_back(TMixing("DRbarUHp0", 2, true, to_valarray(DRBARSLHA(UHp0))));
+   slha_running_mixings.push_back(TMixing("DRbarUHpp", 2, true, to_valarray(DRBARSLHA(UHpp))));
+   slha_running_mixings.push_back(TMixing("DRbarZNp", 2, false, to_valarray(DRBARSLHA(ZNp))));
 }
 
 template <class T>
 void CNE6SSM_semianalytic_slha_values_writer::extract_slha_running_mixings(const CNE6SSM_semianalytic_slha<T>& model)
 {
    slha_running_mixings.clear();
-   slha_running_mixings_scale = model.get_scale();
    slha_running_mixings_inputs = model.get_input();
    slha_running_mixings_problems = model.get_problems();
    slha_running_mixings_m0 = model.get_ewsb_output_parameter(0);
 
-   slha_running_mixings.push_back(TMixing("DRBarZD", 6, true, to_valarray(DRBARSLHA(ZD))));
-   slha_running_mixings.push_back(TMixing("DRBarZV", 3, true, to_valarray(DRBARSLHA(ZV))));
-   slha_running_mixings.push_back(TMixing("DRBarZU", 6, true, to_valarray(DRBARSLHA(ZU))));
-   slha_running_mixings.push_back(TMixing("DRBarZE", 6, true, to_valarray(DRBARSLHA(ZE))));
-   slha_running_mixings.push_back(TMixing("DRBarZDX", 6, true, to_valarray(DRBARSLHA(ZDX))));
-   slha_running_mixings.push_back(TMixing("DRBarZH", 5, true, to_valarray(DRBARSLHA(ZH))));
-   slha_running_mixings.push_back(TMixing("DRBarZA", 5, true, to_valarray(DRBARSLHA(ZA))));
-   slha_running_mixings.push_back(TMixing("DRBarZP", 2, true, to_valarray(DRBARSLHA(ZP))));
-   slha_running_mixings.push_back(TMixing("DRBarZN", 8, false, to_valarray(DRBARSLHA(ZN))));
-   slha_running_mixings.push_back(TMixing("DRBarUM", 2, false, to_valarray(DRBARSLHA(UM))));
-   slha_running_mixings.push_back(TMixing("DRBarUP", 2, false, to_valarray(DRBARSLHA(UP))));
-   slha_running_mixings.push_back(TMixing("DRBarZEL", 3, false, to_valarray(DRBARSLHA(ZEL))));
-   slha_running_mixings.push_back(TMixing("DRBarZER", 3, false, to_valarray(DRBARSLHA(ZER))));
-   slha_running_mixings.push_back(TMixing("DRBarZDL", 3, false, to_valarray(DRBARSLHA(ZDL))));
-   slha_running_mixings.push_back(TMixing("DRBarZDR", 3, false, to_valarray(DRBARSLHA(ZDR))));
-   slha_running_mixings.push_back(TMixing("DRBarZUL", 3, false, to_valarray(DRBARSLHA(ZUL))));
-   slha_running_mixings.push_back(TMixing("DRBarZUR", 3, false, to_valarray(DRBARSLHA(ZUR))));
-   slha_running_mixings.push_back(TMixing("DRBarZDXL", 3, false, to_valarray(DRBARSLHA(ZDXL))));
-   slha_running_mixings.push_back(TMixing("DRBarZDXR", 3, false, to_valarray(DRBARSLHA(ZDXR))));
-   slha_running_mixings.push_back(TMixing("DRBarUHI0", 7, true, to_valarray(DRBARSLHA(UHI0))));
-   slha_running_mixings.push_back(TMixing("DRBarUHIPM", 4, true, to_valarray(DRBARSLHA(UHIPM))));
-   slha_running_mixings.push_back(TMixing("DRBarZMI", 2, false, to_valarray(DRBARSLHA(ZMI))));
-   slha_running_mixings.push_back(TMixing("DRBarZPI", 2, false, to_valarray(DRBARSLHA(ZPI))));
-   slha_running_mixings.push_back(TMixing("DRBarZNI", 7, false, to_valarray(DRBARSLHA(ZNI))));
-   slha_running_mixings.push_back(TMixing("DRBarUHp0", 2, true, to_valarray(DRBARSLHA(UHp0))));
-   slha_running_mixings.push_back(TMixing("DRBarUHpp", 2, true, to_valarray(DRBARSLHA(UHpp))));
-   slha_running_mixings.push_back(TMixing("DRBarZNp", 2, false, to_valarray(DRBARSLHA(ZNp))));
+   slha_running_mixings.push_back(TMixing("DRbarZD", 6, true, to_valarray(DRBARSLHA(ZD))));
+   slha_running_mixings.push_back(TMixing("DRbarZV", 3, true, to_valarray(DRBARSLHA(ZV))));
+   slha_running_mixings.push_back(TMixing("DRbarZU", 6, true, to_valarray(DRBARSLHA(ZU))));
+   slha_running_mixings.push_back(TMixing("DRbarZE", 6, true, to_valarray(DRBARSLHA(ZE))));
+   slha_running_mixings.push_back(TMixing("DRbarZDX", 6, true, to_valarray(DRBARSLHA(ZDX))));
+   slha_running_mixings.push_back(TMixing("DRbarZH", 5, true, to_valarray(DRBARSLHA(ZH))));
+   slha_running_mixings.push_back(TMixing("DRbarZA", 5, true, to_valarray(DRBARSLHA(ZA))));
+   slha_running_mixings.push_back(TMixing("DRbarZP", 2, true, to_valarray(DRBARSLHA(ZP))));
+   slha_running_mixings.push_back(TMixing("DRbarZN", 8, false, to_valarray(DRBARSLHA(ZN))));
+   slha_running_mixings.push_back(TMixing("DRbarUM", 2, false, to_valarray(DRBARSLHA(UM))));
+   slha_running_mixings.push_back(TMixing("DRbarUP", 2, false, to_valarray(DRBARSLHA(UP))));
+   slha_running_mixings.push_back(TMixing("DRbarZEL", 3, false, to_valarray(DRBARSLHA(ZEL))));
+   slha_running_mixings.push_back(TMixing("DRbarZER", 3, false, to_valarray(DRBARSLHA(ZER))));
+   slha_running_mixings.push_back(TMixing("DRbarZDL", 3, false, to_valarray(DRBARSLHA(ZDL))));
+   slha_running_mixings.push_back(TMixing("DRbarZDR", 3, false, to_valarray(DRBARSLHA(ZDR))));
+   slha_running_mixings.push_back(TMixing("DRbarZUL", 3, false, to_valarray(DRBARSLHA(ZUL))));
+   slha_running_mixings.push_back(TMixing("DRbarZUR", 3, false, to_valarray(DRBARSLHA(ZUR))));
+   slha_running_mixings.push_back(TMixing("DRbarZDXL", 3, false, to_valarray(DRBARSLHA(ZDXL))));
+   slha_running_mixings.push_back(TMixing("DRbarZDXR", 3, false, to_valarray(DRBARSLHA(ZDXR))));
+   slha_running_mixings.push_back(TMixing("DRbarUHI0", 7, true, to_valarray(DRBARSLHA(UHI0))));
+   slha_running_mixings.push_back(TMixing("DRbarUHIPM", 4, true, to_valarray(DRBARSLHA(UHIPM))));
+   slha_running_mixings.push_back(TMixing("DRbarZMI", 2, false, to_valarray(DRBARSLHA(ZMI))));
+   slha_running_mixings.push_back(TMixing("DRbarZPI", 2, false, to_valarray(DRBARSLHA(ZPI))));
+   slha_running_mixings.push_back(TMixing("DRbarZNI", 7, false, to_valarray(DRBARSLHA(ZNI))));
+   slha_running_mixings.push_back(TMixing("DRbarUHp0", 2, true, to_valarray(DRBARSLHA(UHp0))));
+   slha_running_mixings.push_back(TMixing("DRbarUHpp", 2, true, to_valarray(DRBARSLHA(UHpp))));
+   slha_running_mixings.push_back(TMixing("DRbarZNp", 2, false, to_valarray(DRBARSLHA(ZNp))));
 }
 
 } // namespace flexiblesusy
