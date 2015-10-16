@@ -6,7 +6,9 @@
 #define CNE6SSM_SCAN_UTILITIES_H
 
 #include "CNE6SSM_two_scale_model.hpp"
-#include "CNE6SSM_semi_two_scale_model.hpp"
+#include "CNE6SSM_semi_two_scale_model_slha.hpp"
+#include "CNE6SSM_two_scale_model_slha.hpp"
+#include "CNE6SSM_semi_two_scale_model_slha.hpp"
 #include "CNE6SSM_info.hpp"
 #include "CNE6SSM_utilities.hpp"
 #include "wrappers.hpp"
@@ -18,6 +20,8 @@
 #include <utility>
 
 #define PHYSICAL(p) model.get_physical().p
+#define PHYSICALSLHA(p) model.get_physical_slha().p
+#define DRBARSLHA(p) model.get_drbar_slha().p
 #define MODELPARAMETER(p) model.get_##p()
 
 
@@ -311,6 +315,243 @@ private:
    double drbar_susy_pars_scale;
    double drbar_soft_pars_scale;
    double drbar_mixings_scale;
+   unsigned width;
+};
+
+/// As above, but in SLHA convention
+class CNE6SSM_slha_values_writer {
+public:
+   CNE6SSM_slha_values_writer();
+   ~CNE6SSM_slha_values_writer() {}
+
+   template <class T>
+   void extract_slha_pole_masses(const CNE6SSM_slha<T>&);
+   template <class T>
+   void extract_slha_running_masses(const CNE6SSM_slha<T>&);
+   template <class T>
+   void extract_slha_susy_pars(const CNE6SSM_slha<T>&);
+   template <class T>
+   void extract_slha_soft_pars(const CNE6SSM_slha<T>&);
+   template <class T>
+   void extract_slha_pole_mixings(const CNE6SSM_slha<T>&);
+   template <class T>
+   void extract_slha_running_mixings(const CNE6SSM_slha<T>&);
+
+   void write_slha_pole_masses_comment_line(std::ostream &) const;
+   void write_slha_running_masses_comment_line(std::ostream &) const;
+   void write_slha_susy_pars_comment_line(std::ostream &) const;
+   void write_slha_soft_pars_comment_line(std::ostream &) const;
+   void write_slha_pole_mixings_comment_line(std::ostream &) const;
+   void write_slha_running_mixings_comment_line(std::ostream &) const;
+
+   void write_slha_pole_masses_line(std::ostream &) const;
+   void write_slha_running_masses_line(std::ostream &) const;
+   void write_slha_susy_pars_line(std::ostream &) const;
+   void write_slha_soft_pars_line(std::ostream &) const;
+   void write_slha_pole_mixings_line(std::ostream &) const;
+   void write_slha_running_mixings_line(std::ostream &) const;
+
+private:
+   struct TMass {
+      std::string name;
+      std::valarray<double> masses;
+      TMass(const std::string& name_, const std::valarray<double>& masses_)
+         : name(name_)
+         , masses(masses_)
+         {}
+   };
+
+   // note: stored in column-major format, i.e.
+   // elements are (0,0), (1,0), (2,0),...
+   struct TParameter {
+      std::string name;
+      std::size_t mass_dimension;
+      std::size_t rows;
+      std::size_t cols;
+      std::valarray<double> values;
+      TParameter(const std::string& name_, 
+                 std::size_t mass_dimension_,
+                 std::size_t rows_, std::size_t cols_,
+                 const std::valarray<double>& values_)
+         : name(name_)
+         , mass_dimension(mass_dimension_)
+         , rows(rows_)
+         , cols(cols_)
+         , values(values_)
+         {}
+   };
+
+   // note: stored in column-major format, i.e.
+   // elements are (0,0), (1,0), (2,0),...
+   struct TMixing {
+      std::string name;
+      std::size_t dimension;
+      bool is_real;
+      std::valarray<double> mixings;
+      TMixing(const std::string name_, std::size_t dimension_,
+              bool is_real_,
+              const std::valarray<double>& mixings_)
+         : name(name_)
+         , dimension(dimension_)
+         , is_real(is_real_)
+         , mixings(mixings_)
+         {}
+   };
+
+   typedef std::vector<TMass> TPoleMasses;
+   typedef std::vector<TMass> TRunningMasses;
+   typedef std::vector<TParameter> TSusyPars;
+   typedef std::vector<TParameter> TSoftPars;
+   typedef std::vector<TMixing> TMixings;
+
+   TPoleMasses slha_pole_masses;
+   TRunningMasses slha_running_masses;
+   TSusyPars slha_susy_pars;
+   TSoftPars slha_soft_pars;
+   TMixings slha_pole_mixings;
+   TMixings slha_running_mixings;
+
+   CNE6SSM_input_parameters<Two_scale> slha_pole_masses_inputs;
+   CNE6SSM_input_parameters<Two_scale> slha_running_masses_inputs;
+   CNE6SSM_input_parameters<Two_scale> slha_susy_pars_inputs;
+   CNE6SSM_input_parameters<Two_scale> slha_soft_pars_inputs;
+   CNE6SSM_input_parameters<Two_scale> slha_pole_mixings_inputs;
+   CNE6SSM_input_parameters<Two_scale> slha_running_mixings_inputs;
+
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_pole_masses_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_running_masses_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_susy_pars_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_soft_pars_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_pole_mixings_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_running_mixings_problems;
+
+   double slha_pole_masses_scale;
+   double slha_running_masses_scale;
+   double slha_susy_pars_scale;
+   double slha_soft_pars_scale;
+   double slha_pole_mixings_scale;
+   double slha_running_mixings_scale;
+   unsigned width;
+};
+
+class CNE6SSM_semianalytic_slha_values_writer {
+public:
+   CNE6SSM_semianalytic_slha_values_writer();
+   ~CNE6SSM_semianalytic_slha_values_writer() {}
+
+   template <class T>
+   void extract_slha_pole_masses(const CNE6SSM_semianalytic_slha<T>&);
+   template <class T>
+   void extract_slha_running_masses(const CNE6SSM_semianalytic_slha<T>&);
+   template <class T>
+   void extract_slha_susy_pars(const CNE6SSM_semianalytic_slha<T>&);
+   template <class T>
+   void extract_slha_soft_pars(const CNE6SSM_semianalytic_slha<T>&);
+   template <class T>
+   void extract_slha_pole_mixings(const CNE6SSM_semianalytic_slha<T>&);
+   template <class T>
+   void extract_slha_running_mixings(const CNE6SSM_semianalytic_slha<T>&);
+
+   void write_slha_pole_masses_comment_line(std::ostream &) const;
+   void write_slha_running_masses_comment_line(std::ostream &) const;
+   void write_slha_susy_pars_comment_line(std::ostream &) const;
+   void write_slha_soft_pars_comment_line(std::ostream &) const;
+   void write_slha_pole_mixings_comment_line(std::ostream &) const;
+   void write_slha_running_mixings_comment_line(std::ostream &) const;
+
+   void write_slha_pole_masses_line(std::ostream &) const;
+   void write_slha_running_masses_line(std::ostream &) const;
+   void write_slha_susy_pars_line(std::ostream &) const;
+   void write_slha_soft_pars_line(std::ostream &) const;
+   void write_slha_pole_mixings_line(std::ostream &) const;
+   void write_slha_running_mixings_line(std::ostream &) const;
+
+private:
+   struct TMass {
+      std::string name;
+      std::valarray<double> masses;
+      TMass(const std::string& name_, const std::valarray<double>& masses_)
+         : name(name_)
+         , masses(masses_)
+         {}
+   };
+
+   // note: stored in column-major format, i.e.
+   // elements are (0,0), (1,0), (2,0),...
+   struct TParameter {
+      std::string name;
+      std::size_t mass_dimension;
+      std::size_t rows;
+      std::size_t cols;
+      std::valarray<double> values;
+      TParameter(const std::string& name_, 
+                 std::size_t mass_dimension_,
+                 std::size_t rows_, std::size_t cols_,
+                 const std::valarray<double>& values_)
+         : name(name_)
+         , mass_dimension(mass_dimension_)
+         , rows(rows_)
+         , cols(cols_)
+         , values(values_)
+         {}
+   };
+
+   // note: stored in column-major format, i.e.
+   // elements are (0,0), (1,0), (2,0),...
+   struct TMixing {
+      std::string name;
+      std::size_t dimension;
+      bool is_real;
+      std::valarray<double> mixings;
+      TMixing(const std::string name_, std::size_t dimension_,
+              bool is_real_,
+              const std::valarray<double>& mixings_)
+         : name(name_)
+         , dimension(dimension_)
+         , is_real(is_real_)
+         , mixings(mixings_)
+         {}
+   };
+
+   typedef std::vector<TMass> TPoleMasses;
+   typedef std::vector<TMass> TRunningMasses;
+   typedef std::vector<TParameter> TSusyPars;
+   typedef std::vector<TParameter> TSoftPars;
+   typedef std::vector<TMixing> TMixings;
+
+   TPoleMasses slha_pole_masses;
+   TRunningMasses slha_running_masses;
+   TSusyPars slha_susy_pars;
+   TSoftPars slha_soft_pars;
+   TMixings slha_pole_mixings;
+   TMixings slha_running_mixings;
+
+   CNE6SSM_semianalytic_input_parameters<Two_scale> slha_pole_masses_inputs;
+   CNE6SSM_semianalytic_input_parameters<Two_scale> slha_running_masses_inputs;
+   CNE6SSM_semianalytic_input_parameters<Two_scale> slha_susy_pars_inputs;
+   CNE6SSM_semianalytic_input_parameters<Two_scale> slha_soft_pars_inputs;
+   CNE6SSM_semianalytic_input_parameters<Two_scale> slha_pole_mixings_inputs;
+   CNE6SSM_semianalytic_input_parameters<Two_scale> slha_running_mixings_inputs;
+
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_pole_masses_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_running_masses_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_susy_pars_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_soft_pars_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_pole_mixings_problems;
+   Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> slha_running_mixings_problems;
+
+   double slha_pole_masses_scale;
+   double slha_running_masses_scale;
+   double slha_susy_pars_scale;
+   double slha_soft_pars_scale;
+   double slha_pole_mixings_scale;
+   double slha_running_mixings_scale;
+   double slha_pole_masses_m0;
+   double slha_running_masses_m0;
+   double slha_susy_pars_m0;
+   double slha_soft_pars_m0;
+   double slha_pole_mixings_m0;
+   double slha_running_mixings_m0;
    unsigned width;
 };
 
@@ -715,6 +956,506 @@ void CNE6SSM_semianalytic_drbar_values_writer::extract_drbar_mixings(const CNE6S
    drbar_mixings.push_back(TMixing("UHp0", 2, true, to_valarray(MODELPARAMETER(UHp0))));
    drbar_mixings.push_back(TMixing("UHpp", 2, true, to_valarray(MODELPARAMETER(UHpp))));
    drbar_mixings.push_back(TMixing("ZNp", 2, false, to_valarray(MODELPARAMETER(ZNp))));
+}
+
+template <class T>
+void CNE6SSM_slha_values_writer::extract_slha_pole_masses(const CNE6SSM_slha<T>& model)
+{
+   slha_pole_masses.clear();
+   slha_pole_masses_scale = model.get_scale();
+   slha_pole_masses_inputs = model.get_input();
+   slha_pole_masses_problems = model.get_problems();
+
+   slha_pole_masses.push_back(TMass("MGlu", to_valarray(PHYSICALSLHA(MGlu))));
+   slha_pole_masses.push_back(TMass("MChaP", to_valarray(PHYSICALSLHA(MChaP))));
+   slha_pole_masses.push_back(TMass("MVZp", to_valarray(PHYSICALSLHA(MVZp))));
+   slha_pole_masses.push_back(TMass("MSd", to_valarray(PHYSICALSLHA(MSd))));
+   slha_pole_masses.push_back(TMass("MSv", to_valarray(PHYSICALSLHA(MSv))));
+   slha_pole_masses.push_back(TMass("MSu", to_valarray(PHYSICALSLHA(MSu))));
+   slha_pole_masses.push_back(TMass("MSe", to_valarray(PHYSICALSLHA(MSe))));
+   slha_pole_masses.push_back(TMass("MSDX", to_valarray(PHYSICALSLHA(MSDX))));
+   slha_pole_masses.push_back(TMass("Mhh", to_valarray(PHYSICALSLHA(Mhh))));
+   slha_pole_masses.push_back(TMass("MAh", to_valarray(PHYSICALSLHA(MAh))));
+   slha_pole_masses.push_back(TMass("MHpm", to_valarray(PHYSICALSLHA(MHpm))));
+   slha_pole_masses.push_back(TMass("MChi", to_valarray(PHYSICALSLHA(MChi))));
+   slha_pole_masses.push_back(TMass("MCha", to_valarray(PHYSICALSLHA(MCha))));
+   slha_pole_masses.push_back(TMass("MFDX", to_valarray(PHYSICALSLHA(MFDX))));
+   slha_pole_masses.push_back(TMass("MSHI0", to_valarray(PHYSICALSLHA(MSHI0))));
+   slha_pole_masses.push_back(TMass("MSHIPM", to_valarray(PHYSICALSLHA(MSHIPM))));
+   slha_pole_masses.push_back(TMass("MChaI", to_valarray(PHYSICALSLHA(MChaI))));
+   slha_pole_masses.push_back(TMass("MChiI", to_valarray(PHYSICALSLHA(MChiI))));
+   slha_pole_masses.push_back(TMass("MSHp0", to_valarray(PHYSICALSLHA(MSHp0))));
+   slha_pole_masses.push_back(TMass("MSHpp", to_valarray(PHYSICALSLHA(MSHpp))));
+   slha_pole_masses.push_back(TMass("MChiP", to_valarray(PHYSICALSLHA(MChiP))));
+
+   if (model.do_calculate_sm_pole_masses()) {
+      slha_pole_masses.push_back(TMass("MFd", to_valarray(PHYSICALSLHA(MFd))));
+      slha_pole_masses.push_back(TMass("MFe", to_valarray(PHYSICALSLHA(MFe))));
+      slha_pole_masses.push_back(TMass("MFu", to_valarray(PHYSICALSLHA(MFu))));
+      slha_pole_masses.push_back(TMass("MFv", to_valarray(PHYSICALSLHA(MFv))));
+      slha_pole_masses.push_back(TMass("MVG", to_valarray(PHYSICALSLHA(MVG))));
+      slha_pole_masses.push_back(TMass("MVP", to_valarray(PHYSICALSLHA(MVP))));
+      slha_pole_masses.push_back(TMass("MVWm", to_valarray(PHYSICALSLHA(MVWm))));
+      slha_pole_masses.push_back(TMass("MVZ", to_valarray(PHYSICALSLHA(MVZ))));
+
+   }
+}
+
+template <class T>
+void CNE6SSM_semianalytic_slha_values_writer::extract_slha_pole_masses(const CNE6SSM_semianalytic_slha<T>& model)
+{
+   slha_pole_masses.clear();
+   slha_pole_masses_scale = model.get_scale();
+   slha_pole_masses_inputs = model.get_input();
+   slha_pole_masses_problems = model.get_problems();
+   slha_pole_masses_m0 = model.get_ewsb_output_parameter(0);
+
+   slha_pole_masses.push_back(TMass("MGlu", to_valarray(PHYSICALSLHA(MGlu))));
+   slha_pole_masses.push_back(TMass("MChaP", to_valarray(PHYSICALSLHA(MChaP))));
+   slha_pole_masses.push_back(TMass("MVZp", to_valarray(PHYSICALSLHA(MVZp))));
+   slha_pole_masses.push_back(TMass("MSd", to_valarray(PHYSICALSLHA(MSd))));
+   slha_pole_masses.push_back(TMass("MSv", to_valarray(PHYSICALSLHA(MSv))));
+   slha_pole_masses.push_back(TMass("MSu", to_valarray(PHYSICALSLHA(MSu))));
+   slha_pole_masses.push_back(TMass("MSe", to_valarray(PHYSICALSLHA(MSe))));
+   slha_pole_masses.push_back(TMass("MSDX", to_valarray(PHYSICALSLHA(MSDX))));
+   slha_pole_masses.push_back(TMass("Mhh", to_valarray(PHYSICALSLHA(Mhh))));
+   slha_pole_masses.push_back(TMass("MAh", to_valarray(PHYSICALSLHA(MAh))));
+   slha_pole_masses.push_back(TMass("MHpm", to_valarray(PHYSICALSLHA(MHpm))));
+   slha_pole_masses.push_back(TMass("MChi", to_valarray(PHYSICALSLHA(MChi))));
+   slha_pole_masses.push_back(TMass("MCha", to_valarray(PHYSICALSLHA(MCha))));
+   slha_pole_masses.push_back(TMass("MFDX", to_valarray(PHYSICALSLHA(MFDX))));
+   slha_pole_masses.push_back(TMass("MSHI0", to_valarray(PHYSICALSLHA(MSHI0))));
+   slha_pole_masses.push_back(TMass("MSHIPM", to_valarray(PHYSICALSLHA(MSHIPM))));
+   slha_pole_masses.push_back(TMass("MChaI", to_valarray(PHYSICALSLHA(MChaI))));
+   slha_pole_masses.push_back(TMass("MChiI", to_valarray(PHYSICALSLHA(MChiI))));
+   slha_pole_masses.push_back(TMass("MSHp0", to_valarray(PHYSICALSLHA(MSHp0))));
+   slha_pole_masses.push_back(TMass("MSHpp", to_valarray(PHYSICALSLHA(MSHpp))));
+   slha_pole_masses.push_back(TMass("MChiP", to_valarray(PHYSICALSLHA(MChiP))));
+
+   if (model.do_calculate_sm_pole_masses()) {
+      slha_pole_masses.push_back(TMass("MFd", to_valarray(PHYSICALSLHA(MFd))));
+      slha_pole_masses.push_back(TMass("MFe", to_valarray(PHYSICALSLHA(MFe))));
+      slha_pole_masses.push_back(TMass("MFu", to_valarray(PHYSICALSLHA(MFu))));
+      slha_pole_masses.push_back(TMass("MFv", to_valarray(PHYSICALSLHA(MFv))));
+      slha_pole_masses.push_back(TMass("MVG", to_valarray(PHYSICALSLHA(MVG))));
+      slha_pole_masses.push_back(TMass("MVP", to_valarray(PHYSICALSLHA(MVP))));
+      slha_pole_masses.push_back(TMass("MVWm", to_valarray(PHYSICALSLHA(MVWm))));
+      slha_pole_masses.push_back(TMass("MVZ", to_valarray(PHYSICALSLHA(MVZ))));
+
+   }
+}
+
+template <class T>
+void CNE6SSM_slha_values_writer::extract_slha_running_masses(const CNE6SSM_slha<T>& model)
+{
+   slha_running_masses.clear();
+   slha_running_masses_scale = model.get_scale();
+   slha_running_masses_inputs = model.get_input();
+   slha_running_masses_problems = model.get_problems();
+
+   slha_running_masses.push_back(TMass("DRBarMGlu", to_valarray(DRBARSLHA(MGlu))));
+   slha_running_masses.push_back(TMass("DRBarMChaP", to_valarray(DRBARSLHA(MChaP))));
+   slha_running_masses.push_back(TMass("DRBarMVZp", to_valarray(DRBARSLHA(MVZp))));
+   slha_running_masses.push_back(TMass("DRBarMSd", to_valarray(DRBARSLHA(MSd))));
+   slha_running_masses.push_back(TMass("DRBarMSv", to_valarray(DRBARSLHA(MSv))));
+   slha_running_masses.push_back(TMass("DRBarMSu", to_valarray(DRBARSLHA(MSu))));
+   slha_running_masses.push_back(TMass("DRBarMSe", to_valarray(DRBARSLHA(MSe))));
+   slha_running_masses.push_back(TMass("DRBarMSDX", to_valarray(DRBARSLHA(MSDX))));
+   slha_running_masses.push_back(TMass("DRBarMhh", to_valarray(DRBARSLHA(Mhh))));
+   slha_running_masses.push_back(TMass("DRBarMAh", to_valarray(DRBARSLHA(MAh))));
+   slha_running_masses.push_back(TMass("DRBarMHpm", to_valarray(DRBARSLHA(MHpm))));
+   slha_running_masses.push_back(TMass("DRBarMChi", to_valarray(DRBARSLHA(MChi))));
+   slha_running_masses.push_back(TMass("DRBarMCha", to_valarray(DRBARSLHA(MCha))));
+   slha_running_masses.push_back(TMass("DRBarMFDX", to_valarray(DRBARSLHA(MFDX))));
+   slha_running_masses.push_back(TMass("DRBarMSHI0", to_valarray(DRBARSLHA(MSHI0))));
+   slha_running_masses.push_back(TMass("DRBarMSHIPM", to_valarray(DRBARSLHA(MSHIPM))));
+   slha_running_masses.push_back(TMass("DRBarMChaI", to_valarray(DRBARSLHA(MChaI))));
+   slha_running_masses.push_back(TMass("DRBarMChiI", to_valarray(DRBARSLHA(MChiI))));
+   slha_running_masses.push_back(TMass("DRBarMSHp0", to_valarray(DRBARSLHA(MSHp0))));
+   slha_running_masses.push_back(TMass("DRBarMSHpp", to_valarray(DRBARSLHA(MSHpp))));
+   slha_running_masses.push_back(TMass("DRBarMChiP", to_valarray(DRBARSLHA(MChiP))));
+
+   if (model.do_calculate_sm_pole_masses()) {
+      slha_running_masses.push_back(TMass("DRBarMFd", to_valarray(DRBARSLHA(MFd))));
+      slha_running_masses.push_back(TMass("DRBarMFe", to_valarray(DRBARSLHA(MFe))));
+      slha_running_masses.push_back(TMass("DRBarMFu", to_valarray(DRBARSLHA(MFu))));
+      slha_running_masses.push_back(TMass("DRBarMFv", to_valarray(DRBARSLHA(MFv))));
+      slha_running_masses.push_back(TMass("DRBarMVG", to_valarray(DRBARSLHA(MVG))));
+      slha_running_masses.push_back(TMass("DRBarMVP", to_valarray(DRBARSLHA(MVP))));
+      slha_running_masses.push_back(TMass("DRBarMVWm", to_valarray(DRBARSLHA(MVWm))));
+      slha_running_masses.push_back(TMass("DRBarMVZ", to_valarray(DRBARSLHA(MVZ))));
+
+   }
+}
+
+template <class T>
+void CNE6SSM_semianalytic_slha_values_writer::extract_slha_running_masses(const CNE6SSM_semianalytic_slha<T>& model)
+{
+   slha_running_masses.clear();
+   slha_running_masses_scale = model.get_scale();
+   slha_running_masses_inputs = model.get_input();
+   slha_running_masses_problems = model.get_problems();
+   slha_running_masses_m0 = model.get_ewsb_output_parameter(0);
+
+   slha_running_masses.push_back(TMass("DRBarMGlu", to_valarray(DRBARSLHA(MGlu))));
+   slha_running_masses.push_back(TMass("DRBarMChaP", to_valarray(DRBARSLHA(MChaP))));
+   slha_running_masses.push_back(TMass("DRBarMVZp", to_valarray(DRBARSLHA(MVZp))));
+   slha_running_masses.push_back(TMass("DRBarMSd", to_valarray(DRBARSLHA(MSd))));
+   slha_running_masses.push_back(TMass("DRBarMSv", to_valarray(DRBARSLHA(MSv))));
+   slha_running_masses.push_back(TMass("DRBarMSu", to_valarray(DRBARSLHA(MSu))));
+   slha_running_masses.push_back(TMass("DRBarMSe", to_valarray(DRBARSLHA(MSe))));
+   slha_running_masses.push_back(TMass("DRBarMSDX", to_valarray(DRBARSLHA(MSDX))));
+   slha_running_masses.push_back(TMass("DRBarMhh", to_valarray(DRBARSLHA(Mhh))));
+   slha_running_masses.push_back(TMass("DRBarMAh", to_valarray(DRBARSLHA(MAh))));
+   slha_running_masses.push_back(TMass("DRBarMHpm", to_valarray(DRBARSLHA(MHpm))));
+   slha_running_masses.push_back(TMass("DRBarMChi", to_valarray(DRBARSLHA(MChi))));
+   slha_running_masses.push_back(TMass("DRBarMCha", to_valarray(DRBARSLHA(MCha))));
+   slha_running_masses.push_back(TMass("DRBarMFDX", to_valarray(DRBARSLHA(MFDX))));
+   slha_running_masses.push_back(TMass("DRBarMSHI0", to_valarray(DRBARSLHA(MSHI0))));
+   slha_running_masses.push_back(TMass("DRBarMSHIPM", to_valarray(DRBARSLHA(MSHIPM))));
+   slha_running_masses.push_back(TMass("DRBarMChaI", to_valarray(DRBARSLHA(MChaI))));
+   slha_running_masses.push_back(TMass("DRBarMChiI", to_valarray(DRBARSLHA(MChiI))));
+   slha_running_masses.push_back(TMass("DRBarMSHp0", to_valarray(DRBARSLHA(MSHp0))));
+   slha_running_masses.push_back(TMass("DRBarMSHpp", to_valarray(DRBARSLHA(MSHpp))));
+   slha_running_masses.push_back(TMass("DRBarMChiP", to_valarray(DRBARSLHA(MChiP))));
+
+   if (model.do_calculate_sm_pole_masses()) {
+      slha_running_masses.push_back(TMass("DRBarMFd", to_valarray(DRBARSLHA(MFd))));
+      slha_running_masses.push_back(TMass("DRBarMFe", to_valarray(DRBARSLHA(MFe))));
+      slha_running_masses.push_back(TMass("DRBarMFu", to_valarray(DRBARSLHA(MFu))));
+      slha_running_masses.push_back(TMass("DRBarMFv", to_valarray(DRBARSLHA(MFv))));
+      slha_running_masses.push_back(TMass("DRBarMVG", to_valarray(DRBARSLHA(MVG))));
+      slha_running_masses.push_back(TMass("DRBarMVP", to_valarray(DRBARSLHA(MVP))));
+      slha_running_masses.push_back(TMass("DRBarMVWm", to_valarray(DRBARSLHA(MVWm))));
+      slha_running_masses.push_back(TMass("DRBarMVZ", to_valarray(DRBARSLHA(MVZ))));
+
+   }
+}
+
+template <class T>
+void CNE6SSM_slha_values_writer::extract_slha_susy_pars(const CNE6SSM_slha<T>& model)
+{
+   slha_susy_pars.clear();
+   slha_susy_pars_scale = model.get_scale();
+   slha_susy_pars_inputs = model.get_input();
+   slha_susy_pars_problems = model.get_problems();
+
+   slha_susy_pars.push_back(TParameter("Yd", 0, 3, 3, to_valarray(MODELPARAMETER(Yd_slha))));
+   slha_susy_pars.push_back(TParameter("hE", 0, 3, 2, to_valarray(MODELPARAMETER(hE))));
+   slha_susy_pars.push_back(TParameter("Ye", 0, 3, 3, to_valarray(MODELPARAMETER(Ye_slha))));
+   slha_susy_pars.push_back(TParameter("SigmaL", 0, 1, 1, to_valarray(MODELPARAMETER(SigmaL))));
+   slha_susy_pars.push_back(TParameter("KappaPr", 0, 1, 1, to_valarray(MODELPARAMETER(KappaPr))));
+   slha_susy_pars.push_back(TParameter("Sigmax", 0, 1, 1, to_valarray(MODELPARAMETER(Sigmax))));
+   slha_susy_pars.push_back(TParameter("gD", 0, 3, 3, to_valarray(MODELPARAMETER(gD))));
+   slha_susy_pars.push_back(TParameter("Kappa", 0, 3, 3, to_valarray(MODELPARAMETER(Kappa))));
+   slha_susy_pars.push_back(TParameter("Lambda12", 0, 2, 2, to_valarray(MODELPARAMETER(Lambda12))));
+   slha_susy_pars.push_back(TParameter("Lambdax", 0, 1, 1, to_valarray(MODELPARAMETER(Lambdax))));
+   slha_susy_pars.push_back(TParameter("fu", 0, 3, 2, to_valarray(MODELPARAMETER(fu))));
+   slha_susy_pars.push_back(TParameter("fd", 0, 3, 2, to_valarray(MODELPARAMETER(fd))));
+   slha_susy_pars.push_back(TParameter("Yu", 0, 3, 3, to_valarray(MODELPARAMETER(Yu_slha))));
+   slha_susy_pars.push_back(TParameter("MuPr", 1, 1, 1, to_valarray(MODELPARAMETER(MuPr))));
+   slha_susy_pars.push_back(TParameter("MuPhi", 1, 1, 1, to_valarray(MODELPARAMETER(MuPhi))));
+   slha_susy_pars.push_back(TParameter("XiF", 2, 1, 1, to_valarray(MODELPARAMETER(XiF))));
+   slha_susy_pars.push_back(TParameter("gY", 0, 1, 1, to_valarray(MODELPARAMETER(g1) * 0.7745966692414834)));
+   slha_susy_pars.push_back(TParameter("g2", 0, 1, 1, to_valarray(MODELPARAMETER(g2))));
+   slha_susy_pars.push_back(TParameter("g3", 0, 1, 1, to_valarray(MODELPARAMETER(g3))));
+   slha_susy_pars.push_back(TParameter("g1p", 0, 1, 1, to_valarray(MODELPARAMETER(g1p))));
+   slha_susy_pars.push_back(TParameter("vd", 1, 1, 1, to_valarray(MODELPARAMETER(vd))));
+   slha_susy_pars.push_back(TParameter("vu", 1, 1, 1, to_valarray(MODELPARAMETER(vu))));
+   slha_susy_pars.push_back(TParameter("vs", 1, 1, 1, to_valarray(MODELPARAMETER(vs))));
+   slha_susy_pars.push_back(TParameter("vsb", 1, 1, 1, to_valarray(MODELPARAMETER(vsb))));
+   slha_susy_pars.push_back(TParameter("vphi", 1, 1, 1, to_valarray(MODELPARAMETER(vphi))));
+   slha_susy_pars.push_back(TParameter("QS", 0, 1, 1, to_valarray(MODELPARAMETER(QS))));
+   slha_susy_pars.push_back(TParameter("Beta", 0, 1, 1,
+                                       to_valarray(ArcTan((MODELPARAMETER(vu)) / (MODELPARAMETER(vd))))));
+}
+
+template <class T>
+void CNE6SSM_semianalytic_slha_values_writer::extract_slha_susy_pars(const CNE6SSM_semianalytic_slha<T>& model)
+{
+   slha_susy_pars.clear();
+   slha_susy_pars_scale = model.get_scale();
+   slha_susy_pars_inputs = model.get_input();
+   slha_susy_pars_problems = model.get_problems();
+   slha_susy_pars_m0 = model.get_ewsb_output_parameter(0);
+
+   slha_susy_pars.push_back(TParameter("Yd", 0, 3, 3, to_valarray(MODELPARAMETER(Yd_slha))));
+   slha_susy_pars.push_back(TParameter("hE", 0, 3, 2, to_valarray(MODELPARAMETER(hE))));
+   slha_susy_pars.push_back(TParameter("Ye", 0, 3, 3, to_valarray(MODELPARAMETER(Ye_slha))));
+   slha_susy_pars.push_back(TParameter("SigmaL", 0, 1, 1, to_valarray(MODELPARAMETER(SigmaL))));
+   slha_susy_pars.push_back(TParameter("KappaPr", 0, 1, 1, to_valarray(MODELPARAMETER(KappaPr))));
+   slha_susy_pars.push_back(TParameter("Sigmax", 0, 1, 1, to_valarray(MODELPARAMETER(Sigmax))));
+   slha_susy_pars.push_back(TParameter("gD", 0, 3, 3, to_valarray(MODELPARAMETER(gD))));
+   slha_susy_pars.push_back(TParameter("Kappa", 0, 3, 3, to_valarray(MODELPARAMETER(Kappa))));
+   slha_susy_pars.push_back(TParameter("Lambda12", 0, 2, 2, to_valarray(MODELPARAMETER(Lambda12))));
+   slha_susy_pars.push_back(TParameter("Lambdax", 0, 1, 1, to_valarray(MODELPARAMETER(Lambdax))));
+   slha_susy_pars.push_back(TParameter("fu", 0, 3, 2, to_valarray(MODELPARAMETER(fu))));
+   slha_susy_pars.push_back(TParameter("fd", 0, 3, 2, to_valarray(MODELPARAMETER(fd))));
+   slha_susy_pars.push_back(TParameter("Yu", 0, 3, 3, to_valarray(MODELPARAMETER(Yu_slha))));
+   slha_susy_pars.push_back(TParameter("MuPr", 1, 1, 1, to_valarray(MODELPARAMETER(MuPr))));
+   slha_susy_pars.push_back(TParameter("MuPhi", 1, 1, 1, to_valarray(MODELPARAMETER(MuPhi))));
+   slha_susy_pars.push_back(TParameter("XiF", 2, 1, 1, to_valarray(MODELPARAMETER(XiF))));
+   slha_susy_pars.push_back(TParameter("gY", 0, 1, 1, to_valarray(MODELPARAMETER(g1) * 0.7745966692414834)));
+   slha_susy_pars.push_back(TParameter("g2", 0, 1, 1, to_valarray(MODELPARAMETER(g2))));
+   slha_susy_pars.push_back(TParameter("g3", 0, 1, 1, to_valarray(MODELPARAMETER(g3))));
+   slha_susy_pars.push_back(TParameter("g1p", 0, 1, 1, to_valarray(MODELPARAMETER(g1p))));
+   slha_susy_pars.push_back(TParameter("vd", 1, 1, 1, to_valarray(MODELPARAMETER(vd))));
+   slha_susy_pars.push_back(TParameter("vu", 1, 1, 1, to_valarray(MODELPARAMETER(vu))));
+   slha_susy_pars.push_back(TParameter("vs", 1, 1, 1, to_valarray(MODELPARAMETER(vs))));
+   slha_susy_pars.push_back(TParameter("vsb", 1, 1, 1, to_valarray(MODELPARAMETER(vsb))));
+   slha_susy_pars.push_back(TParameter("vphi", 1, 1, 1, to_valarray(MODELPARAMETER(vphi))));
+   slha_susy_pars.push_back(TParameter("QS", 0, 1, 1, to_valarray(MODELPARAMETER(QS))));
+   slha_susy_pars.push_back(TParameter("Beta", 0, 1, 1,
+                                       to_valarray(ArcTan((MODELPARAMETER(vu)) / (MODELPARAMETER(vd))))));
+}
+
+template <class T>
+void CNE6SSM_slha_values_writer::extract_slha_soft_pars(const CNE6SSM_slha<T>& model)
+{
+   slha_soft_pars.clear();
+   slha_soft_pars_scale = model.get_scale();
+   slha_soft_pars_inputs = model.get_input();
+   slha_soft_pars_problems = model.get_problems();
+
+   slha_soft_pars.push_back(TParameter("TYd", 1, 3, 3, to_valarray(MODELPARAMETER(TYd_slha))));
+   slha_soft_pars.push_back(TParameter("ThE", 1, 3, 2, to_valarray(MODELPARAMETER(ThE))));
+   slha_soft_pars.push_back(TParameter("TYe", 1, 3, 3, to_valarray(MODELPARAMETER(TYe_slha))));
+   slha_soft_pars.push_back(TParameter("TSigmaL", 1, 1, 1, to_valarray(MODELPARAMETER(TSigmaL))));
+   slha_soft_pars.push_back(TParameter("TKappaPr", 1, 1, 1, to_valarray(MODELPARAMETER(TKappaPr))));
+   slha_soft_pars.push_back(TParameter("TSigmax", 1, 1, 1, to_valarray(MODELPARAMETER(TSigmax))));
+   slha_soft_pars.push_back(TParameter("TgD", 1, 3, 3, to_valarray(MODELPARAMETER(TgD))));
+   slha_soft_pars.push_back(TParameter("TKappa", 1, 3, 3, to_valarray(MODELPARAMETER(TKappa))));
+   slha_soft_pars.push_back(TParameter("TLambda12", 1, 2, 2, to_valarray(MODELPARAMETER(TLambda12))));
+   slha_soft_pars.push_back(TParameter("TLambdax", 1, 1, 1, to_valarray(MODELPARAMETER(TLambdax))));
+   slha_soft_pars.push_back(TParameter("Tfu", 1, 3, 2, to_valarray(MODELPARAMETER(Tfu))));
+   slha_soft_pars.push_back(TParameter("Tfd", 1, 3, 2, to_valarray(MODELPARAMETER(Tfd))));
+   slha_soft_pars.push_back(TParameter("TYu", 1, 3, 3, to_valarray(MODELPARAMETER(TYu_slha))));
+   slha_soft_pars.push_back(TParameter("BMuPr", 2, 1, 1, to_valarray(MODELPARAMETER(BMuPr))));
+   slha_soft_pars.push_back(TParameter("BMuPhi", 2, 1, 1, to_valarray(MODELPARAMETER(BMuPhi))));
+   slha_soft_pars.push_back(TParameter("LXiF", 3, 1, 1, to_valarray(MODELPARAMETER(LXiF))));
+   slha_soft_pars.push_back(TParameter("mq2", 2, 3, 3, to_valarray(MODELPARAMETER(mq2_slha))));
+   slha_soft_pars.push_back(TParameter("ml2", 2, 3, 3, to_valarray(MODELPARAMETER(ml2_slha))));
+   slha_soft_pars.push_back(TParameter("mHd2", 2, 1, 1, to_valarray(MODELPARAMETER(mHd2))));
+   slha_soft_pars.push_back(TParameter("mHu2", 2, 1, 1, to_valarray(MODELPARAMETER(mHu2))));
+   slha_soft_pars.push_back(TParameter("md2", 2, 3, 3, to_valarray(MODELPARAMETER(md2_slha))));
+   slha_soft_pars.push_back(TParameter("mu2", 2, 3, 3, to_valarray(MODELPARAMETER(mu2_slha))));
+   slha_soft_pars.push_back(TParameter("me2", 2, 3, 3, to_valarray(MODELPARAMETER(me2_slha))));
+   slha_soft_pars.push_back(TParameter("ms2", 2, 1, 1, to_valarray(MODELPARAMETER(ms2))));
+   slha_soft_pars.push_back(TParameter("msbar2", 2, 1, 1, to_valarray(MODELPARAMETER(msbar2))));
+   slha_soft_pars.push_back(TParameter("mH1I2", 2, 2, 2, to_valarray(MODELPARAMETER(mH1I2))));
+   slha_soft_pars.push_back(TParameter("mH2I2", 2, 2, 2, to_valarray(MODELPARAMETER(mH2I2))));
+   slha_soft_pars.push_back(TParameter("mSI2", 2, 3, 3, to_valarray(MODELPARAMETER(mSI2))));
+   slha_soft_pars.push_back(TParameter("mDx2", 2, 3, 3, to_valarray(MODELPARAMETER(mDx2))));
+   slha_soft_pars.push_back(TParameter("mDxbar2", 2, 3, 3, to_valarray(MODELPARAMETER(mDxbar2))));
+   slha_soft_pars.push_back(TParameter("mHp2", 2, 1, 1, to_valarray(MODELPARAMETER(mHp2))));
+   slha_soft_pars.push_back(TParameter("mHpbar2", 2, 1, 1, to_valarray(MODELPARAMETER(mHpbar2))));
+   slha_soft_pars.push_back(TParameter("mphi2", 2, 1, 1, to_valarray(MODELPARAMETER(mphi2))));
+   slha_soft_pars.push_back(TParameter("MassB", 1, 1, 1, to_valarray(MODELPARAMETER(MassB))));
+   slha_soft_pars.push_back(TParameter("MassWB", 1, 1, 1, to_valarray(MODELPARAMETER(MassWB))));
+   slha_soft_pars.push_back(TParameter("MassG", 1, 1, 1, to_valarray(MODELPARAMETER(MassG))));
+   slha_soft_pars.push_back(TParameter("MassBp", 1, 1, 1, to_valarray(MODELPARAMETER(MassBp))));
+   slha_soft_pars.push_back(TParameter("Re(PhaseGlu)", 0, 1, 1, to_valarray(Re(MODELPARAMETER(PhaseGlu)))));
+   slha_soft_pars.push_back(TParameter("Im(PhaseGlu)", 0, 1, 1, to_valarray(Im(MODELPARAMETER(PhaseGlu)))));
+}
+
+template <class T>
+void CNE6SSM_semianalytic_slha_values_writer::extract_slha_soft_pars(const CNE6SSM_semianalytic_slha<T>& model)
+{
+   slha_soft_pars.clear();
+   slha_soft_pars_scale = model.get_scale();
+   slha_soft_pars_inputs = model.get_input();
+   slha_soft_pars_problems = model.get_problems();
+   slha_soft_pars_m0 = model.get_ewsb_output_parameter(0);
+
+   slha_soft_pars.push_back(TParameter("TYd", 1, 3, 3, to_valarray(MODELPARAMETER(TYd_slha))));
+   slha_soft_pars.push_back(TParameter("ThE", 1, 3, 2, to_valarray(MODELPARAMETER(ThE))));
+   slha_soft_pars.push_back(TParameter("TYe", 1, 3, 3, to_valarray(MODELPARAMETER(TYe_slha))));
+   slha_soft_pars.push_back(TParameter("TSigmaL", 1, 1, 1, to_valarray(MODELPARAMETER(TSigmaL))));
+   slha_soft_pars.push_back(TParameter("TKappaPr", 1, 1, 1, to_valarray(MODELPARAMETER(TKappaPr))));
+   slha_soft_pars.push_back(TParameter("TSigmax", 1, 1, 1, to_valarray(MODELPARAMETER(TSigmax))));
+   slha_soft_pars.push_back(TParameter("TgD", 1, 3, 3, to_valarray(MODELPARAMETER(TgD))));
+   slha_soft_pars.push_back(TParameter("TKappa", 1, 3, 3, to_valarray(MODELPARAMETER(TKappa))));
+   slha_soft_pars.push_back(TParameter("TLambda12", 1, 2, 2, to_valarray(MODELPARAMETER(TLambda12))));
+   slha_soft_pars.push_back(TParameter("TLambdax", 1, 1, 1, to_valarray(MODELPARAMETER(TLambdax))));
+   slha_soft_pars.push_back(TParameter("Tfu", 1, 3, 2, to_valarray(MODELPARAMETER(Tfu))));
+   slha_soft_pars.push_back(TParameter("Tfd", 1, 3, 2, to_valarray(MODELPARAMETER(Tfd))));
+   slha_soft_pars.push_back(TParameter("TYu", 1, 3, 3, to_valarray(MODELPARAMETER(TYu_slha))));
+   slha_soft_pars.push_back(TParameter("BMuPr", 2, 1, 1, to_valarray(MODELPARAMETER(BMuPr))));
+   slha_soft_pars.push_back(TParameter("BMuPhi", 2, 1, 1, to_valarray(MODELPARAMETER(BMuPhi))));
+   slha_soft_pars.push_back(TParameter("LXiF", 3, 1, 1, to_valarray(MODELPARAMETER(LXiF))));
+   slha_soft_pars.push_back(TParameter("mq2", 2, 3, 3, to_valarray(MODELPARAMETER(mq2_slha))));
+   slha_soft_pars.push_back(TParameter("ml2", 2, 3, 3, to_valarray(MODELPARAMETER(ml2_slha))));
+   slha_soft_pars.push_back(TParameter("mHd2", 2, 1, 1, to_valarray(MODELPARAMETER(mHd2))));
+   slha_soft_pars.push_back(TParameter("mHu2", 2, 1, 1, to_valarray(MODELPARAMETER(mHu2))));
+   slha_soft_pars.push_back(TParameter("md2", 2, 3, 3, to_valarray(MODELPARAMETER(md2_slha))));
+   slha_soft_pars.push_back(TParameter("mu2", 2, 3, 3, to_valarray(MODELPARAMETER(mu2_slha))));
+   slha_soft_pars.push_back(TParameter("me2", 2, 3, 3, to_valarray(MODELPARAMETER(me2_slha))));
+   slha_soft_pars.push_back(TParameter("ms2", 2, 1, 1, to_valarray(MODELPARAMETER(ms2))));
+   slha_soft_pars.push_back(TParameter("msbar2", 2, 1, 1, to_valarray(MODELPARAMETER(msbar2))));
+   slha_soft_pars.push_back(TParameter("mH1I2", 2, 2, 2, to_valarray(MODELPARAMETER(mH1I2))));
+   slha_soft_pars.push_back(TParameter("mH2I2", 2, 2, 2, to_valarray(MODELPARAMETER(mH2I2))));
+   slha_soft_pars.push_back(TParameter("mSI2", 2, 3, 3, to_valarray(MODELPARAMETER(mSI2))));
+   slha_soft_pars.push_back(TParameter("mDx2", 2, 3, 3, to_valarray(MODELPARAMETER(mDx2))));
+   slha_soft_pars.push_back(TParameter("mDxbar2", 2, 3, 3, to_valarray(MODELPARAMETER(mDxbar2))));
+   slha_soft_pars.push_back(TParameter("mHp2", 2, 1, 1, to_valarray(MODELPARAMETER(mHp2))));
+   slha_soft_pars.push_back(TParameter("mHpbar2", 2, 1, 1, to_valarray(MODELPARAMETER(mHpbar2))));
+   slha_soft_pars.push_back(TParameter("mphi2", 2, 1, 1, to_valarray(MODELPARAMETER(mphi2))));
+   slha_soft_pars.push_back(TParameter("MassB", 1, 1, 1, to_valarray(MODELPARAMETER(MassB))));
+   slha_soft_pars.push_back(TParameter("MassWB", 1, 1, 1, to_valarray(MODELPARAMETER(MassWB))));
+   slha_soft_pars.push_back(TParameter("MassG", 1, 1, 1, to_valarray(MODELPARAMETER(MassG))));
+   slha_soft_pars.push_back(TParameter("MassBp", 1, 1, 1, to_valarray(MODELPARAMETER(MassBp))));
+   slha_soft_pars.push_back(TParameter("Re(PhaseGlu)", 0, 1, 1, to_valarray(Re(MODELPARAMETER(PhaseGlu)))));
+   slha_soft_pars.push_back(TParameter("Im(PhaseGlu)", 0, 1, 1, to_valarray(Im(MODELPARAMETER(PhaseGlu)))));
+}
+
+template <class T>
+void CNE6SSM_slha_values_writer::extract_slha_pole_mixings(const CNE6SSM_slha<T>& model)
+{
+   slha_pole_mixings.clear();
+   slha_pole_mixings_scale = model.get_scale();
+   slha_pole_mixings_inputs = model.get_input();
+   slha_pole_mixings_problems = model.get_problems();
+
+   slha_pole_mixings.push_back(TMixing("ZD", 6, true, to_valarray(PHYSICALSLHA(ZD))));
+   slha_pole_mixings.push_back(TMixing("ZV", 3, true, to_valarray(PHYSICALSLHA(ZV))));
+   slha_pole_mixings.push_back(TMixing("ZU", 6, true, to_valarray(PHYSICALSLHA(ZU))));
+   slha_pole_mixings.push_back(TMixing("ZE", 6, true, to_valarray(PHYSICALSLHA(ZE))));
+   slha_pole_mixings.push_back(TMixing("ZDX", 6, true, to_valarray(PHYSICALSLHA(ZDX))));
+   slha_pole_mixings.push_back(TMixing("ZH", 5, true, to_valarray(PHYSICALSLHA(ZH))));
+   slha_pole_mixings.push_back(TMixing("ZA", 5, true, to_valarray(PHYSICALSLHA(ZA))));
+   slha_pole_mixings.push_back(TMixing("ZP", 2, true, to_valarray(PHYSICALSLHA(ZP))));
+   slha_pole_mixings.push_back(TMixing("ZN", 8, false, to_valarray(PHYSICALSLHA(ZN))));
+   slha_pole_mixings.push_back(TMixing("UM", 2, false, to_valarray(PHYSICALSLHA(UM))));
+   slha_pole_mixings.push_back(TMixing("UP", 2, false, to_valarray(PHYSICALSLHA(UP))));
+   slha_pole_mixings.push_back(TMixing("ZEL", 3, false, to_valarray(PHYSICALSLHA(ZEL))));
+   slha_pole_mixings.push_back(TMixing("ZER", 3, false, to_valarray(PHYSICALSLHA(ZER))));
+   slha_pole_mixings.push_back(TMixing("ZDL", 3, false, to_valarray(PHYSICALSLHA(ZDL))));
+   slha_pole_mixings.push_back(TMixing("ZDR", 3, false, to_valarray(PHYSICALSLHA(ZDR))));
+   slha_pole_mixings.push_back(TMixing("ZUL", 3, false, to_valarray(PHYSICALSLHA(ZUL))));
+   slha_pole_mixings.push_back(TMixing("ZUR", 3, false, to_valarray(PHYSICALSLHA(ZUR))));
+   slha_pole_mixings.push_back(TMixing("ZDXL", 3, false, to_valarray(PHYSICALSLHA(ZDXL))));
+   slha_pole_mixings.push_back(TMixing("ZDXR", 3, false, to_valarray(PHYSICALSLHA(ZDXR))));
+   slha_pole_mixings.push_back(TMixing("UHI0", 7, true, to_valarray(PHYSICALSLHA(UHI0))));
+   slha_pole_mixings.push_back(TMixing("UHIPM", 4, true, to_valarray(PHYSICALSLHA(UHIPM))));
+   slha_pole_mixings.push_back(TMixing("ZMI", 2, false, to_valarray(PHYSICALSLHA(ZMI))));
+   slha_pole_mixings.push_back(TMixing("ZPI", 2, false, to_valarray(PHYSICALSLHA(ZPI))));
+   slha_pole_mixings.push_back(TMixing("ZNI", 7, false, to_valarray(PHYSICALSLHA(ZNI))));
+   slha_pole_mixings.push_back(TMixing("UHp0", 2, true, to_valarray(PHYSICALSLHA(UHp0))));
+   slha_pole_mixings.push_back(TMixing("UHpp", 2, true, to_valarray(PHYSICALSLHA(UHpp))));
+   slha_pole_mixings.push_back(TMixing("ZNp", 2, false, to_valarray(PHYSICALSLHA(ZNp))));
+}
+
+template <class T>
+void CNE6SSM_semianalytic_slha_values_writer::extract_slha_pole_mixings(const CNE6SSM_semianalytic_slha<T>& model)
+{
+   slha_pole_mixings.clear();
+   slha_pole_mixings_scale = model.get_scale();
+   slha_pole_mixings_inputs = model.get_input();
+   slha_pole_mixings_problems = model.get_problems();
+   slha_pole_mixings_m0 = model.get_ewsb_output_parameter(0);
+
+   slha_pole_mixings.push_back(TMixing("ZD", 6, true, to_valarray(PHYSICALSLHA(ZD))));
+   slha_pole_mixings.push_back(TMixing("ZV", 3, true, to_valarray(PHYSICALSLHA(ZV))));
+   slha_pole_mixings.push_back(TMixing("ZU", 6, true, to_valarray(PHYSICALSLHA(ZU))));
+   slha_pole_mixings.push_back(TMixing("ZE", 6, true, to_valarray(PHYSICALSLHA(ZE))));
+   slha_pole_mixings.push_back(TMixing("ZDX", 6, true, to_valarray(PHYSICALSLHA(ZDX))));
+   slha_pole_mixings.push_back(TMixing("ZH", 5, true, to_valarray(PHYSICALSLHA(ZH))));
+   slha_pole_mixings.push_back(TMixing("ZA", 5, true, to_valarray(PHYSICALSLHA(ZA))));
+   slha_pole_mixings.push_back(TMixing("ZP", 2, true, to_valarray(PHYSICALSLHA(ZP))));
+   slha_pole_mixings.push_back(TMixing("ZN", 8, false, to_valarray(PHYSICALSLHA(ZN))));
+   slha_pole_mixings.push_back(TMixing("UM", 2, false, to_valarray(PHYSICALSLHA(UM))));
+   slha_pole_mixings.push_back(TMixing("UP", 2, false, to_valarray(PHYSICALSLHA(UP))));
+   slha_pole_mixings.push_back(TMixing("ZEL", 3, false, to_valarray(PHYSICALSLHA(ZEL))));
+   slha_pole_mixings.push_back(TMixing("ZER", 3, false, to_valarray(PHYSICALSLHA(ZER))));
+   slha_pole_mixings.push_back(TMixing("ZDL", 3, false, to_valarray(PHYSICALSLHA(ZDL))));
+   slha_pole_mixings.push_back(TMixing("ZDR", 3, false, to_valarray(PHYSICALSLHA(ZDR))));
+   slha_pole_mixings.push_back(TMixing("ZUL", 3, false, to_valarray(PHYSICALSLHA(ZUL))));
+   slha_pole_mixings.push_back(TMixing("ZUR", 3, false, to_valarray(PHYSICALSLHA(ZUR))));
+   slha_pole_mixings.push_back(TMixing("ZDXL", 3, false, to_valarray(PHYSICALSLHA(ZDXL))));
+   slha_pole_mixings.push_back(TMixing("ZDXR", 3, false, to_valarray(PHYSICALSLHA(ZDXR))));
+   slha_pole_mixings.push_back(TMixing("UHI0", 7, true, to_valarray(PHYSICALSLHA(UHI0))));
+   slha_pole_mixings.push_back(TMixing("UHIPM", 4, true, to_valarray(PHYSICALSLHA(UHIPM))));
+   slha_pole_mixings.push_back(TMixing("ZMI", 2, false, to_valarray(PHYSICALSLHA(ZMI))));
+   slha_pole_mixings.push_back(TMixing("ZPI", 2, false, to_valarray(PHYSICALSLHA(ZPI))));
+   slha_pole_mixings.push_back(TMixing("ZNI", 7, false, to_valarray(PHYSICALSLHA(ZNI))));
+   slha_pole_mixings.push_back(TMixing("UHp0", 2, true, to_valarray(PHYSICALSLHA(UHp0))));
+   slha_pole_mixings.push_back(TMixing("UHpp", 2, true, to_valarray(PHYSICALSLHA(UHpp))));
+   slha_pole_mixings.push_back(TMixing("ZNp", 2, false, to_valarray(PHYSICALSLHA(ZNp))));
+}
+
+template <class T>
+void CNE6SSM_slha_values_writer::extract_slha_running_mixings(const CNE6SSM_slha<T>& model)
+{
+   slha_running_mixings.clear();
+   slha_running_mixings_scale = model.get_scale();
+   slha_running_mixings_inputs = model.get_input();
+   slha_running_mixings_problems = model.get_problems();
+
+   slha_running_mixings.push_back(TMixing("DRBarZD", 6, true, to_valarray(DRBARSLHA(ZD))));
+   slha_running_mixings.push_back(TMixing("DRBarZV", 3, true, to_valarray(DRBARSLHA(ZV))));
+   slha_running_mixings.push_back(TMixing("DRBarZU", 6, true, to_valarray(DRBARSLHA(ZU))));
+   slha_running_mixings.push_back(TMixing("DRBarZE", 6, true, to_valarray(DRBARSLHA(ZE))));
+   slha_running_mixings.push_back(TMixing("DRBarZDX", 6, true, to_valarray(DRBARSLHA(ZDX))));
+   slha_running_mixings.push_back(TMixing("DRBarZH", 5, true, to_valarray(DRBARSLHA(ZH))));
+   slha_running_mixings.push_back(TMixing("DRBarZA", 5, true, to_valarray(DRBARSLHA(ZA))));
+   slha_running_mixings.push_back(TMixing("DRBarZP", 2, true, to_valarray(DRBARSLHA(ZP))));
+   slha_running_mixings.push_back(TMixing("DRBarZN", 8, false, to_valarray(DRBARSLHA(ZN))));
+   slha_running_mixings.push_back(TMixing("DRBarUM", 2, false, to_valarray(DRBARSLHA(UM))));
+   slha_running_mixings.push_back(TMixing("DRBarUP", 2, false, to_valarray(DRBARSLHA(UP))));
+   slha_running_mixings.push_back(TMixing("DRBarZEL", 3, false, to_valarray(DRBARSLHA(ZEL))));
+   slha_running_mixings.push_back(TMixing("DRBarZER", 3, false, to_valarray(DRBARSLHA(ZER))));
+   slha_running_mixings.push_back(TMixing("DRBarZDL", 3, false, to_valarray(DRBARSLHA(ZDL))));
+   slha_running_mixings.push_back(TMixing("DRBarZDR", 3, false, to_valarray(DRBARSLHA(ZDR))));
+   slha_running_mixings.push_back(TMixing("DRBarZUL", 3, false, to_valarray(DRBARSLHA(ZUL))));
+   slha_running_mixings.push_back(TMixing("DRBarZUR", 3, false, to_valarray(DRBARSLHA(ZUR))));
+   slha_running_mixings.push_back(TMixing("DRBarZDXL", 3, false, to_valarray(DRBARSLHA(ZDXL))));
+   slha_running_mixings.push_back(TMixing("DRBarZDXR", 3, false, to_valarray(DRBARSLHA(ZDXR))));
+   slha_running_mixings.push_back(TMixing("DRBarUHI0", 7, true, to_valarray(DRBARSLHA(UHI0))));
+   slha_running_mixings.push_back(TMixing("DRBarUHIPM", 4, true, to_valarray(DRBARSLHA(UHIPM))));
+   slha_running_mixings.push_back(TMixing("DRBarZMI", 2, false, to_valarray(DRBARSLHA(ZMI))));
+   slha_running_mixings.push_back(TMixing("DRBarZPI", 2, false, to_valarray(DRBARSLHA(ZPI))));
+   slha_running_mixings.push_back(TMixing("DRBarZNI", 7, false, to_valarray(DRBARSLHA(ZNI))));
+   slha_running_mixings.push_back(TMixing("DRBarUHp0", 2, true, to_valarray(DRBARSLHA(UHp0))));
+   slha_running_mixings.push_back(TMixing("DRBarUHpp", 2, true, to_valarray(DRBARSLHA(UHpp))));
+   slha_running_mixings.push_back(TMixing("DRBarZNp", 2, false, to_valarray(DRBARSLHA(ZNp))));
+}
+
+template <class T>
+void CNE6SSM_semianalytic_slha_values_writer::extract_slha_running_mixings(const CNE6SSM_semianalytic_slha<T>& model)
+{
+   slha_running_mixings.clear();
+   slha_running_mixings_scale = model.get_scale();
+   slha_running_mixings_inputs = model.get_input();
+   slha_running_mixings_problems = model.get_problems();
+   slha_running_mixings_m0 = model.get_ewsb_output_parameter(0);
+
+   slha_running_mixings.push_back(TMixing("DRBarZD", 6, true, to_valarray(DRBARSLHA(ZD))));
+   slha_running_mixings.push_back(TMixing("DRBarZV", 3, true, to_valarray(DRBARSLHA(ZV))));
+   slha_running_mixings.push_back(TMixing("DRBarZU", 6, true, to_valarray(DRBARSLHA(ZU))));
+   slha_running_mixings.push_back(TMixing("DRBarZE", 6, true, to_valarray(DRBARSLHA(ZE))));
+   slha_running_mixings.push_back(TMixing("DRBarZDX", 6, true, to_valarray(DRBARSLHA(ZDX))));
+   slha_running_mixings.push_back(TMixing("DRBarZH", 5, true, to_valarray(DRBARSLHA(ZH))));
+   slha_running_mixings.push_back(TMixing("DRBarZA", 5, true, to_valarray(DRBARSLHA(ZA))));
+   slha_running_mixings.push_back(TMixing("DRBarZP", 2, true, to_valarray(DRBARSLHA(ZP))));
+   slha_running_mixings.push_back(TMixing("DRBarZN", 8, false, to_valarray(DRBARSLHA(ZN))));
+   slha_running_mixings.push_back(TMixing("DRBarUM", 2, false, to_valarray(DRBARSLHA(UM))));
+   slha_running_mixings.push_back(TMixing("DRBarUP", 2, false, to_valarray(DRBARSLHA(UP))));
+   slha_running_mixings.push_back(TMixing("DRBarZEL", 3, false, to_valarray(DRBARSLHA(ZEL))));
+   slha_running_mixings.push_back(TMixing("DRBarZER", 3, false, to_valarray(DRBARSLHA(ZER))));
+   slha_running_mixings.push_back(TMixing("DRBarZDL", 3, false, to_valarray(DRBARSLHA(ZDL))));
+   slha_running_mixings.push_back(TMixing("DRBarZDR", 3, false, to_valarray(DRBARSLHA(ZDR))));
+   slha_running_mixings.push_back(TMixing("DRBarZUL", 3, false, to_valarray(DRBARSLHA(ZUL))));
+   slha_running_mixings.push_back(TMixing("DRBarZUR", 3, false, to_valarray(DRBARSLHA(ZUR))));
+   slha_running_mixings.push_back(TMixing("DRBarZDXL", 3, false, to_valarray(DRBARSLHA(ZDXL))));
+   slha_running_mixings.push_back(TMixing("DRBarZDXR", 3, false, to_valarray(DRBARSLHA(ZDXR))));
+   slha_running_mixings.push_back(TMixing("DRBarUHI0", 7, true, to_valarray(DRBARSLHA(UHI0))));
+   slha_running_mixings.push_back(TMixing("DRBarUHIPM", 4, true, to_valarray(DRBARSLHA(UHIPM))));
+   slha_running_mixings.push_back(TMixing("DRBarZMI", 2, false, to_valarray(DRBARSLHA(ZMI))));
+   slha_running_mixings.push_back(TMixing("DRBarZPI", 2, false, to_valarray(DRBARSLHA(ZPI))));
+   slha_running_mixings.push_back(TMixing("DRBarZNI", 7, false, to_valarray(DRBARSLHA(ZNI))));
+   slha_running_mixings.push_back(TMixing("DRBarUHp0", 2, true, to_valarray(DRBARSLHA(UHp0))));
+   slha_running_mixings.push_back(TMixing("DRBarUHpp", 2, true, to_valarray(DRBARSLHA(UHpp))));
+   slha_running_mixings.push_back(TMixing("DRBarZNp", 2, false, to_valarray(DRBARSLHA(ZNp))));
 }
 
 } // namespace flexiblesusy

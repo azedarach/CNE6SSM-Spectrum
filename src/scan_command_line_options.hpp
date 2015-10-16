@@ -49,6 +49,12 @@ public:
    const std::string& get_drbar_susy_pars_output_file() const { return drbar_susy_pars_output_file; }
    const std::string& get_drbar_soft_pars_output_file() const { return drbar_soft_pars_output_file; }
    const std::string& get_drbar_mixings_output_file() const { return drbar_mixings_output_file; }
+   const std::string& get_slha_pole_mass_output_file() const { return slha_pole_mass_output_file; }
+   const std::string& get_slha_running_mass_output_file() const { return slha_running_mass_output_file; }
+   const std::string& get_slha_susy_pars_output_file() const { return slha_susy_pars_output_file; }
+   const std::string& get_slha_soft_pars_output_file() const { return slha_soft_pars_output_file; }
+   const std::string& get_slha_pole_mixings_output_file() const { return slha_pole_mixings_output_file; }
+   const std::string& get_slha_running_mixings_output_file() const { return slha_running_mixings_output_file; }
    const std::string& get_program_name() const { return program; }
 
    static std::string get_option_value(const std::string&, const std::string&);
@@ -67,6 +73,12 @@ private:
    std::string drbar_susy_pars_output_file;
    std::string drbar_soft_pars_output_file;
    std::string drbar_mixings_output_file;
+   std::string slha_pole_mass_output_file;
+   std::string slha_running_mass_output_file;
+   std::string slha_susy_pars_output_file;
+   std::string slha_soft_pars_output_file;
+   std::string slha_pole_mixings_output_file;
+   std::string slha_running_mixings_output_file;
 };
 
 } // namespace flexiblesusy

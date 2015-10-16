@@ -17,6 +17,12 @@ Scan_command_line_options::Scan_command_line_options()
    , drbar_susy_pars_output_file()
    , drbar_soft_pars_output_file()
    , drbar_mixings_output_file()
+   , slha_pole_mass_output_file()
+   , slha_running_mass_output_file()
+   , slha_susy_pars_output_file()
+   , slha_soft_pars_output_file()
+   , slha_pole_mixings_output_file()
+   , slha_running_mixings_output_file()
 {
 }
 
@@ -73,6 +79,30 @@ void Scan_command_line_options::parse(int argc, const char* argv[])
          drbar_mixings_output_file = get_option_value(option, "=");
          if (drbar_mixings_output_file.empty())
             WARNING("no DRbar mixings output file name given");
+      } else if (starts_with(option,"--slha-pole-mass-output-file=")) {
+         slha_pole_mass_output_file = get_option_value(option, "=");
+         if (slha_pole_mass_output_file.empty())
+            WARNING("no SLHA pole mass output file name given");
+      } else if (starts_with(option,"--slha-running-mass-output-file=")) {
+         slha_running_mass_output_file = get_option_value(option, "=");
+         if (slha_running_mass_output_file.empty())
+            WARNING("no SLHA running mass output file name given");
+      } else if (starts_with(option,"--slha-susy-pars-output-file=")) {
+         slha_susy_pars_output_file = get_option_value(option, "=");
+         if (slha_susy_pars_output_file.empty())
+            WARNING("no SLHA SUSY parameters output file name given");
+      } else if (starts_with(option,"--slha-soft-pars-output-file=")) {
+         slha_soft_pars_output_file = get_option_value(option, "=");
+         if (slha_soft_pars_output_file.empty())
+            WARNING("no SLHA soft parameters output file name given");
+      } else if (starts_with(option,"--slha-pole-mixings-output-file=")) {
+         slha_pole_mixings_output_file = get_option_value(option, "=");
+         if (slha_pole_mixings_output_file.empty())
+            WARNING("no SLHA pole mixings output file name given");
+      } else if (starts_with(option,"--slha-running-mixings-output-file=")) {
+         slha_running_mixings_output_file = get_option_value(option, "=");
+         if (slha_running_mixings_output_file.empty())
+            WARNING("no SLHA running mixings output file name given");
       } else if (option == "--help" || option == "-h") {
          print_usage(std::cout);
          do_exit = true;
@@ -109,28 +139,46 @@ void Scan_command_line_options::print_usage(std::ostream& ostr) const
 {
    ostr << "Usage: " << program << " [options]\n"
            "Options:\n"
-           "  --scan-input-file=<filename>              scan input file\n"
-           "                                            If not given, default values\n"
-           "                                            are used.\n"
-           "  --pole-mass-output-file=<filename>        SLHA output file\n"
-           "                                            If not given, the output is\n"
-           "                                            printed to stdout.\n"
-           "  --drbar-mass-output-file=<filename>       DRbar masses output file\n"
-           "                                            If not given, DR bar masses\n"
-           "                                            are not printed.\n"
-           "  --drbar-susy-pars-output-file=<filename>  DRbar SUSY parameters output file\n"
-           "                                            If not given, SUSY parameters\n"
-           "                                            are not printed.\n"
-           "  --drbar-soft-pars-output-file=<filename>  DRbar soft parameters output file\n"
-           "                                            If not given, soft parameters\n"
-           "                                            are not printed.\n"
-           "  --drbar-mixings-output-file=<filename>    DRbar mixings output file\n"
-           "                                            If not given, DR mixings\n"
-           "                                            are not printed.\n"
-           "  --build-info                              print build information\n"
-           "  --model-info                              print model information\n"
-           "  --help,-h                                 print this help message\n"
-           "  --version,-v                              print program version"
+           "  --scan-input-file=<filename>                 scan input file\n"
+           "                                               If not given, default values\n"
+           "                                               are used.\n"
+           "  --pole-mass-output-file=<filename>           SLHA output file\n"
+           "                                               If not given, the output is\n"
+           "                                               printed to stdout.\n"
+           "  --drbar-mass-output-file=<filename>          DRbar masses output file\n"
+           "                                               If not given, DR bar masses\n"
+           "                                               are not printed.\n"
+           "  --drbar-susy-pars-output-file=<filename>     DRbar SUSY parameters output file\n"
+           "                                               If not given, SUSY parameters\n"
+           "                                               are not printed.\n"
+           "  --drbar-soft-pars-output-file=<filename>     DRbar soft parameters output file\n"
+           "                                               If not given, soft parameters\n"
+           "                                               are not printed.\n"
+           "  --drbar-mixings-output-file=<filename>       DRbar mixings output file\n"
+           "                                               If not given, DR mixings\n"
+           "                                               are not printed.\n"
+           " --slha-pole-mass-output-file=<filename>       SLHA pole masses output file\n"
+           "                                               If not given, SLHA pole masses\n"
+           "                                               are not printed.\n"
+           " --slha-running-mass-output-file=<filename>    SLHA running masses output file\n"
+           "                                               If not given, SLHA running masses\n"
+           "                                               are not printed.\n"
+           " --slha-susy-pars-output-file=<filename>       SLHA SUSY parameters output file\n"
+           "                                               If not given, SLHA SUSY parameters\n"
+           "                                               are not printed.\n"
+           " --slha-soft-pars-output-file=<filename>       SLHA soft parameters output file\n"
+           "                                               If not given, SLHA soft parameters\n"
+           "                                               are not printed.\n"
+           " --slha-pole-mixings-output-file=<filename>    SLHA pole mixings output file\n"
+           "                                               If not given, SLHA pole mixings\n"
+           "                                               are not printed.\n"
+           " --slha-running-mixings-output-file=<filename> SLHA running mixings output file\n"
+           "                                               If not given, SLHA running mixings\n"
+           "                                               are not printed.\n"
+           "  --build-info                                 print build information\n"
+           "  --model-info                                 print model information\n"
+           "  --help,-h                                    print this help message\n"
+           "  --version,-v                                 print program version"
         << std::endl;
 }
 
@@ -149,6 +197,12 @@ void Scan_command_line_options::reset()
    drbar_susy_pars_output_file.clear();
    drbar_soft_pars_output_file.clear();
    drbar_mixings_output_file.clear();
+   slha_pole_mass_output_file.clear();
+   slha_running_mass_output_file.clear();
+   slha_susy_pars_output_file.clear();
+   slha_soft_pars_output_file.clear();
+   slha_pole_mixings_output_file.clear();
+   slha_running_mixings_output_file.clear();
 }
 
 /**

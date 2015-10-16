@@ -1165,5 +1165,1351 @@ std::valarray<double> to_valarray(double v)
    return std::valarray<double>(&v, 1);
 }
 
+CNE6SSM_slha_values_writer::CNE6SSM_slha_values_writer()
+   : slha_pole_masses()
+   , slha_running_masses()
+   , slha_susy_pars()
+   , slha_soft_pars()
+   , slha_pole_mixings()
+   , slha_running_mixings()
+   , slha_pole_masses_inputs()
+   , slha_running_masses_inputs()
+   , slha_susy_pars_inputs()
+   , slha_soft_pars_inputs()
+   , slha_pole_mixings_inputs()
+   , slha_running_mixings_inputs()
+   , slha_pole_masses_problems(CNE6SSM_info::particle_names)
+   , slha_running_masses_problems(CNE6SSM_info::particle_names)
+   , slha_susy_pars_problems(CNE6SSM_info::particle_names)
+   , slha_soft_pars_problems(CNE6SSM_info::particle_names)
+   , slha_pole_mixings_problems(CNE6SSM_info::particle_names)
+   , slha_running_mixings_problems(CNE6SSM_info::particle_names)
+   , slha_pole_masses_scale()
+   , slha_running_masses_scale()
+   , slha_susy_pars_scale()
+   , slha_soft_pars_scale()
+   , slha_pole_mixings_scale()
+   , slha_running_mixings_scale()
+   , width(18)
+{
+}
+
+CNE6SSM_semianalytic_slha_values_writer::CNE6SSM_semianalytic_slha_values_writer()
+   : slha_pole_masses()
+   , slha_running_masses()
+   , slha_susy_pars()
+   , slha_soft_pars()
+   , slha_pole_mixings()
+   , slha_running_mixings()
+   , slha_pole_masses_inputs()
+   , slha_running_masses_inputs()
+   , slha_susy_pars_inputs()
+   , slha_soft_pars_inputs()
+   , slha_pole_mixings_inputs()
+   , slha_running_mixings_inputs()
+   , slha_pole_masses_problems(CNE6SSM_info::particle_names)
+   , slha_running_masses_problems(CNE6SSM_info::particle_names)
+   , slha_susy_pars_problems(CNE6SSM_info::particle_names)
+   , slha_soft_pars_problems(CNE6SSM_info::particle_names)
+   , slha_pole_mixings_problems(CNE6SSM_info::particle_names)
+   , slha_running_mixings_problems(CNE6SSM_info::particle_names)
+   , slha_pole_masses_scale()
+   , slha_running_masses_scale()
+   , slha_susy_pars_scale()
+   , slha_soft_pars_scale()
+   , slha_pole_mixings_scale()
+   , slha_running_mixings_scale()
+   , slha_pole_masses_m0(0)
+   , slha_running_masses_m0(0)
+   , slha_susy_pars_m0(0)
+   , slha_soft_pars_m0(0)
+   , slha_pole_mixings_m0(0)
+   , slha_running_mixings_m0(0)
+   , width(18)
+{
+}
+
+void CNE6SSM_slha_values_writer::write_slha_pole_masses_comment_line(std::ostream & filestr) const
+{
+   if (slha_pole_masses.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_pole_masses[p].name;
+      const std::size_t multiplicity = slha_pole_masses[p].masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         std::string entry(name);
+         if (multiplicity > 1) {
+            std::ostringstream index;
+            index << "(" << i + 1 << ")";
+            entry.append(index.str());
+         }
+         entry.append("/GeV");
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line(std::ostream & filestr) const
+{
+   if (slha_pole_masses.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_pole_masses[p].name;
+      const std::size_t multiplicity = slha_pole_masses[p].masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         std::string entry(name);
+         if (multiplicity > 1) {
+            std::ostringstream index;
+            index << "(" << i + 1 << ")";
+            entry.append(index.str());
+         }
+         entry.append("/GeV");
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_slha_values_writer::write_slha_running_masses_comment_line(std::ostream & filestr) const
+{
+   if (slha_running_masses.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_running_masses[p].name;
+      const std::size_t multiplicity = slha_running_masses[p].masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         std::string entry(name);
+         if (multiplicity > 1) {
+            std::ostringstream index;
+            index << "(" << i + 1 << ")";
+            entry.append(index.str());
+         }
+         entry.append("/GeV");
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line(std::ostream & filestr) const
+{
+   if (slha_running_masses.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_running_masses[p].name;
+      const std::size_t multiplicity = slha_running_masses[p].masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         std::string entry(name);
+         if (multiplicity > 1) {
+            std::ostringstream index;
+            index << "(" << i + 1 << ")";
+            entry.append(index.str());
+         }
+         entry.append("/GeV");
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_slha_values_writer::write_slha_susy_pars_comment_line(std::ostream & filestr) const
+{
+   if (slha_susy_pars.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_susy_pars[p].name;
+      const std::size_t mass_dimension = slha_susy_pars[p].mass_dimension;
+      const std::size_t rows = slha_susy_pars[p].rows;
+      const std::size_t cols = slha_susy_pars[p].cols;
+      const std::size_t npars = rows * cols;
+
+      for (std::size_t i = 0; i < npars; ++i) {
+         std::string entry(name);
+         if (npars > 1) {
+            std::size_t col_index = i / rows;
+            std::size_t row_index = i - rows * col_index;
+            std::ostringstream index;
+            index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+            entry.append(index.str());
+         }
+         if (mass_dimension > 0) {
+            entry.append("/GeV");
+            if (mass_dimension > 1) {
+               std::ostringstream dim;
+               dim << "^" << mass_dimension;
+               entry.append(dim.str());
+            }
+         }
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line(std::ostream & filestr) const
+{
+   if (slha_susy_pars.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_susy_pars[p].name;
+      const std::size_t mass_dimension = slha_susy_pars[p].mass_dimension;
+      const std::size_t rows = slha_susy_pars[p].rows;
+      const std::size_t cols = slha_susy_pars[p].cols;
+      const std::size_t npars = rows * cols;
+
+      for (std::size_t i = 0; i < npars; ++i) {
+         std::string entry(name);
+         if (npars > 1) {
+            std::size_t col_index = i / rows;
+            std::size_t row_index = i - rows * col_index;
+            std::ostringstream index;
+            index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+            entry.append(index.str());
+         }
+         if (mass_dimension > 0) {
+            entry.append("/GeV");
+            if (mass_dimension > 1) {
+               std::ostringstream dim;
+               dim << "^" << mass_dimension;
+               entry.append(dim.str());
+            }
+         }
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_slha_values_writer::write_slha_soft_pars_comment_line(std::ostream & filestr) const
+{
+   if (slha_soft_pars.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_soft_pars[p].name;
+      const std::size_t mass_dimension = slha_soft_pars[p].mass_dimension;
+      const std::size_t rows = slha_soft_pars[p].rows;
+      const std::size_t cols = slha_soft_pars[p].cols;
+      const std::size_t num_entries = rows * cols;
+
+      for (std::size_t i = 0; i < num_entries; ++i) {
+         std::string entry(name);
+         if (num_entries > 1) {
+            std::size_t col_index = i / rows;
+            std::size_t row_index = i - rows * col_index;
+            std::ostringstream index;
+            index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+            entry.append(index.str());
+         }
+         if (mass_dimension > 0) {
+            entry.append("/GeV");
+            if (mass_dimension > 1) {
+               std::ostringstream dim;
+               dim << "^" << mass_dimension;
+               entry.append(dim.str());
+            }
+         }
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line(std::ostream & filestr) const
+{
+   if (slha_soft_pars.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_soft_pars[p].name;
+      const std::size_t mass_dimension = slha_soft_pars[p].mass_dimension;
+      const std::size_t rows = slha_soft_pars[p].rows;
+      const std::size_t cols = slha_soft_pars[p].cols;
+      const std::size_t num_entries = rows * cols;
+
+      for (std::size_t i = 0; i < num_entries; ++i) {
+         std::string entry(name);
+         if (num_entries > 1) {
+            std::size_t col_index = i / rows;
+            std::size_t row_index = i - rows * col_index;
+            std::ostringstream index;
+            index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+            entry.append(index.str());
+         }
+         if (mass_dimension > 0) {
+            entry.append("/GeV");
+            if (mass_dimension > 1) {
+               std::ostringstream dim;
+               dim << "^" << mass_dimension;
+               entry.append(dim.str());
+            }
+         }
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_slha_values_writer::write_slha_pole_mixings_comment_line(std::ostream & filestr) const
+{
+   if (slha_pole_mixings.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_pole_mixings[p].name;
+      const std::size_t dimension = slha_pole_mixings[p].dimension;
+      const std::size_t num_entries = dimension * dimension;
+      const bool is_real = slha_pole_mixings[p].is_real;
+
+      if (is_real) {
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if (num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << entry << ' ';
+         }
+      } else {
+         // first num_entries values are the real parts
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Re(" + entry + ")" << ' ';
+         }
+         // second num_entries values are the imaginary parts
+         for (std::size_t i = num_entries; i < 2 * num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = (i - num_entries) / dimension;
+               std::size_t row_index = i - num_entries - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Im(" + entry + ")" << ' ';
+         }
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line(std::ostream & filestr) const
+{
+   if (slha_pole_mixings.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+
+   for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_pole_mixings[p].name;
+      const std::size_t dimension = slha_pole_mixings[p].dimension;
+      const std::size_t num_entries = dimension * dimension;
+      const bool is_real = slha_pole_mixings[p].is_real;
+
+      if (is_real) {
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if (num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << entry << ' ';
+         }
+      } else {
+         // first num_entries values are the real parts
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Re(" + entry + ")" << ' ';
+         }
+         // second num_entries values are the imaginary parts
+         for (std::size_t i = num_entries; i < 2 * num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = (i - num_entries) / dimension;
+               std::size_t row_index = i - num_entries - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Im(" + entry + ")" << ' ';
+         }
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_slha_values_writer::write_slha_running_mixings_comment_line(std::ostream & filestr) const
+{
+   if (slha_running_mixings.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+   for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_running_mixings[p].name;
+      const std::size_t dimension = slha_running_mixings[p].dimension;
+      const std::size_t num_entries = dimension * dimension;
+      const bool is_real = slha_running_mixings[p].is_real;
+
+      if (is_real) {
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if (num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << entry << ' ';
+         }
+      } else {
+         // first num_entries values are the real parts
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Re(" + entry + ")" << ' ';
+         }
+         // second num_entries values are the imaginary parts
+         for (std::size_t i = num_entries; i < 2 * num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = (i - num_entries) / dimension;
+               std::size_t row_index = i - num_entries - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Im(" + entry + ")" << ' ';
+         }
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line(std::ostream & filestr) const
+{
+   if (slha_running_mixings.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "Q/GeV" << ' ';
+
+
+   for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = slha_running_mixings[p].name;
+      const std::size_t dimension = slha_running_mixings[p].dimension;
+      const std::size_t num_entries = dimension * dimension;
+      const bool is_real = slha_running_mixings[p].is_real;
+
+      if (is_real) {
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if (num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << entry << ' ';
+         }
+      } else {
+         // first num_entries values are the real parts
+         for (std::size_t i = 0; i < num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = i / dimension;
+               std::size_t row_index = i - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Re(" + entry + ")" << ' ';
+         }
+         // second num_entries values are the imaginary parts
+         for (std::size_t i = num_entries; i < 2 * num_entries; ++i) {
+            std::string entry(name);
+            if(num_entries > 1) {
+               std::size_t col_index = (i - num_entries) / dimension;
+               std::size_t row_index = i - num_entries - dimension * col_index;
+               std::ostringstream index;
+               index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+               entry.append(index.str());
+            }
+            filestr << std::left << std::setw(width) << "Im(" + entry + ")" << ' ';
+         }
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_slha_values_writer::write_slha_pole_masses_line(std::ostream & filestr) const
+{
+   if (slha_pole_masses.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_pole_masses_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_pole_masses_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_pole_masses_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& masses = slha_pole_masses[p].masses;
+      const std::size_t multiplicity = masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         filestr << std::left << std::setw(width) << masses[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_pole_masses_problems.have_problem() << ' ';
+
+   if (slha_pole_masses_problems.have_problem()) {
+      filestr << "\t# " << slha_pole_masses_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line(std::ostream & filestr) const
+{
+   if (slha_pole_masses.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_pole_masses_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_pole_masses_m0 << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_pole_masses_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_pole_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& masses = slha_pole_masses[p].masses;
+      const std::size_t multiplicity = masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         filestr << std::left << std::setw(width) << masses[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_pole_masses_problems.have_problem() << ' ';
+
+   if (slha_pole_masses_problems.have_problem()) {
+      filestr << "\t# " << slha_pole_masses_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_slha_values_writer::write_slha_running_masses_line(std::ostream & filestr) const
+{
+   if (slha_running_masses.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_running_masses_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_running_masses_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_running_masses_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& masses = slha_running_masses[p].masses;
+      const std::size_t multiplicity = masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         filestr << std::left << std::setw(width) << masses[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_running_masses_problems.have_problem() << ' ';
+
+   if (slha_running_masses_problems.have_problem()) {
+      filestr << "\t# " << slha_running_masses_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line(std::ostream & filestr) const
+{
+   if (slha_running_masses.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_running_masses_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_running_masses_m0 << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_running_masses_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_running_masses.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& masses = slha_running_masses[p].masses;
+      const std::size_t multiplicity = masses.size();
+
+      for (std::size_t i = 0; i < multiplicity; ++i) {
+         filestr << std::left << std::setw(width) << masses[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_running_masses_problems.have_problem() << ' ';
+
+   if (slha_running_masses_problems.have_problem()) {
+      filestr << "\t# " << slha_running_masses_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_slha_values_writer::write_slha_susy_pars_line(std::ostream & filestr) const
+{
+   if (slha_susy_pars.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_susy_pars_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_susy_pars_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_susy_pars_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& values = slha_susy_pars[p].values;
+      const std::size_t rows = slha_susy_pars[p].rows;
+      const std::size_t cols = slha_susy_pars[p].cols;
+      const std::size_t num_entries = rows * cols;
+
+      for (std::size_t i = 0; i < num_entries; ++i) {
+         filestr << std::left << std::setw(width) << values[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_susy_pars_problems.have_problem() << ' ';
+
+   if (slha_susy_pars_problems.have_problem()) {
+      filestr << "\t# " << slha_susy_pars_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line(std::ostream & filestr) const
+{
+   if (slha_susy_pars.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_susy_pars_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_susy_pars_m0 << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_susy_pars_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_susy_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& values = slha_susy_pars[p].values;
+      const std::size_t rows = slha_susy_pars[p].rows;
+      const std::size_t cols = slha_susy_pars[p].cols;
+      const std::size_t num_entries = rows * cols;
+
+      for (std::size_t i = 0; i < num_entries; ++i) {
+         filestr << std::left << std::setw(width) << values[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_susy_pars_problems.have_problem() << ' ';
+
+   if (slha_susy_pars_problems.have_problem()) {
+      filestr << "\t# " << slha_susy_pars_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_slha_values_writer::write_slha_soft_pars_line(std::ostream & filestr) const
+{
+   if (slha_soft_pars.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_soft_pars_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_soft_pars_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_soft_pars_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& values = slha_soft_pars[p].values;
+      const std::size_t rows = slha_soft_pars[p].rows;
+      const std::size_t cols = slha_soft_pars[p].cols;
+      const std::size_t num_entries = rows * cols;
+
+      for (std::size_t i = 0; i < num_entries; ++i) {
+         filestr << std::left << std::setw(width) << values[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_soft_pars_problems.have_problem() << ' ';
+
+   if (slha_soft_pars_problems.have_problem()) {
+      filestr << "\t# " << slha_soft_pars_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line(std::ostream & filestr) const
+{
+   if (slha_soft_pars.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_soft_pars_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_soft_pars_m0 << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_soft_pars_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_soft_pars.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& values = slha_soft_pars[p].values;
+      const std::size_t rows = slha_soft_pars[p].rows;
+      const std::size_t cols = slha_soft_pars[p].cols;
+      const std::size_t num_entries = rows * cols;
+
+      for (std::size_t i = 0; i < num_entries; ++i) {
+         filestr << std::left << std::setw(width) << values[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_soft_pars_problems.have_problem() << ' ';
+
+   if (slha_soft_pars_problems.have_problem()) {
+      filestr << "\t# " << slha_soft_pars_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_slha_values_writer::write_slha_pole_mixings_line(std::ostream & filestr) const
+{
+   if (slha_pole_mixings.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_pole_mixings_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_pole_mixings_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_pole_mixings_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& mixings = slha_pole_mixings[p].mixings;
+      const std::size_t num_mixings = mixings.size();
+
+      for (std::size_t i = 0; i < num_mixings; ++i) {
+         filestr << std::left << std::setw(width) << mixings[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_pole_mixings_problems.have_problem() << ' ';
+
+   if (slha_pole_mixings_problems.have_problem()) {
+      filestr << "\t# " << slha_pole_mixings_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line(std::ostream & filestr) const
+{
+   if (slha_pole_mixings.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_pole_mixings_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_pole_mixings_m0 << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_pole_mixings_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_pole_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& mixings = slha_pole_mixings[p].mixings;
+      const std::size_t num_mixings = mixings.size();
+
+      for (std::size_t i = 0; i < num_mixings; ++i) {
+         filestr << std::left << std::setw(width) << mixings[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_pole_mixings_problems.have_problem() << ' ';
+
+   if (slha_pole_mixings_problems.have_problem()) {
+      filestr << "\t# " << slha_pole_mixings_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_slha_values_writer::write_slha_running_mixings_line(std::ostream & filestr) const
+{
+   if (slha_running_mixings.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_running_mixings_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_running_mixings_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_slha_values_writer::write_slha_running_mixings_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& mixings = slha_running_mixings[p].mixings;
+      const std::size_t num_mixings = mixings.size();
+
+      for (std::size_t i = 0; i < num_mixings; ++i) {
+         filestr << std::left << std::setw(width) << mixings[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_running_mixings_problems.have_problem() << ' ';
+
+   if (slha_running_mixings_problems.have_problem()) {
+      filestr << "\t# " << slha_running_mixings_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
+void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line(std::ostream & filestr) const
+{
+   if (slha_running_mixings.empty())
+      return;
+
+   write_CNE6SSM_inputs(slha_running_mixings_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_running_mixings_m0 << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << slha_running_mixings_scale << ' ';
+
+   for (std::size_t p = 0; p < slha_running_mixings.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& mixings = slha_running_mixings[p].mixings;
+      const std::size_t num_mixings = mixings.size();
+
+      for (std::size_t i = 0; i < num_mixings; ++i) {
+         filestr << std::left << std::setw(width) << mixings[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << slha_running_mixings_problems.have_problem() << ' ';
+
+   if (slha_running_mixings_problems.have_problem()) {
+      filestr << "\t# " << slha_running_mixings_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+}
+
 } // namespace flexiblesusy
 

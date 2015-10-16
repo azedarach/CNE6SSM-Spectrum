@@ -269,6 +269,12 @@ int main(int argc, const char* argv[])
    const std::string drbar_susy_pars_output_file(options.get_drbar_susy_pars_output_file());
    const std::string drbar_soft_pars_output_file(options.get_drbar_soft_pars_output_file());
    const std::string drbar_mixings_output_file(options.get_drbar_mixings_output_file());
+   const std::string slha_pole_mass_output_file(options.get_slha_pole_mass_output_file());
+   const std::string slha_running_mass_output_file(options.get_slha_running_mass_output_file());
+   const std::string slha_susy_pars_output_file(options.get_slha_susy_pars_output_file());
+   const std::string slha_soft_pars_output_file(options.get_slha_soft_pars_output_file());
+   const std::string slha_pole_mixings_output_file(options.get_slha_pole_mixings_output_file());
+   const std::string slha_running_mixings_output_file(options.get_slha_running_mixings_output_file());
 
    Scan_parser parser;
    if (scan_input_file.empty()) {
@@ -296,11 +302,23 @@ int main(int argc, const char* argv[])
    bool must_write_drbar_susy_pars = false;
    bool must_write_drbar_soft_pars = false;
    bool must_write_drbar_mixings = false;
+   bool must_write_slha_pole_masses = false;
+   bool must_write_slha_running_masses = false;
+   bool must_write_slha_susy_pars = false;
+   bool must_write_slha_soft_pars = false;
+   bool must_write_slha_pole_mixings = false;
+   bool must_write_slha_running_mixings = false;
 
    std::ofstream drbar_mass_out_stream;
    std::ofstream drbar_susy_pars_out_stream;
    std::ofstream drbar_soft_pars_out_stream;
    std::ofstream drbar_mixings_out_stream;
+   std::ofstream slha_pole_mass_out_stream;
+   std::ofstream slha_running_mass_out_stream;
+   std::ofstream slha_susy_pars_out_stream;
+   std::ofstream slha_soft_pars_out_stream;
+   std::ofstream slha_pole_mixings_out_stream;
+   std::ofstream slha_running_mixings_out_stream;
    if (!drbar_mass_output_file.empty()) {
       must_write_drbar_masses = true;
       drbar_mass_out_stream.open(drbar_mass_output_file, std::ofstream::out);
@@ -316,6 +334,30 @@ int main(int argc, const char* argv[])
    if (!drbar_mixings_output_file.empty()) {
       must_write_drbar_mixings = true;
       drbar_mixings_out_stream.open(drbar_mixings_output_file, std::ofstream::out);
+   }
+   if (!slha_pole_mass_output_file.empty()) {
+      must_write_slha_pole_masses = true;
+      slha_pole_mass_out_stream.open(slha_pole_mass_output_file, std::ofstream::out);
+   }
+   if (!slha_running_mass_output_file.empty()) {
+      must_write_slha_running_masses = true;
+      slha_running_mass_out_stream.open(slha_running_mass_output_file, std::ofstream::out);
+   }
+   if (!slha_susy_pars_output_file.empty()) {
+      must_write_slha_susy_pars = true;
+      slha_susy_pars_out_stream.open(slha_susy_pars_output_file, std::ofstream::out);
+   }
+   if (!slha_soft_pars_output_file.empty()) {
+      must_write_slha_soft_pars = true;
+      slha_soft_pars_out_stream.open(slha_soft_pars_output_file, std::ofstream::out);
+   }
+   if (!slha_pole_mixings_output_file.empty()) {
+      must_write_slha_pole_mixings = true;
+      slha_pole_mixings_out_stream.open(slha_pole_mixings_output_file, std::ofstream::out);
+   }
+   if (!slha_running_mixings_output_file.empty()) {
+      must_write_slha_running_mixings = true;
+      slha_running_mixings_out_stream.open(slha_running_mixings_output_file, std::ofstream::out);
    }
 
    CNE6SSM_semianalytic_input_parameters<algorithm_type> input;
@@ -346,6 +388,7 @@ int main(int argc, const char* argv[])
 
    CNE6SSM_semianalytic_pole_mass_writer pole_mass_writer;
    CNE6SSM_semianalytic_drbar_values_writer drbar_values_writer;
+   CNE6SSM_semianalytic_slha_values_writer slha_values_writer;
    bool must_write_comment_line = true;
 
    while (!scan.has_finished()) {
@@ -358,7 +401,7 @@ int main(int argc, const char* argv[])
          spectrum_generator;
       spectrum_generator.set_precision_goal(1.0e-3);
       spectrum_generator.set_max_iterations(0);   // 0 == automatic
-      spectrum_generator.set_calculate_sm_masses(0); // 0 == no
+      spectrum_generator.set_calculate_sm_masses(1); // 0 == no
       spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
       spectrum_generator.set_ewsb_loop_order(2);
       spectrum_generator.set_pole_mass_loop_order(2);
@@ -373,6 +416,7 @@ int main(int argc, const char* argv[])
 
       const CNE6SSM_semianalytic<algorithm_type>& model
          = spectrum_generator.get_model();
+      const CNE6SSM_semianalytic_slha<algorithm_type> model_slha(model);
 
       pole_mass_writer.extract_pole_masses(model);
 
@@ -384,6 +428,18 @@ int main(int argc, const char* argv[])
          drbar_values_writer.extract_drbar_soft_pars(model);
       if (must_write_drbar_mixings)
          drbar_values_writer.extract_drbar_mixings(model);
+      if (must_write_slha_pole_masses)
+         slha_values_writer.extract_slha_pole_masses(model_slha);
+      if (must_write_slha_running_masses)
+         slha_values_writer.extract_slha_running_masses(model_slha);
+      if (must_write_slha_susy_pars)
+         slha_values_writer.extract_slha_susy_pars(model_slha);
+      if (must_write_slha_soft_pars)
+         slha_values_writer.extract_slha_soft_pars(model_slha);
+      if (must_write_slha_pole_mixings)
+         slha_values_writer.extract_slha_pole_mixings(model_slha);
+      if (must_write_slha_running_mixings)
+         slha_values_writer.extract_slha_running_mixings(model_slha);
 
       if (must_write_comment_line) {
          pole_mass_writer.write_pole_masses_comment_line(pole_mass_out);
@@ -396,6 +452,18 @@ int main(int argc, const char* argv[])
             drbar_values_writer.write_drbar_soft_pars_comment_line(drbar_soft_pars_out_stream);
          if (must_write_drbar_mixings)
             drbar_values_writer.write_drbar_mixings_comment_line(drbar_mixings_out_stream);
+         if (must_write_slha_pole_masses)
+            slha_values_writer.write_slha_pole_masses_comment_line(slha_pole_mass_out_stream);
+         if (must_write_slha_running_masses)
+            slha_values_writer.write_slha_running_masses_comment_line(slha_running_mass_out_stream);
+         if (must_write_slha_susy_pars)
+            slha_values_writer.write_slha_susy_pars_comment_line(slha_susy_pars_out_stream);
+         if (must_write_slha_soft_pars)
+            slha_values_writer.write_slha_soft_pars_comment_line(slha_soft_pars_out_stream);
+         if (must_write_slha_pole_mixings)
+            slha_values_writer.write_slha_pole_mixings_comment_line(slha_pole_mixings_out_stream);
+         if (must_write_slha_running_mixings)
+            slha_values_writer.write_slha_running_mixings_comment_line(slha_running_mixings_out_stream);
 
          must_write_comment_line = false;
       }
@@ -409,6 +477,18 @@ int main(int argc, const char* argv[])
          drbar_values_writer.write_drbar_soft_pars_line(drbar_soft_pars_out_stream);
       if (must_write_drbar_mixings)
          drbar_values_writer.write_drbar_mixings_line(drbar_mixings_out_stream);
+      if (must_write_slha_pole_masses)
+         slha_values_writer.write_slha_pole_masses_line(slha_pole_mass_out_stream);
+      if (must_write_slha_running_masses)
+         slha_values_writer.write_slha_running_masses_line(slha_running_mass_out_stream);
+      if (must_write_slha_susy_pars)
+         slha_values_writer.write_slha_susy_pars_line(slha_susy_pars_out_stream);
+      if (must_write_slha_soft_pars)
+         slha_values_writer.write_slha_soft_pars_line(slha_soft_pars_out_stream);
+      if (must_write_slha_pole_mixings)
+         slha_values_writer.write_slha_pole_mixings_line(slha_pole_mixings_out_stream);
+      if (must_write_slha_running_mixings)
+         slha_values_writer.write_slha_running_mixings_line(slha_running_mixings_out_stream);
 
       scan.step_forward();
    }
@@ -428,6 +508,23 @@ int main(int argc, const char* argv[])
    if (drbar_mixings_out_stream.is_open())
       drbar_mixings_out_stream.close();
 
+   if (slha_pole_mass_out_stream.is_open())
+      slha_pole_mass_out_stream.close();
+
+   if (slha_running_mass_out_stream.is_open())
+      slha_running_mass_out_stream.close();
+
+   if (slha_susy_pars_out_stream.is_open())
+      slha_susy_pars_out_stream.close();
+
+   if (slha_soft_pars_out_stream.is_open())
+      slha_soft_pars_out_stream.close();
+
+   if (slha_pole_mixings_out_stream.is_open())
+      slha_pole_mixings_out_stream.close();
+
+   if (slha_running_mixings_out_stream.is_open())
+      slha_running_mixings_out_stream.close();
 
    std::chrono::high_resolution_clock::time_point end_point = std::chrono::high_resolution_clock::now();
    microseconds_t duration(std::chrono::duration_cast<microseconds_t>(end_point - start_point));
