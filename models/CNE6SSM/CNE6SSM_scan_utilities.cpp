@@ -394,7 +394,7 @@ void CNE6SSM_pole_mass_writer::write_pole_masses_line(std::ostream & filestr) co
 
    filestr << std::left << std::setw(width) << pole_masses_problems.have_problem() << ' ';
 
-   if (pole_masses_problems.have_problem()) {
+   if (pole_masses_problems.have_problem() || pole_masses_problems.have_warning()) {
       filestr << "\t# " << pole_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -427,7 +427,7 @@ void CNE6SSM_semianalytic_pole_mass_writer::write_pole_masses_line(std::ostream 
 
    filestr << std::left << std::setw(width) << pole_masses_problems.have_problem() << ' ';
 
-   if (pole_masses_problems.have_problem()) {
+   if (pole_masses_problems.have_problem() || pole_masses_problems.have_warning()) {
       filestr << "\t# " << pole_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -928,7 +928,7 @@ void CNE6SSM_drbar_values_writer::write_drbar_masses_line(std::ostream & filestr
 
    filestr << std::left << std::setw(width) << drbar_masses_problems.have_problem() << ' ';
 
-   if (drbar_masses_problems.have_problem()) {
+   if (drbar_masses_problems.have_problem() || drbar_masses_problems.have_warning()) {
       filestr << "\t# " << drbar_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -959,7 +959,7 @@ void CNE6SSM_semianalytic_drbar_values_writer::write_drbar_masses_line(std::ostr
 
    filestr << std::left << std::setw(width) << drbar_masses_problems.have_problem() << ' ';
 
-   if (drbar_masses_problems.have_problem()) {
+   if (drbar_masses_problems.have_problem() || drbar_masses_problems.have_warning()) {
       filestr << "\t# " << drbar_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -992,7 +992,7 @@ void CNE6SSM_drbar_values_writer::write_drbar_susy_pars_line(std::ostream & file
 
    filestr << std::left << std::setw(width) << drbar_susy_pars_problems.have_problem() << ' ';
 
-   if (drbar_susy_pars_problems.have_problem()) {
+   if (drbar_susy_pars_problems.have_problem() || drbar_susy_pars_problems.have_warning()) {
       filestr << "\t# " << drbar_susy_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -1025,7 +1025,7 @@ void CNE6SSM_semianalytic_drbar_values_writer::write_drbar_susy_pars_line(std::o
 
    filestr << std::left << std::setw(width) << drbar_susy_pars_problems.have_problem() << ' ';
 
-   if (drbar_susy_pars_problems.have_problem()) {
+   if (drbar_susy_pars_problems.have_problem() || drbar_susy_pars_problems.have_warning()) {
       filestr << "\t# " << drbar_susy_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -1058,7 +1058,7 @@ void CNE6SSM_drbar_values_writer::write_drbar_soft_pars_line(std::ostream & file
 
    filestr << std::left << std::setw(width) << drbar_soft_pars_problems.have_problem() << ' ';
 
-   if (drbar_soft_pars_problems.have_problem()) {
+   if (drbar_soft_pars_problems.have_problem() || drbar_soft_pars_problems.have_warning()) {
       filestr << "\t# " << drbar_soft_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -1091,7 +1091,7 @@ void CNE6SSM_semianalytic_drbar_values_writer::write_drbar_soft_pars_line(std::o
 
    filestr << std::left << std::setw(width) << drbar_soft_pars_problems.have_problem() << ' ';
 
-   if (drbar_soft_pars_problems.have_problem()) {
+   if (drbar_soft_pars_problems.have_problem() || drbar_soft_pars_problems.have_warning()) {
       filestr << "\t# " << drbar_soft_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -1122,7 +1122,7 @@ void CNE6SSM_drbar_values_writer::write_drbar_mixings_line(std::ostream & filest
 
    filestr << std::left << std::setw(width) << drbar_mixings_problems.have_problem() << ' ';
 
-   if (drbar_mixings_problems.have_problem()) {
+   if (drbar_mixings_problems.have_problem() || drbar_mixings_problems.have_warning()) {
       filestr << "\t# " << drbar_mixings_problems << '\n';
    } else {
       filestr << '\n';
@@ -1153,7 +1153,7 @@ void CNE6SSM_semianalytic_drbar_values_writer::write_drbar_mixings_line(std::ost
 
    filestr << std::left << std::setw(width) << drbar_mixings_problems.have_problem() << ' ';
 
-   if (drbar_mixings_problems.have_problem()) {
+   if (drbar_mixings_problems.have_problem() || drbar_mixings_problems.have_warning()) {
       filestr << "\t# " << drbar_mixings_problems << '\n';
    } else {
       filestr << '\n';
@@ -2217,7 +2217,7 @@ void CNE6SSM_slha_values_writer::write_slha_pole_masses_line(std::ostream & file
 
    filestr << std::left << std::setw(width) << slha_pole_masses_problems.have_problem() << ' ';
 
-   if (slha_pole_masses_problems.have_problem()) {
+   if (slha_pole_masses_problems.have_problem() || slha_pole_masses_problems.have_warning()) {
       filestr << "\t# " << slha_pole_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -2284,7 +2284,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line(std::o
 
    filestr << std::left << std::setw(width) << slha_pole_masses_problems.have_problem() << ' ';
 
-   if (slha_pole_masses_problems.have_problem()) {
+   if (slha_pole_masses_problems.have_problem() || slha_pole_masses_problems.have_warning()) {
       filestr << "\t# " << slha_pole_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -2344,7 +2344,7 @@ void CNE6SSM_slha_values_writer::write_slha_running_masses_line(std::ostream & f
 
    filestr << std::left << std::setw(width) << slha_running_masses_problems.have_problem() << ' ';
 
-   if (slha_running_masses_problems.have_problem()) {
+   if (slha_running_masses_problems.have_problem() || slha_running_masses_problems.have_warning()) {
       filestr << "\t# " << slha_running_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -2410,7 +2410,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line(std
 
    filestr << std::left << std::setw(width) << slha_running_masses_problems.have_problem() << ' ';
 
-   if (slha_running_masses_problems.have_problem()) {
+   if (slha_running_masses_problems.have_problem() || slha_running_masses_problems.have_warning()) {
       filestr << "\t# " << slha_running_masses_problems << '\n';
    } else {
       filestr << '\n';
@@ -2472,7 +2472,7 @@ void CNE6SSM_slha_values_writer::write_slha_susy_pars_line(std::ostream & filest
 
    filestr << std::left << std::setw(width) << slha_susy_pars_problems.have_problem() << ' ';
 
-   if (slha_susy_pars_problems.have_problem()) {
+   if (slha_susy_pars_problems.have_problem() || slha_susy_pars_problems.have_warning()) {
       filestr << "\t# " << slha_susy_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -2541,7 +2541,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line(std::ost
 
    filestr << std::left << std::setw(width) << slha_susy_pars_problems.have_problem() << ' ';
 
-   if (slha_susy_pars_problems.have_problem()) {
+   if (slha_susy_pars_problems.have_problem() || slha_susy_pars_problems.have_warning()) {
       filestr << "\t# " << slha_susy_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -2603,7 +2603,7 @@ void CNE6SSM_slha_values_writer::write_slha_soft_pars_line(std::ostream & filest
 
    filestr << std::left << std::setw(width) << slha_soft_pars_problems.have_problem() << ' ';
 
-   if (slha_soft_pars_problems.have_problem()) {
+   if (slha_soft_pars_problems.have_problem() || slha_soft_pars_problems.have_warning()) {
       filestr << "\t# " << slha_soft_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -2672,7 +2672,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line(std::ost
 
    filestr << std::left << std::setw(width) << slha_soft_pars_problems.have_problem() << ' ';
 
-   if (slha_soft_pars_problems.have_problem()) {
+   if (slha_soft_pars_problems.have_problem() || slha_soft_pars_problems.have_warning()) {
       filestr << "\t# " << slha_soft_pars_problems << '\n';
    } else {
       filestr << '\n';
@@ -2732,7 +2732,7 @@ void CNE6SSM_slha_values_writer::write_slha_pole_mixings_line(std::ostream & fil
 
    filestr << std::left << std::setw(width) << slha_pole_mixings_problems.have_problem() << ' ';
 
-   if (slha_pole_mixings_problems.have_problem()) {
+   if (slha_pole_mixings_problems.have_problem() || slha_pole_mixings_problems.have_warning()) {
       filestr << "\t# " << slha_pole_mixings_problems << '\n';
    } else {
       filestr << '\n';
@@ -2799,7 +2799,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line(std::
 
    filestr << std::left << std::setw(width) << slha_pole_mixings_problems.have_problem() << ' ';
 
-   if (slha_pole_mixings_problems.have_problem()) {
+   if (slha_pole_mixings_problems.have_problem() || slha_pole_mixings_problems.have_warning()) {
       filestr << "\t# " << slha_pole_mixings_problems << '\n';
    } else {
       filestr << '\n';
@@ -2859,7 +2859,7 @@ void CNE6SSM_slha_values_writer::write_slha_running_mixings_line(std::ostream & 
 
    filestr << std::left << std::setw(width) << slha_running_mixings_problems.have_problem() << ' ';
 
-   if (slha_running_mixings_problems.have_problem()) {
+   if (slha_running_mixings_problems.have_problem() || slha_running_mixings_problems.have_warning()) {
       filestr << "\t# " << slha_running_mixings_problems << '\n';
    } else {
       filestr << '\n';
@@ -2926,7 +2926,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line(st
 
    filestr << std::left << std::setw(width) << slha_running_mixings_problems.have_problem() << ' ';
 
-   if (slha_running_mixings_problems.have_problem()) {
+   if (slha_running_mixings_problems.have_problem() || slha_running_mixings_problems.have_warning()) {
       filestr << "\t# " << slha_running_mixings_problems << '\n';
    } else {
       filestr << '\n';
