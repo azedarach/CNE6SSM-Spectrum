@@ -2172,6 +2172,11 @@ void CNE6SSM_slha_values_writer::write_slha_pole_masses_line(std::ostream & file
    if (slha_pole_masses.empty())
       return;
 
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
+
    write_CNE6SSM_inputs(slha_pole_masses_inputs, filestr, width);
 
    if (!filestr.good()) {
@@ -2217,12 +2222,20 @@ void CNE6SSM_slha_values_writer::write_slha_pole_masses_line(std::ostream & file
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line(std::ostream & filestr) const
 {
    if (slha_pole_masses.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_pole_masses_inputs, filestr, width);
 
@@ -2276,12 +2289,20 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line(std::o
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_slha_values_writer::write_slha_running_masses_line(std::ostream & filestr) const
 {
    if (slha_running_masses.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_running_masses_inputs, filestr, width);
 
@@ -2328,12 +2349,19 @@ void CNE6SSM_slha_values_writer::write_slha_running_masses_line(std::ostream & f
    } else {
       filestr << '\n';
    }
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line(std::ostream & filestr) const
 {
    if (slha_running_masses.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_running_masses_inputs, filestr, width);
 
@@ -2387,12 +2415,20 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line(std
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_slha_values_writer::write_slha_susy_pars_line(std::ostream & filestr) const
 {
    if (slha_susy_pars.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_susy_pars_inputs, filestr, width);
 
@@ -2441,12 +2477,20 @@ void CNE6SSM_slha_values_writer::write_slha_susy_pars_line(std::ostream & filest
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line(std::ostream & filestr) const
 {
    if (slha_susy_pars.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_susy_pars_inputs, filestr, width);
 
@@ -2502,12 +2546,20 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line(std::ost
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_slha_values_writer::write_slha_soft_pars_line(std::ostream & filestr) const
 {
    if (slha_soft_pars.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_soft_pars_inputs, filestr, width);
 
@@ -2556,12 +2608,20 @@ void CNE6SSM_slha_values_writer::write_slha_soft_pars_line(std::ostream & filest
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line(std::ostream & filestr) const
 {
    if (slha_soft_pars.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_soft_pars_inputs, filestr, width);
 
@@ -2617,12 +2677,20 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line(std::ost
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_slha_values_writer::write_slha_pole_mixings_line(std::ostream & filestr) const
 {
    if (slha_pole_mixings.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_pole_mixings_inputs, filestr, width);
 
@@ -2669,12 +2737,20 @@ void CNE6SSM_slha_values_writer::write_slha_pole_mixings_line(std::ostream & fil
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line(std::ostream & filestr) const
 {
    if (slha_pole_mixings.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_pole_mixings_inputs, filestr, width);
 
@@ -2728,12 +2804,20 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line(std::
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_slha_values_writer::write_slha_running_mixings_line(std::ostream & filestr) const
 {
    if (slha_running_mixings.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_running_mixings_inputs, filestr, width);
 
@@ -2780,12 +2864,20 @@ void CNE6SSM_slha_values_writer::write_slha_running_mixings_line(std::ostream & 
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line(std::ostream & filestr) const
 {
    if (slha_running_mixings.empty())
       return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
 
    write_CNE6SSM_inputs(slha_running_mixings_inputs, filestr, width);
 
@@ -2839,6 +2931,9 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line(st
    } else {
       filestr << '\n';
    }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
 }
 
 } // namespace flexiblesusy
