@@ -1137,9 +1137,20 @@ void CNE6SSM_slha_values_writer::extract_slha_susy_pars(const CNE6SSM_slha<T>& m
    slha_susy_pars_inputs = model.get_input();
    slha_susy_pars_problems = model.get_problems();
 
-   slha_susy_pars.push_back(TParameter("Yd", 0, 3, 3, to_valarray(MODELPARAMETER(Yd_slha))));
+   // convert SLHA Yukawas to matrices
+   Eigen::Matrix<double,3,3> Ye_matrix(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<double,3,3> Yd_matrix(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<double,3,3> Yu_matrix(Eigen::Matrix<double,3,3>::Zero());
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      Ye_matrix(i,i) = MODELPARAMETER(Ye_slha)(i);
+      Yd_matrix(i,i) = MODELPARAMETER(Yd_slha)(i);
+      Yu_matrix(i,i) = MODELPARAMETER(Yu_slha)(i);
+   }
+
+   slha_susy_pars.push_back(TParameter("Yd", 0, 3, 3, to_valarray(Yd_matrix)));
    slha_susy_pars.push_back(TParameter("hE", 0, 3, 2, to_valarray(MODELPARAMETER(hE))));
-   slha_susy_pars.push_back(TParameter("Ye", 0, 3, 3, to_valarray(MODELPARAMETER(Ye_slha))));
+   slha_susy_pars.push_back(TParameter("Ye", 0, 3, 3, to_valarray(Ye_matrix)));
    slha_susy_pars.push_back(TParameter("SigmaL", 0, 1, 1, to_valarray(MODELPARAMETER(SigmaL))));
    slha_susy_pars.push_back(TParameter("KappaPr", 0, 1, 1, to_valarray(MODELPARAMETER(KappaPr))));
    slha_susy_pars.push_back(TParameter("Sigmax", 0, 1, 1, to_valarray(MODELPARAMETER(Sigmax))));
@@ -1149,7 +1160,7 @@ void CNE6SSM_slha_values_writer::extract_slha_susy_pars(const CNE6SSM_slha<T>& m
    slha_susy_pars.push_back(TParameter("Lambdax", 0, 1, 1, to_valarray(MODELPARAMETER(Lambdax))));
    slha_susy_pars.push_back(TParameter("fu", 0, 3, 2, to_valarray(MODELPARAMETER(fu))));
    slha_susy_pars.push_back(TParameter("fd", 0, 3, 2, to_valarray(MODELPARAMETER(fd))));
-   slha_susy_pars.push_back(TParameter("Yu", 0, 3, 3, to_valarray(MODELPARAMETER(Yu_slha))));
+   slha_susy_pars.push_back(TParameter("Yu", 0, 3, 3, to_valarray(Yu_matrix)));
    slha_susy_pars.push_back(TParameter("MuPr", 1, 1, 1, to_valarray(MODELPARAMETER(MuPr))));
    slha_susy_pars.push_back(TParameter("MuPhi", 1, 1, 1, to_valarray(MODELPARAMETER(MuPhi))));
    slha_susy_pars.push_back(TParameter("XiF", 2, 1, 1, to_valarray(MODELPARAMETER(XiF))));
@@ -1175,9 +1186,20 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_susy_pars(const CNE6S
    slha_susy_pars_problems = model.get_problems();
    slha_susy_pars_m0 = model.get_ewsb_output_parameter(0);
 
-   slha_susy_pars.push_back(TParameter("Yd", 0, 3, 3, to_valarray(MODELPARAMETER(Yd_slha))));
+   // convert SLHA Yukawas to matrices
+   Eigen::Matrix<double,3,3> Ye_matrix(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<double,3,3> Yd_matrix(Eigen::Matrix<double,3,3>::Zero());
+   Eigen::Matrix<double,3,3> Yu_matrix(Eigen::Matrix<double,3,3>::Zero());
+
+   for (std::size_t i = 0; i < 3; ++i) {
+      Ye_matrix(i,i) = MODELPARAMETER(Ye_slha)(i);
+      Yd_matrix(i,i) = MODELPARAMETER(Yd_slha)(i);
+      Yu_matrix(i,i) = MODELPARAMETER(Yu_slha)(i);
+   }
+
+   slha_susy_pars.push_back(TParameter("Yd", 0, 3, 3, to_valarray(Yd_matrix)));
    slha_susy_pars.push_back(TParameter("hE", 0, 3, 2, to_valarray(MODELPARAMETER(hE))));
-   slha_susy_pars.push_back(TParameter("Ye", 0, 3, 3, to_valarray(MODELPARAMETER(Ye_slha))));
+   slha_susy_pars.push_back(TParameter("Ye", 0, 3, 3, to_valarray(Ye_matrix)));
    slha_susy_pars.push_back(TParameter("SigmaL", 0, 1, 1, to_valarray(MODELPARAMETER(SigmaL))));
    slha_susy_pars.push_back(TParameter("KappaPr", 0, 1, 1, to_valarray(MODELPARAMETER(KappaPr))));
    slha_susy_pars.push_back(TParameter("Sigmax", 0, 1, 1, to_valarray(MODELPARAMETER(Sigmax))));
@@ -1187,7 +1209,7 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_susy_pars(const CNE6S
    slha_susy_pars.push_back(TParameter("Lambdax", 0, 1, 1, to_valarray(MODELPARAMETER(Lambdax))));
    slha_susy_pars.push_back(TParameter("fu", 0, 3, 2, to_valarray(MODELPARAMETER(fu))));
    slha_susy_pars.push_back(TParameter("fd", 0, 3, 2, to_valarray(MODELPARAMETER(fd))));
-   slha_susy_pars.push_back(TParameter("Yu", 0, 3, 3, to_valarray(MODELPARAMETER(Yu_slha))));
+   slha_susy_pars.push_back(TParameter("Yu", 0, 3, 3, to_valarray(Yu_matrix)));
    slha_susy_pars.push_back(TParameter("MuPr", 1, 1, 1, to_valarray(MODELPARAMETER(MuPr))));
    slha_susy_pars.push_back(TParameter("MuPhi", 1, 1, 1, to_valarray(MODELPARAMETER(MuPhi))));
    slha_susy_pars.push_back(TParameter("XiF", 2, 1, 1, to_valarray(MODELPARAMETER(XiF))));
