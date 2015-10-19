@@ -243,7 +243,11 @@ CNE6SSM_mass_eigenstates initialize_model_from_datapoint(
    model.set_MuPr(boost::lexical_cast<double>(susy_parameters[columns.at("MuPr")]));
    model.set_MuPhi(boost::lexical_cast<double>(susy_parameters[columns.at("MuPhi")]));
    model.set_XiF(boost::lexical_cast<double>(susy_parameters[columns.at("XiF")]));
-   model.set_g1(boost::lexical_cast<double>(susy_parameters[columns.at("g1")]));
+   if (columns.count("g1") != 0) {
+      model.set_g1(boost::lexical_cast<double>(susy_parameters[columns.at("g1")]));
+   } else if (columns.count("gY") != 0) {
+      model.set_g1(Sqrt(5.0 / 3.0) * boost::lexical_cast<double>(susy_parameters[columns.at("gY")]));
+   }
    model.set_g2(boost::lexical_cast<double>(susy_parameters[columns.at("g2")]));
    model.set_g3(boost::lexical_cast<double>(susy_parameters[columns.at("g3")]));
    model.set_g1p(boost::lexical_cast<double>(susy_parameters[columns.at("g1p")]));
