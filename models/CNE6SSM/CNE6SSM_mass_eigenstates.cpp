@@ -54308,7 +54308,7 @@ void CNE6SSM_mass_eigenstates::calculate_MVG_pole()
 void CNE6SSM_mass_eigenstates::calculate_MGlu_pole()
 {
    // diagonalization with medium precision
-   const double M_tree(get_mass_matrix_Glu());
+   const double M_tree(MGlu);
    const double p = MGlu;
    const double self_energy_1  = Re(self_energy_Glu_1(p));
    const double self_energy_PL = Re(self_energy_Glu_PL(p));
@@ -54327,7 +54327,7 @@ void CNE6SSM_mass_eigenstates::calculate_MFv_pole()
 void CNE6SSM_mass_eigenstates::calculate_MChaP_pole()
 {
    // diagonalization with medium precision
-   const double M_tree(get_mass_matrix_ChaP());
+   const double M_tree(MChaP);
    const double p = MChaP;
    const double self_energy_1  = Re(self_energy_ChaP_1(p));
    const double self_energy_PL = Re(self_energy_ChaP_PL(p));
