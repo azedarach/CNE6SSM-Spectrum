@@ -36,6 +36,7 @@ MSSM_TARBALL := \
 
 LIBMSSM_SRC := \
 		$(DIR)/CMSSM_slha_io.cpp \
+		$(DIR)/CMSSM_scan_utilities.cpp \
 		$(DIR)/lowMSSM_slha_io.cpp \
 		$(DIR)/MSSM_info.cpp \
 		$(DIR)/MSSM_mass_eigenstates.cpp \
@@ -56,6 +57,7 @@ LIBMSSM_HDR := \
 		$(DIR)/CMSSM_model_slha.hpp \
 		$(DIR)/CMSSM_slha_io.hpp \
 		$(DIR)/CMSSM_susy_scale_constraint.hpp \
+		$(DIR)/CMSSM_scan_utilities.hpp \
 		$(DIR)/lowMSSM_convergence_tester.hpp \
 		$(DIR)/lowMSSM_high_scale_constraint.hpp \
 		$(DIR)/lowMSSM_initial_guesser.hpp \
@@ -116,6 +118,48 @@ LIBMSSM_HDR += \
 		$(DIR)/lowMSSM_two_scale_model.hpp \
 		$(DIR)/lowMSSM_two_scale_model_slha.hpp \
 		$(DIR)/lowMSSM_two_scale_susy_scale_constraint.hpp
+endif
+
+ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
+LIBMSSM_SRC += \
+		$(DIR)/CMSSM_semi_two_scale_constraint_handler.cpp \
+		$(DIR)/CMSSM_semi_two_scale_convergence_tester.cpp \
+		$(DIR)/CMSSM_semi_two_scale_high_scale_constraint.cpp \
+		$(DIR)/CMSSM_semi_two_scale_initial_guesser.cpp \
+		$(DIR)/CMSSM_semi_two_scale_input_parameters.cpp \
+		$(DIR)/CMSSM_semi_two_scale_low_scale_constraint.cpp \
+		$(DIR)/CMSSM_semi_two_scale_model.cpp \
+		$(DIR)/CMSSM_semi_two_scale_model_slha.cpp \
+		$(DIR)/CMSSM_semi_two_scale_susy_scale_constraint.cpp \
+		$(DIR)/CMSSM_susy_two_scale_convergence_tester.cpp
+
+EXEMSSM_SRC += \
+		$(DIR)/run_semianalytic_CMSSM.cpp \
+		$(DIR)/gridscan_semianalytic_CMSSM.cpp
+
+LIBMSSM_HDR += \
+		$(DIR)/CMSSM_semi_constraint_handler.hpp \
+		$(DIR)/CMSSM_semi_convergence_tester.hpp \
+		$(DIR)/CMSSM_semi_high_scale_constraint.hpp \
+		$(DIR)/CMSSM_semi_initial_guesser.hpp \
+		$(DIR)/CMSSM_semi_input_parameters.hpp \
+		$(DIR)/CMSSM_semi_low_scale_constraint.hpp \
+		$(DIR)/CMSSM_semi_model.hpp \
+		$(DIR)/CMSSM_semi_model_slha.hpp \
+		$(DIR)/CMSSM_semi_susy_scale_constraint.hpp \
+		$(DIR)/CMSSM_semianalytic_spectrum_generator.hpp \
+		$(DIR)/CMSSM_semi_two_scale_constraint_handler.hpp \
+		$(DIR)/CMSSM_semi_two_scale_convergence_tester.hpp \
+		$(DIR)/CMSSM_semi_two_scale_high_scale_constraint.hpp \
+		$(DIR)/CMSSM_semi_two_scale_initial_guesser.hpp \
+		$(DIR)/CMSSM_semi_two_scale_input_parameters.hpp \
+		$(DIR)/CMSSM_semi_two_scale_low_scale_constraint.hpp \
+		$(DIR)/CMSSM_semi_two_scale_model.hpp \
+		$(DIR)/CMSSM_semi_two_scale_model_slha.hpp \
+		$(DIR)/CMSSM_semi_two_scale_susy_scale_constraint.hpp \
+		$(DIR)/CMSSM_susy_convergence_tester.hpp \
+		$(DIR)/CMSSM_susy_two_scale_convergence_tester.hpp
+endif
 
 ifneq ($(MAKECMDGOALS),showbuild)
 ifneq ($(MAKECMDGOALS),tag)
@@ -142,8 +186,6 @@ endif
 endif
 endif
 endif
-endif
-
 endif
 
 # remove duplicates in case all algorithms are used
@@ -174,6 +216,12 @@ RUN_CMD_LINE_CMSSM_EXE := $(DIR)/run_cmd_line_CMSSM.x
 
 SCAN_CMSSM_OBJ := $(DIR)/scan_CMSSM.o
 SCAN_CMSSM_EXE := $(DIR)/scan_CMSSM.x
+
+RUN_SEMI_CMSSM_OBJ := $(DIR)/run_semianalytic_CMSSM.o
+RUN_SEMI_CMSSM_EXE := $(DIR)/run_semianalytic_CMSSM.x
+
+GRIDSCAN_SEMI_CMSSM_OBJ := $(DIR)/gridscan_semianalytic_CMSSM.o
+GRIDSCAN_SEMI_CMSSM_EXE := $(DIR)/gridscan_semianalytic_CMSSM.x
 
 RUN_lowMSSM_OBJ := $(DIR)/run_lowMSSM.o
 RUN_lowMSSM_EXE := $(DIR)/run_lowMSSM.x
@@ -229,6 +277,8 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(RUN_CMSSM_EXE)
 		-rm -f $(RUN_CMD_LINE_CMSSM_EXE)
 		-rm -f $(SCAN_CMSSM_EXE)
+		-rm -f $(RUN_SEMI_CMSSM_EXE)
+		-rm -f $(GRIDSCAN_SEMI_CMSSM_EXE)
 		-rm -f $(RUN_lowMSSM_EXE)
 		-rm -f $(RUN_CMD_LINE_lowMSSM_EXE)
 		-rm -f $(SCAN_lowMSSM_EXE)
@@ -284,10 +334,16 @@ endif
 $(RUN_CMSSM_EXE): $(RUN_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+$(RUN_SEMI_CMSSM_EXE): $(RUN_SEMI_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 $(RUN_CMD_LINE_CMSSM_EXE): $(RUN_CMD_LINE_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
 $(SCAN_CMSSM_EXE): $(SCAN_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
+$(GRIDSCAN_SEMI_CMSSM_EXE): $(GRIDSCAN_SEMI_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
 $(RUN_lowMSSM_EXE): $(RUN_lowMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
@@ -302,4 +358,9 @@ $(SCAN_lowMSSM_EXE): $(SCAN_lowMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(f
 ALLDEP += $(LIBMSSM_DEP) $(EXEMSSM_DEP)
 ALLSRC += $(LIBMSSM_SRC) $(EXEMSSM_SRC)
 ALLLIB += $(LIBMSSM)
+ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 ALLEXE += $(RUN_CMSSM_EXE) $(RUN_CMD_LINE_CMSSM_EXE) $(SCAN_CMSSM_EXE) $(RUN_lowMSSM_EXE) $(RUN_CMD_LINE_lowMSSM_EXE) $(SCAN_lowMSSM_EXE)
+endif
+ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
+ALLEXE += $(RUN_SEMI_CMSSM_EXE) $(GRIDSCAN_SEMI_CMSSM_EXE)
+endif

@@ -36,7 +36,6 @@ LIBCNE6SSM_SRC := \
 		$(DIR)/CNE6SSM_soft_parameters.cpp \
 		$(DIR)/CNE6SSM_susy_parameters.cpp \
 		$(DIR)/CNE6SSM_utilities.cpp \
-		$(DIR)/scan_parser.cpp \
 		$(DIR)/CNE6SSM_scan_utilities.cpp
 
 EXECNE6SSM_SRC :=
@@ -59,7 +58,6 @@ LIBCNE6SSM_HDR := \
 		$(DIR)/CNE6SSM_susy_parameters.hpp \
 		$(DIR)/CNE6SSM_susy_scale_constraint.hpp \
 		$(DIR)/CNE6SSM_utilities.hpp \
-		$(DIR)/scan_parser.hpp \
 		$(DIR)/CNE6SSM_scan_utilities.hpp
 
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)

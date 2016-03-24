@@ -28,6 +28,7 @@ LIBFLEXI_SRC := \
 		$(DIR)/rge.cpp \
 		$(DIR)/rk.cpp \
 		$(DIR)/scan.cpp \
+		$(DIR)/scan_parser.cpp \
 		$(DIR)/slha_io.cpp \
 		$(DIR)/utils.cpp \
 		$(DIR)/weinberg_angle.cpp \
@@ -83,6 +84,7 @@ LIBFLEXI_HDR := \
 		$(DIR)/root_finder.hpp \
 		$(DIR)/scan.hpp \
 		$(DIR)/scan_command_line_options.hpp \
+		$(DIR)/scan_parser.hpp \
 		$(DIR)/sfermions.hpp \
 		$(DIR)/slha_io.hpp \
 		$(DIR)/spectrum_generator_settings.hpp \

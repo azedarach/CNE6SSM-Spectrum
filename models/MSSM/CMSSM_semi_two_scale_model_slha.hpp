@@ -1,57 +1,38 @@
-// ====================================================================
-// This file is part of FlexibleSUSY.
-//
-// FlexibleSUSY is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published
-// by the Free Software Foundation, either version 3 of the License,
-// or (at your option) any later version.
-//
-// FlexibleSUSY is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with FlexibleSUSY.  If not, see
-// <http://www.gnu.org/licenses/>.
-// ====================================================================
 
 /**
- * @file CMSSM_two_scale_model_slha.hpp
+ * @file CMSSM_semi_two_scale_model_slha.hpp
  * @brief contains wrapper class for model class in SLHA convention
  */
 
-// File generated at Fri 10 Jul 2015 12:04:47
+#ifndef CMSSM_SEMI_TWO_SCALE_SLHA_H
+#define CMSSM_SEMI_TWO_SCALE_SLHA_H
 
-#ifndef CMSSM_TWO_SCALE_SLHA_H
-#define CMSSM_TWO_SCALE_SLHA_H
-
-#include "CMSSM_two_scale_model.hpp"
+#include "CMSSM_semi_two_scale_model.hpp"
 #include "MSSM_physical.hpp"
-#include "CMSSM_model_slha.hpp"
+#include "CMSSM_semi_model_slha.hpp"
 
 namespace flexiblesusy {
 
 class Two_scale;
 
 /**
- * @class CMSSM_slha<Two_scale>
+ * @class CMSSM_semianalytic_slha<Two_scale>
  * @brief model class wrapper in SLHA convention
  */
 
 template<>
-class CMSSM_slha<Two_scale> : public CMSSM<Two_scale> {
+class CMSSM_semianalytic_slha<Two_scale> : public CMSSM_semianalytic<Two_scale> {
 public:
-   explicit CMSSM_slha(const CMSSM_input_parameters<Two_scale>& input_ = CMSSM_input_parameters<Two_scale>());
-   explicit CMSSM_slha(const CMSSM<Two_scale>&);
-   virtual ~CMSSM_slha();
+   explicit CMSSM_semianalytic_slha(const CMSSM_semianalytic_input_parameters<Two_scale>& input_ = CMSSM_semianalytic_input_parameters<Two_scale>());
+   explicit CMSSM_semianalytic_slha(const CMSSM_semianalytic<Two_scale>&);
+   virtual ~CMSSM_semianalytic_slha();
 
    virtual void clear();
    void convert_to_slha(); ///< converts pole masses and couplings to SLHA convention
    const Eigen::Matrix<std::complex<double>,3,3>& get_ckm_matrix() const { return ckm; }
    const Eigen::Matrix<std::complex<double>,3,3>& get_pmns_matrix() const { return pmns; }
-   const MSSM_physical& get_physical_slha() const; ///< returns pole masses to SLHA convention
-   MSSM_physical& get_physical_slha(); ///< returns pole masses to SLHA convention
+   const MSSM_physical& get_physical_slha() const; ///< return pole masses to SLHA convention
+   MSSM_physical& get_physical_slha(); ///< return pole masses to SLHA convention
    const MSSM_physical& get_drbar_slha() const; ///< returns DR-bar masses to SLHA convention
    MSSM_physical& get_drbar_slha(); ///< returns DR-bar masses to SLHA convention
 
@@ -123,7 +104,7 @@ public:
    const std::complex<double>& get_ZUL_pole_slha(int i, int k) const { return physical_slha.ZUL(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZUR_pole_slha() const { return physical_slha.ZUR; }
    const std::complex<double>& get_ZUR_pole_slha(int i, int k) const { return physical_slha.ZUR(i,k); }
- 
+
    double get_MVG_drbar_slha() const { return drbar_slha.MVG; }
    double get_MGlu_drbar_slha() const { return drbar_slha.MGlu; }
    const Eigen::Array<double,3,1>& get_MFv_drbar_slha() const { return drbar_slha.MFv; }
@@ -222,15 +203,14 @@ public:
    const std::complex<double>& get_ZDR_slha(int i, int k) const { return ZDR_slha(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZUR_slha() const { return ZUR_slha; }
    const std::complex<double>& get_ZUR_slha(int i, int k) const { return ZUR_slha(i,k); }
-   const Eigen::Matrix<std::complex<double>,3,3>& get_ZEL_slha() const { return ZEL_slha; }
+const Eigen::Matrix<std::complex<double>,3,3>& get_ZEL_slha() const { return ZEL_slha; }
    const std::complex<double>& get_ZEL_slha(int i, int k) const { return ZEL_slha(i,k); }
    const Eigen::Matrix<std::complex<double>,3,3>& get_ZER_slha() const { return ZER_slha; }
    const std::complex<double>& get_ZER_slha(int i, int k) const { return ZER_slha(i,k); }
 
-
 private:
    MSSM_physical physical_slha; ///< contains the pole masses and mixings in slha convention
-   MSSM_physical drbar_slha; ///< contains the DR-bar masses and mixings in slha convention
+   MSSM_physical drbar_slha;    ///< contains the DR-bar masses and mixings in slha convention
    Eigen::Matrix<std::complex<double>,3,3> ckm;
    Eigen::Matrix<std::complex<double>,3,3> pmns;
    Eigen::Array<double,3,1> Yu_slha;
@@ -253,7 +233,6 @@ private:
    Eigen::Matrix<double,3,3> md2_slha;
    Eigen::Matrix<double,3,3> ml2_slha;
    Eigen::Matrix<double,3,3> me2_slha;
-
 
    void calculate_ckm_matrix();
    void calculate_pmns_matrix();

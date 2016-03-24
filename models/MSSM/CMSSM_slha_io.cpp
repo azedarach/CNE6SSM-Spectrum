@@ -20,6 +20,7 @@
 
 #include "CMSSM_slha_io.hpp"
 #include "CMSSM_two_scale_input_parameters.hpp"
+#include "CMSSM_semi_two_scale_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
 #include "numerics2.hpp"
@@ -35,10 +36,12 @@
 #define Pole(p) physical.p
 #define PHYSICAL(p) model.get_physical().p
 #define PHYSICAL_SLHA(p) model.get_physical_slha().p
+#define LOCALDRBAR(p) drbar.p
 #define LOCALPHYSICAL(p) physical.p
 #define MODELPARAMETER(p) model.get_##p()
 #define DEFINE_PARAMETER(p)                                            \
    typename std::remove_const<typename std::remove_reference<decltype(MODELPARAMETER(p))>::type>::type p;
+#define DEFINE_DRBAR_PARAMETER(p) decltype(LOCALDRBAR(p)) p;
 #define DEFINE_PHYSICAL_PARAMETER(p) decltype(LOCALPHYSICAL(p)) p;
 #define LowEnergyConstant(p) Electroweak_constants::p
 
@@ -72,6 +75,21 @@ void CMSSM_slha_io::set_extpar(const CMSSM_input_parameters<Two_scale>& input)
 }
 
 /**
+ * Stores the EXTPAR input parameters in the SLHA object.
+ *
+ * @param input struct of input parameters
+ */
+void CMSSM_slha_io::set_extpar(const CMSSM_semianalytic_input_parameters<Two_scale>& input)
+{
+   std::ostringstream extpar;
+
+   extpar << "Block EXTPAR\n";
+   extpar << FORMAT_ELEMENT(23, input.MuInput, "MuInput");
+   slha_io.set_block(extpar);
+
+}
+
+/**
  * Stores the MINPAR input parameters in the SLHA object.
  *
  * @param input struct of input parameters
@@ -85,6 +103,23 @@ void CMSSM_slha_io::set_minpar(const CMSSM_input_parameters<Two_scale>& input)
    minpar << FORMAT_ELEMENT(2, input.m12, "m12");
    minpar << FORMAT_ELEMENT(3, input.TanBeta, "TanBeta");
    minpar << FORMAT_ELEMENT(4, input.SignMu, "SignMu");
+   minpar << FORMAT_ELEMENT(5, input.Azero, "Azero");
+   slha_io.set_block(minpar);
+
+}
+
+/**
+ * Stores the MINPAR input parameters in the SLHA object.
+ *
+ * @param input struct of input parameters
+ */
+void CMSSM_slha_io::set_minpar(const CMSSM_semianalytic_input_parameters<Two_scale>& input)
+{
+   std::ostringstream minpar;
+
+   minpar << "Block MINPAR\n";
+   minpar << FORMAT_ELEMENT(2, input.m12, "m12");
+   minpar << FORMAT_ELEMENT(3, input.TanBeta, "TanBeta");
    minpar << FORMAT_ELEMENT(5, input.Azero, "Azero");
    slha_io.set_block(minpar);
 
@@ -126,6 +161,118 @@ void CMSSM_slha_io::set_spinfo(const Problems<MSSM_info::NUMBER_OF_PARTICLES>& p
    }
 
    slha_io.set_block(spinfo, SLHA_io::front);
+}
+
+/**
+ * Stores the model DR-bar masses in the SLHA object.
+ *
+ * @param drbar struct of DR-bar masses and mixings
+ *
+ * @param scale scale at which the DR-bar masses are evaluated
+ *
+ * @param write_sm_masses flag to indicate if Standard Model
+ *    particle masses should be written as well
+ */
+void CMSSM_slha_io::set_drbar_mass(const MSSM_physical& drbar,
+                                   double scale,
+                                   bool write_sm_masses)
+{
+   std::ostringstream mass;
+
+   mass << "Block DRBARMASS Q= " << FORMAT_SCALE(scale) << "\n"
+      << FORMAT_MASS(1000021, LOCALDRBAR(MGlu), "DRbarGlu")
+      << FORMAT_MASS(24, LOCALDRBAR(MVWm), "DRbarVWm")
+      << FORMAT_MASS(1000024, LOCALDRBAR(MCha(0)), "DRbarCha(1)")
+      << FORMAT_MASS(1000037, LOCALDRBAR(MCha(1)), "DRbarCha(2)")
+      << FORMAT_MASS(25, LOCALDRBAR(Mhh(0)), "DRbarhh(1)")
+      << FORMAT_MASS(35, LOCALDRBAR(Mhh(1)), "DRbarhh(2)")
+      << FORMAT_MASS(37, LOCALDRBAR(MHpm(1)), "DRbarHpm(2)")
+      << FORMAT_MASS(36, LOCALDRBAR(MAh(1)), "DRbarAh(2)")
+      << FORMAT_MASS(1000012, LOCALDRBAR(MSv(0)), "DRbarSv(1)")
+      << FORMAT_MASS(1000014, LOCALDRBAR(MSv(1)), "DRbarSv(2)")
+      << FORMAT_MASS(1000016, LOCALDRBAR(MSv(2)), "DRbarSv(3)")
+      << FORMAT_MASS(1000022, LOCALDRBAR(MChi(0)), "DRbarChi(1)")
+      << FORMAT_MASS(1000023, LOCALDRBAR(MChi(1)), "DRbarChi(2)")
+      << FORMAT_MASS(1000025, LOCALDRBAR(MChi(2)), "DRbarChi(3)")
+      << FORMAT_MASS(1000035, LOCALDRBAR(MChi(3)), "DRbarChi(4)")
+      << FORMAT_MASS(1000001, LOCALDRBAR(MSd(0)), "DRbarSd(1)")
+      << FORMAT_MASS(1000003, LOCALDRBAR(MSd(1)), "DRbarSd(2)")
+      << FORMAT_MASS(1000005, LOCALDRBAR(MSd(2)), "DRbarSd(3)")
+      << FORMAT_MASS(2000001, LOCALDRBAR(MSd(3)), "DRbarSd(4)")
+      << FORMAT_MASS(2000003, LOCALDRBAR(MSd(4)), "DRbarSd(5)")
+      << FORMAT_MASS(2000005, LOCALDRBAR(MSd(5)), "DRbarSd(6)")
+      << FORMAT_MASS(1000011, LOCALDRBAR(MSe(0)), "DRbarSe(1)")
+      << FORMAT_MASS(1000013, LOCALDRBAR(MSe(1)), "DRbarSe(2)")
+      << FORMAT_MASS(1000015, LOCALDRBAR(MSe(2)), "DRbarSe(3)")
+      << FORMAT_MASS(2000011, LOCALDRBAR(MSe(3)), "DRbarSe(4)")
+      << FORMAT_MASS(2000013, LOCALDRBAR(MSe(4)), "DRbarSe(5)")
+      << FORMAT_MASS(2000015, LOCALDRBAR(MSe(5)), "DRbarSe(6)")
+      << FORMAT_MASS(1000002, LOCALDRBAR(MSu(0)), "DRbarSu(1)")
+      << FORMAT_MASS(1000004, LOCALDRBAR(MSu(1)), "DRbarSu(2)")
+      << FORMAT_MASS(1000006, LOCALDRBAR(MSu(2)), "DRbarSu(3)")
+      << FORMAT_MASS(2000002, LOCALDRBAR(MSu(3)), "DRbarSu(4)")
+      << FORMAT_MASS(2000004, LOCALDRBAR(MSu(4)), "DRbarSu(5)")
+      << FORMAT_MASS(2000006, LOCALDRBAR(MSu(5)), "DRbarSu(6)")
+   ;
+
+   if (write_sm_masses) {
+      mass
+         << FORMAT_MASS(21, LOCALDRBAR(MVG), "DRbarVG")
+         << FORMAT_MASS(12, LOCALDRBAR(MFv(0)), "DRbarFv(1)")
+         << FORMAT_MASS(14, LOCALDRBAR(MFv(1)), "DRbarFv(2)")
+         << FORMAT_MASS(16, LOCALDRBAR(MFv(2)), "DRbarFv(3)")
+         << FORMAT_MASS(22, LOCALDRBAR(MVP), "DRbarVP")
+         << FORMAT_MASS(23, LOCALDRBAR(MVZ), "DRbarVZ")
+         << FORMAT_MASS(11, LOCALDRBAR(MFe(0)), "DRbarFe(1)")
+         << FORMAT_MASS(13, LOCALDRBAR(MFe(1)), "DRbarFe(2)")
+         << FORMAT_MASS(15, LOCALDRBAR(MFe(2)), "DRbarFe(3)")
+         << FORMAT_MASS(1, LOCALDRBAR(MFd(0)), "DRbarFd(1)")
+         << FORMAT_MASS(3, LOCALDRBAR(MFd(1)), "DRbarFd(2)")
+         << FORMAT_MASS(5, LOCALDRBAR(MFd(2)), "DRbarFd(3)")
+         << FORMAT_MASS(2, LOCALDRBAR(MFu(0)), "DRbarFu(1)")
+         << FORMAT_MASS(4, LOCALDRBAR(MFu(1)), "DRbarFu(2)")
+         << FORMAT_MASS(6, LOCALDRBAR(MFu(2)), "DRbarFu(3)")
+      ;
+   }
+
+   slha_io.set_block(mass);
+
+}
+
+/**
+ * Stores the DR-bar mixing matrices in the SLHA object.
+ *
+ * @param drbar struct of DR-bar parameters
+ *
+ * @param scale scale at which the DR-bar mixings are evaluated
+ *
+ * @param write_sm_mixing_matrics flag to indicate if Standard Model
+ *    particle mixing matrices should be written as well
+ */
+void CMSSM_slha_io::set_drbar_mixing_matrices(const MSSM_physical& drbar,
+                                              double scale,
+                                              bool write_sm_mixing_matrics)
+{
+   slha_io.set_block("DRBARUMIX", LOCALDRBAR(UM), "DRbarUM", scale);
+   slha_io.set_block("DRBARVMIX", LOCALDRBAR(UP), "DRbarUP", scale);
+   slha_io.set_block("DRBARPSEUDOSCALARMIX", LOCALDRBAR(ZA), "DRbarZA", scale);
+   slha_io.set_block("DRBARDSQMIX", LOCALDRBAR(ZD), "DRbarZD", scale);
+   slha_io.set_block("DRBARSELMIX", LOCALDRBAR(ZE), "DRbarZE", scale);
+   slha_io.set_block("DRBARSCALARMIX", LOCALDRBAR(ZH), "DRbarZH", scale);
+   slha_io.set_block("DRBARNMIX", LOCALDRBAR(ZN), "DRbarZN", scale);
+   slha_io.set_block("DRBARCHARGEMIX", LOCALDRBAR(ZP), "DRbarZP", scale);
+   slha_io.set_block("DRBARUSQMIX", LOCALDRBAR(ZU), "DRbarZU", scale);
+   slha_io.set_block("DRBARSNUMIX", LOCALDRBAR(ZV), "DRbarZV", scale);
+
+   if (write_sm_mixing_matrics) {
+      slha_io.set_block("DRBARUELMIX", LOCALDRBAR(ZEL), "DRbarZEL", scale);
+      slha_io.set_block("DRBARUERMIX", LOCALDRBAR(ZER), "DRbarZER", scale);
+      slha_io.set_block("DRBARUDLMIX", LOCALDRBAR(ZDL), "DRbarZDL", scale);
+      slha_io.set_block("DRBARUDRMIX", LOCALDRBAR(ZDR), "DRbarZDR", scale);
+      slha_io.set_block("DRBARUULMIX", LOCALDRBAR(ZUL), "DRbarZUL", scale);
+      slha_io.set_block("DRBARUURMIX", LOCALDRBAR(ZUR), "DRbarZUR", scale);
+   }
+
 }
 
 /**
@@ -287,10 +434,39 @@ void CMSSM_slha_io::read_from_file(const std::string& file_name)
  */
 void CMSSM_slha_io::fill(CMSSM_input_parameters<Two_scale>& input) const
 {
+   void (*fill_two_scale_minpar_tuple) (CMSSM_input_parameters<Two_scale>&,
+                                        int, double) = &CMSSM_slha_io::fill_minpar_tuple;
+   void (*fill_two_scale_extpar_tuple) (CMSSM_input_parameters<Two_scale>&,
+                                        int, double) = &CMSSM_slha_io::fill_extpar_tuple;
+
    SLHA_io::Tuple_processor minpar_processor
-      = boost::bind(&CMSSM_slha_io::fill_minpar_tuple, boost::ref(input), _1, _2);
+      = boost::bind(fill_two_scale_minpar_tuple, boost::ref(input), _1, _2);
    SLHA_io::Tuple_processor extpar_processor
-      = boost::bind(&CMSSM_slha_io::fill_extpar_tuple, boost::ref(input), _1, _2);
+      = boost::bind(fill_two_scale_extpar_tuple, boost::ref(input), _1, _2);
+
+   slha_io.read_block("MINPAR", minpar_processor);
+   slha_io.read_block("EXTPAR", extpar_processor);
+
+
+}
+
+/**
+ * Fill struct of model input parameters from SLHA object (MINPAR and
+ * EXTPAR blocks)
+ *
+ * @param input struct of model input parameters
+ */
+void CMSSM_slha_io::fill(CMSSM_semianalytic_input_parameters<Two_scale>& input) const
+{
+   void (*fill_semi_two_scale_minpar_tuple) (CMSSM_semianalytic_input_parameters<Two_scale>&,
+                                             int, double) = &CMSSM_slha_io::fill_minpar_tuple;
+   void (*fill_semi_two_scale_extpar_tuple) (CMSSM_semianalytic_input_parameters<Two_scale>&,
+                                             int, double) = &CMSSM_slha_io::fill_extpar_tuple;
+
+   SLHA_io::Tuple_processor minpar_processor
+      = boost::bind(fill_semi_two_scale_minpar_tuple, boost::ref(input), _1, _2);
+   SLHA_io::Tuple_processor extpar_processor
+      = boost::bind(fill_semi_two_scale_extpar_tuple, boost::ref(input), _1, _2);
 
    slha_io.read_block("MINPAR", minpar_processor);
    slha_io.read_block("EXTPAR", extpar_processor);
@@ -383,6 +559,11 @@ void CMSSM_slha_io::fill(MSSM_mass_eigenstates& model) const
 {
    fill_drbar_parameters(model);
 
+   MSSM_physical drbar_hk;
+   fill_drbar(drbar_hk);
+   drbar_hk.convert_to_hk();
+   model.get_drbar_masses() = drbar_hk;
+
    MSSM_physical physical_hk;
    fill_physical(physical_hk);
    physical_hk.convert_to_hk();
@@ -417,10 +598,32 @@ void CMSSM_slha_io::fill_minpar_tuple(CMSSM_input_parameters<Two_scale>& input,
 
 }
 
+void CMSSM_slha_io::fill_minpar_tuple(CMSSM_semianalytic_input_parameters<Two_scale>& input,
+                                      int key, double value)
+{
+   switch (key) {
+   case 2: input.m12 = value; break;
+   case 3: input.TanBeta = value; break;
+   case 5: input.Azero = value; break;
+   default: WARNING("Unrecognized key: " << key); break;
+   }
+
+}
+
 void CMSSM_slha_io::fill_extpar_tuple(CMSSM_input_parameters<Two_scale>& input,
                                                 int key, double value)
 {
    switch (key) {
+   default: WARNING("Unrecognized key: " << key); break;
+   }
+
+}
+
+void CMSSM_slha_io::fill_extpar_tuple(CMSSM_semianalytic_input_parameters<Two_scale>& input,
+                                                int key, double value)
+{
+   switch (key) {
+   case 23: input.MuInput = value; break;
    default: WARNING("Unrecognized key: " << key); break;
    }
 
@@ -434,6 +637,143 @@ void CMSSM_slha_io::fill_flexiblesusy_tuple(Spectrum_generator_settings& setting
    } else {
       WARNING("Unrecognized key in block FlexibleSUSY: " << key);
    }
+}
+
+/**
+ * Reads DR-bar masses and mixing matrices from a SLHA output file.
+ */
+void CMSSM_slha_io::fill_drbar(MSSM_physical& drbar) const
+{
+   {
+      DEFINE_DRBAR_PARAMETER(ZD);
+      slha_io.read_block("DRBARDSQMIX", ZD);
+      LOCALDRBAR(ZD) = ZD;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZU);
+      slha_io.read_block("DRBARUSQMIX", ZU);
+      LOCALDRBAR(ZU) = ZU;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZE);
+      slha_io.read_block("DRBARSELMIX", ZE);
+      LOCALDRBAR(ZE) = ZE;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZV);
+      slha_io.read_block("DRBARSNUMIX", ZV);
+      LOCALDRBAR(ZV) = ZV;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZH);
+      slha_io.read_block("DRBARSCALARMIX", ZH);
+      LOCALDRBAR(ZH) = ZH;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZA);
+      slha_io.read_block("DRBARPSEUDOSCALARMIX", ZA);
+      LOCALDRBAR(ZA) = ZA;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZP);
+      slha_io.read_block("DRBARCHARGEMIX", ZP);
+      LOCALDRBAR(ZP) = ZP;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZN);
+      slha_io.read_block("DRBARNMIX", ZN);
+      LOCALDRBAR(ZN) = ZN;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(UP);
+      slha_io.read_block("DRBARVMIX", UP);
+      LOCALDRBAR(UP) = UP;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(UM);
+      slha_io.read_block("DRBARUMIX", UM);
+      LOCALDRBAR(UM) = UM;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZEL);
+      slha_io.read_block("DRBARUELMIX", ZEL);
+      LOCALDRBAR(ZEL) = ZEL;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZER);
+      slha_io.read_block("DRBARUERMIX", ZER);
+      LOCALDRBAR(ZER) = ZER;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZDL);
+      slha_io.read_block("DRBARUDLMIX", ZDL);
+      LOCALDRBAR(ZDL) = ZDL;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZDR);
+      slha_io.read_block("DRBARUDRMIX", ZDR);
+      LOCALDRBAR(ZDR) = ZDR;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZUL);
+      slha_io.read_block("DRBARUULMIX", ZUL);
+      LOCALDRBAR(ZUL) = ZUL;
+   }
+   {
+      DEFINE_DRBAR_PARAMETER(ZUR);
+      slha_io.read_block("DRBARUURMIX", ZUR);
+      LOCALDRBAR(ZUR) = ZUR;
+   }
+
+   LOCALDRBAR(MVG) = slha_io.read_entry("DRBARMASS", 21);
+   LOCALDRBAR(MGlu) = slha_io.read_entry("DRBARMASS", 1000021);
+   LOCALDRBAR(MFv)(0) = slha_io.read_entry("DRBARMASS", 12);
+   LOCALDRBAR(MFv)(1) = slha_io.read_entry("DRBARMASS", 14);
+   LOCALDRBAR(MFv)(2) = slha_io.read_entry("DRBARMASS", 16);
+   LOCALDRBAR(MVP) = slha_io.read_entry("DRBARMASS", 22);
+   LOCALDRBAR(MVZ) = slha_io.read_entry("DRBARMASS", 23);
+   LOCALDRBAR(MSd)(0) = slha_io.read_entry("DRBARMASS", 1000001);
+   LOCALDRBAR(MSd)(1) = slha_io.read_entry("DRBARMASS", 1000003);
+   LOCALDRBAR(MSd)(2) = slha_io.read_entry("DRBARMASS", 1000005);
+   LOCALDRBAR(MSd)(3) = slha_io.read_entry("DRBARMASS", 2000001);
+   LOCALDRBAR(MSd)(4) = slha_io.read_entry("DRBARMASS", 2000003);
+   LOCALDRBAR(MSd)(5) = slha_io.read_entry("DRBARMASS", 2000005);
+   LOCALDRBAR(MSv)(0) = slha_io.read_entry("DRBARMASS", 1000012);
+   LOCALDRBAR(MSv)(1) = slha_io.read_entry("DRBARMASS", 1000014);
+   LOCALDRBAR(MSv)(2) = slha_io.read_entry("DRBARMASS", 1000016);
+   LOCALDRBAR(MSu)(0) = slha_io.read_entry("DRBARMASS", 1000002);
+   LOCALDRBAR(MSu)(1) = slha_io.read_entry("DRBARMASS", 1000004);
+   LOCALDRBAR(MSu)(2) = slha_io.read_entry("DRBARMASS", 1000006);
+   LOCALDRBAR(MSu)(3) = slha_io.read_entry("DRBARMASS", 2000002);
+   LOCALDRBAR(MSu)(4) = slha_io.read_entry("DRBARMASS", 2000004);
+   LOCALDRBAR(MSu)(5) = slha_io.read_entry("DRBARMASS", 2000006);
+   LOCALDRBAR(MSe)(0) = slha_io.read_entry("DRBARMASS", 1000011);
+   LOCALDRBAR(MSe)(1) = slha_io.read_entry("DRBARMASS", 1000013);
+   LOCALDRBAR(MSe)(2) = slha_io.read_entry("DRBARMASS", 1000015);
+   LOCALDRBAR(MSe)(3) = slha_io.read_entry("DRBARMASS", 2000011);
+   LOCALDRBAR(MSe)(4) = slha_io.read_entry("DRBARMASS", 2000013);
+   LOCALDRBAR(MSe)(5) = slha_io.read_entry("DRBARMASS", 2000015);
+   LOCALDRBAR(Mhh)(0) = slha_io.read_entry("DRBARMASS", 25);
+   LOCALDRBAR(Mhh)(1) = slha_io.read_entry("DRBARMASS", 35);
+   LOCALDRBAR(MAh)(1) = slha_io.read_entry("DRBARMASS", 36);
+   LOCALDRBAR(MHpm)(1) = slha_io.read_entry("DRBARMASS", 37);
+   LOCALDRBAR(MChi)(0) = slha_io.read_entry("DRBARMASS", 1000022);
+   LOCALDRBAR(MChi)(1) = slha_io.read_entry("DRBARMASS", 1000023);
+   LOCALDRBAR(MChi)(2) = slha_io.read_entry("DRBARMASS", 1000025);
+   LOCALDRBAR(MChi)(3) = slha_io.read_entry("DRBARMASS", 1000035);
+   LOCALDRBAR(MCha)(0) = slha_io.read_entry("DRBARMASS", 1000024);
+   LOCALDRBAR(MCha)(1) = slha_io.read_entry("DRBARMASS", 1000037);
+   LOCALDRBAR(MFe)(0) = slha_io.read_entry("DRBARMASS", 11);
+   LOCALDRBAR(MFe)(1) = slha_io.read_entry("DRBARMASS", 13);
+   LOCALDRBAR(MFe)(2) = slha_io.read_entry("DRBARMASS", 15);
+   LOCALDRBAR(MFd)(0) = slha_io.read_entry("DRBARMASS", 1);
+   LOCALDRBAR(MFd)(1) = slha_io.read_entry("DRBARMASS", 3);
+   LOCALDRBAR(MFd)(2) = slha_io.read_entry("DRBARMASS", 5);
+   LOCALDRBAR(MFu)(0) = slha_io.read_entry("DRBARMASS", 2);
+   LOCALDRBAR(MFu)(1) = slha_io.read_entry("DRBARMASS", 4);
+   LOCALDRBAR(MFu)(2) = slha_io.read_entry("DRBARMASS", 6);
+   LOCALDRBAR(MVWm) = slha_io.read_entry("DRBARMASS", 24);
+
 }
 
 /**

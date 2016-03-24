@@ -79,6 +79,8 @@ public:
    void set_physical(const MSSM_physical&);
    const MSSM_physical& get_physical() const;
    MSSM_physical& get_physical();
+   const MSSM_physical& get_drbar_masses() const;
+   MSSM_physical& get_drbar_masses();
    const Problems<MSSM_info::NUMBER_OF_PARTICLES>& get_problems() const;
    Problems<MSSM_info::NUMBER_OF_PARTICLES>& get_problems();
    const Eigen::Array<double,2,1> get_ewsb_tree_level_soft_masses();
@@ -685,6 +687,7 @@ protected:
    bool calculate_sm_pole_masses; ///< switch to calculate the pole masses of the Standard Model particles
    bool force_output;             ///< switch to force output of pole masses
    MSSM_physical physical; ///< contains the pole masses and mixings
+   MSSM_physical drbar;    ///< contains the DR-bar masses and mixings
    Two_loop_corrections two_loop_corrections; ///< used 2-loop corrections
    Problems<MSSM_info::NUMBER_OF_PARTICLES> problems;
 

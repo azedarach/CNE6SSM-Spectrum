@@ -82,6 +82,7 @@ MSSM_mass_eigenstates::MSSM_mass_eigenstates()
    , calculate_sm_pole_masses(false)
    , force_output(false)
    , physical()
+   , drbar()
    , two_loop_corrections()
    , problems(MSSM_info::particle_names)
 #ifdef ENABLE_THREADS
@@ -160,6 +161,16 @@ double MSSM_mass_eigenstates::get_diagonalization_precision() const
 void MSSM_mass_eigenstates::set_pole_mass_loop_order(unsigned loop_order)
 {
    pole_mass_loop_order = loop_order;
+}
+
+const MSSM_physical& MSSM_mass_eigenstates::get_drbar_masses() const
+{
+   return drbar;
+}
+
+MSSM_physical& MSSM_mass_eigenstates::get_drbar_masses()
+{
+   return drbar;
 }
 
 const MSSM_physical& MSSM_mass_eigenstates::get_physical() const
@@ -492,6 +503,10 @@ void MSSM_mass_eigenstates::reorder_DRbar_masses()
    move_goldstone_to(0, MVZ, MAh, ZA);
    move_goldstone_to(0, MVWm, MHpm, ZP);
 
+   drbar.MAh = MAh;
+   drbar.ZA = ZA;
+   drbar.MHpm = MHpm;
+   drbar.ZP = ZP;
 }
 
 /**
@@ -545,6 +560,8 @@ void MSSM_mass_eigenstates::clear_DRbar_parameters()
    MVWm = 0.;
 
    PhaseGlu = std::complex<double>(1.,0.);
+
+   drbar.clear();
 
 }
 
@@ -657,6 +674,7 @@ void MSSM_mass_eigenstates::calculate_MVG()
 {
    const auto mass_matrix_VG = get_mass_matrix_VG();
    MVG = calculate_singlet_mass(mass_matrix_VG);
+   drbar.MVG = MVG;
 }
 
 double MSSM_mass_eigenstates::get_mass_matrix_Glu() const
@@ -670,6 +688,7 @@ void MSSM_mass_eigenstates::calculate_MGlu()
 {
    const auto mass_matrix_Glu = get_mass_matrix_Glu();
    MGlu = calculate_singlet_mass(mass_matrix_Glu, PhaseGlu);
+   drbar.MGlu = MGlu;
 }
 
 Eigen::Matrix<double,3,3> MSSM_mass_eigenstates::get_mass_matrix_Fv() const
@@ -691,6 +710,7 @@ Eigen::Matrix<double,3,3> MSSM_mass_eigenstates::get_mass_matrix_Fv() const
 void MSSM_mass_eigenstates::calculate_MFv()
 {
    MFv.setConstant(0);
+   drbar.MFv = MFv;
 }
 
 double MSSM_mass_eigenstates::get_mass_matrix_VP() const
@@ -704,6 +724,7 @@ void MSSM_mass_eigenstates::calculate_MVP()
 {
    const auto mass_matrix_VP = get_mass_matrix_VP();
    MVP = calculate_singlet_mass(mass_matrix_VP);
+   drbar.MVP = MVP;
 }
 
 double MSSM_mass_eigenstates::get_mass_matrix_VZ() const
@@ -723,6 +744,7 @@ void MSSM_mass_eigenstates::calculate_MVZ()
       problems.flag_tachyon(MSSM_info::VZ);
 
    MVZ = AbsSqrt(MVZ);
+   drbar.MVZ = MVZ;
 }
 
 Eigen::Matrix<double,6,6> MSSM_mass_eigenstates::get_mass_matrix_Sd() const
@@ -800,6 +822,8 @@ void MSSM_mass_eigenstates::calculate_MSd()
       problems.flag_tachyon(MSSM_info::Sd);
 
    MSd = AbsSqrt(MSd);
+   drbar.MSd = MSd;
+   drbar.ZD = ZD;
 }
 
 Eigen::Matrix<double,3,3> MSSM_mass_eigenstates::get_mass_matrix_Sv() const
@@ -838,6 +862,8 @@ void MSSM_mass_eigenstates::calculate_MSv()
       problems.flag_tachyon(MSSM_info::Sv);
 
    MSv = AbsSqrt(MSv);
+   drbar.MSv = MSv;
+   drbar.ZV = ZV;
 }
 
 Eigen::Matrix<double,6,6> MSSM_mass_eigenstates::get_mass_matrix_Su() const
@@ -912,6 +938,8 @@ void MSSM_mass_eigenstates::calculate_MSu()
       problems.flag_tachyon(MSSM_info::Su);
 
    MSu = AbsSqrt(MSu);
+   drbar.MSu = MSu;
+   drbar.ZU = ZU;
 }
 
 Eigen::Matrix<double,6,6> MSSM_mass_eigenstates::get_mass_matrix_Se() const
@@ -989,6 +1017,8 @@ void MSSM_mass_eigenstates::calculate_MSe()
       problems.flag_tachyon(MSSM_info::Se);
 
    MSe = AbsSqrt(MSe);
+   drbar.MSe = MSe;
+   drbar.ZE = ZE;
 }
 
 Eigen::Matrix<double,2,2> MSSM_mass_eigenstates::get_mass_matrix_hh() const
@@ -1024,6 +1054,8 @@ void MSSM_mass_eigenstates::calculate_Mhh()
       problems.flag_tachyon(MSSM_info::hh);
 
    Mhh = AbsSqrt(Mhh);
+   drbar.Mhh = Mhh;
+   drbar.ZH = ZH;
 }
 
 Eigen::Matrix<double,2,2> MSSM_mass_eigenstates::get_mass_matrix_Ah() const
@@ -1064,6 +1096,8 @@ void MSSM_mass_eigenstates::calculate_MAh()
       problems.flag_tachyon(MSSM_info::Ah);
 
    MAh = AbsSqrt(MAh);
+   drbar.MAh = MAh;
+   drbar.ZA = ZA;
 }
 
 Eigen::Matrix<double,2,2> MSSM_mass_eigenstates::get_mass_matrix_Hpm() const
@@ -1098,6 +1132,8 @@ void MSSM_mass_eigenstates::calculate_MHpm()
       problems.flag_tachyon(MSSM_info::Hpm);
 
    MHpm = AbsSqrt(MHpm);
+   drbar.MHpm = MHpm;
+   drbar.ZP = ZP;
 }
 
 Eigen::Matrix<double,4,4> MSSM_mass_eigenstates::get_mass_matrix_Chi() const
@@ -1132,6 +1168,9 @@ void MSSM_mass_eigenstates::calculate_MChi()
 #else
    fs_diagonalize_symmetric(mass_matrix_Chi, MChi, ZN);
 #endif
+
+   drbar.MChi = MChi;
+   drbar.ZN = ZN;
 }
 
 Eigen::Matrix<double,2,2> MSSM_mass_eigenstates::get_mass_matrix_Cha() const
@@ -1158,6 +1197,10 @@ void MSSM_mass_eigenstates::calculate_MCha()
 #else
    fs_svd(mass_matrix_Cha, MCha, UM, UP);
 #endif
+
+   drbar.MCha = MCha;
+   drbar.UM = UM;
+   drbar.UP = UP;
 }
 
 Eigen::Matrix<double,3,3> MSSM_mass_eigenstates::get_mass_matrix_Fe() const
@@ -1189,6 +1232,10 @@ void MSSM_mass_eigenstates::calculate_MFe()
 #else
    fs_svd(mass_matrix_Fe, MFe, ZEL, ZER);
 #endif
+
+   drbar.MFe = MFe;
+   drbar.ZEL = ZEL;
+   drbar.ZER = ZER;
 }
 
 Eigen::Matrix<double,3,3> MSSM_mass_eigenstates::get_mass_matrix_Fd() const
@@ -1220,6 +1267,10 @@ void MSSM_mass_eigenstates::calculate_MFd()
 #else
    fs_svd(mass_matrix_Fd, MFd, ZDL, ZDR);
 #endif
+
+   drbar.MFd = MFd;
+   drbar.ZDL = ZDL;
+   drbar.ZDR = ZDR;
 }
 
 Eigen::Matrix<double,3,3> MSSM_mass_eigenstates::get_mass_matrix_Fu() const
@@ -1251,6 +1302,10 @@ void MSSM_mass_eigenstates::calculate_MFu()
 #else
    fs_svd(mass_matrix_Fu, MFu, ZUL, ZUR);
 #endif
+
+   drbar.MFu = MFu;
+   drbar.ZUL = ZUL;
+   drbar.ZUR = ZUR;
 }
 
 double MSSM_mass_eigenstates::get_mass_matrix_VWm() const
@@ -1269,6 +1324,8 @@ void MSSM_mass_eigenstates::calculate_MVWm()
       problems.flag_tachyon(MSSM_info::VWm);
 
    MVWm = AbsSqrt(MVWm);
+
+   drbar.MVWm = MVWm;
 }
 
 

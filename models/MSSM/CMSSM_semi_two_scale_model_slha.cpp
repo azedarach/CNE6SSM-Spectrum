@@ -1,40 +1,21 @@
-// ====================================================================
-// This file is part of FlexibleSUSY.
-//
-// FlexibleSUSY is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published
-// by the Free Software Foundation, either version 3 of the License,
-// or (at your option) any later version.
-//
-// FlexibleSUSY is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with FlexibleSUSY.  If not, see
-// <http://www.gnu.org/licenses/>.
-// ====================================================================
-
-// File generated at Fri 10 Jul 2015 12:04:47
 
 /**
- * @file CMSSM_two_scale_model_slha.cpp
- * @brief CMSSM model class wrapper for SLHA conversion
+ * @file CMSSM_semi_two_scale_model_slha.cpp
+ * @brief CMSSM model class wrapper for SLHA convention
  */
 
-#include "CMSSM_two_scale_model_slha.hpp"
+#include "CMSSM_semi_two_scale_model_slha.hpp"
 #include "slha_io.hpp"
 #include "ckm.hpp"
 #include "pmns.hpp"
 
 namespace flexiblesusy {
 
-#define CLASSNAME CMSSM_slha<Two_scale>
+#define CLASSNAME CMSSM_semianalytic_slha<Two_scale>
 #define LOCALPHYSICAL(p) physical.p
 
-CLASSNAME::CMSSM_slha(const CMSSM_input_parameters<Two_scale>& input_)
-   : CMSSM<Two_scale>(input_)
+CLASSNAME::CMSSM_semianalytic_slha(const CMSSM_semianalytic_input_parameters<Two_scale>& input_)
+   : CMSSM_semianalytic<Two_scale>(input_)
    , physical_slha()
    , drbar_slha()
    , ckm(Eigen::Matrix<std::complex<double>,3,3>::Identity())
@@ -48,26 +29,26 @@ CLASSNAME::CMSSM_slha(const CMSSM_input_parameters<Two_scale>& input_)
  *
  * @param model_ model class in BPMZ convention
  */
-CLASSNAME::CMSSM_slha(const CMSSM<Two_scale>& model_)
-   : CMSSM<Two_scale>(model_)
+CLASSNAME::CMSSM_semianalytic_slha(const CMSSM_semianalytic<Two_scale>& model_)
+   : CMSSM_semianalytic<Two_scale>(model_)
 {
    convert_to_slha();
 }
 
-CLASSNAME::~CMSSM_slha()
+CLASSNAME::~CMSSM_semianalytic_slha()
 {
 }
 
 void CLASSNAME::clear()
 {
-   CMSSM<Two_scale>::clear();
+   CMSSM_semianalytic<Two_scale>::clear();
    physical_slha.clear();
    drbar_slha.clear();
 }
 
 void CLASSNAME::calculate_spectrum()
 {
-   CMSSM<Two_scale>::calculate_spectrum();
+   CMSSM_semianalytic<Two_scale>::calculate_spectrum();
    convert_to_slha();
 }
 
@@ -122,7 +103,7 @@ void CLASSNAME::convert_trilinear_couplings_to_slha()
 }
 
 /**
- * Convert trilinear couplings to SLHA convention
+ * Convert soft squared masses to SLHA convention
  */
 void CLASSNAME::convert_soft_squared_masses_to_slha()
 {
@@ -156,7 +137,7 @@ MSSM_physical& CLASSNAME::get_drbar_slha()
 
 void CLASSNAME::print(std::ostream& ostr) const
 {
-   CMSSM<Two_scale>::print(ostr);
+   CMSSM_semianalytic<Two_scale>::print(ostr);
 
    ostr << "----------------------------------------\n"
            "SLHA convention:\n"
