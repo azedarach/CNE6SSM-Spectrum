@@ -1,5 +1,6 @@
 #include "CMSSM_scan_utilities.hpp"
 #include "CMSSM_two_scale_input_parameters.hpp"
+#include "CMSSM_semi_two_scale_input_parameters.hpp"
 #include "logger.hpp"
 #include "wrappers.hpp"
 

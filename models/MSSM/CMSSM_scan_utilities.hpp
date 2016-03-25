@@ -5,8 +5,6 @@
 #ifndef CMSSM_SCAN_UTILITIES_H
 #define CMSSM_SCAN_UTILITIES_H
 
-#include "CMSSM_two_scale_model.hpp"
-#include "CMSSM_semi_two_scale_model_slha.hpp"
 #include "CMSSM_two_scale_model_slha.hpp"
 #include "CMSSM_semi_two_scale_model_slha.hpp"
 #include "MSSM_info.hpp"
