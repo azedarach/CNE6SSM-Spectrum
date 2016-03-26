@@ -333,7 +333,7 @@ void print_result_header(int width)
              << std::left << std::setw(width) << "error" << '\n';
 }
 
-void print_result_line(const CNE6SSM_semianalytic_input_parameters<Two_scale>& inputs, const SUSYHD::SUSYHD_input_parameters& higgs_mass_inputs, double Rscale, double Mhh, int width)
+void print_result_line(const CMSSM_semianalytic_input_parameters<Two_scale>& inputs, const SUSYHD::SUSYHD_input_parameters& higgs_mass_inputs, double Rscale, double Mhh, int width)
 {
    const bool error = (Mhh < 1.0 ? true : false);
 
@@ -462,7 +462,7 @@ int main(int argc, const char* argv[])
             Sqr(Abs(ZU(5,5)))));
 
          SUSYHD::SUSYHD_input_parameters higgs_mass_inputs
-            = match_to_MSSM(model, use_MSSM_mA);
+            = initialize_MSSM(model);
 
          susyhd.set_Rscale(Rscale);
 
