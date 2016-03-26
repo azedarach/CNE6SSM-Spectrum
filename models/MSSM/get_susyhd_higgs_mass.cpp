@@ -1,5 +1,5 @@
 
-#include "CMSSM_semi_two_scale_input_parameters.hpp"
+#include "MSSM_semi_two_scale_input_parameters.hpp"
 #include "CMSSM_mass_eigenstates.hpp"
 
 #include "command_line_options.hpp"
