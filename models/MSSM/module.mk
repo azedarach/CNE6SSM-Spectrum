@@ -137,6 +137,11 @@ EXEMSSM_SRC += \
 		$(DIR)/run_semianalytic_CMSSM.cpp \
 		$(DIR)/gridscan_semianalytic_CMSSM.cpp
 
+ifneq ($(findstring addons/susyhd_call,$(ADDONS)),)
+EXEMSSM_SRC += \
+		$(DIR)/get_susyhd_higgs_mass.cpp
+endif
+
 LIBMSSM_HDR += \
 		$(DIR)/CMSSM_semi_constraint_handler.hpp \
 		$(DIR)/CMSSM_semi_convergence_tester.hpp \
@@ -223,6 +228,9 @@ RUN_SEMI_CMSSM_EXE := $(DIR)/run_semianalytic_CMSSM.x
 GRIDSCAN_SEMI_CMSSM_OBJ := $(DIR)/gridscan_semianalytic_CMSSM.o
 GRIDSCAN_SEMI_CMSSM_EXE := $(DIR)/gridscan_semianalytic_CMSSM.x
 
+GET_HIGGS_MASS_OBJ := $(DIR)/get_susyhd_higgs_mass.o
+GET_HIGGS_MASS_EXE := $(DIR)/get_susyhd_higgs_mass.x
+
 RUN_lowMSSM_OBJ := $(DIR)/run_lowMSSM.o
 RUN_lowMSSM_EXE := $(DIR)/run_lowMSSM.x
 
@@ -279,6 +287,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(SCAN_CMSSM_EXE)
 		-rm -f $(RUN_SEMI_CMSSM_EXE)
 		-rm -f $(GRIDSCAN_SEMI_CMSSM_EXE)
+		-rm -f $(GET_HIGGS_MASS_EXE)
 		-rm -f $(RUN_lowMSSM_EXE)
 		-rm -f $(RUN_CMD_LINE_lowMSSM_EXE)
 		-rm -f $(SCAN_lowMSSM_EXE)
@@ -345,6 +354,9 @@ $(SCAN_CMSSM_EXE): $(SCAN_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filte
 
 $(GRIDSCAN_SEMI_CMSSM_EXE): $(GRIDSCAN_SEMI_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
+$(GET_HIGGS_MASS_EXE): $(GET_HIGGS_MASS_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS)) $(LIBMATHLINK) $(LIBSUSYHDLINK)
+		$(CXX) -Wl,-no-as-needed -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(MLINKLIBS) $(EXTRA_MLINK_LIBS)
 
 $(RUN_lowMSSM_EXE): $(RUN_lowMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
