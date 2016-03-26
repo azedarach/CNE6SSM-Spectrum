@@ -375,4 +375,7 @@ ALLEXE += $(RUN_CMSSM_EXE) $(RUN_CMD_LINE_CMSSM_EXE) $(SCAN_CMSSM_EXE) $(RUN_low
 endif
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
 ALLEXE += $(RUN_SEMI_CMSSM_EXE) $(GRIDSCAN_SEMI_CMSSM_EXE)
+ifneq ($(findstring addons/susyhd_call,$(ADDONS)),)
+ALLEXE += $(GET_HIGGS_MASS_EXE)
+endif
 endif
