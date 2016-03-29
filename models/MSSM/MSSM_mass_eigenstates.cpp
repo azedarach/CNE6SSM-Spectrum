@@ -16851,7 +16851,7 @@ void MSSM_mass_eigenstates::calculate_MVG_pole()
 void MSSM_mass_eigenstates::calculate_MGlu_pole()
 {
    // diagonalization with medium precision
-   const double M_tree(get_mass_matrix_Glu());
+   const double M_tree(MGlu);
    const double p = MGlu;
    const double self_energy_1  = Re(self_energy_Glu_1(p));
    const double self_energy_PL = Re(self_energy_Glu_PL(p));
