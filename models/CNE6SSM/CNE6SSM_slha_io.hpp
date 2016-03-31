@@ -541,7 +541,7 @@ void CNE6SSM_slha_io::set_extra(
    {
       std::ostringstream block;
       block << "Block EWSBOutputParameters Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
-            << FORMAT_ELEMENT(0, model.get_ewsb_output_parameter(0), "m0")
+            << FORMAT_ELEMENT(0, model.get_ewsb_output_parameter(0), "m0Sqr")
             << FORMAT_ELEMENT(1, model.get_ewsb_output_parameter(1), "TanTheta")
             << FORMAT_ELEMENT(2, model.get_ewsb_output_parameter(2), "vphi")
             << FORMAT_ELEMENT(3, model.get_ewsb_output_parameter(3), "XiF")
@@ -712,7 +712,7 @@ void CNE6SSM_slha_io::set_extra(
    {
       std::ostringstream block;
       block << "Block EWSBOutputParameters Q= " << FORMAT_SCALE(model.get_scale()) << '\n'
-            << FORMAT_ELEMENT(0, model.get_ewsb_output_parameter(0), "m0")
+            << FORMAT_ELEMENT(0, model.get_ewsb_output_parameter(0), "m0Sqr")
             << FORMAT_ELEMENT(1, model.get_ewsb_output_parameter(1), "TanTheta")
             << FORMAT_ELEMENT(2, model.get_ewsb_output_parameter(2), "vphi")
             << FORMAT_ELEMENT(3, model.get_ewsb_output_parameter(3), "XiF")

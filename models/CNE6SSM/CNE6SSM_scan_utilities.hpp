@@ -5,8 +5,6 @@
 #ifndef CNE6SSM_SCAN_UTILITIES_H
 #define CNE6SSM_SCAN_UTILITIES_H
 
-#include "CNE6SSM_two_scale_model.hpp"
-#include "CNE6SSM_semi_two_scale_model_slha.hpp"
 #include "CNE6SSM_two_scale_model_slha.hpp"
 #include "CNE6SSM_semi_two_scale_model_slha.hpp"
 #include "CNE6SSM_info.hpp"
@@ -118,7 +116,7 @@ private:
    Problems<CNE6SSM_info::NUMBER_OF_PARTICLES> pole_masses_problems;
 
    double pole_masses_scale;
-   double m0;
+   double m0Sqr;
    unsigned width;
 };
 
@@ -548,12 +546,12 @@ private:
    double high_scale;
    double susy_scale;
    double low_scale;
-   double slha_pole_masses_m0;
-   double slha_running_masses_m0;
-   double slha_susy_pars_m0;
-   double slha_soft_pars_m0;
-   double slha_pole_mixings_m0;
-   double slha_running_mixings_m0;
+   double slha_pole_masses_m0Sqr;
+   double slha_running_masses_m0Sqr;
+   double slha_susy_pars_m0Sqr;
+   double slha_soft_pars_m0Sqr;
+   double slha_pole_mixings_m0Sqr;
+   double slha_running_mixings_m0Sqr;
    unsigned width;
 };
 
@@ -607,7 +605,7 @@ void CNE6SSM_semianalytic_pole_mass_writer::extract_pole_masses(const CNE6SSM_se
    pole_masses_scale = model.get_scale();
    pole_masses_inputs = model.get_input();
    pole_masses_problems = model.get_problems();
-   m0 = model.get_ewsb_output_parameter(0);
+   m0Sqr = model.get_ewsb_output_parameter(0);
 
    pole_masses.push_back(TPoleMass("MGlu", to_valarray(PHYSICAL(MGlu))));
    pole_masses.push_back(TPoleMass("MChaP", to_valarray(PHYSICAL(MChaP))));
@@ -1008,7 +1006,7 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_pole_masses(const CNE
    slha_pole_masses.clear();
    slha_pole_masses_inputs = model.get_input();
    slha_pole_masses_problems = model.get_problems();
-   slha_pole_masses_m0 = model.get_ewsb_output_parameter(0);
+   slha_pole_masses_m0Sqr = model.get_ewsb_output_parameter(0);
 
    slha_pole_masses.push_back(TMass("MGlu", to_valarray(PHYSICALSLHA(MGlu))));
    slha_pole_masses.push_back(TMass("MChaP", to_valarray(PHYSICALSLHA(MChaP))));
@@ -1093,7 +1091,7 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_running_masses(const 
    slha_running_masses.clear();
    slha_running_masses_inputs = model.get_input();
    slha_running_masses_problems = model.get_problems();
-   slha_running_masses_m0 = model.get_ewsb_output_parameter(0);
+   slha_running_masses_m0Sqr = model.get_ewsb_output_parameter(0);
 
    slha_running_masses.push_back(TMass("DRbarMGlu", to_valarray(DRBARSLHA(MGlu))));
    slha_running_masses.push_back(TMass("DRbarMChaP", to_valarray(DRBARSLHA(MChaP))));
@@ -1184,7 +1182,7 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_susy_pars(const CNE6S
    slha_susy_pars.clear();
    slha_susy_pars_inputs = model.get_input();
    slha_susy_pars_problems = model.get_problems();
-   slha_susy_pars_m0 = model.get_ewsb_output_parameter(0);
+   slha_susy_pars_m0Sqr = model.get_ewsb_output_parameter(0);
 
    // convert SLHA Yukawas to matrices
    Eigen::Matrix<double,3,3> Ye_matrix(Eigen::Matrix<double,3,3>::Zero());
@@ -1281,7 +1279,7 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_soft_pars(const CNE6S
    slha_soft_pars.clear();
    slha_soft_pars_inputs = model.get_input();
    slha_soft_pars_problems = model.get_problems();
-   slha_soft_pars_m0 = model.get_ewsb_output_parameter(0);
+   slha_soft_pars_m0Sqr = model.get_ewsb_output_parameter(0);
 
    slha_soft_pars.push_back(TParameter("TYd", 1, 3, 3, to_valarray(MODELPARAMETER(TYd_slha))));
    slha_soft_pars.push_back(TParameter("ThE", 1, 3, 2, to_valarray(MODELPARAMETER(ThE))));
@@ -1366,7 +1364,7 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_pole_mixings(const CN
    slha_pole_mixings.clear();
    slha_pole_mixings_inputs = model.get_input();
    slha_pole_mixings_problems = model.get_problems();
-   slha_pole_mixings_m0 = model.get_ewsb_output_parameter(0);
+   slha_pole_mixings_m0Sqr = model.get_ewsb_output_parameter(0);
 
    slha_pole_mixings.push_back(TMixing("ZD", 6, true, to_valarray(PHYSICALSLHA(ZD))));
    slha_pole_mixings.push_back(TMixing("ZV", 3, true, to_valarray(PHYSICALSLHA(ZV))));
@@ -1439,7 +1437,7 @@ void CNE6SSM_semianalytic_slha_values_writer::extract_slha_running_mixings(const
    slha_running_mixings.clear();
    slha_running_mixings_inputs = model.get_input();
    slha_running_mixings_problems = model.get_problems();
-   slha_running_mixings_m0 = model.get_ewsb_output_parameter(0);
+   slha_running_mixings_m0Sqr = model.get_ewsb_output_parameter(0);
 
    slha_running_mixings.push_back(TMixing("DRbarZD", 6, true, to_valarray(DRBARSLHA(ZD))));
    slha_running_mixings.push_back(TMixing("DRbarZV", 3, true, to_valarray(DRBARSLHA(ZV))));

@@ -282,7 +282,7 @@ CNE6SSM_semianalytic_pole_mass_writer::CNE6SSM_semianalytic_pole_mass_writer()
    , pole_masses_inputs()
    , pole_masses_problems(CNE6SSM_info::particle_names)
    , pole_masses_scale(0.0)
-   , m0(0.0)
+   , m0Sqr(0.0)
    , width(18)
 {
 }
@@ -342,8 +342,8 @@ void CNE6SSM_semianalytic_pole_mass_writer::write_pole_masses_comment_line(std::
 
    write_CNE6SSM_semianalytic_inputs_list(filestr, width);
 
-   // additional write-out for m0
-   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+   // additional write-out for m0Sqr
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
 
    for (std::size_t p = 0; p < pole_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -408,7 +408,7 @@ void CNE6SSM_semianalytic_pole_mass_writer::write_pole_masses_line(std::ostream 
 
    write_CNE6SSM_inputs(pole_masses_inputs, filestr, width);
 
-   filestr << std::left << std::setw(width) << m0 << ' ';
+   filestr << std::left << std::setw(width) << m0Sqr << ' ';
 
    for (std::size_t p = 0; p < pole_masses.size(); ++p) {
       if (!filestr.good()) {
@@ -1213,12 +1213,12 @@ CNE6SSM_semianalytic_slha_values_writer::CNE6SSM_semianalytic_slha_values_writer
    , high_scale(0)
    , susy_scale(0)
    , low_scale(0)
-   , slha_pole_masses_m0(0)
-   , slha_running_masses_m0(0)
-   , slha_susy_pars_m0(0)
-   , slha_soft_pars_m0(0)
-   , slha_pole_mixings_m0(0)
-   , slha_running_mixings_m0(0)
+   , slha_pole_masses_m0Sqr(0)
+   , slha_running_masses_m0Sqr(0)
+   , slha_susy_pars_m0Sqr(0)
+   , slha_soft_pars_m0Sqr(0)
+   , slha_pole_mixings_m0Sqr(0)
+   , slha_running_mixings_m0Sqr(0)
    , width(18)
 {
 }
@@ -1304,7 +1304,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_lin
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_comment_line: "
@@ -1433,7 +1433,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_comment_line: "
@@ -1574,7 +1574,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line(
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_comment_line: "
@@ -1727,7 +1727,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line(
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_comment_line: "
@@ -1898,7 +1898,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_li
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_comment_line: "
@@ -2088,7 +2088,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << "m0/GeV" << ' ';
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_comment_line: "
@@ -2244,7 +2244,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line(std::o
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_pole_masses_m0 << ' ';
+   filestr << std::left << std::setw(width) << slha_pole_masses_m0Sqr << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_masses_line: "
@@ -2370,7 +2370,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line(std
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_running_masses_m0 << ' ';
+   filestr << std::left << std::setw(width) << slha_running_masses_m0Sqr << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_masses_line: "
@@ -2499,7 +2499,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line(std::ost
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_susy_pars_m0 << ' ';
+   filestr << std::left << std::setw(width) << slha_susy_pars_m0Sqr << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_susy_pars_line: "
@@ -2630,7 +2630,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line(std::ost
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_soft_pars_m0 << ' ';
+   filestr << std::left << std::setw(width) << slha_soft_pars_m0Sqr << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_soft_pars_line: "
@@ -2759,7 +2759,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line(std::
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_pole_mixings_m0 << ' ';
+   filestr << std::left << std::setw(width) << slha_pole_mixings_m0Sqr << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_pole_mixings_line: "
@@ -2886,7 +2886,7 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line(st
             "file stream is corrupted");
       return;
    }
-   filestr << std::left << std::setw(width) << slha_running_mixings_m0 << ' ';
+   filestr << std::left << std::setw(width) << slha_running_mixings_m0Sqr << ' ';
 
    if (!filestr.good()) {
       ERROR("CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line: "
