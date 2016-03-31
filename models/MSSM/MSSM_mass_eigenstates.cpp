@@ -17276,12 +17276,9 @@ void MSSM_mass_eigenstates::calculate_MChi_pole()
       const double p = Abs(MChi(es));
       for (unsigned i1 = 0; i1 < 4; ++i1) {
          for (unsigned i2 = 0; i2 < 4; ++i2) {
-            self_energy_1(i1,i2)  = Re(self_energy_Chi_1(p,i1,i2
-               ));
-            self_energy_PL(i1,i2) = Re(self_energy_Chi_PL(p,i1,
-               i2));
-            self_energy_PR(i1,i2) = Re(self_energy_Chi_PR(p,i1,
-               i2));
+            self_energy_1(i1,i2)  = Re(self_energy_Chi_1(p,i1,i2));
+            self_energy_PL(i1,i2) = Re(self_energy_Chi_PL(p,i1,i2));
+            self_energy_PR(i1,i2) = Re(self_energy_Chi_PR(p,i1,i2));
          }
       }
       const Eigen::Matrix<double,4,4> delta_M(- self_energy_PR *
