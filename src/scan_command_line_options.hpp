@@ -55,6 +55,7 @@ public:
    const std::string& get_slha_soft_pars_output_file() const { return slha_soft_pars_output_file; }
    const std::string& get_slha_pole_mixings_output_file() const { return slha_pole_mixings_output_file; }
    const std::string& get_slha_running_mixings_output_file() const { return slha_running_mixings_output_file; }
+   const std::string& get_coefficients_output_file() const { return coefficients_output_file; }
    const std::string& get_program_name() const { return program; }
 
    static std::string get_option_value(const std::string&, const std::string&);
@@ -79,6 +80,7 @@ private:
    std::string slha_soft_pars_output_file;
    std::string slha_pole_mixings_output_file;
    std::string slha_running_mixings_output_file;
+   std::string coefficients_output_file;
 };
 
 } // namespace flexiblesusy

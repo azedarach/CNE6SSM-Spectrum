@@ -147,6 +147,9 @@ void set_input_parameter_by_name(const std::string& name, double value,
    } else if (name == "KappaInput(1,2)") {
       input.KappaInput(1,2) = value;
    } else if (name == "KappaInput(2,2)") {
+      // NOTE: temporary modification
+      input.KappaInput(0,0) = value;
+      input.KappaInput(1,1) = value;
       input.KappaInput(2,2) = value;
    }  else if (name == "Lambda12Input(0,0)") {
       input.Lambda12Input(0,0) = value;
@@ -155,6 +158,8 @@ void set_input_parameter_by_name(const std::string& name, double value,
    } else if (name == "Lambda12Input(0,1)") {
       input.Lambda12Input(0,1) = value;
    } else if (name == "Lambda12Input(1,1)") {
+      // NOTE: temporary modification
+      input.Lambda12Input(0,0) = value;
       input.Lambda12Input(1,1) = value;
    } else if (name == "LambdaxInput") {
       input.LambdaxInput = value;
@@ -391,6 +396,15 @@ int main(int argc, const char* argv[])
    CNE6SSM_semianalytic_slha_values_writer slha_values_writer;
    bool must_write_comment_line = true;
 
+   std::cout << "# "
+             << std::left << std::setw(21) << "Lambda12Input(1,1)" << ' '
+             << std::left << std::setw(21) << "KappaInput(2,2)" << ' '
+             << std::left << std::setw(21) << "aHu" << ' '
+             << std::left << std::setw(21) << "bHu" << ' '
+             << std::left << std::setw(21) << "aHd" << ' '
+             << std::left << std::setw(21) << "bHd" << ' '
+             << std::left << std::setw(21) << "error" << '\n';
+
    while (!scan.has_finished()) {
       if (is_grid_scan) {
          set_gridscan_parameter_values(scanned_parameters, scan.get_position(), input);
@@ -472,6 +486,15 @@ int main(int argc, const char* argv[])
          must_write_comment_line = false;
       }
       pole_mass_writer.write_pole_masses_line(pole_mass_out);
+
+      std::cout << " "
+                << std::left << std::setw(21) << model.get_input().Lambda12Input(1,1) << ' '
+                << std::left << std::setw(21) << model.get_input().KappaInput(2,2) << ' '
+                << std::left << std::setw(21) << model.get_m02_coeff_mHu2() << ' '
+                << std::left << std::setw(21) << model.get_m122_coeff_mHu2() << ' '
+                << std::left << std::setw(21) << model.get_m02_coeff_mHd2() << ' '
+                << std::left << std::setw(21) << model.get_m122_coeff_mHd2() << ' '
+                << std::left << std::setw(21) << model.get_problems().have_problem() << '\n';
 
       if (must_write_drbar_masses)
          drbar_values_writer.write_drbar_masses_line(drbar_mass_out_stream);

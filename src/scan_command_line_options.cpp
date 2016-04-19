@@ -23,6 +23,7 @@ Scan_command_line_options::Scan_command_line_options()
    , slha_soft_pars_output_file()
    , slha_pole_mixings_output_file()
    , slha_running_mixings_output_file()
+   , coefficients_output_file()
 {
 }
 
@@ -103,6 +104,10 @@ void Scan_command_line_options::parse(int argc, const char* argv[])
          slha_running_mixings_output_file = get_option_value(option, "=");
          if (slha_running_mixings_output_file.empty())
             WARNING("no SLHA running mixings output file name given");
+      } else if (starts_with(option,"--coefficients-output-file=")) {
+         coefficients_output_file = get_option_value(option, "=");
+         if (coefficients_output_file.empty())
+            WARNING("no coefficients output file name given");
       } else if (option == "--help" || option == "-h") {
          print_usage(std::cout);
          do_exit = true;
@@ -175,6 +180,9 @@ void Scan_command_line_options::print_usage(std::ostream& ostr) const
            " --slha-running-mixings-output-file=<filename> SLHA running mixings output file\n"
            "                                               If not given, SLHA running mixings\n"
            "                                               are not printed.\n"
+           " --coefficients-output-file=<filename>         semi-analytic coefficients output\n"
+           "                                               file. If not given, coefficients\n"
+           "                                               are not printed.\n"
            "  --build-info                                 print build information\n"
            "  --model-info                                 print model information\n"
            "  --help,-h                                    print this help message\n"
@@ -203,6 +211,7 @@ void Scan_command_line_options::reset()
    slha_soft_pars_output_file.clear();
    slha_pole_mixings_output_file.clear();
    slha_running_mixings_output_file.clear();
+   coefficients_output_file.clear();
 }
 
 /**

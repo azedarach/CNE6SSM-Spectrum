@@ -2936,5 +2936,163 @@ void CNE6SSM_semianalytic_slha_values_writer::write_slha_running_mixings_line(st
    filestr.precision(old_precision);
 }
 
+CNE6SSM_semianalytic_coefficients_writer::CNE6SSM_semianalytic_coefficients_writer()
+   : coefficients()
+   , coefficients_inputs()
+   , coefficients_problems(CNE6SSM_info::particle_names)
+   , high_scale(0)
+   , susy_scale(0)
+   , low_scale(0)
+   , width(18)
+{
+}
+
+void CNE6SSM_semianalytic_coefficients_writer::write_coefficients_comment_line(std::ostream & filestr) const
+{
+   if (coefficients.empty())
+      return;
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+
+   filestr << "# ";
+
+   write_CNE6SSM_semianalytic_inputs_list(filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "m0Sqr/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "LowScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "SUSYScale/GeV" << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_comment_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << "HighScale/GeV" << ' ';
+
+   for (std::size_t p = 0; p < coefficients.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_comment_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::string& name = coefficients[p].name;
+      const std::size_t mass_dimension = coefficients[p].mass_dimension;
+      const std::size_t rows = coefficients[p].rows;
+      const std::size_t cols = coefficients[p].cols;
+      const std::size_t num_entries = rows * cols;
+
+      for (std::size_t i = 0; i < num_entries; ++i) {
+         std::string entry(name);
+         if (num_entries > 1) {
+            std::size_t col_index = i / rows;
+            std::size_t row_index = i - rows * col_index;
+            std::ostringstream index;
+            index << "(" << row_index + 1 << "," << col_index + 1 << ")";
+            entry.append(index.str());
+         }
+         if (mass_dimension > 0) {
+            entry.append("/GeV");
+            if (mass_dimension > 1) {
+               std::ostringstream dim;
+               dim << "^" << mass_dimension;
+               entry.append(dim.str());
+            }
+         }
+         filestr << std::left << std::setw(width) << entry << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << "error" << '\n';
+}
+
+void CNE6SSM_semianalytic_coefficients_writer::write_coefficients_line(std::ostream & filestr) const
+{
+   if (coefficients.empty())
+      return;
+
+   // ensure SLHA formatted output
+   std::ios_base::fmtflags old_flags =
+      filestr.setf(ios::scientific, ios::floatfield);
+   int old_precision = filestr.precision(8);
+
+   write_CNE6SSM_inputs(coefficients_inputs, filestr, width);
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << coefficients_m0Sqr << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << low_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << susy_scale << ' ';
+
+   if (!filestr.good()) {
+      ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_line: "
+            "file stream is corrupted");
+      return;
+   }
+   filestr << std::left << std::setw(width) << high_scale << ' ';
+
+   for (std::size_t p = 0; p < coefficients.size(); ++p) {
+      if (!filestr.good()) {
+         ERROR("CNE6SSM_semianalytic_coefficients_writer::write_coefficients_line: "
+               "file stream is corrupted");
+         break;
+      }
+
+      const std::valarray<double>& coeffs = coefficients[p].values;
+      const std::size_t num_coeffs = coeffs.size();
+
+      for (std::size_t i = 0; i < num_coeffs; ++i) {
+         filestr << std::left << std::setw(width) << coeffs[i] << ' ';
+      }
+   }
+
+   filestr << std::left << std::setw(width) << coefficients_problems.have_problem() << ' ';
+
+   if (coefficients_problems.have_problem() || coefficients_problems.have_warning()) {
+      filestr << "\t# " << coefficients_problems << '\n';
+   } else {
+      filestr << '\n';
+   }
+
+   filestr.setf(old_flags);
+   filestr.precision(old_precision);
+}
+
 } // namespace flexiblesusy
 
