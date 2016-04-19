@@ -280,6 +280,7 @@ int main(int argc, const char* argv[])
    const std::string slha_soft_pars_output_file(options.get_slha_soft_pars_output_file());
    const std::string slha_pole_mixings_output_file(options.get_slha_pole_mixings_output_file());
    const std::string slha_running_mixings_output_file(options.get_slha_running_mixings_output_file());
+   const std::string coefficients_output_file(options.get_coefficients_output_file());
 
    Scan_parser parser;
    if (scan_input_file.empty()) {
@@ -313,6 +314,7 @@ int main(int argc, const char* argv[])
    bool must_write_slha_soft_pars = false;
    bool must_write_slha_pole_mixings = false;
    bool must_write_slha_running_mixings = false;
+   bool must_write_coefficients = false;
 
    std::ofstream drbar_mass_out_stream;
    std::ofstream drbar_susy_pars_out_stream;
@@ -324,6 +326,7 @@ int main(int argc, const char* argv[])
    std::ofstream slha_soft_pars_out_stream;
    std::ofstream slha_pole_mixings_out_stream;
    std::ofstream slha_running_mixings_out_stream;
+   std::ofstream coefficients_out_stream;
    if (!drbar_mass_output_file.empty()) {
       must_write_drbar_masses = true;
       drbar_mass_out_stream.open(drbar_mass_output_file, std::ofstream::out);
@@ -364,6 +367,10 @@ int main(int argc, const char* argv[])
       must_write_slha_running_mixings = true;
       slha_running_mixings_out_stream.open(slha_running_mixings_output_file, std::ofstream::out);
    }
+   if (!coefficients_output_file.empty()) {
+      must_write_coefficients = true;
+      coefficients_out_stream.open(coefficients_output_file, std::ofstream::out);
+   }
 
    CNE6SSM_semianalytic_input_parameters<algorithm_type> input;
    set_default_parameter_values(input);
@@ -394,16 +401,8 @@ int main(int argc, const char* argv[])
    CNE6SSM_semianalytic_pole_mass_writer pole_mass_writer;
    CNE6SSM_semianalytic_drbar_values_writer drbar_values_writer;
    CNE6SSM_semianalytic_slha_values_writer slha_values_writer;
+   CNE6SSM_semianalytic_coefficients_writer coefficients_writer;
    bool must_write_comment_line = true;
-
-   std::cout << "# "
-             << std::left << std::setw(21) << "Lambda12Input(1,1)" << ' '
-             << std::left << std::setw(21) << "KappaInput(2,2)" << ' '
-             << std::left << std::setw(21) << "aHu" << ' '
-             << std::left << std::setw(21) << "bHu" << ' '
-             << std::left << std::setw(21) << "aHd" << ' '
-             << std::left << std::setw(21) << "bHd" << ' '
-             << std::left << std::setw(21) << "error" << '\n';
 
    while (!scan.has_finished()) {
       if (is_grid_scan) {
@@ -436,6 +435,10 @@ int main(int argc, const char* argv[])
       slha_values_writer.set_susy_scale(spectrum_generator.get_susy_scale());
       slha_values_writer.set_low_scale(spectrum_generator.get_low_scale());
 
+      coefficients_writer.set_high_scale(spectrum_generator.get_high_scale());
+      coefficients_writer.set_susy_scale(spectrum_generator.get_susy_scale());
+      coefficients_writer.set_low_scale(spectrum_generator.get_low_scale());
+
       pole_mass_writer.extract_pole_masses(model);
 
       if (must_write_drbar_masses)
@@ -458,6 +461,8 @@ int main(int argc, const char* argv[])
          slha_values_writer.extract_slha_pole_mixings(model_slha);
       if (must_write_slha_running_mixings)
          slha_values_writer.extract_slha_running_mixings(model_slha);
+      if (must_write_coefficients)
+         coefficients_writer.extract_coefficients(model);
 
       if (must_write_comment_line) {
          pole_mass_writer.write_pole_masses_comment_line(pole_mass_out);
@@ -482,19 +487,12 @@ int main(int argc, const char* argv[])
             slha_values_writer.write_slha_pole_mixings_comment_line(slha_pole_mixings_out_stream);
          if (must_write_slha_running_mixings)
             slha_values_writer.write_slha_running_mixings_comment_line(slha_running_mixings_out_stream);
+         if (must_write_coefficients)
+            coefficients_writer.write_coefficients_comment_line(coefficients_out_stream);
 
          must_write_comment_line = false;
       }
       pole_mass_writer.write_pole_masses_line(pole_mass_out);
-
-      std::cout << " "
-                << std::left << std::setw(21) << model.get_input().Lambda12Input(1,1) << ' '
-                << std::left << std::setw(21) << model.get_input().KappaInput(2,2) << ' '
-                << std::left << std::setw(21) << model.get_m02_coeff_mHu2() << ' '
-                << std::left << std::setw(21) << model.get_m122_coeff_mHu2() << ' '
-                << std::left << std::setw(21) << model.get_m02_coeff_mHd2() << ' '
-                << std::left << std::setw(21) << model.get_m122_coeff_mHd2() << ' '
-                << std::left << std::setw(21) << model.get_problems().have_problem() << '\n';
 
       if (must_write_drbar_masses)
          drbar_values_writer.write_drbar_masses_line(drbar_mass_out_stream);
@@ -516,6 +514,8 @@ int main(int argc, const char* argv[])
          slha_values_writer.write_slha_pole_mixings_line(slha_pole_mixings_out_stream);
       if (must_write_slha_running_mixings)
          slha_values_writer.write_slha_running_mixings_line(slha_running_mixings_out_stream);
+      if (must_write_coefficients)
+         coefficients_writer.write_coefficients_line(coefficients_out_stream);
 
       scan.step_forward();
    }
@@ -552,6 +552,9 @@ int main(int argc, const char* argv[])
 
    if (slha_running_mixings_out_stream.is_open())
       slha_running_mixings_out_stream.close();
+
+   if (coefficients_out_stream.is_open())
+      coefficients_out_stream.close();
 
    std::chrono::high_resolution_clock::time_point end_point = std::chrono::high_resolution_clock::now();
    microseconds_t duration(std::chrono::duration_cast<microseconds_t>(end_point - start_point));
