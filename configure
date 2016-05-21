@@ -105,6 +105,7 @@ options="                    \
    enable_rpath              \
    enable_silent             \
    enable_static_libs        \
+   enable_sqlite             \
    enable_threads            \
    enable_verbose            \
 "
@@ -130,6 +131,7 @@ enable_rpath="no"
 ################################################################
 enable_silent="no"
 enable_static_libs="yes"
+enable_sqlite="automatic"
 enable_threads="yes"
 enable_verbose="no"
 
@@ -144,6 +146,7 @@ DEFINE_ENABLE_MULTINEST="#undef ENABLE_MULTINEST"
 ################################################################
 DEFINE_ENABLE_RANDOM="#undef ENABLE_RANDOM"
 DEFINE_ENABLE_SILENT="#undef ENABLE_SILENT"
+DEFINE_ENABLE_SQLITE="#undef ENABLE_SQLITE"
 DEFINE_ENABLE_THREADS="#define ENABLE_THREADS 1"
 DEFINE_ENABLE_VERBOSE="#undef ENABLE_VERBOSE"
 
@@ -181,6 +184,8 @@ BLASLIBS=""
 LAPACKLIBS=""
 MAKELIB="ar cru"
 MATH="math"
+sqlite_lib_dir=""
+sqlite_inc_dir=""
 # available RG algorithms
 ALGORITHMS="two_scale"
 available_algorithms="two_scale lattice semianalytic"
@@ -1730,6 +1735,53 @@ check_looptools_incl() {
     fi
 }
 
+#_____________________________________________________________________
+check_sqlite_libs() {
+    check_library "libsqlite3" "$sqlite_lib_dir" \
+       "$default_lib_paths"
+    if test "x$found_lib" = "x" ; then
+        message "Warning: libsqlite3 not found."
+        message "   Support for SQLite will be is disabled."
+        return 1
+    else
+        local SQLITELIBS_="-lsqlite3"
+        if [ -z "$sqlite_lib_dir" ]; then
+            # assume that the linker will look in the default paths
+            SQLITELIBS="$SQLITELIBS_"
+        else
+            SQLITELIBS="-L$sqlite_lib_dir $SQLITELIBS_"
+        fi
+    fi
+    return 0
+}
+
+check_sqlite_incl() {
+    check_header "sqlite3.h" "$sqlite_inc_dir" \
+        "$default_inc_paths"
+    if test "x$found_hdr" = "x" ; then
+        message "Warning: sqlite.h not found in $sqlite_inc_dir $default_inc_paths."
+        message "   Support for SQLite will be is disabled."
+        return 1
+    else
+        # assume that the compiler will look in the default paths
+        if [ -n "$sqlite_inc_dir" ]; then
+            SQLITEFLAGS="-I$sqlite_inc_dir"
+        fi
+    fi
+    return 0
+}
+
+#_____________________________________________________________________
+check_sqlite() {
+    if test "x$enable_sqlite" != "xno" ; then
+        if check_sqlite_incl && check_sqlite_libs ; then
+            enable_sqlite=yes
+        else
+            enable_sqlite=no
+        fi
+    fi
+}
+
 ################################################################
 
 #_____________________________________________________________________
@@ -2098,6 +2150,16 @@ enable_defines() {
         fi
     fi
 
+    if test "x${enable_sqlite}" = "xyes" ; then
+        DEFINE_ENABLE_SQLITE="#define ENABLE_SQLITE 1"
+        logmsg "Enabling sqlite"
+        logmsg "   ${DEFINE_ENABLE_SQLITE}"
+    else
+        DEFINE_ENABLE_SQLITE="#undef ENABLE_SQLITE"
+        message "Disabling sqlite"
+        logmsg "   ${DEFINE_ENABLE_SQLITE}"
+    fi
+
     if test "x${enable_threads}" = "xyes" ; then
         DEFINE_ENABLE_THREADS="#define ENABLE_THREADS 1"
         logmsg "Enabling multi-threading"
@@ -2152,9 +2214,12 @@ replace_markers() {
 	-e "s|@ENABLE_DEBUG@|$enable_debug|"      \
 	-e "s|@ENABLE_CHECK_EIGENVALUE_ERROR@|$enable_mass_error_check|" \
 	-e "s|@ENABLE_SILENT@|$enable_silent|"    \
+        -e "s|@ENABLE_SQLITE@|$enable_sqlite|"    \
 	-e "s|@ENABLE_VERBOSE@|$enable_verbose|"  \
 	-e "s|@LOOPTOOLSLIBS@|$LOOPTOOLSLIBS|"    \
 	-e "s|@LOOPTOOLSFLAGS@|$LOOPTOOLSFLAGS|"  \
+        -e "s|@SQLITELIBS@|$SQLITELIBS|"          \
+        -e "s|@SQLITEFLAGS@|$SQLITEFLAGS|"        \
         -e "s|@MULTINESTLIBS@|$MULTINESTLIBS|"    \
         -e "s|@MULTINESTFLAGS@|$MULTINESTFLAGS|"  \
 	-e "s|@MODELS@|$MODELS|"           \
@@ -2188,6 +2253,7 @@ EOF
 cat <<EOF
   rpath             Enable setting rpath for executables (default: $enable_rpath)
   silent            Suppress all command line output (default: $enable_silent)
+  sqlite            Enable SQLite (defaut: $enable_sqlite)
   static-libs       Create static libraries (default: $enable_static_libs)
   threads           Enable multi-threading (default: $enable_threads)
   verbose           Verbose messages (default: $enable_verbose)
@@ -2221,6 +2287,8 @@ cat <<EOF
   --with-models=            Comma separated list of models to be build
                             (default: $MODELS)
                             possible values: all <model1>,<model2>,...
+  --with-sqlite-libdir=     Path to search for SQLite library
+  --with-sqlite-incdir=     Path to search for SQLite header
 EOF
 cat <<EOF
   --with-multinest-libdir=  Path to search for MultiNest libraries
@@ -2314,6 +2382,8 @@ if test $# -gt 0 ; then
             --with-make-lib-cmd=*)   MAKELIB=$optarg ;;
             --with-math-cmd=*)       MATH=$optarg ;;
             --with-models=*)         MODELS=$optarg ;;
+            --with-sqlite-libdir=*)  sqlite_lib_dir=$optarg ;;
+            --with-sqlite-incdir=*)  sqlite_inc_dir=$optarg ;;
             --with-multinest-libdir=*) multinest_lib_dir=$optarg ;;
             --with-multinest-incdir=*) multinest_inc_dir=$optarg ;;
             --help|-h)               help; exit 0 ;;
@@ -2363,6 +2433,7 @@ if test "x${enable_compile}" = "xyes"; then
         check_looptools_incl
         check_looptools_libs
     fi
+    check_sqlite
     check_makelib
     check_random_number_generator
     check_std_threads
@@ -2417,6 +2488,8 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@GSLFLAGS@|$GSLFLAGS|"       \
     -e "s|@GSLLIBS@|$GSLLIBS|"         \
     -e "s|@LOOPFUNCFLAGS@|$LOOPTOOLSFLAGS|" \
+    -e "s|@SQLITELIBS@|$SQLITELIBS|"   \
+    -e "s|@SQLITEFLAGS@|$SQLITEFLAGS|" \
     -e "s|@MAKELIB@|$MAKELIB|"         \
     -e "s|@MATH@|$MATH|"               \
     -e "s|@MODELS@|$MODELS|"           \
@@ -2460,6 +2533,7 @@ sed -e "s|@FLEXIBLESUSY_VERSION@|$FLEXIBLESUSY_VERSION|" \
     -e "s|@DEFINE_ENABLE_MULTINEST@|$DEFINE_ENABLE_MULTINEST|" \
     -e "s|@DEFINE_ENABLE_RANDOM@|$DEFINE_ENABLE_RANDOM|"       \
     -e "s|@DEFINE_ENABLE_SILENT@|$DEFINE_ENABLE_SILENT|"       \
+    -e "s|@DEFINE_ENABLE_SQLITE@|$DEFINE_ENABLE_SQLITE|"       \
     -e "s|@DEFINE_ENABLE_THREADS@|$DEFINE_ENABLE_THREADS|"     \
     -e "s|@DEFINE_ENABLE_VERBOSE@|$DEFINE_ENABLE_VERBOSE|"     \
     < $CONFIGHDR_TMPL > $CONFIGHDR
