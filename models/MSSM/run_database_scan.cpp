@@ -255,15 +255,15 @@ int main(int argc, const char* argv[])
                                TanBeta_values, MuInput_values);
 
    const std::size_t n_seeds = m12_values.size();
-   const std::size_t n_pts = 3;
+   const std::size_t n_pts = 5;
 
    const double alphas_cent = 0.1181;
    const double alphas_uncert = 0.0013;
    const double mtp_cent = 173.21;
    const double mtp_uncert = 0.87;
 
-   const double delta_alphas = 2.0 * alphas_uncert / (n_pts - 1.0);
-   const double delta_mtp = 2.0 * mtp_uncert / (n_pts - 1.0);
+   const double delta_alphas = 4.0 * alphas_uncert / (n_pts - 1.0);
+   const double delta_mtp = 4.0 * mtp_uncert / (n_pts - 1.0);
 
    CMSSM_semianalytic_pole_mass_writer pole_mass_writer;
    CMSSM_semianalytic_drbar_values_writer drbar_values_writer;
