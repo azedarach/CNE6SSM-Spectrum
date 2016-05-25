@@ -277,10 +277,10 @@ int main(int argc, const char* argv[])
       input.MuInput = MuInput_values[i];
 
       for (std::size_t j = 0; j < n_pts; ++j) {
-         const double alphas = alphas_cent - alphas_uncert
+         const double alphas = alphas_cent - 2.0 * alphas_uncert
             + j * delta_alphas;
          for (std::size_t k = 0; k < n_pts; ++k) {
-            const double mtp = mtp_cent - mtp_uncert
+            const double mtp = mtp_cent - 2.0 * mtp_uncert
                + k * delta_mtp;
 
             softsusy::QedQcd oneset;
