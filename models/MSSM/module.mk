@@ -95,6 +95,7 @@ LIBMSSM_SRC += \
 EXEMSSM_SRC += \
 		$(DIR)/run_CMSSM.cpp \
 		$(DIR)/run_cmd_line_CMSSM.cpp \
+		$(DIR)/gridscan_CMSSM.cpp \
 		$(DIR)/scan_CMSSM.cpp \
 		$(DIR)/run_lowMSSM.cpp \
 		$(DIR)/run_cmd_line_lowMSSM.cpp \
@@ -220,6 +221,9 @@ RUN_CMSSM_EXE := $(DIR)/run_CMSSM.x
 RUN_CMD_LINE_CMSSM_OBJ := $(DIR)/run_cmd_line_CMSSM.o
 RUN_CMD_LINE_CMSSM_EXE := $(DIR)/run_cmd_line_CMSSM.x
 
+GRIDSCAN_CMSSM_OBJ := $(DIR)/gridscan_CMSSM.o
+GRIDSCAN_CMSSM_EXE := $(DIR)/gridscan_CMSSM.x
+
 SCAN_CMSSM_OBJ := $(DIR)/scan_CMSSM.o
 SCAN_CMSSM_EXE := $(DIR)/scan_CMSSM.x
 
@@ -288,6 +292,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(LIBMSSM)
 		-rm -f $(RUN_CMSSM_EXE)
 		-rm -f $(RUN_CMD_LINE_CMSSM_EXE)
+		-rm -f $(GRIDSCAN_CMSSM_EXE)
 		-rm -f $(SCAN_CMSSM_EXE)
 		-rm -f $(RUN_DATABASE_EXE)
 		-rm -f $(RUN_SEMI_CMSSM_EXE)
@@ -357,6 +362,9 @@ $(RUN_DATABASE_EXE): $(RUN_DATABASE_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(f
 $(RUN_CMD_LINE_CMSSM_EXE): $(RUN_CMD_LINE_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+$(GRIDSCAN_CMSSM_EXE): $(GRIDSCAN_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 $(SCAN_CMSSM_EXE): $(SCAN_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
@@ -379,7 +387,7 @@ ALLDEP += $(LIBMSSM_DEP) $(EXEMSSM_DEP)
 ALLSRC += $(LIBMSSM_SRC) $(EXEMSSM_SRC)
 ALLLIB += $(LIBMSSM)
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)
-ALLEXE += $(RUN_CMSSM_EXE) $(RUN_CMD_LINE_CMSSM_EXE) $(SCAN_CMSSM_EXE) $(RUN_lowMSSM_EXE) $(RUN_CMD_LINE_lowMSSM_EXE) $(SCAN_lowMSSM_EXE)
+ALLEXE += $(RUN_CMSSM_EXE) $(RUN_CMD_LINE_CMSSM_EXE) $(GRIDSCAN_CMSSM_EXE) $(SCAN_CMSSM_EXE) $(RUN_lowMSSM_EXE) $(RUN_CMD_LINE_lowMSSM_EXE) $(SCAN_lowMSSM_EXE)
 endif
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
 ALLEXE += $(RUN_SEMI_CMSSM_EXE) $(GRIDSCAN_SEMI_CMSSM_EXE) $(RUN_DATABASE_EXE)
