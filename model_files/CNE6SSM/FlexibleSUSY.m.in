@@ -81,9 +81,9 @@ HighScaleInput = {
    {MassBp, m12}
 };
 
-LowScale = SM[MZ];
+LowScale = LowEnergyConstant[MZ];
 
-LowScaleFirstGuess = SM[MZ];
+LowScaleFirstGuess = LowEnergyConstant[MZ];
 
 LowScaleInput = {
    {Yu, Automatic},
@@ -95,13 +95,13 @@ LowScaleInput = {
 
 (* Provide initial guess for \[Xi]F? *)
 InitialGuessAtLowScale = {
-  {vd, SM[vev] Cos[ArcTan[TanBeta]]},
-  {vu, SM[vev] Sin[ArcTan[TanBeta]]},
+  {vd, LowEnergyConstant[vev] Cos[ArcTan[TanBeta]]},
+  {vu, LowEnergyConstant[vev] Sin[ArcTan[TanBeta]]},
   {Yu, Automatic},
   {Yd, Automatic},
   {Ye, Automatic},
-  {\[Xi]F, SM[MZ]^3},
-  {L[\[Xi]F], SM[MZ]^3},
+  {\[Xi]F, LowEnergyConstant[MZ]^3},
+  {L[\[Xi]F], LowEnergyConstant[MZ]^3},
   {\[Lambda], 0.1},
   {vs, ssumInput / Sqrt[2]},
   {vsb, ssumInput / Sqrt[2]},
