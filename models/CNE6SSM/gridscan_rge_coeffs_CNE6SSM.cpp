@@ -1154,6 +1154,7 @@ int main(int argc, const char* argv[])
    cout << "# Scan completed in " << time_in_seconds << " seconds\n";
    cout << "# Wall time = " << wall_end - wall_start << " seconds\n";
    cout << "# CPU time  = " << cpu_end - cpu_start << " seconds\n";
+   cout << "# Random seed = " << seed << "\n";
 
    return 0;
 }
