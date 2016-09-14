@@ -128,6 +128,11 @@ const CMSSM_semianalytic_input_parameters<Two_scale>& CLASSNAME::get_input() con
    return input;
 }
 
+CMSSM_semianalytic_input_parameters<Two_scale>& CLASSNAME::get_input()
+{
+   return input;
+}
+
 void CLASSNAME::set_input_parameters(const CMSSM_semianalytic_input_parameters<Two_scale>& input_)
 {
    input = input_;

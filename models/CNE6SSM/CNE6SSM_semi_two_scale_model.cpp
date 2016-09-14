@@ -191,6 +191,11 @@ const CNE6SSM_semianalytic_input_parameters<Two_scale>& CLASSNAME::get_input() c
    return input;
 }
 
+CNE6SSM_semianalytic_input_parameters<Two_scale>& CLASSNAME::get_input()
+{
+   return input;
+}
+
 void CLASSNAME::set_input_parameters(const CNE6SSM_semianalytic_input_parameters<Two_scale>& input_)
 {
    input = input_;

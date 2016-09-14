@@ -50,6 +50,7 @@ public:
    void set_ewsb_loop_order(unsigned);
    void set_number_of_ewsb_iterations(std::size_t);
    const CNE6SSM_semianalytic_input_parameters<Two_scale>& get_input() const;
+   CNE6SSM_semianalytic_input_parameters<Two_scale>& get_input();
    void set_input_parameters(const CNE6SSM_semianalytic_input_parameters<Two_scale>&);
    double get_ewsb_iteration_precision() const;
    double get_ewsb_loop_order() const;
