@@ -115,6 +115,10 @@ void CMSSM_semianalytic_initial_guesser<Two_scale>::guess_susy_parameters()
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
 
+   // initial guess for Mu is at high-scale
+   const auto MuInput_at_MS = INPUTPARAMETER(MuInput_at_MS);
+   INPUTPARAMETER(MuInput_at_MS) = false;
+
    guess_high_scale_parameters();
 
    const double low_scale_guess = low_constraint.get_initial_scale_guess();
@@ -140,6 +144,8 @@ void CMSSM_semianalytic_initial_guesser<Two_scale>::guess_susy_parameters()
    initial_solver.solve();
 
    main_iteration_high_constraint->set_initial_scale_guess(high_constraint.get_scale());
+
+   INPUTPARAMETER(MuInput_at_MS) = MuInput_at_MS;
 }
 
 void CMSSM_semianalytic_initial_guesser<Two_scale>::guess_low_scale_parameters(CMSSM_semianalytic<Two_scale>* model, const QedQcd& oneset, double g1, double g2, double g3)

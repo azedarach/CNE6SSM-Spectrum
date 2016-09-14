@@ -76,8 +76,11 @@ void CMSSM_semianalytic_high_scale_constraint<Two_scale>::apply()
    update_scale();
 
    const auto MuInput = INPUTPARAMETER(MuInput);
+   const auto MuInput_at_MS = INPUTPARAMETER(MuInput_at_MS);
 
-   MODEL->set_Mu(Re(MuInput));
+   if (!MuInput_at_MS) {
+      MODEL->set_Mu(Re(MuInput));
+   }
 
    {
       const auto g1 = MODELPARAMETER(g1);

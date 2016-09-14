@@ -17,9 +17,10 @@ struct CMSSM_semianalytic_input_parameters<Two_scale> {
    double Azero;
    double TanBeta;
    double MuInput;
+   bool MuInput_at_MS;
 
    CMSSM_semianalytic_input_parameters()
-      : m12(0), Azero(0), TanBeta(0), MuInput(0)
+      : m12(0), Azero(0), TanBeta(0), MuInput(0), MuInput_at_MS(false)
       {}
 };
 

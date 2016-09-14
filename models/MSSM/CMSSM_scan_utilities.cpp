@@ -39,7 +39,8 @@ void write_CMSSM_semianalytic_inputs_list(std::ostream & filestr, std::size_t wi
    filestr << std::left << std::setw(width) << "m12/GeV" << ' '
            << std::left << std::setw(width) << "Azero/GeV" << ' '
            << std::left << std::setw(width) << "TanBeta" << ' '
-           << std::left << std::setw(width) << "MuInput/GeV" << ' ';
+           << std::left << std::setw(width) << "MuInput/GeV" << ' '
+           << std::left << std::setw(width) << "MuInput_at_MS" << ' ';
 }
 
 void write_CMSSM_inputs(const CMSSM_input_parameters<Two_scale>& inputs, std::ostream & filestr, std::size_t width)
@@ -70,7 +71,8 @@ void write_CMSSM_inputs(const CMSSM_semianalytic_input_parameters<Two_scale>& in
            << std::left << std::setw(width) << inputs.m12 << ' '
            << std::left << std::setw(width) << inputs.Azero << ' '
            << std::left << std::setw(width) << inputs.TanBeta << ' '
-           << std::left << std::setw(width) << inputs.MuInput << ' ';
+           << std::left << std::setw(width) << inputs.MuInput << ' '
+           << std::left << std::setw(width) << inputs.MuInput_at_MS << ' ';
 }
 
 CMSSM_pole_mass_writer::CMSSM_pole_mass_writer()

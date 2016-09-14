@@ -11,6 +11,7 @@ std::ostream& operator<<(std::ostream& ostr, const CMSSM_semianalytic_input_para
    ostr << "Azero = " << INPUT(Azero) << ", ";
    ostr << "TanBeta = " << INPUT(TanBeta) << ", ";
    ostr << "MuInput = " << INPUT(MuInput) << ", ";
+   ostr << "MuInput_at_MS = " << INPUT(MuInput_at_MS) << ", ";
 
    return ostr;
 }

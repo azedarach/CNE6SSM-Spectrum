@@ -63,6 +63,12 @@ void CMSSM_semianalytic_susy_scale_constraint<Two_scale>::apply()
    update_scale();
 
    // apply user-defined susy scale constraints
+   const auto MuInput = INPUTPARAMETER(MuInput);
+   const auto MuInput_at_MS = INPUTPARAMETER(MuInput_at_MS);
+
+   if (MuInput_at_MS) {
+      MODEL->set_Mu(Re(MuInput));
+   }
 
    // the parameters, which are fixed by the EWSB eqs., will now be
    // defined at this scale (at the EWSB loop level defined in the

@@ -26,6 +26,7 @@ void set_default_parameter_values(CMSSM_semianalytic_input_parameters<Two_scale>
    input.Azero = 8000.;
    input.TanBeta = 10.;
    input.MuInput = 1000.;
+   input.MuInput_at_MS = false;
 }
 
 void set_input_parameter_by_name(const std::string& name, double value,
@@ -39,6 +40,8 @@ void set_input_parameter_by_name(const std::string& name, double value,
       input.TanBeta = value;
    } else if (name == "MuInput") {
       input.MuInput = value;
+   } else if (name == "MuInput_at_MS") {
+      input.MuInput_at_MS = value;
    } else {
       WARNING("Unrecognized parameter '" + name + "'!");
    }

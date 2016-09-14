@@ -84,6 +84,9 @@ void CMSSM_slha_io::set_extpar(const CMSSM_semianalytic_input_parameters<Two_sca
    std::ostringstream extpar;
 
    extpar << "Block EXTPAR\n";
+   if (input.MuInput_at_MS) {
+      extpar << FORMAT_ELEMENT(0, -1, "Mu input at SUSY scale");
+   }
    extpar << FORMAT_ELEMENT(23, input.MuInput, "MuInput");
    slha_io.set_block(extpar);
 
@@ -623,6 +626,15 @@ void CMSSM_slha_io::fill_extpar_tuple(CMSSM_semianalytic_input_parameters<Two_sc
                                                 int key, double value)
 {
    switch (key) {
+   case 0: {
+      if (value < 0) {
+         input.MuInput_at_MS = true;
+      } else {
+         // N.B. this is not compliant with SLHA2
+         input.MuInput_at_MS = false;
+      }
+      break;
+   }
    case 23: input.MuInput = value; break;
    default: WARNING("Unrecognized key: " << key); break;
    }
